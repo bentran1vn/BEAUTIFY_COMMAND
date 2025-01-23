@@ -1,7 +1,7 @@
-using System.Linq.Expressions;
 using BEAUTIFY_PACKAGES.BEAUTIFY_PACKAGES.DOMAIN.Abstractions.Entities;
 using BEAUTIFY_PACKAGES.BEAUTIFY_PACKAGES.DOMAIN.Abstractions.Repositories;
 using Microsoft.EntityFrameworkCore;
+using System.Linq.Expressions;
 
 namespace BEAUTIFY_COMMAND.PERSISTENCE.Repositories;
 
@@ -36,13 +36,13 @@ public class RepositoryBase<TEntity, TKey>(ApplicationDbContext dbContext) : IRe
     public void Add(TEntity entity)
         => dbContext.Add(entity);
 
-    
+
     public void AddRange(IEnumerable<TEntity> entities)
         => dbContext.AddRange(entities);
 
     public void UpdateRange(IEnumerable<TEntity> entities)
         => dbContext.UpdateRange(entities);
-    
+
     public void Remove(TEntity entity)
         => dbContext.Set<TEntity>().Remove(entity);
 

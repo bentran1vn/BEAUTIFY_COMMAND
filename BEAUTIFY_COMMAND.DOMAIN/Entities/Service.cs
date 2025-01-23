@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.ComponentModel.DataAnnotations.Schema;
 
 namespace BEAUTIFY_COMMAND.DOMAIN.Entities;
 public class Service : AggregateRoot<Guid>, IAuditableEntity
@@ -13,7 +12,7 @@ public class Service : AggregateRoot<Guid>, IAuditableEntity
     [Column(TypeName = "decimal(18,2)")] public decimal? DiscountPrice { get; set; }
     public DateTimeOffset CreatedOnUtc { get; set; }
     public DateTimeOffset? ModifiedOnUtc { get; set; }
-    public Guid? PromotionId { get; set; }
+   // public Guid? PromotionId { get; set; }
     public virtual Promotion Promotion { get; set; }
     public virtual ICollection<Procedure>? Procedures { get; set; }
     public virtual ICollection<CustomerSchedule>? CustomerSchedules { get; set; }

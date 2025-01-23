@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Routing;
 
 namespace BEAUTIFY_COMMAND.PRESENTATION.APIs.Clinics;
 
-public class ClinicApi: ApiEndpoint, ICarterModule
+public class ClinicApi : ApiEndpoint, ICarterModule
 {
     private const string BaseUrl = "/api/v{version:apiVersion}/user";
 

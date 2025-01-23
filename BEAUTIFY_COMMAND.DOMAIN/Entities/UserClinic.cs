@@ -1,7 +1,4 @@
-﻿using System.Collections;
-using BEAUTIFY_PACKAGES.BEAUTIFY_PACKAGES.DOMAIN.Entities;
-
-namespace BEAUTIFY_COMMAND.DOMAIN.Entities;
+﻿namespace BEAUTIFY_COMMAND.DOMAIN.Entities;
 public class UserClinic : AggregateRoot<Guid>, IAuditableEntity
 {
     public Guid UserId { get; set; }

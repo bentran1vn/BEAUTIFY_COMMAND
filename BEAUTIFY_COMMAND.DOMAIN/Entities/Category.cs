@@ -1,6 +1,4 @@
-﻿using System.Collections;
-
-namespace BEAUTIFY_COMMAND.DOMAIN.Entities;
+﻿namespace BEAUTIFY_COMMAND.DOMAIN.Entities;
 public class Category : AggregateRoot<Guid>, IAuditableEntity
 {
     public required string Name { get; set; }
@@ -15,7 +13,7 @@ public class Category : AggregateRoot<Guid>, IAuditableEntity
 
     public virtual ICollection<Category> Children { get; set; }
     public Guid? ClinicId { get; set; }
-    public virtual Clinics? Clinic { get; set; }
+    public virtual Clinic? Clinic { get; set; }
     public virtual ICollection<Service> Services { get; set; }
     public virtual ICollection<DoctorService>? DoctorServices { get; set; }
 }

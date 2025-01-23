@@ -1,6 +1,4 @@
-﻿using System.Collections;
-
-namespace BEAUTIFY_COMMAND.DOMAIN.Entities;
+﻿namespace BEAUTIFY_COMMAND.DOMAIN.Entities;
 public class Procedure : AggregateRoot<Guid>, IAuditableEntity
 {
     public required string Name { get; set; }
@@ -12,6 +10,6 @@ public class Procedure : AggregateRoot<Guid>, IAuditableEntity
     public Guid? ServiceId { get; set; }
     public virtual Guid? Service { get; set; }
     public DateTimeOffset CreatedOnUtc { get; set; }
-    public DateTimeOffset? ModifiedOnUtc { get; set; } 
+    public DateTimeOffset? ModifiedOnUtc { get; set; }
     public virtual ICollection<CustomerSchedule>? CustomerSchedules { get; set; }
 }

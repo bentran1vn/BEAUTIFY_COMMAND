@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.ComponentModel.DataAnnotations.Schema;
 
 namespace BEAUTIFY_COMMAND.DOMAIN.Entities;
 public class Order : AggregateRoot<Guid>, IAuditableEntity

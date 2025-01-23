@@ -8,8 +8,8 @@
 
     <ItemGroup>
       <PackageReference Include="Asp.Versioning.Mvc.ApiExplorer" Version="8.1.0" />
-      <PackageReference Include="BEAUTIFY_PACKAGES.SHARE" Version="1.0.16" />
-      <PackageReference Include="Carter" Version="7.2.0" />
+      <PackageReference Include="BEAUTIFY_PACKAGES.SHARE" Version="1.0.23" />
+      <PackageReference Include="Carter" Version="8.1.0" />
     </ItemGroup>
 
 </Project>

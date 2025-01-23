@@ -12,6 +12,6 @@ public class OrderDetail : AggregateRoot<Guid>, IAuditableEntity
     [Column(TypeName = "decimal(18,2)")] public decimal? Discount { get; set; }
     public DateTimeOffset CreatedOnUtc { get; set; }
     public DateTimeOffset? ModifiedOnUtc { get; set; }
-    public Guid? FeedbackId { get; set; }
+    //public Guid? FeedbackId { get; set; }
     public virtual Feedback? Feedback { get; set; }
 }

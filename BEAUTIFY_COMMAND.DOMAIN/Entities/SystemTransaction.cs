@@ -1,5 +1,4 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
-using BEAUTIFY_PACKAGES.BEAUTIFY_PACKAGES.DOMAIN.Entities;
 
 namespace BEAUTIFY_COMMAND.DOMAIN.Entities;
 public class SystemTransaction : AggregateRoot<Guid>, IAuditableEntity

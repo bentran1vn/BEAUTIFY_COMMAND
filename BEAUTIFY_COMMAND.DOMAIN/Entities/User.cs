@@ -1,4 +1,3 @@
-using System.Collections;
 using System.ComponentModel.DataAnnotations;
 
 namespace BEAUTIFY_COMMAND.DOMAIN.Entities;
@@ -29,7 +28,7 @@ public class User : AggregateRoot<Guid>, IAuditableEntity
 
     public virtual ICollection<UserClinic>? UserClinics { get; set; }
     public virtual ICollection<DoctorCertificate>? DoctorCertificates { get; set; }
-    public virtual ICollection<Conversation>? Conversations { get; set; }
+    public virtual ICollection<UserConversation>? UserConversations { get; set; }
     public virtual ICollection<DoctorService>? DoctorServices { get; set; }
     public virtual ICollection<CustomerSchedule>? CustomerSchedules { get; set; }
     public virtual ICollection<Order>? Orders { get; set; }

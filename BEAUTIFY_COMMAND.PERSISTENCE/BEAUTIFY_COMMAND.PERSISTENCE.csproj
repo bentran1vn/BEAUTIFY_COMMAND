@@ -7,7 +7,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="BEAUTIFY_PACKAGES.SHARE" Version="1.0.16" />
+      <PackageReference Include="BEAUTIFY_PACKAGES.SHARE" Version="1.0.23" />
       <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.7" />
       <PackageReference Include="Microsoft.EntityFrameworkCore.Proxies" Version="8.0.7" />
       <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.7" />
@@ -17,6 +17,10 @@
       <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="9.0.1" />
       <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="9.0.1" />
       <PackageReference Include="Microsoft.Extensions.Options.DataAnnotations" Version="9.0.1" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\BEAUTIFY_COMMAND.DOMAIN\BEAUTIFY_COMMAND.DOMAIN.csproj" />
     </ItemGroup>
 
 </Project>

@@ -1,7 +1,5 @@
-using System.Collections;
-
 namespace BEAUTIFY_COMMAND.DOMAIN.Entities;
-public class Clinics : AggregateRoot<Guid>, IAuditableEntity
+public class Clinic : AggregateRoot<Guid>, IAuditableEntity
 {
     public required string Name { get; set; }
     public required string Email { get; set; }
@@ -17,9 +15,9 @@ public class Clinics : AggregateRoot<Guid>, IAuditableEntity
     public bool IsActivated { get; set; } = false;
     public bool? IsParent { get; set; } = false;
     public Guid? ParentId { get; set; }
-    public virtual Clinics? Parent { get; set; }
+    public virtual Clinic? Parent { get; set; }
     public string? Note { get; set; }
-    public virtual ICollection<Clinics> Children { get; set; }
+    public virtual ICollection<Clinic> Children { get; set; } = [];
     public Guid? ClinicOnBoardingRequestId { get; set; }
     public virtual ClinicOnBoardingRequest? ClinicOnBoardingRequest { get; set; }
     public virtual SystemTransaction? SystemTransaction { get; set; }

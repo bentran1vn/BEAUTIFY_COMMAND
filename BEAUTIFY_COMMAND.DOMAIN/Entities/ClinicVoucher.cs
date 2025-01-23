@@ -1,5 +1,4 @@
-﻿using BEAUTIFY_PACKAGES.BEAUTIFY_PACKAGES.DOMAIN.Entities;
-
+﻿
 namespace BEAUTIFY_COMMAND.DOMAIN.Entities;
 public class ClinicVoucher : AggregateRoot<Guid>, IAuditableEntity
 {

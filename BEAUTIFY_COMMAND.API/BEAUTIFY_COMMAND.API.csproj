@@ -7,10 +7,18 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="BEAUTIFY_PACKAGES.SHARE" Version="1.0.16" />
+      <_ContentIncludedByDefault Remove="appsettings.json" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <PackageReference Include="BEAUTIFY_PACKAGES.SHARE" Version="1.0.23" />
         <PackageReference Include="Carter" Version="8.1.0" />
         <PackageReference Include="MicroElements.Swashbuckle.FluentValidation" Version="6.1.0" />
-        <PackageReference Include="Swashbuckle.AspNetCore" Version="6.6.2"/>
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.7">
+          <PrivateAssets>all</PrivateAssets>
+          <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+        <PackageReference Include="Swashbuckle.AspNetCore" Version="6.6.2" />
     </ItemGroup>
 
     <ItemGroup>
@@ -19,8 +27,11 @@
 
     <ItemGroup>
       <ProjectReference Include="..\BEAUTIFY_COMMAND.APPLICATION\BEAUTIFY_COMMAND.APPLICATION.csproj" />
+      <ProjectReference Include="..\BEAUTIFY_COMMAND.CONTRACT\BEAUTIFY_COMMAND.CONTRACT.csproj" />
+      <ProjectReference Include="..\BEAUTIFY_COMMAND.DOMAIN\BEAUTIFY_COMMAND.DOMAIN.csproj" />
 <!--      <ProjectReference Include="..\BEAUTIFY_COMMAND.DOMAIN\BEAUTIFY_COMMAND.DOMAIN.csproj" />-->
       <ProjectReference Include="..\BEAUTIFY_COMMAND.INFRASTRUCTURE\BEAUTIFY_COMMAND.INFRASTRUCTURE.csproj" />
+      <ProjectReference Include="..\BEAUTIFY_COMMAND.PERSISTENCE\BEAUTIFY_COMMAND.PERSISTENCE.csproj" />
       <ProjectReference Include="..\BEAUTIFY_COMMAND.PRESENTATION\BEAUTIFY_COMMAND.PRESENTATION.csproj" />
     </ItemGroup>
 
