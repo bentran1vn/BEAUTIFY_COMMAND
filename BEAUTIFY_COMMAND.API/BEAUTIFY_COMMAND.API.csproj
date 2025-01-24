@@ -4,6 +4,7 @@
         <TargetFramework>net8.0</TargetFramework>
         <Nullable>enable</Nullable>
         <ImplicitUsings>enable</ImplicitUsings>
+        <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
     </PropertyGroup>
 
     <ItemGroup>
@@ -11,7 +12,7 @@
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="BEAUTIFY_PACKAGES.SHARE" Version="1.0.23" />
+        <PackageReference Include="BEAUTIFY_PACKAGES.SHARE" Version="1.0.25" />
         <PackageReference Include="Carter" Version="8.1.0" />
         <PackageReference Include="MicroElements.Swashbuckle.FluentValidation" Version="6.1.0" />
         <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.7">
@@ -33,6 +34,12 @@
       <ProjectReference Include="..\BEAUTIFY_COMMAND.INFRASTRUCTURE\BEAUTIFY_COMMAND.INFRASTRUCTURE.csproj" />
       <ProjectReference Include="..\BEAUTIFY_COMMAND.PERSISTENCE\BEAUTIFY_COMMAND.PERSISTENCE.csproj" />
       <ProjectReference Include="..\BEAUTIFY_COMMAND.PRESENTATION\BEAUTIFY_COMMAND.PRESENTATION.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Content Include="..\.dockerignore">
+        <Link>.dockerignore</Link>
+      </Content>
     </ItemGroup>
 
 </Project>

@@ -1,6 +1,6 @@
-﻿using BEAUTIFY_PACKAGES.BEAUTIFY_PACKAGES.DOMAIN.Exceptions;
-using MBS_QUERY.Application.Exceptions;
-using System.Text.Json;
+﻿using System.Text.Json;
+using BEAUTIFY_COMMAND.APPLICATION.Exceptions;
+using BEAUTIFY_COMMAND.DOMAIN.Exceptions;
 
 namespace BEAUTIFY_COMMAND.API.Middlewares;
 
