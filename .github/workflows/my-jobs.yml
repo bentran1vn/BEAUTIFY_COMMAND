@@ -16,7 +16,7 @@ jobs:
           echo '${{ secrets.APP_SETTINGS }}' > BEAUTIFY_COMMAND.API/appsettings.json
 
       - name: Build Docker Image
-        run: docker build -t beautify_command:latest -f BEAUTIFY_COMMAND.API.API/Dockerfile .
+        run: docker build -t beautify_command:latest -f BEAUTIFY_COMMAND.API/Dockerfile .
   
   deploy:
     needs: build
