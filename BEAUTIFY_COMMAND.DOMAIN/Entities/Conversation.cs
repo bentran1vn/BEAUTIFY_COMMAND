@@ -1,8 +1,9 @@
-﻿namespace BEAUTIFY_COMMAND.DOMAIN.Entities;
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace BEAUTIFY_COMMAND.DOMAIN.Entities;
 public class Conversation : AggregateRoot<Guid>, IAuditableEntity
 {
-
-    public string Type { get; set; }
+    [MaxLength(50)] public required string Type { get; set; }
 
 
     public virtual ICollection<Message>? Messages { get; set; }
