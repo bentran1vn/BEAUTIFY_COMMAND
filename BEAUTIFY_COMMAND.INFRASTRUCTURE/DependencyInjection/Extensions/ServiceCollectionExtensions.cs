@@ -1,3 +1,4 @@
+using System.Reflection;
 using BEAUTIFY_COMMAND.INFRASTRUCTURE.BackgroundJobs;
 using BEAUTIFY_PACKAGES.BEAUTIFY_PACKAGES.APPLICATION.Abstractions;
 using BEAUTIFY_PACKAGES.BEAUTIFY_PACKAGES.CONTRACT.JsonConverters;
@@ -15,10 +16,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using Quartz;
-using System.Reflection;
 
 namespace BEAUTIFY_COMMAND.INFRASTRUCTURE.DependencyInjection.Extensions;
-
 public static class ServiceCollectionExtensions
 {
     public static void AddServicesInfrastructure(this IServiceCollection services)
@@ -47,7 +46,8 @@ public static class ServiceCollectionExtensions
     }
 
     // Configure for masstransit with rabbitMQ
-    public static IServiceCollection AddMasstransitRabbitMQInfrastructure(this IServiceCollection services, IConfiguration configuration)
+    public static IServiceCollection AddMasstransitRabbitMQInfrastructure(this IServiceCollection services,
+        IConfiguration configuration)
     {
         var masstransitConfiguration = new MasstransitConfiguration();
         configuration.GetSection(nameof(MasstransitConfiguration)).Bind(masstransitConfiguration);
@@ -58,24 +58,26 @@ public static class ServiceCollectionExtensions
         services.AddMassTransit(cfg =>
         {
             // ===================== Setup for Consumer =====================
-            cfg.AddConsumers(Assembly.GetExecutingAssembly()); // Add all of consumers to masstransit instead above command
+            cfg.AddConsumers(Assembly
+                .GetExecutingAssembly()); // Add all of consumers to masstransit instead above command
 
             // ?? => Configure endpoint formatter. Not configure for producer Root Exchange
             cfg.SetKebabCaseEndpointNameFormatter(); // ??
 
             cfg.UsingRabbitMq((context, bus) =>
             {
-                bus.Host(masstransitConfiguration.Host, masstransitConfiguration.Port, masstransitConfiguration.VHost, h =>
-                {
-                    h.Username(masstransitConfiguration.UserName);
-                    h.Password(masstransitConfiguration.Password);
-                });
+                bus.Host(masstransitConfiguration.Host, masstransitConfiguration.Port, masstransitConfiguration.VHost,
+                    h =>
+                    {
+                        h.Username(masstransitConfiguration.UserName);
+                        h.Password(masstransitConfiguration.Password);
+                    });
 
                 bus.UseMessageRetry(retry
-                => retry.Incremental(
-                           retryLimit: messageBusOption.RetryLimit,
-                           initialInterval: messageBusOption.InitialInterval,
-                           intervalIncrement: messageBusOption.IntervalIncrement));
+                    => retry.Incremental(
+                        retryLimit: messageBusOption.RetryLimit,
+                        initialInterval: messageBusOption.InitialInterval,
+                        intervalIncrement: messageBusOption.IntervalIncrement));
 
                 bus.UseNewtonsoftJsonSerializer();
 
@@ -136,14 +138,16 @@ public static class ServiceCollectionExtensions
         services.AddQuartzHostedService();
     }
 
-    public static OptionsBuilder<CloudinaryOptions> ConfigureCloudinaryOptionsInfrastucture(this IServiceCollection services, IConfigurationSection section)
+    public static OptionsBuilder<CloudinaryOptions> ConfigureCloudinaryOptionsInfrastucture(
+        this IServiceCollection services, IConfigurationSection section)
         => services
             .AddOptions<CloudinaryOptions>()
             .Bind(section)
             .ValidateDataAnnotations()
             .ValidateOnStart();
 
-    public static OptionsBuilder<MailOption> ConfigureMailOptionsInfrastucture(this IServiceCollection services, IConfigurationSection section)
+    public static OptionsBuilder<MailOption> ConfigureMailOptionsInfrastucture(this IServiceCollection services,
+        IConfigurationSection section)
         => services
             .AddOptions<MailOption>()
             .Bind(section)

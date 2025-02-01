@@ -13,7 +13,7 @@ public class ClinicOnBoardingRequest : AggregateRoot<Guid>, IAuditableEntity
     public DateTimeOffset? OperatingLicenseExpiryDate { get; set; }
     [MaxLength(50)] public string? Status { get; set; }
     [MaxLength(250)] public string? RejectReason { get; set; }
-    
+
 
     public DateTimeOffset CreatedOnUtc { get; set; }
     public DateTimeOffset? ModifiedOnUtc { get; set; }

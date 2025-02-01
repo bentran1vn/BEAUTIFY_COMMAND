@@ -1,7 +1,6 @@
 using BEAUTIFY_PACKAGES.BEAUTIFY_PACKAGES.APPLICATION.Abstractions;
 
 namespace BEAUTIFY_COMMAND.APPLICATION.DependencyInjection.Extensions;
-
 public static class EmailExtensions
 {
     public static MailContent ForgotPasswordBody(string verifyCode, string userName, string email)
@@ -113,7 +112,7 @@ public static class EmailExtensions
         </body>
         </html>
         ";
-        return new MailContent()
+        return new MailContent
         {
             Body = body,
             To = email,
@@ -121,30 +120,27 @@ public static class EmailExtensions
         };
     }
 
-    public static MailContent ConfirmUpdateVendorBody(string verifyCode, string userName, string email, string? bankAccountNumber = null, string? bankName = null, string? bankOwnerName = null, string? phoneNumber = null, string? vendorEmail = null)
+    public static MailContent ConfirmUpdateVendorBody(string verifyCode, string userName, string email,
+        string? bankAccountNumber = null, string? bankName = null, string? bankOwnerName = null,
+        string? phoneNumber = null, string? vendorEmail = null)
     {
         var vendorDetails = "";
 
         // Dynamically insert the provided vendor information
-        if (!string.IsNullOrWhiteSpace(bankAccountNumber) && !string.IsNullOrWhiteSpace(bankName) && !string.IsNullOrWhiteSpace(bankOwnerName))
-        {
+        if (!string.IsNullOrWhiteSpace(bankAccountNumber) && !string.IsNullOrWhiteSpace(bankName) &&
+            !string.IsNullOrWhiteSpace(bankOwnerName))
             vendorDetails += $@"
             <p><strong>Bank Account Number:</strong> {bankAccountNumber}</p>
             <p><strong>Bank Name:</strong> {bankName}</p>
             <p><strong>Bank Owner Name:</strong> {bankOwnerName}</p>";
-        }
 
         if (!string.IsNullOrWhiteSpace(phoneNumber))
-        {
             vendorDetails += $@"
             <p><strong>Phone Number:</strong> {phoneNumber}</p>";
-        }
 
         if (!string.IsNullOrWhiteSpace(vendorEmail))
-        {
             vendorDetails += $@"
             <p><strong>Vendor Email:</strong> {vendorEmail}</p>";
-        }
 
         var body = $@"
     <!DOCTYPE html>
@@ -248,7 +244,7 @@ public static class EmailExtensions
     </html>
     ";
 
-        return new MailContent()
+        return new MailContent
         {
             Body = body,
             To = email,

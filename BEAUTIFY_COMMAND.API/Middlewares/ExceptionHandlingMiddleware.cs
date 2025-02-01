@@ -3,7 +3,6 @@ using BEAUTIFY_COMMAND.APPLICATION.Exceptions;
 using BEAUTIFY_COMMAND.DOMAIN.Exceptions;
 
 namespace BEAUTIFY_COMMAND.API.Middlewares;
-
 internal sealed class ExceptionHandlingMiddleware : IMiddleware
 {
     private readonly ILogger<ExceptionHandlingMiddleware> _logger;
@@ -75,5 +74,4 @@ internal sealed class ExceptionHandlingMiddleware : IMiddleware
 
         return errors;
     }
-
 }

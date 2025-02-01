@@ -3,7 +3,6 @@ using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 
 namespace BEAUTIFY_COMMAND.PERSISTENCE.Interceptors;
-
 public sealed class DeleteAuditableEntitiesInterceptor : SaveChangesInterceptor
 {
     public override ValueTask<InterceptionResult<int>> SavingChangesAsync(
@@ -34,7 +33,8 @@ public sealed class DeleteAuditableEntitiesInterceptor : SaveChangesInterceptor
                 var entity = entityEntry.Entity;
                 var isDeletedProperty = entity.GetType().GetProperty("IsDeleted");
                 var updateProperty = entity.GetType().GetProperty("ModifiedOnUtc");
-                if (isDeletedProperty != null && isDeletedProperty.CanWrite && updateProperty != null && updateProperty.CanWrite)
+                if (isDeletedProperty != null && isDeletedProperty.CanWrite && updateProperty != null &&
+                    updateProperty.CanWrite)
                 {
                     entityEntry.State = EntityState.Modified;
                     isDeletedProperty.SetValue(entity, true);

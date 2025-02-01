@@ -1,10 +1,9 @@
+using System.Linq.Expressions;
 using BEAUTIFY_PACKAGES.BEAUTIFY_PACKAGES.DOMAIN.Abstractions.Entities;
 using BEAUTIFY_PACKAGES.BEAUTIFY_PACKAGES.DOMAIN.Abstractions.Repositories;
 using Microsoft.EntityFrameworkCore;
-using System.Linq.Expressions;
 
 namespace BEAUTIFY_COMMAND.PERSISTENCE.Repositories;
-
 public class RepositoryBase<TEntity, TKey>(ApplicationDbContext dbContext) : IRepositoryBase<TEntity, TKey>, IDisposable
     where TEntity : Entity<TKey>
 {
@@ -15,7 +14,8 @@ public class RepositoryBase<TEntity, TKey>(ApplicationDbContext dbContext) : IRe
         params Expression<Func<TEntity, object>>[] includeProperties)
     {
         var items = dbContext.Set<TEntity>().AsNoTracking(); // Importance Always include AsNoTracking for Query Side
-        if (includeProperties != null) items = includeProperties.Aggregate(items, (current, includeProperty) => current.Include(includeProperty));
+        if (includeProperties != null)
+            items = includeProperties.Aggregate(items, (current, includeProperty) => current.Include(includeProperty));
 
         if (predicate is not null)
             items = items.Where(predicate);
@@ -23,12 +23,14 @@ public class RepositoryBase<TEntity, TKey>(ApplicationDbContext dbContext) : IRe
         return items;
     }
 
-    public async Task<TEntity?> FindByIdAsync(TKey id, CancellationToken cancellationToken = default, params Expression<Func<TEntity, object>>[] includeProperties)
+    public async Task<TEntity?> FindByIdAsync(TKey id, CancellationToken cancellationToken = default,
+        params Expression<Func<TEntity, object>>[] includeProperties)
         => await FindAll(null, includeProperties)
             .AsTracking()
             .SingleOrDefaultAsync(x => x.Id.Equals(id), cancellationToken);
 
-    public async Task<TEntity?> FindSingleAsync(Expression<Func<TEntity, bool>>? predicate = null, CancellationToken cancellationToken = default, params Expression<Func<TEntity, object>>[] includeProperties)
+    public async Task<TEntity?> FindSingleAsync(Expression<Func<TEntity, bool>>? predicate = null,
+        CancellationToken cancellationToken = default, params Expression<Func<TEntity, object>>[] includeProperties)
         => await FindAll(null, includeProperties)
             .AsTracking()
             .SingleOrDefaultAsync(predicate, cancellationToken);

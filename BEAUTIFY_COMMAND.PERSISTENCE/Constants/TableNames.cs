@@ -1,5 +1,4 @@
 namespace BEAUTIFY_COMMAND.PERSISTENCE.Constants;
-
 internal static class TableNames
 {
     // For Outbox Pattern

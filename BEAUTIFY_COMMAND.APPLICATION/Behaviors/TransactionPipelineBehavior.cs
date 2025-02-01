@@ -3,7 +3,6 @@ using MediatR;
 using Microsoft.EntityFrameworkCore;
 
 namespace BEAUTIFY_COMMAND.APPLICATION.Behaviors;
-
 public sealed class TransactionPipelineBehavior<TRequest, TResponse>
     : IPipelineBehavior<TRequest, TResponse>
     where TRequest : notnull
@@ -57,5 +56,7 @@ public sealed class TransactionPipelineBehavior<TRequest, TResponse>
     }
 
     private bool IsCommand()
-        => typeof(TRequest).Name.EndsWith("Command");
+    {
+        return typeof(TRequest).Name.EndsWith("Command");
+    }
 }

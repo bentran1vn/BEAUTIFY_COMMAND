@@ -1,11 +1,11 @@
 using BEAUTIFY_COMMAND.PERSISTENCE;
 using BEAUTIFY_COMMAND.PERSISTENCE.Outbox;
 using BEAUTIFY_PACKAGES.BEAUTIFY_PACKAGES.CONTRACT.Abstractions.Messages;
+using BEAUTIFY_PACKAGES.BEAUTIFY_PACKAGES.CONTRACT.Services.Subscriptions;
 using MassTransit;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using Quartz;
-
 
 namespace BEAUTIFY_COMMAND.INFRASTRUCTURE.BackgroundJobs;
 [DisallowConcurrentExecution]
@@ -46,61 +46,52 @@ public class ProcessOutboxMessagesJob : IJob
             {
                 switch (domainEvent.GetType().Name)
                 {
-                    // case nameof(ServicesShared.MentorSkills.DomainEvent.MentorSkillsCreated):
-                    //     var mentorSkillsCreated =
-                    //         JsonConvert.DeserializeObject<ServicesShared.MentorSkills.DomainEvent.MentorSkillsCreated>(
-                    //             outboxMessage.Content,
-                    //             new JsonSerializerSettings
-                    //             {
-                    //                 TypeNameHandling = TypeNameHandling.All
-                    //             });
-                    //     await _publishEndpoint.Publish(mentorSkillsCreated, context.CancellationToken);
-                    //     break;
-                    //
-                    // case nameof(ServicesShared.Mentors.DomainEvent.MentorCreated):
-                    //     var mentorCreated =
-                    //         JsonConvert.DeserializeObject<ServicesShared.Mentors.DomainEvent.MentorCreated>(
-                    //             outboxMessage.Content,
-                    //             new JsonSerializerSettings
-                    //             {
-                    //                 TypeNameHandling = TypeNameHandling.All
-                    //             });
-                    //     await _publishEndpoint.Publish(mentorCreated, context.CancellationToken);
-                    //     break;
-                    // case nameof(ServicesShared.Users.DomainEvent.MentorSlotCreated):
-                    //     var MentorSlotCreated =
-                    //         JsonConvert.DeserializeObject<ServicesShared.Users.DomainEvent.MentorSlotCreated>(
-                    //             outboxMessage.Content,
-                    //             new JsonSerializerSettings
-                    //             {
-                    //                 TypeNameHandling = TypeNameHandling.All
-                    //             });
-                    //     await _publishEndpoint.Publish(MentorSlotCreated, context.CancellationToken);
-                    //     break;
-                    // case nameof(ServicesShared.Slots.DomainEvent.ChangeSlotStatusInToBooked):
-                    //     var ChangeSlotStatusInToBooked =
-                    //         JsonConvert.DeserializeObject<ServicesShared.Slots.DomainEvent.ChangeSlotStatusInToBooked>(
-                    //             outboxMessage.Content,
-                    //             new JsonSerializerSettings
-                    //             {
-                    //                 TypeNameHandling = TypeNameHandling.All
-                    //             });
-                    //
-                    //
-                    //     await _publishEndpoint.Publish(ChangeSlotStatusInToBooked, context.CancellationToken);
-                    //     break;
-                    // case nameof(ServicesShared.Slots.DomainEvent.SlotUpdated):
-                    //     var SlotUpdated =
-                    //         JsonConvert.DeserializeObject<ServicesShared.Slots.DomainEvent.SlotUpdated>(
-                    //             outboxMessage.Content,
-                    //             new JsonSerializerSettings
-                    //             {
-                    //                 TypeNameHandling = TypeNameHandling.All
-                    //             });
-                    //     await _publishEndpoint.Publish(SlotUpdated, context.CancellationToken);
-                    //     Console.WriteLine("SlotUpdated");
-                    //     Console.BackgroundColor = ConsoleColor.Red;
-                    //     break;
+                    case nameof(DomainEvents.SubscriptionCreated):
+                        var subscriptionCreated = JsonConvert.DeserializeObject<DomainEvents.SubscriptionCreated>(
+                            outboxMessage.Content,
+                            new JsonSerializerSettings
+                            {
+                                TypeNameHandling = TypeNameHandling.All
+                            });
+                        await _publishEndpoint.Publish(subscriptionCreated, context.CancellationToken);
+                        break;
+                    case nameof(DomainEvents.SubscriptionUpdated):
+                        var subscriptionUpdated = JsonConvert.DeserializeObject<DomainEvents.SubscriptionUpdated>(
+                            outboxMessage.Content,
+                            new JsonSerializerSettings
+                            {
+                                TypeNameHandling = TypeNameHandling.All
+                            });
+                        await _publishEndpoint.Publish(subscriptionUpdated, context.CancellationToken);
+                        break;
+                    case nameof(DomainEvents.SubscriptionDeleted):
+                        var subscriptionDeleted = JsonConvert.DeserializeObject<DomainEvents.SubscriptionDeleted>(
+                            outboxMessage.Content,
+                            new JsonSerializerSettings
+                            {
+                                TypeNameHandling = TypeNameHandling.All
+                            });
+                        await _publishEndpoint.Publish(subscriptionDeleted, context.CancellationToken);
+                        break;
+                    case nameof(DomainEvents.SubscriptionActivated):
+                        var subscriptionActivated = JsonConvert.DeserializeObject<DomainEvents.SubscriptionActivated>(
+                            outboxMessage.Content,
+                            new JsonSerializerSettings
+                            {
+                                TypeNameHandling = TypeNameHandling.All
+                            });
+                        await _publishEndpoint.Publish(subscriptionActivated, context.CancellationToken);
+                        break;
+                    case nameof(DomainEvents.SubscriptionDeactivated):
+                        var subscriptionDeactivated =
+                            JsonConvert.DeserializeObject<DomainEvents.SubscriptionDeactivated>(
+                                outboxMessage.Content,
+                                new JsonSerializerSettings
+                                {
+                                    TypeNameHandling = TypeNameHandling.All
+                                });
+                        await _publishEndpoint.Publish(subscriptionDeactivated, context.CancellationToken);
+                        break;
                 }
 
                 outboxMessage.ProcessedOnUtc = DateTime.UtcNow;
