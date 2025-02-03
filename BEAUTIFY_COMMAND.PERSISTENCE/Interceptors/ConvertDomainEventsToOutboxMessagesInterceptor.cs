@@ -5,9 +5,8 @@ using Microsoft.EntityFrameworkCore.Diagnostics;
 using Newtonsoft.Json;
 
 namespace BEAUTIFY_COMMAND.PERSISTENCE.Interceptors;
-
 public sealed class ConvertDomainEventsToOutboxMessagesInterceptor
-     : SaveChangesInterceptor
+    : SaveChangesInterceptor
 {
     public override ValueTask<InterceptionResult<int>> SavingChangesAsync(
         DbContextEventData eventData,

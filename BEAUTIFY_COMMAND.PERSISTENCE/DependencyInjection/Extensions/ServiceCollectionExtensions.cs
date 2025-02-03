@@ -8,7 +8,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 
 namespace BEAUTIFY_COMMAND.PERSISTENCE.DependencyInjection.Extensions;
-
 public static class ServiceCollectionExtensions
 {
     public static void AddSqlServerPersistence(this IServiceCollection services)
@@ -26,12 +25,13 @@ public static class ServiceCollectionExtensions
             #region ============== SQL-SERVER-STRATEGY-1 ==============
 
             builder
-            .EnableDetailedErrors(true)
-            .EnableSensitiveDataLogging(true)
-            .UseLazyLoadingProxies(true) // => If UseLazyLoadingProxies, all of the navigation fields should be VIRTUAL
-            .UseSqlServer(
-                connectionString: configuration.GetConnectionString("ConnectionStrings"),
-                sqlServerOptionsAction: optionsBuilder
+                .EnableDetailedErrors(true)
+                .EnableSensitiveDataLogging(true)
+                .UseLazyLoadingProxies(
+                    true) // => If UseLazyLoadingProxies, all of the navigation fields should be VIRTUAL
+                .UseSqlServer(
+                    connectionString: configuration.GetConnectionString("ConnectionStrings"),
+                    sqlServerOptionsAction: optionsBuilder
                         => optionsBuilder.ExecutionStrategy(
                                 dependencies => new SqlServerRetryingExecutionStrategy(
                                     dependencies: dependencies,
@@ -39,10 +39,10 @@ public static class ServiceCollectionExtensions
                                     maxRetryDelay: options.CurrentValue.MaxRetryDelay,
                                     errorNumbersToAdd: options.CurrentValue.ErrorNumbersToAdd))
                             .MigrationsAssembly(typeof(ApplicationDbContext).Assembly.GetName().Name))
-            .AddInterceptors(
-                outboxInterceptor,
-                auditableInterceptor,
-                deletableInterceptor);
+                .AddInterceptors(
+                    outboxInterceptor,
+                    auditableInterceptor,
+                    deletableInterceptor);
 
             #endregion ============== SQL-SERVER-STRATEGY-1 ==============
 
@@ -75,7 +75,8 @@ public static class ServiceCollectionExtensions
         // services.AddTransient(typeof(IUnitOfWork), typeof(EFUnitOfWork));
     }
 
-    public static OptionsBuilder<SqlServerRetryOptions> ConfigureSqlServerRetryOptionsPersistence(this IServiceCollection services, IConfigurationSection section)
+    public static OptionsBuilder<SqlServerRetryOptions> ConfigureSqlServerRetryOptionsPersistence(
+        this IServiceCollection services, IConfigurationSection section)
         => services
             .AddOptions<SqlServerRetryOptions>()
             .Bind(section)

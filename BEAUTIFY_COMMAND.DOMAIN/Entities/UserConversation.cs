@@ -1,5 +1,4 @@
 ﻿namespace BEAUTIFY_COMMAND.DOMAIN.Entities;
-
 public class UserConversation : AggregateRoot<Guid>, IAuditableEntity
 {
     public Guid UserId { get; set; }
@@ -8,7 +7,6 @@ public class UserConversation : AggregateRoot<Guid>, IAuditableEntity
     public Guid ConversationId { get; set; }
     public virtual Conversation Conversation { get; set; } = null!;
 
-    public DateTimeOffset CreatedOnUtc { get ; set ; }
-    public DateTimeOffset? ModifiedOnUtc { get ; set ; }
+    public DateTimeOffset CreatedOnUtc { get; set; }
+    public DateTimeOffset? ModifiedOnUtc { get; set; }
 }
-

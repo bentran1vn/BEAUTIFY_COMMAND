@@ -52,7 +52,8 @@ builder.Services.AddAutoMapperApplication();
 
 // Persistence Layer
 builder.Services.AddInterceptorPersistence();
-builder.Services.ConfigureSqlServerRetryOptionsPersistence(builder.Configuration.GetSection(nameof(SqlServerRetryOptions)));
+builder.Services.ConfigureSqlServerRetryOptionsPersistence(
+    builder.Configuration.GetSection(nameof(SqlServerRetryOptions)));
 builder.Services.AddSqlServerPersistence();
 builder.Services.AddRepositoryPersistence();
 
@@ -105,4 +106,6 @@ finally
     await app.DisposeAsync();
 }
 
-public partial class Program { }
+public partial class Program
+{
+}

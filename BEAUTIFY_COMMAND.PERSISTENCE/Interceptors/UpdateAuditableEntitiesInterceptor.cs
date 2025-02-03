@@ -4,7 +4,6 @@ using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 
 namespace BEAUTIFY_COMMAND.PERSISTENCE.Interceptors;
-
 public sealed class UpdateAuditableEntitiesInterceptor
     : SaveChangesInterceptor
 {

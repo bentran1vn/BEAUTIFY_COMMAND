@@ -1,5 +1,4 @@
 namespace BEAUTIFY_COMMAND.PERSISTENCE.Outbox;
-
 public class OutboxMessage
 {
     public Guid Id { get; set; }

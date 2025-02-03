@@ -1,5 +1,4 @@
 namespace BEAUTIFY_COMMAND.PRESENTATION.Constrants;
-
 public class RoleNames
 {
     public const string Customer = nameof(Customer);
