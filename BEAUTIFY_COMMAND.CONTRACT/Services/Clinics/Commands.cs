@@ -8,4 +8,9 @@ public static class Commands
         string BusinessLicenseUrl, string OperatingLicenseUrl, string OperatingLicenseExpiryDate,
         string ProfilePictureUrl
     ) : ICommand;
+    
+    public record ResponseClinicApplyCommand(
+        string RequestId , string? RejectReason, int Action
+        // 0 Approve, 1 Reject, 2 Banned
+    ) : ICommand;
 }

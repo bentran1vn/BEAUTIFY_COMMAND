@@ -8,6 +8,7 @@ using BEAUTIFY_PACKAGES.BEAUTIFY_PACKAGES.INFRASTRUCTURE.DependencyInjection.Ext
 using BEAUTIFY_PACKAGES.BEAUTIFY_PACKAGES.INFRASTRUCTURE.DependencyInjection.Options;
 using BEAUTIFY_PACKAGES.BEAUTIFY_PACKAGES.INFRASTRUCTURE.Mail;
 using BEAUTIFY_PACKAGES.BEAUTIFY_PACKAGES.INFRASTRUCTURE.Media;
+using BEAUTIFY_PACKAGES.BEAUTIFY_PACKAGES.INFRASTRUCTURE.PasswordHasher;
 using BEAUTIFY_PACKAGES.BEAUTIFY_PACKAGES.INFRASTRUCTURE.PipeObservers;
 using CloudinaryDotNet;
 using MassTransit;
@@ -25,6 +26,7 @@ public static class ServiceCollectionExtensions
             .AddTransient<IJwtTokenService, JwtTokenService>()
             .AddTransient<ICacheService, CacheService>()
             .AddSingleton<IMediaService, CloudinaryService>()
+            .AddTransient<IPasswordHasherService, PasswordHasherService>()
             .AddSingleton<IMailService, MailService>()
             .AddSingleton<Cloudinary>((provider) =>
             {

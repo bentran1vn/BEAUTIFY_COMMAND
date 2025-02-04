@@ -12,8 +12,7 @@ public class ClinicApi : ApiEndpoint, ICarterModule
     {
         var gr1 = app.NewVersionedApi("Clinics")
             .MapGroup(BaseUrl).HasApiVersion(1);
-
-        gr1.MapGet("", CreateUser);
+        
         gr1.MapPost("apply", ClinicApply)
             .WithName("apply")
             .WithSummary("New Clinic send a request to Join System.")
@@ -45,15 +44,29 @@ public class ClinicApi : ApiEndpoint, ICarterModule
                     }
                 }
             );
-    }
-
-    private static async Task<IResult> CreateUser(ISender sender)
-    {
-        return Results.Ok("Hello");
+        gr1.MapPut("apply/{id}", ResponseClinicApply)
+            .WithName("Response Apply Request")
+            .WithSummary("Admin Response Apply Request.")
+            .WithDescription("With Action = 0 is Approve, Action = 1 is Reject, Action = 2 is Banned." +
+                             " With Action 1 and 2, reject reason must be included." +
+                             " Id in the path with RequestId in the request body must be same.");
+            // .RequireAuthorization()
     }
     
     private static async Task<IResult> ClinicApply(ISender sender, [FromBody] Commands.ClinicApplyCommand command)
     {
+        var result = await sender.Send(command);
+
+        if (result.IsFailure)
+            return HandlerFailure(result);
+
+        return Results.Ok(result);
+    }
+    
+    private static async Task<IResult> ResponseClinicApply(ISender sender, string id, [FromBody] Commands.ResponseClinicApplyCommand command)
+    {
+        if(command.RequestId != id) return Results.BadRequest();
+        
         var result = await sender.Send(command);
 
         if (result.IsFailure)
