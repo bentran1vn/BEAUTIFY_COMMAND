@@ -18,7 +18,6 @@ public class SubscriptionPackage : AggregateRoot<Guid>, IAuditableEntity
     {
     }
 
-    // Factory method to create a new subscription and raise the domain event
     public static SubscriptionPackage Create(
         string name,
         string description,
