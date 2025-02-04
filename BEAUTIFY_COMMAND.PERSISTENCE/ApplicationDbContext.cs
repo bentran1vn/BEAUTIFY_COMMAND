@@ -23,7 +23,4 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
         builder.Entity<SubscriptionPackage>()
             .HasQueryFilter(x => !x.IsDeleted);
     }
-
-
-    public DbSet<User> Users { get; set; }
 }
