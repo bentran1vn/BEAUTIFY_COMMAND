@@ -3,18 +3,14 @@
 namespace BEAUTIFY_COMMAND.DOMAIN.Entities;
 public class ClinicOnBoardingRequest : AggregateRoot<Guid>, IAuditableEntity
 {
-    [MaxLength(100)] public required string Name { get; set; }
-    [MaxLength(100)] public required string Email { get; set; }
-    [MaxLength(15)] public required string PhoneNumber { get; set; }
-    [MaxLength(500)] public required string Address { get; set; }
-    [MaxLength(20)] public required string TaxCode { get; set; }
-    [MaxLength(250)] public required string BusinessLicenseUrl { get; set; }
-    [MaxLength(250)] public required string OperatingLicenseUrl { get; set; }
-    public DateTimeOffset? OperatingLicenseExpiryDate { get; set; }
-    [MaxLength(50)] public string? Status { get; set; }
-    [MaxLength(250)] public string? RejectReason { get; set; }
-
-
+    [MaxLength(50)] public int Status { get; set; } = 0;
+    // 0 Pending 1 Approve 2 Reject
+    [MaxLength(250)] public string? RejectReason { get; set; } 
+    public DateTimeOffset SendMailDate { get; set; }
+    
+    public Guid ClinicId { get; set; }
+    public virtual Clinic? Clinic { get; set; }
+    
     public DateTimeOffset CreatedOnUtc { get; set; }
     public DateTimeOffset? ModifiedOnUtc { get; set; }
 }
