@@ -45,7 +45,6 @@ builder.Services.AddJwtAuthenticationAPI(builder.Configuration);
 builder.Services.AddTransient<ExceptionHandlingMiddleware>();
 builder.Services.AddHttpContextAccessor();
 
-
 // Application Layer
 builder.Services.AddMediatRApplication();
 builder.Services.AddAutoMapperApplication();
