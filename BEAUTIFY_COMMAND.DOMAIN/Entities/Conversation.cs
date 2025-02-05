@@ -4,8 +4,6 @@ namespace BEAUTIFY_COMMAND.DOMAIN.Entities;
 public class Conversation : AggregateRoot<Guid>, IAuditableEntity
 {
     [MaxLength(50)] public required string Type { get; set; }
-
-
     public virtual ICollection<Message>? Messages { get; set; }
     public virtual ICollection<UserConversation>? UserConversations { get; set; }
 

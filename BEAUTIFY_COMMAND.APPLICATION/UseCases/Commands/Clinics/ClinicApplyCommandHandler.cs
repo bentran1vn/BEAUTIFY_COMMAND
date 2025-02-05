@@ -4,12 +4,12 @@ namespace BEAUTIFY_COMMAND.APPLICATION.UseCases.Commands.Clinics;
 
 public class ClinicApplyCommandHandler : ICommandHandler<CONTRACT.Services.Clinics.Commands.ClinicApplyCommand>
 {
-    private readonly IRepositoryBase<Clinic, Guid> _clinicRepository;
+    private readonly IRepositoryBase<DOMAIN.Entities.Clinics, Guid> _clinicRepository;
     // private readonly IRepositoryBase<User, Guid> _userRepository;
     private readonly IRepositoryBase<ClinicOnBoardingRequest, Guid> _clinicOnBoardingRequestRepository;
     private readonly IMailService _mailService;
 
-    public ClinicApplyCommandHandler(IRepositoryBase<Clinic, Guid> clinicRepository, IRepositoryBase<ClinicOnBoardingRequest, Guid> clinicOnBoardingRequestRepository, IMailService mailService)
+    public ClinicApplyCommandHandler(IRepositoryBase<DOMAIN.Entities.Clinics, Guid> clinicRepository, IRepositoryBase<ClinicOnBoardingRequest, Guid> clinicOnBoardingRequestRepository, IMailService mailService)
     {
         _clinicRepository = clinicRepository;
         _clinicOnBoardingRequestRepository = clinicOnBoardingRequestRepository;
@@ -83,7 +83,7 @@ public class ClinicApplyCommandHandler : ICommandHandler<CONTRACT.Services.Clini
         }
         else
         {
-            var clinic = new Clinic()
+            var clinic = new DOMAIN.Entities.Clinics()
             {
                 Id = Guid.NewGuid(),
                 Name = request.Name,
