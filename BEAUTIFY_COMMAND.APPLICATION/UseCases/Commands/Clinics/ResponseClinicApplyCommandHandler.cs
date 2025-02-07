@@ -77,6 +77,9 @@ public class ResponseClinicApplyCommandHandler: ICommandHandler<CONTRACT.Service
         }
         else
         {
+            applyRequest.Clinic!.Status = 1;
+            applyRequest.Clinic!.IsActivated = true;
+            
             string guid = Guid.NewGuid().ToString("N").ToLower(); // Convert to lowercase
             string specialChars = "!@#$%^&*";
     

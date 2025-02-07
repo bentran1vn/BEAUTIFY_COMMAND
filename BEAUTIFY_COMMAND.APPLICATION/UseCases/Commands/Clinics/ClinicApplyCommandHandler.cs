@@ -8,12 +8,14 @@ public class ClinicApplyCommandHandler : ICommandHandler<CONTRACT.Services.Clini
     // private readonly IRepositoryBase<User, Guid> _userRepository;
     private readonly IRepositoryBase<ClinicOnBoardingRequest, Guid> _clinicOnBoardingRequestRepository;
     private readonly IMailService _mailService;
+    private readonly IMediaService _mediaService;
 
-    public ClinicApplyCommandHandler(IRepositoryBase<DOMAIN.Entities.Clinics, Guid> clinicRepository, IRepositoryBase<ClinicOnBoardingRequest, Guid> clinicOnBoardingRequestRepository, IMailService mailService)
+    public ClinicApplyCommandHandler(IRepositoryBase<DOMAIN.Entities.Clinics, Guid> clinicRepository, IRepositoryBase<ClinicOnBoardingRequest, Guid> clinicOnBoardingRequestRepository, IMailService mailService, IMediaService mediaService)
     {
         _clinicRepository = clinicRepository;
         _clinicOnBoardingRequestRepository = clinicOnBoardingRequestRepository;
         _mailService = mailService;
+        _mediaService = mediaService;
         // _userRepository = userRepository;
     }
 
@@ -83,6 +85,15 @@ public class ClinicApplyCommandHandler : ICommandHandler<CONTRACT.Services.Clini
         }
         else
         {
+            var uploadPromises = await Task.WhenAll(
+                _mediaService.UploadImageAsync(request.BusinessLicense),
+                _mediaService.UploadImageAsync(request.OperatingLicense),
+                _mediaService.UploadImageAsync(request.ProfilePictureUrl)
+            );
+            var businessLicenseUrl = uploadPromises[0];
+            var operatingLicenseUrl = uploadPromises[1];
+            var profilePictureUrl = uploadPromises[2];
+            
             var clinic = new DOMAIN.Entities.Clinics()
             {
                 Id = Guid.NewGuid(),
@@ -91,11 +102,11 @@ public class ClinicApplyCommandHandler : ICommandHandler<CONTRACT.Services.Clini
                 Address = request.Address,
                 PhoneNumber = request.PhoneNumber,
                 TaxCode = request.TaxCode,
-                BusinessLicenseUrl = request.BusinessLicenseUrl,
-                OperatingLicenseUrl = request.OperatingLicenseUrl,
+                BusinessLicenseUrl = businessLicenseUrl,
+                OperatingLicenseUrl = operatingLicenseUrl,
                 IsParent = true,
                 Status = 0,
-                ProfilePictureUrl = request.ProfilePictureUrl,
+                ProfilePictureUrl = profilePictureUrl,
                 TotalApply = 1,
                 OperatingLicenseExpiryDate = DateTimeOffset.Parse(request.OperatingLicenseExpiryDate),
             };

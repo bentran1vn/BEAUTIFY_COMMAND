@@ -69,6 +69,12 @@ builder.Services.ConfigureMailOptionsInfrastucture(builder.Configuration.GetSect
 // Add Middleware => Remember using middleware
 builder.Services.AddTransient<ExceptionHandlingMiddleware>();
 
+builder.Services.AddAntiforgery(options =>
+{
+    // Optional: Configure anti-forgery options if needed
+    options.HeaderName = "X-CSRF-TOKEN"; // Default header for token validation
+});
+
 var app = builder.Build();
 
 // Using middleware
@@ -85,6 +91,7 @@ app.UseCors("CorsPolicy");
 app.UseAuthentication(); // Need to be before app.UseAuthorization();
 app.UseAuthorization();
 
+app.UseAntiforgery();
 
 // Add API Endpoint with carter module
 app.MapCarter();

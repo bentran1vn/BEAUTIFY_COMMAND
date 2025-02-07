@@ -27,21 +27,18 @@ public class ClinicApplyCommandValidators : AbstractValidator<Commands.ClinicApp
         RuleFor(x => x.TaxCode)
             .NotEmpty().WithMessage("Tax code is required");
 
-        RuleFor(x => x.BusinessLicenseUrl)
-            .NotEmpty().WithMessage("Business License URL is required")
-            .Must(BeAValidUrl).WithMessage("Invalid Business License URL format");
+        RuleFor(x => x.BusinessLicense)
+            .NotEmpty().WithMessage("Business License URL is required");
 
-        RuleFor(x => x.OperatingLicenseUrl)
-            .NotEmpty().WithMessage("Operating License URL is required")
-            .Must(BeAValidUrl).WithMessage("Invalid Operating License URL format");
+        RuleFor(x => x.OperatingLicense)
+            .NotEmpty().WithMessage("Operating License URL is required");
 
         RuleFor(x => x.OperatingLicenseExpiryDate)
             .NotEmpty().WithMessage("Operating License Expiry Date is required")
             .Must(BeAValidDate).WithMessage("Invalid date format");
 
         RuleFor(x => x.ProfilePictureUrl)
-            .NotEmpty().WithMessage("Profile Picture URL is required")
-            .Must(BeAValidUrl).WithMessage("Invalid Profile Picture URL format");
+            .NotEmpty().WithMessage("Profile Picture URL is required");
     }
     
     private bool BeAValidUrl(string url)
