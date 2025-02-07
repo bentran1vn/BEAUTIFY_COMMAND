@@ -4,6 +4,7 @@ using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Models;
 
 namespace BEAUTIFY_COMMAND.PRESENTATION.APIs.Clinics;
+[IgnoreAntiforgeryToken]
 public class ClinicApi : ApiEndpoint, ICarterModule
 {
     private const string BaseUrl = "/api/v{version:apiVersion}/clinics";
@@ -14,6 +15,7 @@ public class ClinicApi : ApiEndpoint, ICarterModule
             .MapGroup(BaseUrl).HasApiVersion(1);
         
         gr1.MapPost("apply", ClinicApply)
+            .DisableAntiforgery()
             .WithName("apply")
             .WithSummary("New Clinic send a request to Join System.")
             .WithDescription("Clinics can send a request to join a clinic." +
@@ -26,34 +28,57 @@ public class ClinicApi : ApiEndpoint, ICarterModule
                     {
                         Content =
                         {
-                            ["application/json"] = new OpenApiMediaType
+                            ["multipart/form-data"] = new OpenApiMediaType
                             {
-                                Example = new OpenApiString(JsonSerializer.Serialize(new Commands.ClinicApplyCommand(
-                                    "Thẩm mĩ viện Hướng Dương",
-                                    "tan11105@gmail.com",
-                                    "+84983460123",
-                                    "Biên Hoà, Đồng Nai",
-                                    "123123",
-                                    "https://www.facebook.com/bentran1vn/?locale=vi_VN",
-                                    "https://www.facebook.com/bentran1vn/?locale=vi_VN",
-                                    "2025-12-31",
-                                    "https://www.facebook.com/bentran1vn/?locale=vi_VN"
-                                )))
+                                Schema = new OpenApiSchema
+                                {
+                                    Type = "object",
+                                    Properties = new Dictionary<string, OpenApiSchema>
+                                    {
+                                        { "Name", new OpenApiSchema { Type = "string", Example = new OpenApiString("Thẩm mĩ viện Hướng Dương") } },
+                                        { "Email", new OpenApiSchema { Type = "string", Format = "email", Example = new OpenApiString("tan11105@gmail.com") } },
+                                        { "PhoneNumber", new OpenApiSchema { Type = "string", Format = "phone", Example = new OpenApiString("+84983460123") } },
+                                        { "Address", new OpenApiSchema { Type = "string", Example = new OpenApiString("Biên Hoà, Đồng Nai") } },
+                                        { "TaxCode", new OpenApiSchema { Type = "string", Example = new OpenApiString("123123") } },
+                                        { "BusinessLicense", new OpenApiSchema { Type = "string", Format = "binary" } },
+                                        { "OperatingLicense", new OpenApiSchema { Type = "string", Format = "binary" } },
+                                        { "OperatingLicenseExpiryDate", new OpenApiSchema { Type = "string", Format = "date", Example = new OpenApiString("2025-12-31") } },
+                                        { "ProfilePictureUrl", new OpenApiSchema { Type = "string", Format = "binary" } }
+                                    }
+                                }
                             }
                         }
                     }
                 }
             );
+        
         gr1.MapPut("apply/{id}", ResponseClinicApply)
             .WithName("Response Apply Request")
             .WithSummary("Admin Response Apply Request.")
             .WithDescription("With Action = 0 is Approve, Action = 1 is Reject, Action = 2 is Banned." +
                              " With Action 1 and 2, reject reason must be included." +
                              " Id in the path with RequestId in the request body must be same.");
+        // .RequireAuthorization()
+        
+        gr1.MapPut("{id}", UpdateClinic)
+            .DisableAntiforgery()
+            .WithName("Update Clinic Information")
+            .WithSummary("Update Clinic Information.")
+            .WithDescription("");
             // .RequireAuthorization()
     }
     
-    private static async Task<IResult> ClinicApply(ISender sender, [FromBody] Commands.ClinicApplyCommand command)
+    private static async Task<IResult> ClinicApply(ISender sender, [FromForm] Commands.ClinicApplyCommand command)
+    {
+        var result = await sender.Send(command);
+
+        if (result.IsFailure)
+            return HandlerFailure(result);
+
+        return Results.Ok(result);
+    }
+    
+    private static async Task<IResult> UpdateClinic(ISender sender, [FromForm] Commands.UpdateClinicCommand command)
     {
         var result = await sender.Send(command);
 
