@@ -74,9 +74,9 @@ public class ProcessOutboxMessagesJob : IJob
                             });
                         await _publishEndpoint.Publish(subscriptionDeleted, context.CancellationToken);
                         break;
-                    case nameof(DomainEvents.SubscriptionStatusActivationChanged):
+                    case nameof(SubscriptionsDomainEvent.SubscriptionStatusActivationChanged):
                         var subscriptionActivated =
-                            JsonConvert.DeserializeObject<DomainEvents.SubscriptionStatusActivationChanged>(
+                            JsonConvert.DeserializeObject<SubscriptionsDomainEvent.SubscriptionStatusActivationChanged>(
                                 outboxMessage.Content,
                                 new JsonSerializerSettings
                                 {
