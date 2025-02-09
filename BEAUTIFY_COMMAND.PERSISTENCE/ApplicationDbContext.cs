@@ -22,5 +22,12 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
 
         builder.Entity<SubscriptionPackage>()
             .HasQueryFilter(x => !x.IsDeleted);
+        builder.Entity<Role>()
+            .HasData(
+                new Role { Id = Guid.NewGuid(), Name = "Admin" },
+                new Role { Id = Guid.NewGuid(), Name = "Doctor" },
+                new Role { Id = Guid.NewGuid(), Name = "Customer" },
+                new Role { Id = Guid.NewGuid(), Name = "Staff" }
+            );
     }
 }

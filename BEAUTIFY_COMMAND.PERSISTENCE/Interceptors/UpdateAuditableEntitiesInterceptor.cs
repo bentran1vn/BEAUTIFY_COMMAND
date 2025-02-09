@@ -43,7 +43,7 @@ public sealed class UpdateAuditableEntitiesInterceptor
                     = TimeZoneInfo.ConvertTime(DateTimeOffset.UtcNow, vietnamTimeZone);
             }
         }
-
+       
         return base.SavingChangesAsync(
             eventData,
             result,

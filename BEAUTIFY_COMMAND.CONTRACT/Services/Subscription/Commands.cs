@@ -5,10 +5,9 @@ public static class Commands
 {
     public record CreateSubscriptionCommand(string Name, string Description, decimal Price, int Duration) : ICommand;
 
-    public record UpdateSubscriptionCommand(Guid Id, string Name, string Description, decimal Price, int Duration)
+    public record UpdateSubscriptionCommand(Guid Id, string Name, string Description, decimal Price, int Duration,bool IsActivated)
         : ICommand;
 
     public record DeleteSubscriptionCommand(Guid Id) : ICommand;
-
-    public record ChangeSubscriptionActivationCommand(Guid Id) : ICommand;
+    
 }
