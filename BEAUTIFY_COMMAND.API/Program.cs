@@ -1,3 +1,4 @@
+using BEAUTIFY_COMMAND.API.DependencyInjection.Extensions;
 using BEAUTIFY_COMMAND.API.Middlewares;
 using BEAUTIFY_COMMAND.APPLICATION.DependencyInjection.Extensions;
 using BEAUTIFY_COMMAND.INFRASTRUCTURE.DependencyInjection.Extensions;
@@ -38,7 +39,7 @@ builder.Services
         options.SubstituteApiVersionInUrl = true;
     });
 
-builder.Services.ConfigureCors();
+builder.Services.ConfigureCors1();
 
 // API Layer
 builder.Services.AddJwtAuthenticationAPI(builder.Configuration);

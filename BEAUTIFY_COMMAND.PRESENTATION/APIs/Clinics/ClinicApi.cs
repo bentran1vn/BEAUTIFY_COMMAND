@@ -64,8 +64,8 @@ public class ClinicApi : ApiEndpoint, ICarterModule
             .DisableAntiforgery()
             .WithName("Update Clinic Information")
             .WithSummary("Update Clinic Information.")
-            .WithDescription("");
-            // .RequireAuthorization()
+            .WithDescription("")
+            .RequireAuthorization();
     }
     
     private static async Task<IResult> ClinicApply(ISender sender, [FromForm] Commands.ClinicApplyCommand command)
