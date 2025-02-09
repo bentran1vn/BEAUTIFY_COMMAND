@@ -10,7 +10,7 @@ public class SubscriptionPackage : AggregateRoot<Guid>, IAuditableEntity
     [MaxLength(200)] public required string Description { get; set; }
     [Column(TypeName = "decimal(18,2)")] public required decimal Price { get; set; }
     public required int Duration { get; set; }
-    public bool IsActivated { get; set; } = false;
+    public bool IsActivated { get; set; }
     public DateTimeOffset CreatedOnUtc { get; set; }
     public DateTimeOffset? ModifiedOnUtc { get; set; }
 
@@ -92,24 +92,15 @@ public class SubscriptionPackage : AggregateRoot<Guid>, IAuditableEntity
             Guid.NewGuid(),
             Id));
     }
-    public void ActivateSubscription()
+    public void ChangeSubscriptionActivation()
     {
-        IsActivated = true;
+        IsActivated = !IsActivated;
         ModifiedOnUtc = DateTimeOffset.UtcNow;
 
         // Raise domain event for activation
-        RaiseDomainEvent(new DomainEvents.SubscriptionActivated(
+        RaiseDomainEvent(new DomainEvents.SubscriptionStatusActivationChanged(
             Guid.NewGuid(),
             Id));
     }
-    public void DeactivateSubscription()
-    {
-        IsActivated = false;
-        ModifiedOnUtc = DateTimeOffset.UtcNow;
 
-        // Raise domain event for deactivation
-        RaiseDomainEvent(new DomainEvents.SubscriptionDeactivated(
-            Guid.NewGuid(),
-            Id));
-    }
 }
