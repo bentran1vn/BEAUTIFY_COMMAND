@@ -73,24 +73,15 @@ public class ProcessOutboxMessagesJob : IJob
                             });
                         await _publishEndpoint.Publish(subscriptionDeleted, context.CancellationToken);
                         break;
-                    case nameof(DomainEvents.SubscriptionActivated):
-                        var subscriptionActivated = JsonConvert.DeserializeObject<DomainEvents.SubscriptionActivated>(
-                            outboxMessage.Content,
-                            new JsonSerializerSettings
-                            {
-                                TypeNameHandling = TypeNameHandling.All
-                            });
-                        await _publishEndpoint.Publish(subscriptionActivated, context.CancellationToken);
-                        break;
-                    case nameof(DomainEvents.SubscriptionDeactivated):
-                        var subscriptionDeactivated =
-                            JsonConvert.DeserializeObject<DomainEvents.SubscriptionDeactivated>(
+                    case nameof(DomainEvents.SubscriptionStatusActivationChanged):
+                        var subscriptionActivated =
+                            JsonConvert.DeserializeObject<DomainEvents.SubscriptionStatusActivationChanged>(
                                 outboxMessage.Content,
                                 new JsonSerializerSettings
                                 {
                                     TypeNameHandling = TypeNameHandling.All
                                 });
-                        await _publishEndpoint.Publish(subscriptionDeactivated, context.CancellationToken);
+                        await _publishEndpoint.Publish(subscriptionActivated, context.CancellationToken);
                         break;
                 }
 

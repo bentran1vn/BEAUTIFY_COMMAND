@@ -10,7 +10,5 @@ public static class Commands
 
     public record DeleteSubscriptionCommand(Guid Id) : ICommand;
 
-    public record ActivateSubscriptionCommand(Guid Id) : ICommand;
-
-    public record DeactivateSubscriptionCommand(Guid Id) : ICommand;
+    public record ChangeSubscriptionActivationCommand(Guid Id) : ICommand;
 }
