@@ -1,4 +1,5 @@
 ﻿using BEAUTIFY_COMMAND.CONTRACT.Services.Subscription;
+using BEAUTIFY_PACKAGES.BEAUTIFY_PACKAGES.PRESENTATION.Abstractions.Extention;
 
 namespace BEAUTIFY_COMMAND.PRESENTATION.APIs.Subscriptions;
 public class SubscriptionApi : ApiEndpoint, ICarterModule
@@ -10,37 +11,31 @@ public class SubscriptionApi : ApiEndpoint, ICarterModule
         var gr1 = app.NewVersionedApi("Subscriptions")
             .MapGroup(BaseUrl).HasApiVersion(1);
 
-        gr1.MapPost("", CreateSubscription);
-        gr1.MapPut("", UpdateSubscription);
-        gr1.MapDelete("", DeleteSubscription);
-        gr1.MapPut("{id:guid}/change-status", ActivateSubscription);
+        gr1.MapPost(string.Empty, CreateSubscription);
+        gr1.MapPut("{id:guid}", UpdateSubscription);
+        gr1.MapDelete("{id:guid}", DeleteSubscription);
     }
 
     private static async Task<IResult> CreateSubscription(ISender sender,
-        [FromBody] Commands.CreateSubscriptionCommand command)
+        Commands.CreateSubscriptionCommand command)
     {
         var result = await sender.Send(command);
         return result.IsFailure ? HandlerFailure(result) : Results.Ok(result);
     }
 
     private static async Task<IResult> UpdateSubscription(ISender sender,
+        Guid id,
         [FromBody] Commands.UpdateSubscriptionCommand command)
     {
-        var result = await sender.Send(command);
+        var result = await sender.Send(command with { Id = id });
         return result.IsFailure ? HandlerFailure(result) : Results.Ok(result);
     }
 
     private static async Task<IResult> DeleteSubscription(ISender sender,
-        [FromBody] Commands.DeleteSubscriptionCommand command)
+        Guid id)
     {
-        var result = await sender.Send(command);
+        var result = await sender.Send(new Commands.DeleteSubscriptionCommand(id));
         return result.IsFailure ? HandlerFailure(result) : Results.Ok(result);
     }
 
-    private static async Task<IResult> ActivateSubscription(ISender sender,
-        Guid id)
-    {
-        var result = await sender.Send(new Commands.ChangeSubscriptionActivationCommand(id));
-        return result.IsFailure ? HandlerFailure(result) : Results.Ok(result);
-    }
 }

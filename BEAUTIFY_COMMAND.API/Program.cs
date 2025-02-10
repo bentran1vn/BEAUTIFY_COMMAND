@@ -4,6 +4,7 @@ using BEAUTIFY_COMMAND.APPLICATION.DependencyInjection.Extensions;
 using BEAUTIFY_COMMAND.INFRASTRUCTURE.DependencyInjection.Extensions;
 using BEAUTIFY_COMMAND.PERSISTENCE.DependencyInjection.Extensions;
 using BEAUTIFY_PACKAGES.BEAUTIFY_PACKAGES.API.DependencyInjection.Extensions;
+using BEAUTIFY_PACKAGES.BEAUTIFY_PACKAGES.DOMAIN.Abstractions.Repositories;
 using BEAUTIFY_PACKAGES.BEAUTIFY_PACKAGES.INFRASTRUCTURE.DependencyInjection.Options;
 using BEAUTIFY_PACKAGES.BEAUTIFY_PACKAGES.PERSISTENCE.DependencyInjection.Options;
 using Carter;
@@ -69,7 +70,7 @@ builder.Services.ConfigureMailOptionsInfrastucture(builder.Configuration.GetSect
 
 // Add Middleware => Remember using middleware
 builder.Services.AddTransient<ExceptionHandlingMiddleware>();
-
+// builder.Services.AddTransient<ICurrentUserService,CurrentUserService>();
 builder.Services.AddAntiforgery(options =>
 {
     // Optional: Configure anti-forgery options if needed

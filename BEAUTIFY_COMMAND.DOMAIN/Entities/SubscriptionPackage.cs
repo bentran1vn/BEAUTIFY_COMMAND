@@ -58,13 +58,15 @@ public class SubscriptionPackage : AggregateRoot<Guid>, IAuditableEntity
         string name,
         string description,
         decimal price,
-        int duration)
+        int duration,
+        bool isActivated)
     {
         Name = name;
         Description = description;
         Price = price;
         Duration = duration;
         ModifiedOnUtc = DateTimeOffset.UtcNow;
+        IsActivated = isActivated;
 
         // Raise domain event for update
         RaiseDomainEvent(new DomainEvents.SubscriptionUpdated(
@@ -92,15 +94,6 @@ public class SubscriptionPackage : AggregateRoot<Guid>, IAuditableEntity
             Guid.NewGuid(),
             Id));
     }
-    public void ChangeSubscriptionActivation()
-    {
-        IsActivated = !IsActivated;
-        ModifiedOnUtc = DateTimeOffset.UtcNow;
-
-        // Raise domain event for activation
-        RaiseDomainEvent(new DomainEvents.SubscriptionStatusActivationChanged(
-            Guid.NewGuid(),
-            Id));
-    }
+    
 
 }
