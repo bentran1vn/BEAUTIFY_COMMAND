@@ -39,10 +39,10 @@ builder.Services
         options.SubstituteApiVersionInUrl = true;
     });
 
-builder.Services.ConfigureCors1();
+builder.Services.ConfigureCors();
 
 // API Layer
-builder.Services.AddJwtAuthenticationAPI(builder.Configuration);
+builder.Services.AddJwtAuthenticationAPI1(builder.Configuration);
 builder.Services.AddTransient<ExceptionHandlingMiddleware>();
 builder.Services.AddHttpContextAccessor();
 
