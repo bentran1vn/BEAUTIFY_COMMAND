@@ -13,15 +13,15 @@ public class ClinicApi : ApiEndpoint, ICarterModule
     {
         var gr1 = app.NewVersionedApi("Clinics")
             .MapGroup(BaseUrl).HasApiVersion(1);
-
+        
         gr1.MapPost("apply", ClinicApply)
             .DisableAntiforgery()
             .WithName("apply")
             .WithSummary("New Clinic send a request to Join System.")
             .WithDescription("Clinics can send a request to join a clinic." +
-                             " Clinic can apply multiple times when clinic request was rejected (Each apply time is" +
-                             " 30 days apart). If Clinic is banned user can not send request again." +
-                             "A clinics when apply again must send email, phone number, tax code same with the last request.")
+                " Clinic can apply multiple times when clinic request was rejected (Each apply time is" +
+                " 30 days apart). If Clinic is banned user can not send request again." +
+                "A clinics when apply again must send email, phone number, tax code same with the last request.")
             .WithOpenApi(operation => new(operation)
                 {
                     RequestBody = new OpenApiRequestBody()
@@ -35,54 +35,15 @@ public class ClinicApi : ApiEndpoint, ICarterModule
                                     Type = "object",
                                     Properties = new Dictionary<string, OpenApiSchema>
                                     {
-                                        {
-                                            "Name",
-                                            new OpenApiSchema
-                                            {
-                                                Type = "string", Example = new OpenApiString("Thẩm mĩ viện Hướng Dương")
-                                            }
-                                        },
-                                        {
-                                            "Email",
-                                            new OpenApiSchema
-                                            {
-                                                Type = "string", Format = "email",
-                                                Example = new OpenApiString("tan11105@gmail.com")
-                                            }
-                                        },
-                                        {
-                                            "PhoneNumber",
-                                            new OpenApiSchema
-                                            {
-                                                Type = "string", Format = "phone",
-                                                Example = new OpenApiString("+84983460123")
-                                            }
-                                        },
-                                        {
-                                            "Address",
-                                            new OpenApiSchema
-                                                { Type = "string", Example = new OpenApiString("Biên Hoà, Đồng Nai") }
-                                        },
-                                        {
-                                            "TaxCode",
-                                            new OpenApiSchema { Type = "string", Example = new OpenApiString("123123") }
-                                        },
+                                        { "Name", new OpenApiSchema { Type = "string", Example = new OpenApiString("Thẩm mĩ viện Hướng Dương") } },
+                                        { "Email", new OpenApiSchema { Type = "string", Format = "email", Example = new OpenApiString("tan11105@gmail.com") } },
+                                        { "PhoneNumber", new OpenApiSchema { Type = "string", Format = "phone", Example = new OpenApiString("+84983460123") } },
+                                        { "Address", new OpenApiSchema { Type = "string", Example = new OpenApiString("Biên Hoà, Đồng Nai") } },
+                                        { "TaxCode", new OpenApiSchema { Type = "string", Example = new OpenApiString("123123") } },
                                         { "BusinessLicense", new OpenApiSchema { Type = "string", Format = "binary" } },
-                                        {
-                                            "OperatingLicense", new OpenApiSchema { Type = "string", Format = "binary" }
-                                        },
-                                        {
-                                            "OperatingLicenseExpiryDate",
-                                            new OpenApiSchema
-                                            {
-                                                Type = "string", Format = "date",
-                                                Example = new OpenApiString("2025-12-31")
-                                            }
-                                        },
-                                        {
-                                            "ProfilePictureUrl",
-                                            new OpenApiSchema { Type = "string", Format = "binary" }
-                                        }
+                                        { "OperatingLicense", new OpenApiSchema { Type = "string", Format = "binary" } },
+                                        { "OperatingLicenseExpiryDate", new OpenApiSchema { Type = "string", Format = "date", Example = new OpenApiString("2025-12-31") } },
+                                        { "ProfilePictureUrl", new OpenApiSchema { Type = "string", Format = "binary" } }
                                     }
                                 }
                             }
@@ -90,7 +51,7 @@ public class ClinicApi : ApiEndpoint, ICarterModule
                     }
                 }
             );
-
+        
         gr1.MapPut("apply/{id}", ResponseClinicApply)
             .WithName("Response Apply Request")
             .WithSummary("Admin Response Apply Request.")
@@ -98,15 +59,15 @@ public class ClinicApi : ApiEndpoint, ICarterModule
                              " With Action 1 and 2, reject reason must be included." +
                              " Id in the path with RequestId in the request body must be same.");
         // .RequireAuthorization()
-
+        
         gr1.MapPut("{id}", UpdateClinic)
             .DisableAntiforgery()
             .WithName("Update Clinic Information")
             .WithSummary("Update Clinic Information.")
-            .WithDescription("");
-            
+            .WithDescription("")
+            .RequireAuthorization();
     }
-
+    
     private static async Task<IResult> ClinicApply(ISender sender, [FromForm] Commands.ClinicApplyCommand command)
     {
         var result = await sender.Send(command);
@@ -116,7 +77,7 @@ public class ClinicApi : ApiEndpoint, ICarterModule
 
         return Results.Ok(result);
     }
-
+    
     private static async Task<IResult> UpdateClinic(ISender sender, [FromForm] Commands.UpdateClinicCommand command)
     {
         var result = await sender.Send(command);
@@ -126,12 +87,11 @@ public class ClinicApi : ApiEndpoint, ICarterModule
 
         return Results.Ok(result);
     }
-
-    private static async Task<IResult> ResponseClinicApply(ISender sender, string id,
-        [FromBody] Commands.ResponseClinicApplyCommand command)
+    
+    private static async Task<IResult> ResponseClinicApply(ISender sender, string id, [FromBody] Commands.ResponseClinicApplyCommand command)
     {
-        if (command.RequestId != id) return Results.BadRequest();
-
+        if(command.RequestId != id) return Results.BadRequest();
+        
         var result = await sender.Send(command);
 
         if (result.IsFailure)

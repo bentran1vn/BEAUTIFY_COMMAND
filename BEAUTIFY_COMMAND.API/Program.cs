@@ -1,3 +1,4 @@
+using BEAUTIFY_COMMAND.API.DependencyInjection.Extensions;
 using BEAUTIFY_COMMAND.API.Middlewares;
 using BEAUTIFY_COMMAND.APPLICATION.DependencyInjection.Extensions;
 using BEAUTIFY_COMMAND.INFRASTRUCTURE.DependencyInjection.Extensions;
@@ -42,7 +43,7 @@ builder.Services
 builder.Services.ConfigureCors();
 
 // API Layer
-builder.Services.AddJwtAuthenticationAPI(builder.Configuration);
+builder.Services.AddJwtAuthenticationAPI1(builder.Configuration);
 builder.Services.AddTransient<ExceptionHandlingMiddleware>();
 builder.Services.AddHttpContextAccessor();
 
