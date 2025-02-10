@@ -22,7 +22,7 @@ public class CreateSubscriptionCommandHandler(
         var user = await userRepository.FindSingleAsync(x => x.Id == request.UserId, cancellationToken);
         if (user == null)
             throw new UnauthorizedAccessException();
-        if (user.Role.Name != Constant.DOCTOR)
+        if (user.Role?.Name != Constant.DOCTOR)
             throw new UnauthorizedAccessException();
         // check if doctor certificate already exist
         var doctorCertificate = await doctorCertificateRepository.FindSingleAsync(
