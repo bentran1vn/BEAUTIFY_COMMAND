@@ -13,6 +13,7 @@ public class SubscriptionApi : ApiEndpoint, ICarterModule
         gr1.MapPost(string.Empty, CreateSubscription);
         gr1.MapPut("{id:guid}", UpdateSubscription);
         gr1.MapDelete("{id:guid}", DeleteSubscription);
+        gr1.MapPut("change-status/{id:guid}", ChangeStatusSubscription);
     }
 
     private static async Task<IResult> CreateSubscription(ISender sender,
@@ -34,6 +35,13 @@ public class SubscriptionApi : ApiEndpoint, ICarterModule
         Guid id)
     {
         var result = await sender.Send(new Commands.DeleteSubscriptionCommand(id));
+        return result.IsFailure ? HandlerFailure(result) : Results.Ok(result);
+    }
+
+    private static async Task<IResult> ChangeStatusSubscription(ISender sender,
+        Guid id)
+    {
+        var result = await sender.Send(new Commands.ChangeStatusSubscriptionCommand(id));
         return result.IsFailure ? HandlerFailure(result) : Results.Ok(result);
     }
 }

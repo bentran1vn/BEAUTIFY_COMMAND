@@ -2,7 +2,7 @@ using BEAUTIFY_COMMAND.PERSISTENCE;
 using BEAUTIFY_COMMAND.PERSISTENCE.Outbox;
 using BEAUTIFY_PACKAGES.BEAUTIFY_PACKAGES.CONTRACT.Abstractions.Messages;
 using SubscriptionsDomainEvent = BEAUTIFY_PACKAGES.BEAUTIFY_PACKAGES.CONTRACT.Services.Subscriptions.DomainEvents;
-using PostgreMigrateDomainEvent =  BEAUTIFY_PACKAGES.BEAUTIFY_PACKAGES.CONTRACT.Services.CommandConverts.DomainEvents;
+using PostgreMigrateDomainEvent = BEAUTIFY_PACKAGES.BEAUTIFY_PACKAGES.CONTRACT.Services.CommandConverts.DomainEvents;
 using MassTransit;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
@@ -48,30 +48,33 @@ public class ProcessOutboxMessagesJob : IJob
                 switch (domainEvent.GetType().Name)
                 {
                     case nameof(SubscriptionsDomainEvent.SubscriptionCreated):
-                        var subscriptionCreated = JsonConvert.DeserializeObject<SubscriptionsDomainEvent.SubscriptionCreated>(
-                            outboxMessage.Content,
-                            new JsonSerializerSettings
-                            {
-                                TypeNameHandling = TypeNameHandling.All
-                            });
+                        var subscriptionCreated =
+                            JsonConvert.DeserializeObject<SubscriptionsDomainEvent.SubscriptionCreated>(
+                                outboxMessage.Content,
+                                new JsonSerializerSettings
+                                {
+                                    TypeNameHandling = TypeNameHandling.All
+                                });
                         await _publishEndpoint.Publish(subscriptionCreated, context.CancellationToken);
                         break;
                     case nameof(SubscriptionsDomainEvent.SubscriptionUpdated):
-                        var subscriptionUpdated = JsonConvert.DeserializeObject<SubscriptionsDomainEvent.SubscriptionUpdated>(
-                            outboxMessage.Content,
-                            new JsonSerializerSettings
-                            {
-                                TypeNameHandling = TypeNameHandling.All
-                            });
+                        var subscriptionUpdated =
+                            JsonConvert.DeserializeObject<SubscriptionsDomainEvent.SubscriptionUpdated>(
+                                outboxMessage.Content,
+                                new JsonSerializerSettings
+                                {
+                                    TypeNameHandling = TypeNameHandling.All
+                                });
                         await _publishEndpoint.Publish(subscriptionUpdated, context.CancellationToken);
                         break;
                     case nameof(SubscriptionsDomainEvent.SubscriptionDeleted):
-                        var subscriptionDeleted = JsonConvert.DeserializeObject<SubscriptionsDomainEvent.SubscriptionDeleted>(
-                            outboxMessage.Content,
-                            new JsonSerializerSettings
-                            {
-                                TypeNameHandling = TypeNameHandling.All
-                            });
+                        var subscriptionDeleted =
+                            JsonConvert.DeserializeObject<SubscriptionsDomainEvent.SubscriptionDeleted>(
+                                outboxMessage.Content,
+                                new JsonSerializerSettings
+                                {
+                                    TypeNameHandling = TypeNameHandling.All
+                                });
                         await _publishEndpoint.Publish(subscriptionDeleted, context.CancellationToken);
                         break;
                     case nameof(PostgreMigrateDomainEvent.PostgreMigrate):
@@ -83,6 +86,16 @@ public class ProcessOutboxMessagesJob : IJob
                                     TypeNameHandling = TypeNameHandling.All
                                 });
                         await _publishEndpoint.Publish(postgreMigrate, context.CancellationToken);
+                        break;
+                    case nameof(SubscriptionsDomainEvent.SubscriptionStatusActivationChanged):
+                        var subscriptionStatusActivationChanged =
+                            JsonConvert.DeserializeObject<SubscriptionsDomainEvent.SubscriptionStatusActivationChanged>(
+                                outboxMessage.Content,
+                                new JsonSerializerSettings
+                                {
+                                    TypeNameHandling = TypeNameHandling.All
+                                });
+                        await _publishEndpoint.Publish(subscriptionStatusActivationChanged, context.CancellationToken);
                         break;
                 }
 
