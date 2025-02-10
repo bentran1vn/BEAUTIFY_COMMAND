@@ -5,10 +5,10 @@ namespace BEAUTIFY_COMMAND.APPLICATION.UseCases.Commands.Clinics;
 
 public class UpdateClinicCommandHandler : ICommandHandler<CONTRACT.Services.Clinics.Commands.UpdateClinicCommand>
 {
-    private readonly IRepositoryBase<DOMAIN.Entities.Clinics, Guid> _clinicRepository;
+    private readonly IRepositoryBase<DOMAIN.Entities.Clinic, Guid> _clinicRepository;
     private readonly IMediaService _mediaService;
 
-    public UpdateClinicCommandHandler(IRepositoryBase<DOMAIN.Entities.Clinics, Guid> clinicRepository, IMediaService mediaService)
+    public UpdateClinicCommandHandler(IRepositoryBase<DOMAIN.Entities.Clinic, Guid> clinicRepository, IMediaService mediaService)
     {
         _clinicRepository = clinicRepository;
         _mediaService = mediaService;

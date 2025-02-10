@@ -1,5 +1,4 @@
 ﻿using BEAUTIFY_COMMAND.CONTRACT.Services.Subscription;
-using BEAUTIFY_PACKAGES.BEAUTIFY_PACKAGES.PRESENTATION.Abstractions.Extention;
 
 namespace BEAUTIFY_COMMAND.PRESENTATION.APIs.Subscriptions;
 public class SubscriptionApi : ApiEndpoint, ICarterModule
@@ -37,5 +36,4 @@ public class SubscriptionApi : ApiEndpoint, ICarterModule
         var result = await sender.Send(new Commands.DeleteSubscriptionCommand(id));
         return result.IsFailure ? HandlerFailure(result) : Results.Ok(result);
     }
-
 }

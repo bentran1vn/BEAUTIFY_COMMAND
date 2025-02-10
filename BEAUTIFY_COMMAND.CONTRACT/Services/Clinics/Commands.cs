@@ -5,12 +5,24 @@ using Microsoft.AspNetCore.Http;
 namespace BEAUTIFY_COMMAND.CONTRACT.Services.Clinics;
 public static class Commands
 {
+    #region ClinicApplyCommand
+
     public record ClinicApplyCommand(
-        string Name, string Email, string PhoneNumber, string Address, string TaxCode,
-        IFormFile BusinessLicense, IFormFile OperatingLicense, string OperatingLicenseExpiryDate,
+        string Name,
+        string Email,
+        string PhoneNumber,
+        string Address,
+        string TaxCode,
+        IFormFile BusinessLicense,
+        IFormFile OperatingLicense,
+        string OperatingLicenseExpiryDate,
         IFormFile ProfilePictureUrl
     ) : ICommand;
-    
+
+    #endregion
+
+    #region UpdateClinicCommand
+
     public class UpdateClinicCommand : ICommand
     {
         public string ClinicId { get; set; }
@@ -20,9 +32,54 @@ public static class Commands
         public IFormFile? ProfilePicture { get; set; }
         public bool? IsActivated { get; set; }
     }
-    
+
+    #endregion
+
+    #region ResponseClinicApplyCommand
+
     public record ResponseClinicApplyCommand(
-        string RequestId , string? RejectReason, int Action
+        string RequestId,
+        string? RejectReason,
+        int Action
         // 0 Approve, 1 Reject, 2 Banned
     ) : ICommand;
+
+    #endregion
+
+
+    #region ClinicCreateAccountForEmployeeCommand
+
+    public record ClinicCreateAccountForEmployeeCommand(
+        Guid ClinicId,
+        string Email,
+        string Password,
+        string FirstName,
+        string LastName,
+        Guid RoleId
+    ) : ICommand;
+
+    #endregion
+
+    #region ClinicDeleteAccountOfEmployeeCommand
+
+    public record ClinicDeleteAccountOfEmployeeCommand(
+        Guid ClinicId,
+        Guid UserId
+    ) : ICommand;
+
+    #endregion
+
+    #region ClinicUpdateAccountOfEmployeeCommand
+
+    public class ClinicUpdateAccountOfEmployeeCommand : ICommand
+    {
+        public Guid UserId { get; set; }
+        public string Address { get;set; }
+        public string PhoneNumber { get;set; }
+        public string FirstName { get;set; }
+        public string LastName { get;set; }
+        public IFormFile? ProfilePicture { get;set; }
+    }
+
+    #endregion
 }

@@ -1,5 +1,6 @@
 using BEAUTIFY_COMMAND.DOMAIN.Entities;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
 namespace BEAUTIFY_COMMAND.PERSISTENCE;
 public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : DbContext(options)
@@ -29,5 +30,6 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
                 new Role { Id = Guid.NewGuid(), Name = "Customer" },
                 new Role { Id = Guid.NewGuid(), Name = "Staff" }
             );
+        
     }
 }

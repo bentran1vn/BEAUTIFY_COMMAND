@@ -4,13 +4,13 @@ namespace BEAUTIFY_COMMAND.APPLICATION.UseCases.Commands.Clinics;
 
 public class ClinicApplyCommandHandler : ICommandHandler<CONTRACT.Services.Clinics.Commands.ClinicApplyCommand>
 {
-    private readonly IRepositoryBase<DOMAIN.Entities.Clinics, Guid> _clinicRepository;
+    private readonly IRepositoryBase<DOMAIN.Entities.Clinic, Guid> _clinicRepository;
     // private readonly IRepositoryBase<User, Guid> _userRepository;
     private readonly IRepositoryBase<ClinicOnBoardingRequest, Guid> _clinicOnBoardingRequestRepository;
     private readonly IMailService _mailService;
     private readonly IMediaService _mediaService;
 
-    public ClinicApplyCommandHandler(IRepositoryBase<DOMAIN.Entities.Clinics, Guid> clinicRepository, IRepositoryBase<ClinicOnBoardingRequest, Guid> clinicOnBoardingRequestRepository, IMailService mailService, IMediaService mediaService)
+    public ClinicApplyCommandHandler(IRepositoryBase<DOMAIN.Entities.Clinic, Guid> clinicRepository, IRepositoryBase<ClinicOnBoardingRequest, Guid> clinicOnBoardingRequestRepository, IMailService mailService, IMediaService mediaService)
     {
         _clinicRepository = clinicRepository;
         _clinicOnBoardingRequestRepository = clinicOnBoardingRequestRepository;
@@ -94,7 +94,7 @@ public class ClinicApplyCommandHandler : ICommandHandler<CONTRACT.Services.Clini
             var operatingLicenseUrl = uploadPromises[1];
             var profilePictureUrl = uploadPromises[2];
             
-            var clinic = new DOMAIN.Entities.Clinics()
+            var clinic = new DOMAIN.Entities.Clinic()
             {
                 Id = Guid.NewGuid(),
                 Name = request.Name,

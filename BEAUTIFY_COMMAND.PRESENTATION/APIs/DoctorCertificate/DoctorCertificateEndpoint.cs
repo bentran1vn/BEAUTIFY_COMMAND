@@ -24,7 +24,7 @@ public class DoctorCertificateEndpoint : ApiEndpoint, ICarterModule
     private static async Task<IResult> UpdateDoctorCertificate(
         ISender sender,
         Guid id,
-        [FromBody] Commands.UpdateCommand command)
+        [FromForm] Commands.UpdateCommand command)
     {
         command.Id = id;
         var result = await sender.Send(command);
