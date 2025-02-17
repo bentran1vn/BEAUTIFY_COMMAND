@@ -30,7 +30,7 @@ builder.Services
     .AddSwaggerGenNewtonsoftSupport()
     .AddFluentValidationRulesToSwagger()
     .AddEndpointsApiExplorer()
-    .AddSwaggerAPI();
+    .AddSwaggerAPI1();
 
 builder.Services
     .AddApiVersioning(options => options.ReportApiVersions = true)
