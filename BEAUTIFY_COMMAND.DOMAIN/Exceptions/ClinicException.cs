@@ -7,7 +7,10 @@ public static class ClinicException
             : base($"The clinic with the id {clinicId} was not found.")
         {
         }
+
+        public ClinicNotFoundException()
+            : base($"The clinic was not found.")
+        {
+        }
     }
-    
-    
 }
