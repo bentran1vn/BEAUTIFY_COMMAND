@@ -1,6 +1,7 @@
 using BEAUTIFY_COMMAND.PERSISTENCE;
 using BEAUTIFY_COMMAND.PERSISTENCE.Outbox;
 using BEAUTIFY_PACKAGES.BEAUTIFY_PACKAGES.CONTRACT.Abstractions.Messages;
+using BEAUTIFY_PACKAGES.BEAUTIFY_PACKAGES.CONTRACT.Services.WorkingSchedules;
 using SubscriptionsDomainEvent = BEAUTIFY_PACKAGES.BEAUTIFY_PACKAGES.CONTRACT.Services.Subscriptions.DomainEvents;
 using PostgreMigrateDomainEvent = BEAUTIFY_PACKAGES.BEAUTIFY_PACKAGES.CONTRACT.Services.CommandConverts.DomainEvents;
 using MassTransit;
@@ -96,6 +97,37 @@ public class ProcessOutboxMessagesJob : IJob
                                     TypeNameHandling = TypeNameHandling.All
                                 });
                         await _publishEndpoint.Publish(subscriptionStatusActivationChanged, context.CancellationToken);
+                        break;
+
+                    case nameof(DomainEvents.WorkingScheduleCreated):
+                        var workingScheduleCreated =
+                            JsonConvert.DeserializeObject<DomainEvents.WorkingScheduleCreated>(
+                                outboxMessage.Content,
+                                new JsonSerializerSettings
+                                {
+                                    TypeNameHandling = TypeNameHandling.All
+                                });
+                        await _publishEndpoint.Publish(workingScheduleCreated, context.CancellationToken);
+                        break;
+                    case nameof(DomainEvents.WorkingScheduleDeleted):
+                        var workingScheduleDeleted =
+                            JsonConvert.DeserializeObject<DomainEvents.WorkingScheduleDeleted>(
+                                outboxMessage.Content,
+                                new JsonSerializerSettings
+                                {
+                                    TypeNameHandling = TypeNameHandling.All
+                                });
+                        await _publishEndpoint.Publish(workingScheduleDeleted, context.CancellationToken);
+                        break;
+                    case nameof(DomainEvents.WorkingScheduleUpdated):
+                        var workingScheduleUpdated =
+                            JsonConvert.DeserializeObject<DomainEvents.WorkingScheduleUpdated>(
+                                outboxMessage.Content,
+                                new JsonSerializerSettings
+                                {
+                                    TypeNameHandling = TypeNameHandling.All
+                                });
+                        await _publishEndpoint.Publish(workingScheduleUpdated, context.CancellationToken);
                         break;
                 }
 
