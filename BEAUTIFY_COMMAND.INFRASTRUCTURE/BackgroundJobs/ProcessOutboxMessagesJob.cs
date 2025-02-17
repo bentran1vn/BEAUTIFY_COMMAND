@@ -1,7 +1,6 @@
 using BEAUTIFY_COMMAND.PERSISTENCE;
 using BEAUTIFY_COMMAND.PERSISTENCE.Outbox;
 using BEAUTIFY_PACKAGES.BEAUTIFY_PACKAGES.CONTRACT.Abstractions.Messages;
-using BEAUTIFY_PACKAGES.BEAUTIFY_PACKAGES.CONTRACT.Services.WorkingSchedules;
 using SubscriptionsDomainEvent = BEAUTIFY_PACKAGES.BEAUTIFY_PACKAGES.CONTRACT.Services.Subscriptions.DomainEvents;
 using PostgreMigrateDomainEvent = BEAUTIFY_PACKAGES.BEAUTIFY_PACKAGES.CONTRACT.Services.CommandConverts.DomainEvents;
 using MassTransit;
@@ -97,6 +96,26 @@ public class ProcessOutboxMessagesJob : IJob
                                     TypeNameHandling = TypeNameHandling.All
                                 });
                         await _publishEndpoint.Publish(subscriptionStatusActivationChanged, context.CancellationToken);
+                        break;
+                    case nameof(ClinicServiceDomainEvent.ClinicServiceCreated):
+                        var clinicServiceCreated =
+                            JsonConvert.DeserializeObject<ClinicServiceDomainEvent.ClinicServiceCreated>(
+                                outboxMessage.Content,
+                                new JsonSerializerSettings
+                                {
+                                    TypeNameHandling = TypeNameHandling.All
+                                });
+                        await _publishEndpoint.Publish(clinicServiceCreated, context.CancellationToken);
+                        break;
+                    case nameof(ProcedureDomainEvent.ProcedureCreated):
+                        var procedureCreated =
+                            JsonConvert.DeserializeObject<ProcedureDomainEvent.ProcedureCreated>(
+                                outboxMessage.Content,
+                                new JsonSerializerSettings
+                                {
+                                    TypeNameHandling = TypeNameHandling.All
+                                });
+                        await _publishEndpoint.Publish(procedureCreated, context.CancellationToken);
                         break;
 
                     case nameof(DomainEvents.WorkingScheduleCreated):
