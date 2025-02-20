@@ -23,12 +23,6 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
         builder.Entity<User>()
             .HasIndex(x => x.PhoneNumber)
             .IsUnique();
-        
-        builder.Entity<Service>()
-            .HasOne(cs => cs.Clinics)
-            .WithMany(u => u.ClinicServices)
-            .HasForeignKey(cs => cs.ClinicId)
-            .OnDelete(DeleteBehavior.NoAction);
 
         builder.Entity<SubscriptionPackage>()
             .HasQueryFilter(x => !x.IsDeleted);

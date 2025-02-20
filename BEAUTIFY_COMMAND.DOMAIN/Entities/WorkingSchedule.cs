@@ -30,9 +30,9 @@ public class WorkingSchedule : AggregateRoot<Guid>, IAuditableEntity
 
        
         // Raise the domain event
-        RaiseDomainEvent(new DomainEvents.WorkingScheduleCreated(
-            Guid.NewGuid(),
-            workingScheduleEntities));
+        // RaiseDomainEvent(new DomainEvents.WorkingScheduleCreated(
+        //     Guid.NewGuid(),
+        //     workingScheduleEntities));
     }
     public void WorkingScheduleDelete(Guid WorkingScheduleId)
     {
@@ -54,8 +54,8 @@ public class WorkingSchedule : AggregateRoot<Guid>, IAuditableEntity
         }).ToList();
 
         // Raise the domain event
-        RaiseDomainEvent(new DomainEvents.WorkingScheduleUpdated(
-            Guid.NewGuid(),
-            workingScheduleEntities));
+        // RaiseDomainEvent(new DomainEvents.WorkingScheduleUpdated(
+        //     Guid.NewGuid(),
+        //     workingScheduleEntities));
     }
 }
