@@ -7,7 +7,7 @@ namespace BEAUTIFY_COMMAND.CONTRACT.Services.ClinicSerivices;
 public class Commands
 {
     public record CreateClinicServiceCommand(
-        Guid ClinicId,
+        Guid[] ClinicId,
         string Name,
         decimal Price,
         IFormFileCollection CoverImages,

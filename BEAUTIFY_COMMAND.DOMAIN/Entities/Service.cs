@@ -11,9 +11,6 @@ public class Service : AggregateRoot<Guid>, IAuditableEntity
     [Column(TypeName = "decimal(18,2)")] public decimal Price { get; set; }
     public int NumberOfCustomersUsed { get; set; } = 0;
     
-    public Guid ClinicId { get; set; }
-    public virtual Clinic Clinics { get; set; }
-    
     public Guid CategoryId { get; set; }
     public virtual Category Category { get; set; }
     
@@ -21,6 +18,7 @@ public class Service : AggregateRoot<Guid>, IAuditableEntity
     public DateTimeOffset CreatedOnUtc { get; set; }
     public DateTimeOffset? ModifiedOnUtc { get; set; }
 
+    public virtual ICollection<ClinicService>? ClinicServices { get; set; }
     public virtual ICollection<ServiceMedia>? ServiceMedias { get; set; }
     public virtual ICollection<Promotion>? Promotions { get; set; }
     public virtual ICollection<Procedure>? Procedures { get; set; }
@@ -31,9 +29,7 @@ public class Service : AggregateRoot<Guid>, IAuditableEntity
     public static Service RaiseCreateClinicServiceEvent(string Name, string Description,
         string[] CoverImage, string[] DescriptionImage,
         decimal Price, Guid CateId, string CateName,
-        string CateDescription, Guid ClinicId, string ClinicName,
-        string ClinicEmail, string ClinicAddress, string ClinicPhoneNumber,
-        string? ClinicProfilePictureUrl
+        string CateDescription, List<Clinic> clinics
     )
     {
         var clinicService = new Service()
@@ -43,7 +39,6 @@ public class Service : AggregateRoot<Guid>, IAuditableEntity
             Description = Description,
             Price = Price,
             CategoryId = CateId,
-            ClinicId = ClinicId,
         };
         
         clinicService.RaiseDomainEvent(new DomainEvents.ClinicServiceCreated(
@@ -51,8 +46,8 @@ public class Service : AggregateRoot<Guid>, IAuditableEntity
             new ClinicServiceEvent.CreateClinicService(
                 clinicService.Id, Name, Description, CoverImage, DescriptionImage, Price, 
                 new ClinicServiceEvent.Category(CateId, CateName, CateDescription),
-                new ClinicServiceEvent.Clinic(ClinicId, ClinicName, ClinicEmail,
-                ClinicAddress, ClinicPhoneNumber, ClinicProfilePictureUrl)
+                clinics.Select(x => new ClinicServiceEvent.Clinic(x.Id, x.Name, x.Email,
+                    x.Address, x.PhoneNumber, x.ProfilePictureUrl, x.IsParent, x.ParentId)).ToList()
             )));
 
         return clinicService;

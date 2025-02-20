@@ -1,23 +1,26 @@
 using AutoMapper;
 using BEAUTIFY_PACKAGES.BEAUTIFY_PACKAGES.APPLICATION.Abstractions;
+using Microsoft.EntityFrameworkCore;
 
 namespace BEAUTIFY_COMMAND.APPLICATION.UseCases.Commands.ClinicServices;
 
 public class CreateClinicServiceCommandHandler : ICommandHandler<CONTRACT.Services.ClinicSerivices.Commands.CreateClinicServiceCommand>
 {
-    private readonly IRepositoryBase<Service, Guid> _clinicServiceRepository;
+    private readonly IRepositoryBase<Service, Guid> _serviceRepository;
     private readonly IRepositoryBase<Category, Guid> _categoryRepository;
     private readonly IMediaService _mediaService;
     private readonly IRepositoryBase<ServiceMedia, Guid> _serviceMediaRepository;
     private readonly IRepositoryBase<Clinic, Guid> _clinicRepository;
+    private readonly IRepositoryBase<ClinicService, Guid> _clinicServiceRepository;
 
-    public CreateClinicServiceCommandHandler(IRepositoryBase<Service, Guid> clinicServiceRepository, IRepositoryBase<Category, Guid> categoryRepository, IMediaService mediaService, IRepositoryBase<ServiceMedia, Guid> serviceMediaRepository, IRepositoryBase<Clinic, Guid> clinicRepository)
+    public CreateClinicServiceCommandHandler(IRepositoryBase<Service, Guid> serviceRepository, IRepositoryBase<Category, Guid> categoryRepository, IMediaService mediaService, IRepositoryBase<ServiceMedia, Guid> serviceMediaRepository, IRepositoryBase<Clinic, Guid> clinicRepository, IRepositoryBase<ClinicService, Guid> clinicServiceRepository)
     {
-        _clinicServiceRepository = clinicServiceRepository;
+        _serviceRepository = serviceRepository;
         _categoryRepository = categoryRepository;
         _mediaService = mediaService;
         _serviceMediaRepository = serviceMediaRepository;
         _clinicRepository = clinicRepository;
+        _clinicServiceRepository = clinicServiceRepository;
     }
 
     public async Task<Result> Handle(CONTRACT.Services.ClinicSerivices.Commands.CreateClinicServiceCommand request, CancellationToken cancellationToken)
@@ -29,11 +32,11 @@ public class CreateClinicServiceCommandHandler : ICommandHandler<CONTRACT.Servic
             return Result.Failure(new Error("404", "Category not found "));
         }
         
-        var isClinicExisted = await _clinicRepository.FindByIdAsync(request.ClinicId, cancellationToken);
+        var isClinicExisted = await _clinicRepository.FindAll(x => request.ClinicId.Contains(x.Id)).ToListAsync(cancellationToken);
         
-        if (isClinicExisted == null || isClinicExisted.IsDeleted)
+        if (isClinicExisted.Count != request.ClinicId.Length)
         {
-            return Result.Failure(new Error("404", "Category not found "));
+            return Result.Failure(new Error("404", "Clinic not found "));
         }
         
         List<ServiceMedia> serviceMediaList = new List<ServiceMedia>();
@@ -54,11 +57,18 @@ public class CreateClinicServiceCommandHandler : ICommandHandler<CONTRACT.Servic
             request.Name, request.Description,
             coverImageUrls, desImageUrls, request.Price,
             isCategoryExisted.Id, isCategoryExisted.Name, isCategoryExisted.Description ?? "",
-            isClinicExisted.Id, isClinicExisted.Name, isClinicExisted.Email,
-            isClinicExisted.Address, isClinicExisted.PhoneNumber,
-            isClinicExisted.ProfilePictureUrl);
+            isClinicExisted);
         
-        _clinicServiceRepository.Add(service);
+        _serviceRepository.Add(service);
+
+        var clinicServices = request.ClinicId.Select(x => new ClinicService()
+        {
+            Id = Guid.NewGuid(),
+            ServiceId = service.Id,
+            ClinicId = x
+        });
+        
+        _clinicServiceRepository.AddRange(clinicServices);
         
         var medias = coverImageUrls.Select((x, idx) => new ServiceMedia()
         {
