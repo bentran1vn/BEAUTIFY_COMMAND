@@ -12,8 +12,9 @@ public class CreateClinicServiceCommandHandler : ICommandHandler<CONTRACT.Servic
     private readonly IRepositoryBase<ServiceMedia, Guid> _serviceMediaRepository;
     private readonly IRepositoryBase<Clinic, Guid> _clinicRepository;
     private readonly IRepositoryBase<ClinicService, Guid> _clinicServiceRepository;
+    private readonly IRepositoryBase<TriggerOutbox, Guid> _triggerOutboxRepository;
 
-    public CreateClinicServiceCommandHandler(IRepositoryBase<Service, Guid> serviceRepository, IRepositoryBase<Category, Guid> categoryRepository, IMediaService mediaService, IRepositoryBase<ServiceMedia, Guid> serviceMediaRepository, IRepositoryBase<Clinic, Guid> clinicRepository, IRepositoryBase<ClinicService, Guid> clinicServiceRepository)
+    public CreateClinicServiceCommandHandler(IRepositoryBase<Service, Guid> serviceRepository, IRepositoryBase<Category, Guid> categoryRepository, IMediaService mediaService, IRepositoryBase<ServiceMedia, Guid> serviceMediaRepository, IRepositoryBase<Clinic, Guid> clinicRepository, IRepositoryBase<ClinicService, Guid> clinicServiceRepository, IRepositoryBase<TriggerOutbox, Guid> triggerOutboxRepository)
     {
         _serviceRepository = serviceRepository;
         _categoryRepository = categoryRepository;
@@ -21,6 +22,7 @@ public class CreateClinicServiceCommandHandler : ICommandHandler<CONTRACT.Servic
         _serviceMediaRepository = serviceMediaRepository;
         _clinicRepository = clinicRepository;
         _clinicServiceRepository = clinicServiceRepository;
+        _triggerOutboxRepository = triggerOutboxRepository;
     }
 
     public async Task<Result> Handle(CONTRACT.Services.ClinicSerivices.Commands.CreateClinicServiceCommand request, CancellationToken cancellationToken)
@@ -34,7 +36,7 @@ public class CreateClinicServiceCommandHandler : ICommandHandler<CONTRACT.Servic
         
         var isClinicExisted = await _clinicRepository.FindAll(x => request.ClinicId.Contains(x.Id)).ToListAsync(cancellationToken);
         
-        if (isClinicExisted.Count != request.ClinicId.Length)
+        if (isClinicExisted.Count != request.ClinicId.Count)
         {
             return Result.Failure(new Error("404", "Clinic not found "));
         }
@@ -53,11 +55,13 @@ public class CreateClinicServiceCommandHandler : ICommandHandler<CONTRACT.Servic
         
         var desImageUrls = await Task.WhenAll(servicesDescriptionImageTasks);
         
-        var service = Service.RaiseCreateClinicServiceEvent(
-            request.Name, request.Description,
-            coverImageUrls, desImageUrls, request.Price,
-            isCategoryExisted.Id, isCategoryExisted.Name, isCategoryExisted.Description ?? "",
-            isClinicExisted);
+        var service = new Service()
+        {
+            Id = Guid.NewGuid(),
+            Name = request.Name,
+            Description = request.Description,
+            CategoryId = request.CategoryId,
+        };
         
         _serviceRepository.Add(service);
 
@@ -93,6 +97,13 @@ public class CreateClinicServiceCommandHandler : ICommandHandler<CONTRACT.Servic
         serviceMediaList.AddRange(desMedias);
         
         _serviceMediaRepository.AddRange(serviceMediaList);
+
+        var trigger = TriggerOutbox.RaiseCreateClinicServiceEvent(
+            service.Id, service.Name, service.Description, medias.ToArray(), desMedias.ToArray(),
+            request.CategoryId, isCategoryExisted.Name, isCategoryExisted.Description ?? "", isClinicExisted
+            );
+        
+        _triggerOutboxRepository.Add(trigger);
         
         return Result.Success("Clinic service created successfully");
     }

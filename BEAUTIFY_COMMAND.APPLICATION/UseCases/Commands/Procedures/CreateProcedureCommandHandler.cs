@@ -23,7 +23,8 @@ public class CreateProcedureCommandHandler: ICommandHandler<CONTRACT.Services.Pr
 
     public async Task<Result> Handle(CONTRACT.Services.Procedures.Commands.CreateProcedureCommand request, CancellationToken cancellationToken)
     {
-        var isExisted = await _clinicServiceRepository.FindByIdAsync(request.ClinicServiceId, cancellationToken);
+        var isExisted = await _clinicServiceRepository.FindByIdAsync(request.ClinicServiceId, cancellationToken,
+            x => x.Promotions);
         
         if (isExisted == null || isExisted.IsDeleted)
         {
@@ -72,11 +73,27 @@ public class CreateProcedureCommandHandler: ICommandHandler<CONTRACT.Services.Pr
         });
 
         var priceTypes = procedurePriceTypes.ToList();
+        
         _procedurePriceTypeServiceRepository.AddRange(priceTypes);
         
+        var lowestPrice = isExisted.Procedures?.Sum(procedure =>
+            procedure.ProcedurePriceTypes.Any()
+                ? procedure.ProcedurePriceTypes.Min(pt => pt.Price)
+                : 0) ?? 0;
+        
+        var highestPrice = isExisted.Procedures?.Sum(procedure => 
+            procedure.ProcedurePriceTypes.Any() 
+                ? procedure.ProcedurePriceTypes.Max(pt => pt.Price) 
+                : 0) ?? 0;
+
+        var discountPercent = isExisted.Promotions?.FirstOrDefault(x => x.IsActivated)?.DiscountPercent;
+        
         var trigger = TriggerOutbox.RaiseCreateServiceProcedureEvent(
-            procedure.Id, isExisted.Id, procedure.Name, procedure.Description, procedure.StepIndex,
-            coverImageUrls, priceTypes);
+            procedure.Id, isExisted.Id, procedure.Name, procedure.Description,
+            highestPrice, lowestPrice,
+            highestPrice - (decimal?)discountPercent * highestPrice,
+            lowestPrice - (decimal?)discountPercent * lowestPrice,
+            procedure.StepIndex, coverImageUrls, priceTypes);
         
         _triggerOutboxRepository.Add(trigger);
 

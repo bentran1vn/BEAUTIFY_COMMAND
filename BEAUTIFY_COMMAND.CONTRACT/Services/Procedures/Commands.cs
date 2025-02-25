@@ -12,7 +12,6 @@ public class Commands
         string Description,
         int StepIndex,
         IFormFileCollection ProcedureCoverImage,
-        [ModelBinder(typeof(SwaggerEnumerable<ProcedurePriceType[]>))]
         IEnumerable<ProcedurePriceType>? ProcedurePriceTypes = null) : ICommand;
     
     public record CreateProcedureBody(

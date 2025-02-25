@@ -103,6 +103,7 @@ public class ResponseClinicApplyCommandHandler: ICommandHandler<CONTRACT.Service
                 DateOfBirth = DateOnly.Parse("1999-01-01"),
                 Address = applyRequest.Clinic!.Address,
                 Password = hashingPassword,
+                RoleId = new Guid("C6D93B8C-F509-4498-ABBB-FE63EDC66F2B"),
                 Status = 1,
             };
             

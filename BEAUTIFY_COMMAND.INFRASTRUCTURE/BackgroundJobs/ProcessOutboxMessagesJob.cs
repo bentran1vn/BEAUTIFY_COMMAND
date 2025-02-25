@@ -6,6 +6,7 @@ using SubscriptionsDomainEvent = BEAUTIFY_PACKAGES.BEAUTIFY_PACKAGES.CONTRACT.Se
 using ClinicServiceDomainEvent = BEAUTIFY_PACKAGES.BEAUTIFY_PACKAGES.CONTRACT.Services.ClinicServices.DomainEvents;
 using ProcedureDomainEvent = BEAUTIFY_PACKAGES.BEAUTIFY_PACKAGES.CONTRACT.Services.Procedures.DomainEvents;
 using WorkingScheduleDomainEvent = BEAUTIFY_PACKAGES.BEAUTIFY_PACKAGES.CONTRACT.Services.WorkingSchedules.DomainEvents;
+using ServicePromotionDomainEvent = BEAUTIFY_PACKAGES.BEAUTIFY_PACKAGES.CONTRACT.Services.ServicePromotion.DomainEvents;
 using MassTransit;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
@@ -110,6 +111,16 @@ public class ProcessOutboxMessagesJob : IJob
                                 });
                         await _publishEndpoint.Publish(clinicServiceCreated, context.CancellationToken);
                         break;
+                    case nameof(ClinicServiceDomainEvent.ClinicServiceUpdated):
+                        var clinicServiceUpdated =
+                            JsonConvert.DeserializeObject<ClinicServiceDomainEvent.ClinicServiceUpdated>(
+                                outboxMessage.Content,
+                                new JsonSerializerSettings
+                                {
+                                    TypeNameHandling = TypeNameHandling.All
+                                });
+                        await _publishEndpoint.Publish(clinicServiceUpdated, context.CancellationToken);
+                        break;
                     case nameof(ProcedureDomainEvent.ProcedureCreated):
                         var procedureCreated =
                             JsonConvert.DeserializeObject<ProcedureDomainEvent.ProcedureCreated>(
@@ -151,8 +162,17 @@ public class ProcessOutboxMessagesJob : IJob
                                 });
                         await _publishEndpoint.Publish(workingScheduleUpdated, context.CancellationToken);
                         break;
+                    case nameof(ServicePromotionDomainEvent.ServicePromotionCreated):
+                        var servicePromotionCreated =
+                            JsonConvert.DeserializeObject<ServicePromotionDomainEvent.ServicePromotionCreated>(
+                                outboxMessage.Content,
+                                new JsonSerializerSettings
+                                {
+                                    TypeNameHandling = TypeNameHandling.All
+                                });
+                        await _publishEndpoint.Publish(servicePromotionCreated, context.CancellationToken);
+                        break;
                 }
-
                 outboxMessage.ProcessedOnUtc = DateTime.UtcNow;
             }
             catch (Exception ex)
