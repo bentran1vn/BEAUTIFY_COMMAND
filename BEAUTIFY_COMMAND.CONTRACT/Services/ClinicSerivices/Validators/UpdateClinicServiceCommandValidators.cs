@@ -2,9 +2,9 @@ using FluentValidation;
 
 namespace BEAUTIFY_COMMAND.CONTRACT.Services.ClinicSerivices.Validators;
 
-public class CreateClinicServiceCommandValidators : AbstractValidator<Commands.CreateClinicServiceCommand>
+public class UpdateClinicServiceCommandValidators : AbstractValidator<Commands.UpdateClinicServiceCommand>
 {
-    public CreateClinicServiceCommandValidators()
+    public UpdateClinicServiceCommandValidators()
     {
         RuleFor(x => x.ClinicId)
             .NotEmpty();
@@ -18,12 +18,6 @@ public class CreateClinicServiceCommandValidators : AbstractValidator<Commands.C
             .NotEmpty()
             .MinimumLength(5).WithMessage("Category Description must be at least 5 characters long")
             .MaximumLength(100).WithMessage("Category Description must exceed 100 characters");
-        
-        RuleFor(x => x.CoverImages)
-            .NotEmpty();
-        
-        RuleFor(x => x.DescriptionImages)
-            .NotEmpty();
         
         RuleFor(x => x.CategoryId)
             .NotEmpty();

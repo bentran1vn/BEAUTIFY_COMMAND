@@ -94,7 +94,7 @@ public class ClinicApplyCommandHandler : ICommandHandler<CONTRACT.Services.Clini
             var operatingLicenseUrl = uploadPromises[1];
             var profilePictureUrl = uploadPromises[2];
             
-            var clinic = new DOMAIN.Entities.Clinic()
+            var clinic = new Clinic()
             {
                 Id = Guid.NewGuid(),
                 Name = request.Name,

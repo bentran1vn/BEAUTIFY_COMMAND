@@ -1,5 +1,4 @@
-﻿using BEAUTIFY_COMMAND.CONTRACT.Services.ClinicSerivices;
-using BEAUTIFY_PACKAGES.BEAUTIFY_PACKAGES.API.DependencyInjection.Options;
+﻿using BEAUTIFY_PACKAGES.BEAUTIFY_PACKAGES.API.DependencyInjection.Options;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
@@ -47,107 +46,44 @@ Example: 'Bearer 12345abcdef'",
                 }
             });
             
-            c.OperationFilter<SwaggerFormDataOperationFilter>();
+            // c.OperationFilter<SwaggerFormDataOperationFilter>();
             
             // c.OperationFilter<FileUploadOperationFilter>();
-            // c.EnableAnnotations();
             
+            c.EnableAnnotations();
+            
+            // c.UseOneOfForPolymorphism();
         });
         services.AddTransient<IConfigureOptions<SwaggerGenOptions>, ConfigureSwaggerOptions>();
     }
     
-    // public class FileUploadOperationFilter : IOperationFilter
+    // public class SwaggerFormDataOperationFilter : IOperationFilter
     // {
     //     public void Apply(OpenApiOperation operation, OperationFilterContext context)
     //     {
-    //         var formParameters = new Dictionary<string, OpenApiSchema>();
-    //
-    //         foreach (var param in context.MethodInfo.GetParameters())
-    //         {
-    //             foreach (var property in param.ParameterType.GetProperties())
-    //             {
-    //                 if (typeof(IFormFile).IsAssignableFrom(property.PropertyType))
-    //                 {
-    //                     formParameters[property.Name] = new OpenApiSchema
-    //                     {
-    //                         Type = "string",
-    //                         Format = "binary"
-    //                     };
-    //                 }
-    //                 else if (typeof(IEnumerable<IFormFile>).IsAssignableFrom(property.PropertyType))
-    //                 {
-    //                     formParameters[property.Name] = new OpenApiSchema
-    //                     {
-    //                         Type = "array",
-    //                         Items = new OpenApiSchema { Type = "string", Format = "binary" }
-    //                     };
-    //                 }
-    //                 else if (typeof(IEnumerable<object>).IsAssignableFrom(property.PropertyType)) // Handle nested objects
-    //                 {
-    //                     int index = 0;
-    //                     foreach (var nestedProp in property.PropertyType.GetGenericArguments()[0].GetProperties())
-    //                     {
-    //                         if (typeof(IFormFile).IsAssignableFrom(nestedProp.PropertyType))
-    //                         {
-    //                             formParameters[$"{property.Name}[{index}].{nestedProp.Name}"] = new OpenApiSchema
-    //                             {
-    //                                 Type = "string",
-    //                                 Format = "binary"
-    //                             };
-    //                         }
-    //                     }
-    //                 }
-    //             }
-    //         }
+    //         var formParameters = context.MethodInfo
+    //             .GetParameters()
+    //             .Where(p => p.GetCustomAttributes(true)
+    //                 .Any(attr => attr.GetType() == typeof(FromFormAttribute)))
+    //             .ToList();
     //
     //         if (formParameters.Any())
     //         {
-    //             operation.RequestBody = new OpenApiRequestBody
+    //             foreach (var param in formParameters)
     //             {
-    //                 Content =
+    //                 operation.RequestBody = new OpenApiRequestBody
     //                 {
-    //                     ["multipart/form-data"] = new OpenApiMediaType
-    //                     {
-    //                         Schema = new OpenApiSchema
+    //                     Content = {
+    //                         ["multipart/form-data"] = new OpenApiMediaType
     //                         {
-    //                             Type = "object",
-    //                             Properties = formParameters
+    //                             Schema = context.SchemaGenerator.GenerateSchema(param.ParameterType, context.SchemaRepository)
     //                         }
     //                     }
-    //                 }
-    //             };
+    //                 };
+    //             }
     //         }
     //     }
     // }
-
-    
-    public class SwaggerFormDataOperationFilter : IOperationFilter
-    {
-        public void Apply(OpenApiOperation operation, OperationFilterContext context)
-        {
-            var formParameters = context.MethodInfo
-                .GetParameters()
-                .Where(p => p.GetCustomAttributes(true)
-                    .Any(attr => attr.GetType() == typeof(FromFormAttribute)))
-                .ToList();
-
-            if (formParameters.Any())
-            {
-                foreach (var param in formParameters)
-                {
-                    operation.RequestBody = new OpenApiRequestBody
-                    {
-                        Content = {
-                            ["multipart/form-data"] = new OpenApiMediaType
-                            {
-                                Schema = context.SchemaGenerator.GenerateSchema(param.ParameterType, context.SchemaRepository)
-                            }
-                        }
-                    };
-                }
-            }
-        }
-    }
 
     public static void UseSwaggerAPI1(this WebApplication app)
     {
