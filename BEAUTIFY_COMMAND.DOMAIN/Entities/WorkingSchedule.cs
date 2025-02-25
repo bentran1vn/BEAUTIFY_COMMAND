@@ -13,7 +13,8 @@ public class WorkingSchedule : AggregateRoot<Guid>, IAuditableEntity
     public DateTimeOffset? ModifiedOnUtc { get; set; }
 
 
-    public void WorkingScheduleCreate(Guid DoctorId, Guid ClinicId, List<WorkingSchedule> workingSchedule)
+    public void WorkingScheduleCreate(Guid DoctorId, Guid ClinicId, string DoctorName,
+        List<WorkingSchedule> workingSchedule)
     {
         //map from workingSchedule to WorkingScheduleEntities
         var workingScheduleEntities = workingSchedule.Select(x => new EntityEvent.WorkingScheduleEntity
@@ -28,12 +29,13 @@ public class WorkingSchedule : AggregateRoot<Guid>, IAuditableEntity
             ModifiedOnUtc = null
         }).ToList();
 
-       
+
         // Raise the domain event
-        // RaiseDomainEvent(new DomainEvents.WorkingScheduleCreated(
-        //     Guid.NewGuid(),
-        //     workingScheduleEntities));
+        RaiseDomainEvent(new DomainEvents.WorkingScheduleCreated(
+            Guid.NewGuid(),
+            workingScheduleEntities, DoctorName));
     }
+
     public void WorkingScheduleDelete(Guid WorkingScheduleId)
     {
         Console.BackgroundColor = ConsoleColor.DarkGreen;
@@ -41,7 +43,8 @@ public class WorkingSchedule : AggregateRoot<Guid>, IAuditableEntity
         // Raise the domain event
         RaiseDomainEvent(new DomainEvents.WorkingScheduleDeleted(Guid.NewGuid(), WorkingScheduleId));
     }
-    public void WorkingScheduleUpdate(List<WorkingSchedule> workingSchedule)
+
+    public void WorkingScheduleUpdate(List<WorkingSchedule> workingSchedule, string DoctorName)
     {
         //map from workingSchedule to WorkingScheduleEntities
         var workingScheduleEntities = workingSchedule.Select(x => new EntityEvent.WorkingScheduleEntity
@@ -54,8 +57,8 @@ public class WorkingSchedule : AggregateRoot<Guid>, IAuditableEntity
         }).ToList();
 
         // Raise the domain event
-        // RaiseDomainEvent(new DomainEvents.WorkingScheduleUpdated(
-        //     Guid.NewGuid(),
-        //     workingScheduleEntities));
+        RaiseDomainEvent(new DomainEvents.WorkingScheduleUpdated(
+            Guid.NewGuid(),
+            workingScheduleEntities, DoctorName));
     }
 }

@@ -15,7 +15,7 @@ internal sealed class CreateWorkingScheduleCommandHandler(
         // 1. Validate doctor
         var doctor = await userRepository.FindByIdAsync(request.DoctorId, cancellationToken)
                      ?? throw new UserException.UserNotFoundException(request.DoctorId);
-
+        var doctorName = $"{doctor.FirstName} {doctor.LastName}";
         if (doctor.UserClinics == null || doctor.UserClinics.Count == 0)
         {
             throw new UserClinicException.UserClinicNotFoundException();
@@ -75,7 +75,7 @@ internal sealed class CreateWorkingScheduleCommandHandler(
             // 3d. All good – add to the list
             schedulesToAdd.Add(new WorkingSchedule
             {
-                Id =Guid.NewGuid(),
+                Id = Guid.NewGuid(),
                 DoctorClinicId = doctorClinic.Id,
                 Date = date,
                 StartTime = startTime,
@@ -89,8 +89,7 @@ internal sealed class CreateWorkingScheduleCommandHandler(
             return Result.Failure(new Error("NoValidSchedules", "No valid schedules to add."));
         }
 
-        var workingSchedule = new WorkingSchedule();
-        schedulesToAdd[0].WorkingScheduleCreate(doctor.Id, clinic.Id, schedulesToAdd);
+        schedulesToAdd[0].WorkingScheduleCreate(doctor.Id, clinic.Id, doctorName, schedulesToAdd);
 
         workingScheduleRepository.AddRange(schedulesToAdd);
         // Save changes if your repository requires an explicit save:

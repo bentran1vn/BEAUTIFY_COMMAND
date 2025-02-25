@@ -2,7 +2,8 @@
 
 namespace BEAUTIFY_COMMAND.APPLICATION.UseCases.Commands.WorkingSchedules;
 public class UpdateWorkingScheduleCommandHandler(
-    IRepositoryBase<WorkingSchedule, Guid> workingScheduleRepository)
+    IRepositoryBase<WorkingSchedule, Guid> workingScheduleRepository,
+    IRepositoryBase<User, Guid> userRepository)
     : ICommandHandler<CONTRACT.Services.WorkingSchedules.Commands.UpdateWorkingScheduleCommand>
 {
     public async Task<Result> Handle(
@@ -23,7 +24,14 @@ public class UpdateWorkingScheduleCommandHandler(
         //    (Adjust this call to match your repository pattern.)
         var existingSchedules = await workingScheduleRepository
             .FindAll(s => scheduleIdsToUpdate.Contains(s.Id)).ToListAsync(cancellationToken);
+        var user = await userRepository.FindSingleAsync(x => x.Id.Equals(existingSchedules[0].DoctorClinic!.UserId),
+            cancellationToken);
+        if (user == null)
+        {
+            return Result.Failure(new Error("404", "Doctor not found"));
+        }
 
+        var doctorName = $"{user.FirstName} {user.LastName}";
         // 3. Validate all schedules exist
         if (existingSchedules.Count != scheduleIdsToUpdate.Count)
         {
@@ -112,7 +120,7 @@ public class UpdateWorkingScheduleCommandHandler(
         }
 
         var work = schedulesToUpdate.Values.ToList();
-        work[0].WorkingScheduleUpdate(work);
+        work[0].WorkingScheduleUpdate(work, doctorName);
         workingScheduleRepository.UpdateRange(schedulesToUpdate.Values);
 
 
