@@ -1,6 +1,7 @@
 using BEAUTIFY_COMMAND.PERSISTENCE;
 using BEAUTIFY_COMMAND.PERSISTENCE.Outbox;
 using BEAUTIFY_PACKAGES.BEAUTIFY_PACKAGES.CONTRACT.Abstractions.Messages;
+using BEAUTIFY_PACKAGES.BEAUTIFY_PACKAGES.CONTRACT.Services.DoctorServices;
 using SubscriptionsDomainEvent = BEAUTIFY_PACKAGES.BEAUTIFY_PACKAGES.CONTRACT.Services.Subscriptions.DomainEvents;
 // using PostgreMigrateDomainEvent = BEAUTIFY_PACKAGES.BEAUTIFY_PACKAGES.CONTRACT.Services.CommandConverts.DomainEvents;
 using ClinicServiceDomainEvent = BEAUTIFY_PACKAGES.BEAUTIFY_PACKAGES.CONTRACT.Services.ClinicServices.DomainEvents;
@@ -171,6 +172,26 @@ public class ProcessOutboxMessagesJob : IJob
                                     TypeNameHandling = TypeNameHandling.All
                                 });
                         await _publishEndpoint.Publish(servicePromotionCreated, context.CancellationToken);
+                        break;
+                    case nameof(DomainEvents.DoctorServiceCreated):
+                        var doctorServiceCreated =
+                            JsonConvert.DeserializeObject<DomainEvents.DoctorServiceCreated>(
+                                outboxMessage.Content,
+                                new JsonSerializerSettings
+                                {
+                                    TypeNameHandling = TypeNameHandling.All
+                                });
+                        await _publishEndpoint.Publish(doctorServiceCreated, context.CancellationToken);
+                        break;
+                    case nameof(DomainEvents.DoctorServiceDeleted):
+                        var doctorServiceDeleted =
+                            JsonConvert.DeserializeObject<DomainEvents.DoctorServiceDeleted>(
+                                outboxMessage.Content,
+                                new JsonSerializerSettings
+                                {
+                                    TypeNameHandling = TypeNameHandling.All
+                                });
+                        await _publishEndpoint.Publish(doctorServiceDeleted, context.CancellationToken);
                         break;
                 }
                 outboxMessage.ProcessedOnUtc = DateTime.UtcNow;

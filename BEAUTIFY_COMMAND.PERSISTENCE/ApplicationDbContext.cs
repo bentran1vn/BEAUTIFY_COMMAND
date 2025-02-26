@@ -36,7 +36,7 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
                 new Role { Id = new Guid("c6d93b8c-f509-4498-abbb-fe63edc66f2b"), Name = "Clinic Admin" },
                 new Role { Id = new Guid("2e25e963-c03f-45e6-a29d-f22c08e117b3"), Name = "Clinic Staff" }
             );
-        
+        #region Category
         var idPhauThuatThamMy = Guid.Parse("11111111-1111-1111-1111-111111111111");
         var idNangMui = Guid.Parse("11111111-1111-1111-1111-111111111112");
         var idThamMyMat = Guid.Parse("11111111-1111-1111-1111-111111111113");
@@ -653,5 +653,6 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
                 ParentId = idTaiTaoDa
             }
         );
+        #endregion  
     }
 }
