@@ -18,7 +18,7 @@ public static class SwaggerExtensions
             {
                 Description = @"JWT Authorization header using the Bearer scheme. 
 
-Enter 'Bearer' [space] and then your token in the text input below.
+Enter your token in the text input below.
 
 Example: 'Bearer 12345abcdef'",
                 Name = "Authorization",
