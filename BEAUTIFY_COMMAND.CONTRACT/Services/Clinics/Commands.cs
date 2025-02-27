@@ -114,7 +114,7 @@ public static class Commands
         string Name,
         string PhoneNumber,
         string Address,
-        //IFormFile ProfilePicture,
+        IFormFile? ProfilePicture,
         bool IsActivated
     ) : ICommand;
 
