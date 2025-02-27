@@ -91,4 +91,40 @@ public static class Commands
     ) : ICommand;
 
     #endregion
+
+
+    #region ClinicCreateBranchCommand
+
+    public record ClinicCreateBranchCommand(
+        string Name,
+        string Email,
+        string PhoneNumber,
+        string Address,
+        IFormFile OperatingLicense,
+        DateTimeOffset OperatingLicenseExpiryDate,
+        IFormFile ProfilePictureUrl,
+        Guid ParentId) : ICommand;
+
+    #endregion
+
+    #region ClinicUpdateBranchCommand
+
+    public record ClinicUpdateBranchCommand(
+        Guid BranchId,
+        string Name,
+        string PhoneNumber,
+        string Address,
+        //IFormFile ProfilePicture,
+        bool IsActivated
+    ) : ICommand;
+
+    #endregion
+
+    #region ClinicDeleteBranchCommand
+
+    public record ClinicDeleteBranchCommand(
+        Guid BranchId
+    ) : ICommand;
+
+    #endregion
 }
