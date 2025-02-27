@@ -11,36 +11,8 @@ internal sealed class DeleteDoctorServiceCommandHandler(
     public async Task<Result> Handle(CONTRACT.Services.DoctorServices.Commands.DeleteDoctorServiceCommand request,
         CancellationToken cancellationToken)
     {
-        // Validate doctor existence
-        var doctor = await userRepository.FindByIdAsync(request.DoctorId, cancellationToken);
-        if (doctor is null)
-        {
-            throw new UserException.UserNotFoundException(request.DoctorId);
-        }
-
-        // Ensure user is a doctor
-        if (doctor.Role?.Name != Constant.DOCTOR)
-        {
-            return Result.Failure(new Error("403", "User is not a doctor"));
-        }
-
-        // Fetch existing service IDs in a single query
-        var existingServiceIds = serviceRepository
-            .FindAll(x => request.ServiceIds.Contains(x.Id))
-            .Select(x => x.Id)
-            .ToHashSet();
-
-        // Identify missing services
-        var missingServiceIds = request.ServiceIds.Except(existingServiceIds).ToList();
-        if (missingServiceIds.Count > 0)
-        {
-            var missingServicesMessage = $"Services not found: {string.Join(", ", missingServiceIds)}";
-            return Result.Failure(new Error("404", missingServicesMessage));
-        }
-
-        // Retrieve doctor services that need to be deleted
         var doctorServicesToDelete = doctorServiceRepository
-            .FindAll(ds => ds.DoctorId == request.DoctorId && request.ServiceIds.Contains(ds.ServiceId))
+            .FindAll(ds => request.DoctorServiceIds.Contains(ds.Id))
             .ToList();
 
         if (doctorServicesToDelete.Count == 0)
@@ -51,7 +23,7 @@ internal sealed class DeleteDoctorServiceCommandHandler(
         // Delete the records
         doctorServiceRepository.RemoveMultiple(doctorServicesToDelete);
         doctorServicesToDelete[0]
-            .RaiseDoctorServiceDeletedEvent(doctorServicesToDelete.Select(x => x.ServiceId).ToList());
+            .RaiseDoctorServiceDeletedEvent(doctorServicesToDelete[0].ServiceId,doctorServicesToDelete.Select(x => x.Id).ToList());
         return Result.Success();
     }
 }

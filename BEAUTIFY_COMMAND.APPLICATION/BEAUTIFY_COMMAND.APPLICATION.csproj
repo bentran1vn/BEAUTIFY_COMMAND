@@ -8,7 +8,7 @@
 
     <ItemGroup>
         <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="12.0.1"/>
-        <PackageReference Include="BEAUTIFY_PACKAGES.SHARE" Version="1.4.9" />
+        
         <PackageReference Include="FluentValidation" Version="12.0.0-preview1"/>
         <PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="12.0.0-preview1"/>
         <PackageReference Include="MediatR" Version="12.4.1"/>
@@ -20,9 +20,7 @@
         <ProjectReference Include="..\BEAUTIFY_COMMAND.PERSISTENCE\BEAUTIFY_COMMAND.PERSISTENCE.csproj"/>
     </ItemGroup>
 
-    <ItemGroup>
-      <PackageVersion Update="BEAUTIFY_PACKAGES.SHARE" Version="1.4.9" />
-    </ItemGroup>
+  
     
 
 </Project>

@@ -16,8 +16,8 @@ public class DoctorService : AggregateRoot<Guid>, IAuditableEntity
         RaiseDomainEvent(new DomainEvents.DoctorServiceCreated(Guid.NewGuid(), services));
     }
 
-    public void RaiseDoctorServiceDeletedEvent(List<Guid> serviceId)
+    public void RaiseDoctorServiceDeletedEvent(Guid ServiceIdRemove, List<Guid> DoctorServiceIds)
     {
-        RaiseDomainEvent(new DomainEvents.DoctorServiceDeleted(Guid.NewGuid(), serviceId));
+        RaiseDomainEvent(new DomainEvents.DoctorServiceDeleted(Guid.NewGuid(), ServiceIdRemove, DoctorServiceIds));
     }
 }

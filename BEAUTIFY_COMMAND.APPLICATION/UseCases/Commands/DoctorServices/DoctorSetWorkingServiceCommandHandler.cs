@@ -57,6 +57,7 @@ internal sealed class DoctorSetWorkingServiceCommandHandler(
         if (newDoctorServices.Count == 0) return Result.Success();
         var doctorService = newDoctorServices.Select(x => new EntityEvent.DoctorServiceEntity
         {
+            Id = x.Id,
             ServiceId = x.ServiceId,
             Doctor = new EntityEvent.UserEntity()
             {
