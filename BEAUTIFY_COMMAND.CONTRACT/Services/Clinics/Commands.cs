@@ -102,8 +102,8 @@ public static class Commands
         string Address,
         IFormFile OperatingLicense,
         DateTimeOffset OperatingLicenseExpiryDate,
-        IFormFile ProfilePictureUrl,
-        Guid ParentId) : ICommand;
+        IFormFile ProfilePictureUrl
+        ) : ICommand;
 
     #endregion
 

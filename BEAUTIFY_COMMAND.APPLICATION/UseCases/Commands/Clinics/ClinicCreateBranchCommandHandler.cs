@@ -8,23 +8,26 @@ internal sealed class
         IRepositoryBase<Clinic, Guid> clinicRepository,
         IMediaService mediaService,
         IPasswordHasherService passwordHasherService,
-        IRepositoryBase<Role, Guid> roleRepository)
+        IRepositoryBase<Role, Guid> roleRepository,
+        ICurrentUserService currentUserService,
+        IRepositoryBase<UserClinic, Guid> userClinicRepository)
     : ICommandHandler<CONTRACT.Services.Clinics.Commands.ClinicCreateBranchCommand>
 {
     public async Task<Result> Handle(CONTRACT.Services.Clinics.Commands.ClinicCreateBranchCommand request,
         CancellationToken cancellationToken)
     {
-        var parentClinic = await clinicRepository.FindByIdAsync(request.ParentId, cancellationToken) ??
-                           throw new ClinicException.ClinicNotFoundException(request.ParentId);
+        var parentClinic = await clinicRepository.FindByIdAsync(currentUserService.ClinicId.Value, cancellationToken) ??
+                           throw new ClinicException.ClinicNotFoundException(currentUserService.ClinicId.Value);
         var role = await roleRepository.FindSingleAsync(x => x.Name == "Clinic Staff", cancellationToken);
         var OUrl = await mediaService.UploadImageAsync(request.OperatingLicense);
         var PUrl = await mediaService.UploadImageAsync(request.ProfilePictureUrl);
         var clinic = new Clinic
         {
+            Id = Guid.NewGuid(),
             Email = request.Email,
             Name = request.Name,
             Address = request.Address,
-            ParentId = request.ParentId,
+            ParentId = currentUserService.ClinicId.Value,
             PhoneNumber = request.PhoneNumber,
             TaxCode = parentClinic.TaxCode,
             BusinessLicenseUrl = parentClinic.BusinessLicenseUrl,
@@ -38,6 +41,7 @@ internal sealed class
         // create account for branch
         var branchAccount = new User
         {
+            Id = Guid.NewGuid(),
             Email = request.Email,
             FirstName = parentClinic.Name,
             LastName = request.Name,
@@ -47,7 +51,11 @@ internal sealed class
             Address = request.Address,
             RoleId = role.Id,
         };
-
+        userClinicRepository.Add(new UserClinic
+        {
+            ClinicId = clinic.Id,
+            UserId = branchAccount.Id,
+        });
         clinicRepository.Add(clinic);
         userRepository.Add(branchAccount);
         return Result.Success();
