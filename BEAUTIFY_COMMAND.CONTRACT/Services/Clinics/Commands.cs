@@ -91,8 +91,7 @@ public static class Commands
     ) : ICommand;
 
     #endregion
-
-
+    
     #region ClinicCreateBranchCommand
 
     public record ClinicCreateBranchCommand(
@@ -127,4 +126,7 @@ public static class Commands
     ) : ICommand;
 
     #endregion
+    
+    
+    public record TestTokenCommand : ICommand;
 }
