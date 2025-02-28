@@ -110,17 +110,11 @@ public class ClinicApi : ApiEndpoint, ICarterModule
         gr1.MapDelete("clinic-account", ClinicRemoveAccountForEmployee);
         gr1.MapPut("clinic-account", ClinicUpdateAccountOfEmployeeCommand).DisableAntiforgery();
         gr1.MapPut("staff-change-doctor-working-clinic", StaffChangeDoctorWorkingClinic).DisableAntiforgery();
-        gr1.MapPost("create-branch", ClinicCreateBranch).DisableAntiforgery();
-        gr1.MapPut("update-branch", ClinicUpdateBranch).DisableAntiforgery();
-        gr1.MapDelete("delete-branch", ClinicDeleteBranch).DisableAntiforgery();
-        gr1.MapGet("test", Test).RequireAuthorization().DisableAntiforgery();
+        gr1.MapPost("create-branch", ClinicCreateBranch).DisableAntiforgery().RequireAuthorization();
+        gr1.MapPut("update-branch", ClinicUpdateBranch).DisableAntiforgery().RequireAuthorization();
+        gr1.MapDelete("delete-branch", ClinicDeleteBranch).DisableAntiforgery().RequireAuthorization();
     }
 
-    private static async Task<IResult> Test(ISender sender)
-    {
-        var result = await sender.Send(new Commands.TestTokenCommand());
-        return Results.Ok(result);
-    }
 
     private static async Task<IResult> StaffChangeDoctorWorkingClinic(ISender sender,
         [FromForm] Commands.StaffChangeDoctorWorkingClinicCommand command)

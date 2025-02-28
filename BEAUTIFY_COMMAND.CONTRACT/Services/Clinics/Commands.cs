@@ -108,14 +108,17 @@ public static class Commands
 
     #region ClinicUpdateBranchCommand
 
-    public record ClinicUpdateBranchCommand(
-        Guid BranchId,
-        string Name,
-        string PhoneNumber,
-        string Address,
-        IFormFile? ProfilePicture,
-        bool IsActivated
-    ) : ICommand;
+    public class ClinicUpdateBranchCommand : ICommand
+    {
+        public Guid BranchId { get; set; }
+        public string Name { get; set; }
+        public string PhoneNumber { get; set; }
+        public string Address { get; set; }
+        public bool IsActivated { get; set; }
+        public IFormFile? ProfilePicture { get; set; }
+
+        
+    }
 
     #endregion
 
@@ -128,5 +131,5 @@ public static class Commands
     #endregion
     
     
-    public record TestTokenCommand : ICommand;
+    
 }
