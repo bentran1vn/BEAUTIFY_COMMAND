@@ -14,9 +14,9 @@ public class SubscriptionPackage : AggregateRoot<Guid>, IAuditableEntity
     public DateTimeOffset CreatedOnUtc { get; set; }
     public DateTimeOffset? ModifiedOnUtc { get; set; }
 
-    protected SubscriptionPackage()
-    {
-    }
+    // protected SubscriptionPackage()
+    // {
+    // }
 
     public static SubscriptionPackage Create(
         string name,

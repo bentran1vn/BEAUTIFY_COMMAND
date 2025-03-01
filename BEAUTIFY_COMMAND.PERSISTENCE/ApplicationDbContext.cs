@@ -27,6 +27,46 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
         builder.Entity<SubscriptionPackage>()
             .HasQueryFilter(x => !x.IsDeleted);
         
+        builder.Entity<SubscriptionPackage>()
+            .HasData(
+                new SubscriptionPackage()
+                {
+                    Id = new Guid("4b7171f4-3219-4688-9f7c-625687a95867"),
+                    Name = "Trial",
+                    Description = "Trial",
+                    Price = 0,
+                    Duration = 30,
+                    IsActivated = true,
+                },
+                new SubscriptionPackage()
+                {
+                    Id = new Guid("248bf96b-9782-4011-8bb0-b26e66658090"),
+                    Name = "Begin",
+                    Description = "Trial",
+                    Price = 3000000,
+                    Duration = 30,
+                    IsActivated = true,
+                },
+                new SubscriptionPackage()
+                {
+                    Id = new Guid("b549752a-f156-4894-90ad-ab3994fd071d"),
+                    Name = "Medium",
+                    Description = "Trial",
+                    Price = 5200000,
+                    Duration = 30,
+                    IsActivated = true,
+                },
+                new SubscriptionPackage()
+                {
+                    Id = new Guid("b5db3ea1-f81c-465e-a23b-da7d6d361930"),
+                    Name = "Pro",
+                    Description = "Trial",
+                    Price = 9000000,
+                    Duration = 30,
+                    IsActivated = true,
+                }
+            );
+        
         builder.Entity<Role>()
             .HasData(
                 new Role { Id = new Guid("4b7171f4-3219-4688-9f7c-625687a95867"), Name = "System Admin" },

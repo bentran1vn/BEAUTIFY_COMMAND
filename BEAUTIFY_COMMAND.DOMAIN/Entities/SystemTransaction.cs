@@ -13,6 +13,8 @@ public class SystemTransaction : AggregateRoot<Guid>, IAuditableEntity
     [MaxLength(50)] public string? PaymentMethod { get; set; }
     [MaxLength(50)] public string? PaymentStatus { get; set; }
 
+    public int Status { get; set; } = 0;
+
     public DateTimeOffset CreatedOnUtc { get; set; }
     public DateTimeOffset? ModifiedOnUtc { get; set; }
 }
