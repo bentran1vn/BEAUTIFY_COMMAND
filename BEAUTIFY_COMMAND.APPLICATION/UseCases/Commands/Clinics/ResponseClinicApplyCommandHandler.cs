@@ -10,8 +10,10 @@ public class ResponseClinicApplyCommandHandler: ICommandHandler<CONTRACT.Service
     private readonly IMailService _mailService;
     private readonly IPasswordHasherService _passwordHasherService;
     private readonly IRepositoryBase<UserClinic, Guid> _userClinicRepository;
+    private readonly IRepositoryBase<SubscriptionPackage, Guid> _subscriptionPackageRepository;
+    private readonly IRepositoryBase<SystemTransaction, Guid> _systemTransactionRepository;
 
-    public ResponseClinicApplyCommandHandler(IRepositoryBase<User, Guid> userRepository, IRepositoryBase<ClinicOnBoardingRequest, Guid> clinicOnBoardingRequestRepository, IMailService mailService, IPasswordHasherService passwordHasherService, IRepositoryBase<UserClinic, Guid> userClinicRepository)
+    public ResponseClinicApplyCommandHandler(IRepositoryBase<User, Guid> userRepository, IRepositoryBase<ClinicOnBoardingRequest, Guid> clinicOnBoardingRequestRepository, IMailService mailService, IPasswordHasherService passwordHasherService, IRepositoryBase<UserClinic, Guid> userClinicRepository, IRepositoryBase<SubscriptionPackage, Guid> subscriptionPackageRepository, IRepositoryBase<SystemTransaction, Guid> systemTransactionRepository)
     {
         // _clinicRepository = clinicRepository;
         _userRepository = userRepository;
@@ -19,6 +21,8 @@ public class ResponseClinicApplyCommandHandler: ICommandHandler<CONTRACT.Service
         _mailService = mailService;
         _passwordHasherService = passwordHasherService;
         _userClinicRepository = userClinicRepository;
+        _subscriptionPackageRepository = subscriptionPackageRepository;
+        _systemTransactionRepository = systemTransactionRepository;
     }
 
     public async Task<Result> Handle(CONTRACT.Services.Clinics.Commands.ResponseClinicApplyCommand request, CancellationToken cancellationToken)
@@ -127,6 +131,27 @@ public class ResponseClinicApplyCommandHandler: ICommandHandler<CONTRACT.Service
                 <p>If you have any questions, please reply to this email.</p>
                 <p>Thank you for your application !</p>
             ";
+
+            var sub = await _subscriptionPackageRepository.FindSingleAsync(x => x.Name.Equals("Trial"), cancellationToken);
+
+            if (sub == null)
+            {
+                return Result.Failure(new Error("500", "Subscription package Not Found"));
+            }
+            
+            TimeZoneInfo vietnamTimeZone = TimeZoneInfo.FindSystemTimeZoneById("SE Asia Standard Time");
+
+            var trans = new SystemTransaction()
+            {
+                Id = Guid.NewGuid(),
+                ClinicId = applyRequest.Clinic.Id,
+                SubscriptionPackageId = sub.Id,
+                Amount = sub.Price,
+                TransactionDate = TimeZoneInfo.ConvertTime(DateTimeOffset.UtcNow, vietnamTimeZone),
+                Status = 1
+            };
+            
+            _systemTransactionRepository.Add(trans);
         }
         
         await _mailService.SendMail(content);
