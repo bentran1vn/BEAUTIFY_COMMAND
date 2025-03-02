@@ -49,7 +49,7 @@ public class SubscriptionOrderCommandHandler: ICommandHandler<CONTRACT.Services.
         
         _systemTransactionRepository.Add(trans);
 
-        var qrUrl = $"https://qr.sepay.vn/img?bank=VietinBank&acc=100879223979&template=qronly&amount={sub.Price}&des=BeautifySub{trans.Id}";
+        var qrUrl = $"https://qr.sepay.vn/img?bank=MBBank&acc=0901928382&template=&amount={(int)sub.Price}&des=BeautifySub{trans.Id}";
         
         var result = new
         {
