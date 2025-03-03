@@ -35,11 +35,12 @@ public class CreatePromotionServicesCommandHandler : ICommandHandler<CONTRACT.Se
         var isValidServiceQuery =  _clinicServicerepository.FindAll(
             x => 
                 x.ServiceId == request.ServiceId &&
-                x.ClinicId == request.ClinicId &&
+                (x.ClinicId == request.ClinicId || x.Clinics.ParentId == request.ClinicId) &&
                 !x.IsDeleted
             ).AsTracking();
 
         isValidServiceQuery = isValidServiceQuery
+            .Include(x => x.Clinics)
             .Include(x => x.Services)
             .ThenInclude(x => x.Procedures)!
                     .ThenInclude(x => x.ProcedurePriceTypes);
