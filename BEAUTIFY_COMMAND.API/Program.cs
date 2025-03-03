@@ -1,6 +1,7 @@
 using BEAUTIFY_COMMAND.API.DependencyInjection.Extensions;
 using BEAUTIFY_COMMAND.API.Middlewares;
 using BEAUTIFY_COMMAND.APPLICATION.DependencyInjection.Extensions;
+using BEAUTIFY_COMMAND.APPLICATION.Hub;
 using BEAUTIFY_COMMAND.INFRASTRUCTURE.DependencyInjection.Extensions;
 using BEAUTIFY_COMMAND.PERSISTENCE.DependencyInjection.Extensions;
 using BEAUTIFY_PACKAGES.BEAUTIFY_PACKAGES.API.DependencyInjection.Extensions;
@@ -77,6 +78,8 @@ builder.Services.AddAntiforgery(options =>
     options.HeaderName = "X-CSRF-TOKEN"; // Default header for token validation
 });
 
+builder.Services.AddSignalR();
+
 var app = builder.Build();
 
 // Using middleware
@@ -87,6 +90,7 @@ app.UseMiddleware<ExceptionHandlingMiddleware>();
 app.UseSwaggerAPI(); // => After MapCarter => Show Version
 
 app.UseCors("CorsPolicy");
+app.MapHub<PaymentHub>("/paymentHub");
 
 // app.UseHttpsRedirection();
 
