@@ -54,10 +54,10 @@ public class SubscriptionOrderCommandHandler: ICommandHandler<CONTRACT.Services.
         var result = new
         {
             TransactionId = trans.Id,
-            BankNumber = "100879223979",
-            BankGateway = "VietinBank",
-            trans.Amount,
-            OrderDescription = $"Beautify-{trans.Id}",
+            BankNumber = "0901928382",
+            BankGateway = "MBBank",
+            TransAmount = (int)trans.Amount,
+            OrderDescription = $"BeautifySub{trans.Id}",
             QrUrl = qrUrl,
         };
         
