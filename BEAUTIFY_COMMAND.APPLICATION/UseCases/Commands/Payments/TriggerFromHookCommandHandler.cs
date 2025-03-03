@@ -1,12 +1,17 @@
+using BEAUTIFY_COMMAND.APPLICATION.Hub;
+using Microsoft.AspNetCore.SignalR;
+
 namespace BEAUTIFY_COMMAND.APPLICATION.UseCases.Commands.Payments;
 
 public class TriggerFromHookCommandHandler: ICommandHandler<CONTRACT.Services.Payments.Commands.TriggerFromHookCommand>
 {
     private readonly IRepositoryBase<SystemTransaction, Guid> _systemTransactionRepository;
+    private readonly IHubContext<PaymentHub> _hubContext;
 
-    public TriggerFromHookCommandHandler(IRepositoryBase<SystemTransaction, Guid> systemTransactionRepository)
+    public TriggerFromHookCommandHandler(IRepositoryBase<SystemTransaction, Guid> systemTransactionRepository, IHubContext<PaymentHub> hubContext)
     {
         _systemTransactionRepository = systemTransactionRepository;
+        _hubContext = hubContext;
     }
 
     public async Task<Result> Handle(CONTRACT.Services.Payments.Commands.TriggerFromHookCommand request, CancellationToken cancellationToken)
@@ -29,13 +34,15 @@ public class TriggerFromHookCommandHandler: ICommandHandler<CONTRACT.Services.Pa
             {
                 return Result.Failure(new Error("500", "Transaction Amount invalid"));
             }
-        
-            tran.Status = 1;
-
+            
             if (tran.TransactionDate > DateTimeOffset.Now)
             {
                 return Result.Failure(new Error("500", "Transaction Date invalid"));
             }
+            
+            tran.Status = 1;
+            
+            await _hubContext.Clients.Group(tran.Id.ToString()).SendAsync("ReceivePaymentStatus", true, cancellationToken);
         }
         
         return Result.Success("Handler successfully triggered.");
