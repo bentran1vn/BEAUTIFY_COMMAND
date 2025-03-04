@@ -10,9 +10,9 @@ public class SubscriptionApi : ApiEndpoint, ICarterModule
         var gr1 = app.NewVersionedApi("Subscriptions")
             .MapGroup(BaseUrl).HasApiVersion(1);
 
-        gr1.MapPost(string.Empty, CreateSubscription);
-        gr1.MapPut("{id:guid}", UpdateSubscription);
-        gr1.MapDelete("{id:guid}", DeleteSubscription);
+        gr1.MapPost(string.Empty, CreateSubscription).RequireAuthorization();
+        gr1.MapPut("{id:guid}", UpdateSubscription).RequireAuthorization();
+        gr1.MapDelete("{id:guid}", DeleteSubscription).RequireAuthorization();
         gr1.MapPut("change-status/{id:guid}", ChangeStatusSubscription);
     }
 
