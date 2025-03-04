@@ -7,6 +7,8 @@ public class Order : AggregateRoot<Guid>, IAuditableEntity
     public Guid CustomerId { get; set; }
     public virtual User? Customer { get; set; }
     [Column(TypeName = "decimal(18,2)")] public decimal? TotalAmount { get; set; }
+    [Column(TypeName = "decimal(18,2)")] public decimal? Discount { get; set; }
+    [Column(TypeName = "decimal(18,2)")] public decimal? FinalAmount { get; set; }
     public DateTimeOffset OrderDate { get; set; } = DateTimeOffset.UtcNow;
     [MaxLength(50)] public string? Status { get; set; }
     public DateTimeOffset CreatedOnUtc { get; set; }

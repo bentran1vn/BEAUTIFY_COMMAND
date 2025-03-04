@@ -1,5 +1,0 @@
-<Project>
-  <ItemGroup>
-    <PackageReference Include="BEAUTIFY_PACKAGES.SHARE" Version="1.5.5" />
-  </ItemGroup>
-</Project>

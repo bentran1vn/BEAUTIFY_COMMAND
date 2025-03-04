@@ -5,17 +5,16 @@
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
     </PropertyGroup>
+
     <ItemGroup>
-       
+      <PackageReference Include="BEAUTIFY_PACKAGES.SHARE" Version="1.5.7" />
     </ItemGroup>
    
 
     <ItemGroup>
+		
       <ProjectReference Include="..\BEAUTIFY_COMMAND.PERSISTENCE\BEAUTIFY_COMMAND.PERSISTENCE.csproj" />
     </ItemGroup>
    
-
-   
-
 
 </Project>

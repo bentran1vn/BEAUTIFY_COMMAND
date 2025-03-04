@@ -11,8 +11,10 @@
       <_ContentIncludedByDefault Remove="appsettings.json" />
     </ItemGroup>
 
-    <ItemGroup>
-        
+    <ItemGroup>   
+		
+        <PackageReference Include="BEAUTIFY_PACKAGES.SHARE" Version="1.5.7" />   
+		
         <PackageReference Include="Carter" Version="8.1.0" />
         <PackageReference Include="MicroElements.Swashbuckle.FluentValidation" Version="6.1.0" />
         <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.7">
@@ -44,5 +46,4 @@
         <Link>.dockerignore</Link>
       </Content>
     </ItemGroup>
-
 </Project>
