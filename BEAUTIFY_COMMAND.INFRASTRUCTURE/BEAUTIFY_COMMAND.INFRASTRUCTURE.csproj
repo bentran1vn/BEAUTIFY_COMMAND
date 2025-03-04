@@ -17,4 +17,9 @@
     </ItemGroup>
    
 
+    <ItemGroup>
+      <PackageVersion Update="BEAUTIFY_PACKAGES.SHARE" Version="1.5.8" />
+    </ItemGroup>
+   
+
 </Project>

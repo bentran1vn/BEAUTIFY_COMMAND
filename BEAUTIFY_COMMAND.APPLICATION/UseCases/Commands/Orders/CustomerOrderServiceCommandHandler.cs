@@ -66,11 +66,21 @@ internal sealed class
             ProcedurePriceTypeId = x.Id,
             Price = x.Price,
         }).ToList();
-        
+        order.TotalAmount = orderDetails.Sum(x => x.Price);
+        order.FinalAmount = order.TotalAmount - discount;
         orderRepositoryBase.Add(order);
         orderDetailRepositoryBase.AddRange(orderDetails);
-        
-
-        return Result.Success();
+        var qrUrl =
+            $"https://qr.sepay.vn/img?bank=MBBank&acc=0901928382&template=&amount={(int)order!.FinalAmount!}&des=CustomerOrder{order.Id}";
+        var result = new
+        {
+            TransactionId = order.Id,
+            BankNumber = "100879223979",
+            BankGateway = "VietinBank",
+            order.FinalAmount,
+            OrderDescription = $"Customer Order: {order.Id}",
+            QrUrl = qrUrl,
+        };
+        return Result.Success(result);
     }
 }

@@ -16,35 +16,33 @@ public class TriggerFromHookCommandHandler: ICommandHandler<CONTRACT.Services.Pa
 
     public async Task<Result> Handle(CONTRACT.Services.Payments.Commands.TriggerFromHookCommand request, CancellationToken cancellationToken)
     {
-        if (request.Type == 0)
+        if (request.Type != 0) return Result.Success("Handler successfully triggered.");
+        var tran = await _systemTransactionRepository.FindByIdAsync(request.Id, cancellationToken);
+
+        if (tran == null || tran.IsDeleted)
         {
-            var tran = await _systemTransactionRepository.FindByIdAsync(request.Id, cancellationToken);
-
-            if (tran == null || tran.IsDeleted)
-            {
-                return Result.Failure(new Error("404", "Transaction not found"));
-            }
-        
-            if(tran.Status != 0)
-            {
-                return Result.Failure(new Error("500", "Transaction already handler"));
-            }
-
-            if (tran.Amount != request.TransferAmount)
-            {
-                return Result.Failure(new Error("500", "Transaction Amount invalid"));
-            }
-            
-            if (tran.TransactionDate > DateTimeOffset.Now)
-            {
-                return Result.Failure(new Error("500", "Transaction Date invalid"));
-            }
-            
-            tran.Status = 1;
-            
-            await _hubContext.Clients.Group(tran.Id.ToString()).SendAsync("ReceivePaymentStatus", true, cancellationToken);
+            return Result.Failure(new Error("404", "Transaction not found"));
         }
         
+        if(tran.Status != 0)
+        {
+            return Result.Failure(new Error("500", "Transaction already handler"));
+        }
+
+        if (tran.Amount != request.TransferAmount)
+        {
+            return Result.Failure(new Error("500", "Transaction Amount invalid"));
+        }
+            
+        if (tran.TransactionDate > DateTimeOffset.Now)
+        {
+            return Result.Failure(new Error("500", "Transaction Date invalid"));
+        }
+            
+        tran.Status = 1;
+            
+        await _hubContext.Clients.Group(tran.Id.ToString()).SendAsync("ReceivePaymentStatus", true, cancellationToken);
+
         return Result.Success("Handler successfully triggered.");
     }
 }

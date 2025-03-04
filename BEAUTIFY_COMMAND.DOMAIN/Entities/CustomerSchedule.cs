@@ -10,6 +10,8 @@ public class CustomerSchedule : AggregateRoot<Guid>, IAuditableEntity
     public Guid DoctorId { get; set; }
     public virtual UserClinic? Doctor { get; set; }
 
+    public DateTimeOffset Date { get; set; }
+
     [MaxLength(50)] public string? Status { get; set; }
     public Guid? ProcedureId { get; set; }
     public virtual Procedure? Procedure { get; set; }
