@@ -23,7 +23,10 @@ internal sealed class CreateSubscriptionCommandHandler(IRepositoryBase<Subscript
             trimmedName,
             request.Description,
             request.Price,
-            request.Duration);
+            request.Duration,
+            request.LimitBranches,
+            request.LimitLiveStream
+        );
 
         _repositoryBase.Add(subscription);
 

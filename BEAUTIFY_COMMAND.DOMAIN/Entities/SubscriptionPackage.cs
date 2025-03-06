@@ -12,19 +12,18 @@ public class SubscriptionPackage : AggregateRoot<Guid>, IAuditableEntity
     public required int Duration { get; set; }
     public bool IsActivated { get; set; }
     public int LimitBranch { get; set; }
-    public bool LimitLiveStream { get; set; }
+    public int LimitLiveStream { get; set; }
     public DateTimeOffset CreatedOnUtc { get; set; }
     public DateTimeOffset? ModifiedOnUtc { get; set; }
 
-    // protected SubscriptionPackage()
-    // {
-    // }
 
     public static SubscriptionPackage Create(
         string name,
         string description,
         decimal price,
-        int duration)
+        int duration,
+        int limitBranch,
+        int limitLiveStream)
     {
         var subscription = new SubscriptionPackage
         {
@@ -34,7 +33,9 @@ public class SubscriptionPackage : AggregateRoot<Guid>, IAuditableEntity
             Price = price,
             Duration = duration,
             IsActivated = false,
-            CreatedOnUtc = DateTimeOffset.UtcNow
+            CreatedOnUtc = DateTimeOffset.UtcNow,
+            LimitBranch = limitBranch,
+            LimitLiveStream = limitLiveStream
         };
 
         // Raise the domain event
@@ -50,7 +51,9 @@ public class SubscriptionPackage : AggregateRoot<Guid>, IAuditableEntity
                 IsActivated = subscription.IsActivated,
                 IsDeleted = false,
                 Created = subscription.CreatedOnUtc,
-                ModifiedOnUtc = null
+                ModifiedOnUtc = null,
+                LimitBranch = subscription.LimitBranch,
+                LimitLiveStream = subscription.LimitLiveStream
             }));
 
         return subscription;
@@ -60,13 +63,17 @@ public class SubscriptionPackage : AggregateRoot<Guid>, IAuditableEntity
         string name,
         string description,
         decimal price,
-        int duration)
+        int duration,
+        int limitBranch,
+        int limitLiveStream)
     {
         Name = name;
         Description = description;
         Price = price;
         Duration = duration;
         ModifiedOnUtc = DateTimeOffset.UtcNow;
+        LimitBranch = limitBranch;
+        LimitLiveStream = limitLiveStream;
 
 
         // Raise domain event for update
@@ -82,7 +89,9 @@ public class SubscriptionPackage : AggregateRoot<Guid>, IAuditableEntity
                 IsActivated = IsActivated,
                 IsDeleted = false,
                 Created = CreatedOnUtc,
-                ModifiedOnUtc = ModifiedOnUtc
+                ModifiedOnUtc = ModifiedOnUtc,
+                LimitBranch = LimitBranch,
+                LimitLiveStream = LimitLiveStream
             }));
     }
 

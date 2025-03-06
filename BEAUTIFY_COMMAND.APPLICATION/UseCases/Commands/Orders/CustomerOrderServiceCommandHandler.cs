@@ -54,7 +54,8 @@ internal sealed class
         {
             Id = Guid.NewGuid(),
             CustomerId = user.Id,
-            Status = Constant.ORDER_PENDING,
+            ServiceId = procedures[0].Procedure.ServiceId,
+            Status = Constant.OrderStatus.ORDER_PENDING,
             Discount = discount,
         };
         //check if service discount is not null then apply discount

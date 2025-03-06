@@ -2,7 +2,7 @@
 using BEAUTIFY_PACKAGES.BEAUTIFY_PACKAGES.DOMAIN.Constrants;
 
 namespace BEAUTIFY_COMMAND.APPLICATION.UseCases.Commands.DoctorCertificate;
-public class CreateSubscriptionCommandHandler(
+public class CreateDoctorCertificateCommandHandler(
     IRepositoryBase<DOMAIN.Entities.DoctorCertificate, Guid> doctorCertificateRepository,
     IMediaService mediaService,
     IRepositoryBase<User, Guid> userRepository
@@ -22,7 +22,7 @@ public class CreateSubscriptionCommandHandler(
         var user = await userRepository.FindSingleAsync(x => x.Id == request.UserId, cancellationToken);
         if (user == null)
             throw new UnauthorizedAccessException();
-        if (user.Role?.Name != Constant.DOCTOR)
+        if (user.Role?.Name != Constant.Role.DOCTOR)
             throw new UnauthorizedAccessException();
         // check if doctor certificate already exist
         var doctorCertificate = await doctorCertificateRepository.FindSingleAsync(

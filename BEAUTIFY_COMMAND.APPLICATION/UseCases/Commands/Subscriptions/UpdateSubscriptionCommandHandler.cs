@@ -27,7 +27,9 @@ public class UpdateSubscriptionCommandHandler(IRepositoryBase<SubscriptionPackag
             request.Name,
             request.Description,
             request.Price,
-            request.Duration
+            request.Duration,
+            request.LimitBranches,
+            request.LimitLiveStream
         );
 
         // 4. Save updates via repository
