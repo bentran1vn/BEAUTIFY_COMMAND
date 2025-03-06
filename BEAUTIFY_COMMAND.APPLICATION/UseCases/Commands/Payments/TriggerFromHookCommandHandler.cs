@@ -1,47 +1,68 @@
 using BEAUTIFY_COMMAND.APPLICATION.Hub;
+using BEAUTIFY_PACKAGES.BEAUTIFY_PACKAGES.DOMAIN.Constrants;
 using Microsoft.AspNetCore.SignalR;
 
 namespace BEAUTIFY_COMMAND.APPLICATION.UseCases.Commands.Payments;
-
-public class TriggerFromHookCommandHandler: ICommandHandler<CONTRACT.Services.Payments.Commands.TriggerFromHookCommand>
+public class TriggerFromHookCommandHandler(
+    IRepositoryBase<SystemTransaction, Guid> systemTransactionRepository,
+    IHubContext<PaymentHub> hubContext,
+    IRepositoryBase<Order, Guid> orderRepository)
+    : ICommandHandler<CONTRACT.Services.Payments.Commands.TriggerFromHookCommand>
 {
-    private readonly IRepositoryBase<SystemTransaction, Guid> _systemTransactionRepository;
-    private readonly IHubContext<PaymentHub> _hubContext;
-
-    public TriggerFromHookCommandHandler(IRepositoryBase<SystemTransaction, Guid> systemTransactionRepository, IHubContext<PaymentHub> hubContext)
+    public async Task<Result> Handle(CONTRACT.Services.Payments.Commands.TriggerFromHookCommand request,
+        CancellationToken cancellationToken)
     {
-        _systemTransactionRepository = systemTransactionRepository;
-        _hubContext = hubContext;
-    }
+        if (request.Type == 0)
+        {
+            var tran = await systemTransactionRepository.FindByIdAsync(request.Id, cancellationToken);
 
-    public async Task<Result> Handle(CONTRACT.Services.Payments.Commands.TriggerFromHookCommand request, CancellationToken cancellationToken)
-    {
-        if (request.Type != 0) return Result.Success("Handler successfully triggered.");
-        var tran = await _systemTransactionRepository.FindByIdAsync(request.Id, cancellationToken);
+            if (tran == null || tran.IsDeleted)
+            {
+                return Result.Failure(new Error("404", "Transaction not found"));
+            }
 
-        if (tran == null || tran.IsDeleted)
-        {
-            return Result.Failure(new Error("404", "Transaction not found"));
-        }
-        
-        if(tran.Status != 0)
-        {
-            return Result.Failure(new Error("500", "Transaction already handler"));
-        }
+            if (tran.Status != 0)
+            {
+                return Result.Failure(new Error("500", "Transaction already handler"));
+            }
 
-        if (tran.Amount != request.TransferAmount)
-        {
-            return Result.Failure(new Error("500", "Transaction Amount invalid"));
+            if (tran.Amount != request.TransferAmount)
+            {
+                return Result.Failure(new Error("500", "Transaction Amount invalid"));
+            }
+
+            if (tran.TransactionDate > DateTimeOffset.Now)
+            {
+                return Result.Failure(new Error("500", "Transaction Date invalid"));
+            }
+
+            tran.Status = 1;
+
+            await hubContext.Clients.Group(tran.Id.ToString())
+                .SendAsync("ReceivePaymentStatus", true, cancellationToken);
         }
-            
-        if (tran.TransactionDate > DateTimeOffset.Now)
+        else if (request.Type == 1)
         {
-            return Result.Failure(new Error("500", "Transaction Date invalid"));
+            var order = await orderRepository.FindByIdAsync(request.Id, cancellationToken);
+            if (order == null || order.IsDeleted)
+            {
+                return Result.Failure(new Error("404", "Order not found"));
+            }
+
+            if (order.Status == Constant.ORDER_COMPLETED)
+            {
+                return Result.Failure(new Error("500", "Order already completed"));
+            }
+
+            if (order.FinalAmount != request.TransferAmount)
+            {
+                return Result.Failure(new Error("500", "Order Amount invalid"));
+            }
+
+            order.Status = Constant.ORDER_COMPLETED;
+            await hubContext.Clients.Group(order.Id.ToString())
+                .SendAsync(Constant.ORDER_COMPLETED, true, cancellationToken);
         }
-            
-        tran.Status = 1;
-            
-        await _hubContext.Clients.Group(tran.Id.ToString()).SendAsync("ReceivePaymentStatus", true, cancellationToken);
 
         return Result.Success("Handler successfully triggered.");
     }

@@ -71,7 +71,7 @@ internal sealed class
         orderRepositoryBase.Add(order);
         orderDetailRepositoryBase.AddRange(orderDetails);
         var qrUrl =
-            $"https://qr.sepay.vn/img?bank=MBBank&acc=0901928382&template=&amount={(int)order!.FinalAmount!}&des=CustomerOrder{order.Id}";
+            $"https://qr.sepay.vn/img?bank=MBBank&acc=0901928382&template=&amount={(int)order!.FinalAmount!}&des=BeautifyOrder{order.Id}";
         var result = new
         {
             TransactionId = order.Id,
