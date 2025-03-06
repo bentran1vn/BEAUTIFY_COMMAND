@@ -49,7 +49,7 @@ public class TriggerFromHookCommandHandler(
                 return Result.Failure(new Error("404", "Order not found"));
             }
 
-            if (order.Status == Constant.ORDER_COMPLETED)
+            if (order.Status == Constant.OrderStatus.ORDER_COMPLETED)
             {
                 return Result.Failure(new Error("500", "Order already completed"));
             }
@@ -59,9 +59,9 @@ public class TriggerFromHookCommandHandler(
                 return Result.Failure(new Error("500", "Order Amount invalid"));
             }
 
-            order.Status = Constant.ORDER_COMPLETED;
+            order.Status = Constant.OrderStatus.ORDER_COMPLETED;
             await hubContext.Clients.Group(order.Id.ToString())
-                .SendAsync(Constant.ORDER_COMPLETED, true, cancellationToken);
+                .SendAsync(Constant.OrderStatus.ORDER_COMPLETED, true, cancellationToken);
         }
 
         return Result.Success("Handler successfully triggered.");

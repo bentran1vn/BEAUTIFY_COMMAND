@@ -19,7 +19,7 @@ internal sealed class DoctorSetWorkingServiceCommandHandler(
             throw new UserException.UserNotFoundException(request.DoctorId);
         }
 
-        if (doctor.Role?.Name != Constant.DOCTOR)
+        if (doctor.Role?.Name != Constant.Role.DOCTOR)
         {
             return Result.Failure(new Error("403", "User is not a doctor"));
         }

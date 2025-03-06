@@ -21,7 +21,7 @@ internal sealed class CreateWorkingScheduleCommandHandler(
             throw new UserClinicException.UserClinicNotFoundException();
         }
 
-        if (doctor.Role?.Name != Constant.DOCTOR)
+        if (doctor.Role?.Name != Constant.Role.DOCTOR)
         {
             return Result.Failure(new Error("403", "User is not a doctor"));
         }

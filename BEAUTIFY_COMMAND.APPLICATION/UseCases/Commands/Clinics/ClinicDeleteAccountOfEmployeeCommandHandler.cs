@@ -16,7 +16,7 @@ internal sealed class ClinicDeleteAccountOfEmployeeCommandHandler(
 
         var user = await userRepository.FindByIdAsync(request.UserId, cancellationToken) ??
                    throw new UserException.UserNotFoundException(request.UserId);
-        if (user?.Role?.Name == Constant.CLINIC)
+        if (user?.Role?.Name == Constant.Role.CLINIC_ADMIN)
         {
             throw new UnauthorizedAccessException();
         }
