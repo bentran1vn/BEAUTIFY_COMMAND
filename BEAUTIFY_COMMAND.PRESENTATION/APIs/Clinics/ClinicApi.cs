@@ -14,7 +14,7 @@ public class ClinicApi : ApiEndpoint, ICarterModule
         var gr1 = app.NewVersionedApi("Clinics")
             .MapGroup(BaseUrl).HasApiVersion(1);
 
-        gr1.MapPost("apply", ClinicApply)
+        gr1.MapPost("application", ClinicApply)
             .DisableAntiforgery()
             .WithName("apply")
             .WithSummary("New Clinic send a request to Join System.")
@@ -91,7 +91,7 @@ public class ClinicApi : ApiEndpoint, ICarterModule
                 }
             );
 
-        gr1.MapPut("apply/{id}", ResponseClinicApply)
+        gr1.MapPut("application/{id}", ResponseClinicApply)
             .WithName("Response Apply Request")
             .WithSummary("Admin Response Apply Request.")
             .WithDescription("With Action = 0 is Approve, Action = 1 is Reject, Action = 2 is Banned." +
