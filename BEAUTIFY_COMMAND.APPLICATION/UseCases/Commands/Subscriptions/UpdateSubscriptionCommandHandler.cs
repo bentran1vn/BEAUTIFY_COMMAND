@@ -22,16 +22,13 @@ public class UpdateSubscriptionCommandHandler(IRepositoryBase<SubscriptionPackag
         if (duplicateNameSubscription is not null)
             return Result.Failure(new Error("422", "Subscription name already exists"));
 
-        // 3. Update the existing subscription (domain logic)
-        existingSubscription.UpdateSubscription(
-            request.Name,
-            request.Description,
-            request.Price,
-            request.Duration,
-            request.LimitBranches,
-            request.LimitLiveStream
-        );
-
+        existingSubscription.Name = request.Name;
+        existingSubscription.Description = request.Description;
+        existingSubscription.Price = request.Price;
+        existingSubscription.Duration = request.Duration;
+        existingSubscription.LimitBranch = request.LimitBranches;
+        existingSubscription.LimitLiveStream = request.LimitLiveStream;
+        existingSubscription.EnhancedViewer = request.EnhancedView;
         // 4. Save updates via repository
         repositoryBase.Update(existingSubscription);
 

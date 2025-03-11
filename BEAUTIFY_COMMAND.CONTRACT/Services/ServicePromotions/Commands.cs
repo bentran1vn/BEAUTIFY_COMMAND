@@ -1,4 +1,3 @@
-using BEAUTIFY_PACKAGES.BEAUTIFY_PACKAGES.CONTRACT.Abstractions.Messages;
 using Microsoft.AspNetCore.Http;
 
 namespace BEAUTIFY_COMMAND.CONTRACT.Services.ServicePromotions;

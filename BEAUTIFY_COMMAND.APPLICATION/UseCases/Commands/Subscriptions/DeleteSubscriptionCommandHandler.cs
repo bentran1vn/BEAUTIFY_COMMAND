@@ -10,7 +10,7 @@ public class
             await repositoryBase.FindSingleAsync(x => x.Id.Equals(request.Id), cancellationToken);
         if (existingSubscription is null) return Result.Failure(new Error("404", "Subscription not found"));
 
-        existingSubscription.DeleteSubscription();
+        repositoryBase.Remove(existingSubscription);
         return Result.Success();
     }
 }

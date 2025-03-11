@@ -1,6 +1,4 @@
-﻿using FluentValidation;
-
-namespace BEAUTIFY_COMMAND.CONTRACT.Services.Subscription.Validator;
+﻿namespace BEAUTIFY_COMMAND.CONTRACT.Services.Subscription.Validator;
 internal sealed class CreateSubscriptionCommandValidator : AbstractValidator<Commands.CreateSubscriptionCommand>
 {
     public CreateSubscriptionCommandValidator()

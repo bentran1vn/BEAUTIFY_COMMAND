@@ -1,6 +1,4 @@
-﻿using FluentValidation;
-
-namespace BEAUTIFY_COMMAND.CONTRACT.Services.DoctorCertificate.Validator;
+﻿namespace BEAUTIFY_COMMAND.CONTRACT.Services.DoctorCertificate.Validator;
 internal sealed class CreateDoctorCertificateValidator : AbstractValidator<Commands.CreateDoctorCertificateCommand>
 {
     public CreateDoctorCertificateValidator()

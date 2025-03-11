@@ -26,7 +26,10 @@ internal sealed class
             Id = Guid.NewGuid(),
             Email = request.Email,
             Name = request.Name,
-            Address = request.Address,
+            City = request.City,
+            Ward = request.Ward,
+            District = request.District,
+            HouseNumber = request.HouseNumber,
             ParentId = currentUserService.ClinicId.Value,
             PhoneNumber = request.PhoneNumber,
             TaxCode = parentClinic.TaxCode,
@@ -34,6 +37,8 @@ internal sealed class
             OperatingLicenseUrl = OUrl,
             OperatingLicenseExpiryDate = request.OperatingLicenseExpiryDate,
             Status = 1,
+            BankName = request.BankName,
+            BankAccountNumber = request.BankAccountNumber,
             ProfilePictureUrl = PUrl,
             IsActivated = true,
         };
@@ -48,7 +53,10 @@ internal sealed class
             Password = passwordHasherService.HashPassword("123456789"),
             Status = 1,
             PhoneNumber = request.PhoneNumber,
-            Address = request.Address,
+            City = request.City,
+            Ward = request.Ward,
+            District = request.District,
+            HouseNumber = request.HouseNumber,
             RoleId = role.Id,
         };
         userClinicRepository.Add(new UserClinic

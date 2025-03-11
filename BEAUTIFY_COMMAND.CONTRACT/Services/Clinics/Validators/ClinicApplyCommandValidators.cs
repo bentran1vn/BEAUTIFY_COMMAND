@@ -1,5 +1,3 @@
-using FluentValidation;
-
 namespace BEAUTIFY_COMMAND.CONTRACT.Services.Clinics.Validators;
 
 public class ClinicApplyCommandValidators : AbstractValidator<Commands.ClinicApplyCommand>
@@ -19,10 +17,7 @@ public class ClinicApplyCommandValidators : AbstractValidator<Commands.ClinicApp
             .NotEmpty()
             .Matches(@"^\+?[1-9]\d{1,14}$").WithMessage("Invalid phone number format");
         
-        RuleFor(x => x.Address)
-            .NotEmpty()
-            .MinimumLength(10).WithMessage("Address must be at least 10 characters long")
-            .MaximumLength(100).WithMessage("Address must exceed 100 characters");
+       
         
         RuleFor(x => x.TaxCode)
             .NotEmpty().WithMessage("Tax code is required");

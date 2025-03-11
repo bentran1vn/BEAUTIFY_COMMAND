@@ -1,4 +1,3 @@
-using BEAUTIFY_PACKAGES.BEAUTIFY_PACKAGES.CONTRACT.Abstractions.Messages;
 using Microsoft.AspNetCore.Http;
 
 
@@ -11,8 +10,13 @@ public static class Commands
         string Name,
         string Email,
         string PhoneNumber,
-        string Address,
+        string City,
+        string District,
+        string Ward,
+        string HouseNumber,
         string TaxCode,
+        string BankName,
+        string BankAccountNumber,
         IFormFile BusinessLicense,
         IFormFile OperatingLicense,
         string OperatingLicenseExpiryDate,
@@ -28,9 +32,14 @@ public static class Commands
         public string ClinicId { get; set; }
         public string? Name { get; set; }
         public string? PhoneNumber { get; set; }
-        public string? Address { get; set; }
+        public string? City { get; set; }
+        public string? District { get; set; }
+        public string? Ward { get; set; }
+        public string? HouseNumber { get; set; }
         public IFormFile? ProfilePicture { get; set; }
         public bool? IsActivated { get; set; }
+        public string? BankName { get; set; }
+        public string? BankAccountNumber { get; set; }
     }
 
     #endregion
@@ -45,8 +54,7 @@ public static class Commands
     ) : ICommand;
 
     #endregion
-
-
+    
     #region ClinicCreateAccountForEmployeeCommand
 
     public record ClinicCreateAccountForEmployeeCommand(
@@ -74,7 +82,10 @@ public static class Commands
     public class ClinicUpdateAccountOfEmployeeCommand : ICommand
     {
         public Guid UserId { get; set; }
-        public string Address { get; set; }
+        public string City { get; set; }
+        public string District { get; set; }
+        public string Ward { get; set; }
+        public string HouseNumber { get; set; }
         public string PhoneNumber { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
@@ -91,18 +102,23 @@ public static class Commands
     ) : ICommand;
 
     #endregion
-    
+
     #region ClinicCreateBranchCommand
 
     public record ClinicCreateBranchCommand(
         string Name,
         string Email,
         string PhoneNumber,
-        string Address,
+        string City,
+        string District,
+        string Ward,
+        string HouseNumber,
+        string BankName,
+        string BankAccountNumber,
         IFormFile OperatingLicense,
         DateTimeOffset OperatingLicenseExpiryDate,
         IFormFile ProfilePictureUrl
-        ) : ICommand;
+    ) : ICommand;
 
     #endregion
 
@@ -110,14 +126,15 @@ public static class Commands
 
     public class ClinicUpdateBranchCommand : ICommand
     {
-        public Guid BranchId { get; set; }
-        public string Name { get; set; }
+        public Guid BranchId { get; }
+        public string Name { get; }
         public string PhoneNumber { get; set; }
-        public string Address { get; set; }
+        public string City { get; set; }
+        public string District { get; set; }
+        public string Ward { get; set; }
+        public string HouseNumber { get; set; }
         public bool IsActivated { get; set; }
         public IFormFile? ProfilePicture { get; set; }
-
-        
     }
 
     #endregion
@@ -129,7 +146,4 @@ public static class Commands
     ) : ICommand;
 
     #endregion
-    
-    
-    
 }

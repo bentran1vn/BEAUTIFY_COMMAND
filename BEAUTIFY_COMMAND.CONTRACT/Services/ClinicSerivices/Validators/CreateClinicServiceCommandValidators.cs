@@ -1,5 +1,3 @@
-using FluentValidation;
-
 namespace BEAUTIFY_COMMAND.CONTRACT.Services.ClinicSerivices.Validators;
 
 public class CreateClinicServiceCommandValidators : AbstractValidator<Commands.CreateClinicServiceCommand>

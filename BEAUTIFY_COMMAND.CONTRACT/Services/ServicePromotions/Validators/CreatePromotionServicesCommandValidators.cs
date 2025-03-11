@@ -1,5 +1,3 @@
-using FluentValidation;
-
 namespace BEAUTIFY_COMMAND.CONTRACT.Services.ServicePromotions.Validators;
 
 public class CreatePromotionServicesCommandValidators: AbstractValidator<Commands.CreatePromotionServicesCommand>

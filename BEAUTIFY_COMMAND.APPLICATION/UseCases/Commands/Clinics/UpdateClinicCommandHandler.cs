@@ -2,21 +2,15 @@ using BEAUTIFY_PACKAGES.BEAUTIFY_PACKAGES.APPLICATION.Abstractions;
 
 
 namespace BEAUTIFY_COMMAND.APPLICATION.UseCases.Commands.Clinics;
-
-public class UpdateClinicCommandHandler : ICommandHandler<CONTRACT.Services.Clinics.Commands.UpdateClinicCommand>
+public class UpdateClinicCommandHandler(
+    IRepositoryBase<Clinic, Guid> clinicRepository,
+    IMediaService mediaService)
+    : ICommandHandler<CONTRACT.Services.Clinics.Commands.UpdateClinicCommand>
 {
-    private readonly IRepositoryBase<DOMAIN.Entities.Clinic, Guid> _clinicRepository;
-    private readonly IMediaService _mediaService;
-
-    public UpdateClinicCommandHandler(IRepositoryBase<DOMAIN.Entities.Clinic, Guid> clinicRepository, IMediaService mediaService)
+    public async Task<Result> Handle(CONTRACT.Services.Clinics.Commands.UpdateClinicCommand request,
+        CancellationToken cancellationToken)
     {
-        _clinicRepository = clinicRepository;
-        _mediaService = mediaService;
-    }
-
-    public async Task<Result> Handle(CONTRACT.Services.Clinics.Commands.UpdateClinicCommand request, CancellationToken cancellationToken)
-    {
-        var clinic = await _clinicRepository.FindByIdAsync(new Guid(request.ClinicId), cancellationToken);
+        var clinic = await clinicRepository.FindByIdAsync(new Guid(request.ClinicId), cancellationToken);
 
         if (clinic == null || clinic.IsDeleted)
         {
@@ -33,14 +27,29 @@ public class UpdateClinicCommandHandler : ICommandHandler<CONTRACT.Services.Clin
             clinic.PhoneNumber = request.PhoneNumber;
         }
 
-        if (request.Address != null)
+        if (request.City != null)
         {
-            clinic.Address = request.Address;
+            clinic.City = request.City;
+        }
+
+        if (request.District != null)
+        {
+            clinic.District = request.District;
+        }
+
+        if (request.Ward != null)
+        {
+            clinic.Ward = request.Ward;
+        }
+
+        if (request.HouseNumber != null)
+        {
+            clinic.HouseNumber = request.HouseNumber;
         }
 
         if (request.ProfilePicture != null)
         {
-            var url = await _mediaService.UploadImageAsync(request.ProfilePicture);
+            var url = await mediaService.UploadImageAsync(request.ProfilePicture);
             clinic.ProfilePictureUrl = url;
         }
 
@@ -48,7 +57,15 @@ public class UpdateClinicCommandHandler : ICommandHandler<CONTRACT.Services.Clin
         {
             clinic.IsActivated = request.IsActivated.Value;
         }
-        
+        if (request.BankName != null)
+        {
+            clinic.BankName = request.BankName;
+        }
+        if (request.BankAccountNumber != null)
+        {
+            clinic.BankAccountNumber = request.BankAccountNumber;
+        }
+
         return Result.Success("Clinic updated.");
     }
 }

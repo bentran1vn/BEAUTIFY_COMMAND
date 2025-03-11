@@ -1,5 +1,3 @@
-using FluentValidation;
-
 namespace BEAUTIFY_COMMAND.CONTRACT.Services.Categories.Validators;
 
 public class UpdateCategoryCommandValidators: AbstractValidator<Commands.UpdateCategoryCommand>

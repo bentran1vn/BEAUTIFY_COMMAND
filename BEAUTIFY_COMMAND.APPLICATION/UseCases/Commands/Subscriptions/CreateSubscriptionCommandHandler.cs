@@ -18,15 +18,17 @@ internal sealed class CreateSubscriptionCommandHandler(IRepositoryBase<Subscript
 
         if (existingSubscription != null) return Result.Failure(new Error("400", "Subscription already exists"));
 
-        // Create and add the new subscription
-        var subscription = SubscriptionPackage.Create(
-            trimmedName,
-            request.Description,
-            request.Price,
-            request.Duration,
-            request.LimitBranches,
-            request.LimitLiveStream
-        );
+        var subscription = new SubscriptionPackage
+        {
+            Name = trimmedName,
+            Description = request.Description,
+            Price = request.Price,
+            Duration = request.Duration,
+            LimitBranch = request.LimitBranches,
+            LimitLiveStream = request.LimitLiveStream,
+            EnhancedViewer = request.EnhancedView,
+            IsActivated = false
+        };
 
         _repositoryBase.Add(subscription);
 

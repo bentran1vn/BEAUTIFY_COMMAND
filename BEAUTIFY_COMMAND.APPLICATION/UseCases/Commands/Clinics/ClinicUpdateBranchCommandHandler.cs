@@ -18,7 +18,10 @@ internal sealed class
         }
 
         clinic.Name = request.Name;
-        clinic.Address = request.Address;
+        clinic.City = request.City;
+        clinic.District = request.District;
+        clinic.Ward = request.Ward;
+        clinic.HouseNumber = request.HouseNumber;
         clinic.PhoneNumber = request.PhoneNumber;
         clinic.IsActivated = request.IsActivated;
         clinicRepository.Update(clinic);

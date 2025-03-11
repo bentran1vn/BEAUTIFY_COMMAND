@@ -1,5 +1,3 @@
-using BEAUTIFY_PACKAGES.BEAUTIFY_PACKAGES.CONTRACT.Abstractions.Messages;
-
 namespace BEAUTIFY_COMMAND.CONTRACT.Services.Subscription;
 public static class Commands
 {
@@ -9,7 +7,8 @@ public static class Commands
         decimal Price,
         int Duration,
         int LimitBranches,
-        int LimitLiveStream) : ICommand;
+        int LimitLiveStream,
+        int EnhancedView) : ICommand;
 
     public record UpdateSubscriptionCommand(
         Guid Id,
@@ -19,7 +18,8 @@ public static class Commands
         int Duration,
         bool IsActivated,
         int LimitBranches,
-        int LimitLiveStream)
+        int LimitLiveStream,
+        int EnhancedView)
         : ICommand;
 
     public record DeleteSubscriptionCommand(Guid Id) : ICommand;

@@ -1,5 +1,3 @@
-using FluentValidation;
-
 namespace BEAUTIFY_COMMAND.CONTRACT.Services.Clinics.Validators;
 
 public class UpdateClinicCommandValidators : AbstractValidator<Commands.UpdateClinicCommand>
@@ -20,11 +18,7 @@ public class UpdateClinicCommandValidators : AbstractValidator<Commands.UpdateCl
             .When(x => !string.IsNullOrEmpty(x.PhoneNumber))
             .WithMessage("Invalid phone number format");
 
-        RuleFor(x => x.Address)
-            .MinimumLength(10)
-            .MaximumLength(100)
-            .When(x => !string.IsNullOrEmpty(x.Address))
-            .WithMessage("Address must be between 10 and 100 characters long.");
+       
         
         // RuleFor(x => x.ProfilePicture)
         //     .Must(file => file.Length > 0)

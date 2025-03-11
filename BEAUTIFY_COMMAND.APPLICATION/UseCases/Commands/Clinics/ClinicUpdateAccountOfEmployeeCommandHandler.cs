@@ -21,7 +21,11 @@ public class ClinicUpdateAccountOfEmployeeCommandHandler(
 
         user.FirstName = request.FirstName;
         user.LastName = request.LastName;
-        user.Address = request.Address;
+        user.City = request.City;
+        user.Ward = request.Ward;
+        user.District = request.District;
+        user.HouseNumber = request.HouseNumber;
+
         user.PhoneNumber = request.PhoneNumber;
         if (request.ProfilePicture != null)
         {

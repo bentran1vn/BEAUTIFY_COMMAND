@@ -2,42 +2,34 @@ using BEAUTIFY_COMMAND.PERSISTENCE;
 using BEAUTIFY_COMMAND.PERSISTENCE.Outbox;
 using BEAUTIFY_PACKAGES.BEAUTIFY_PACKAGES.CONTRACT.Abstractions.Messages;
 using BEAUTIFY_PACKAGES.BEAUTIFY_PACKAGES.CONTRACT.Services.DoctorServices;
-using SubscriptionsDomainEvent = BEAUTIFY_PACKAGES.BEAUTIFY_PACKAGES.CONTRACT.Services.Subscriptions.DomainEvents;
+using MassTransit;
+using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
+using Quartz;
 // using PostgreMigrateDomainEvent = BEAUTIFY_PACKAGES.BEAUTIFY_PACKAGES.CONTRACT.Services.CommandConverts.DomainEvents;
 using ClinicServiceDomainEvent = BEAUTIFY_PACKAGES.BEAUTIFY_PACKAGES.CONTRACT.Services.ClinicServices.DomainEvents;
 using ProcedureDomainEvent = BEAUTIFY_PACKAGES.BEAUTIFY_PACKAGES.CONTRACT.Services.Procedures.DomainEvents;
 using WorkingScheduleDomainEvent = BEAUTIFY_PACKAGES.BEAUTIFY_PACKAGES.CONTRACT.Services.WorkingSchedules.DomainEvents;
 using ServicePromotionDomainEvent = BEAUTIFY_PACKAGES.BEAUTIFY_PACKAGES.CONTRACT.Services.ServicePromotion.DomainEvents;
-using MassTransit;
-using Microsoft.EntityFrameworkCore;
-using Newtonsoft.Json;
-using Quartz;
 
 namespace BEAUTIFY_COMMAND.INFRASTRUCTURE.BackgroundJobs;
 [DisallowConcurrentExecution]
-public class ProcessOutboxMessagesJob : IJob
+public class ProcessOutboxMessagesJob(ApplicationDbContext dbContext, IPublishEndpoint publishEndpoint)
+    : IJob
 {
-    private readonly ApplicationDbContext _dbContext;
-    private readonly IPublishEndpoint _publishEndpoint; // Maybe can use more Rebus library
-
-    public ProcessOutboxMessagesJob(ApplicationDbContext dbContext, IPublishEndpoint publishEndpoint)
-    {
-        _dbContext = dbContext;
-        _publishEndpoint = publishEndpoint;
-    }
 
     public async Task Execute(IJobExecutionContext context)
     {
-        List<OutboxMessage> messages = await _dbContext
+        var messages = await dbContext
             .Set<OutboxMessage>()
             .Where(m => m.ProcessedOnUtc == null)
             .OrderBy(m => m.OccurredOnUtc)
             .Take(20)
             .ToListAsync(context.CancellationToken);
 
-        foreach (OutboxMessage outboxMessage in messages)
+        foreach (var outboxMessage in messages)
         {
-            IDomainEvent? domainEvent = JsonConvert
+            var domainEvent = JsonConvert
                 .DeserializeObject<IDomainEvent>(
                     outboxMessage.Content,
                     new JsonSerializerSettings
@@ -52,36 +44,6 @@ public class ProcessOutboxMessagesJob : IJob
             {
                 switch (domainEvent.GetType().Name)
                 {
-                    case nameof(SubscriptionsDomainEvent.SubscriptionCreated):
-                        var subscriptionCreated =
-                            JsonConvert.DeserializeObject<SubscriptionsDomainEvent.SubscriptionCreated>(
-                                outboxMessage.Content,
-                                new JsonSerializerSettings
-                                {
-                                    TypeNameHandling = TypeNameHandling.All
-                                });
-                        await _publishEndpoint.Publish(subscriptionCreated, context.CancellationToken);
-                        break;
-                    case nameof(SubscriptionsDomainEvent.SubscriptionUpdated):
-                        var subscriptionUpdated =
-                            JsonConvert.DeserializeObject<SubscriptionsDomainEvent.SubscriptionUpdated>(
-                                outboxMessage.Content,
-                                new JsonSerializerSettings
-                                {
-                                    TypeNameHandling = TypeNameHandling.All
-                                });
-                        await _publishEndpoint.Publish(subscriptionUpdated, context.CancellationToken);
-                        break;
-                    case nameof(SubscriptionsDomainEvent.SubscriptionDeleted):
-                        var subscriptionDeleted =
-                            JsonConvert.DeserializeObject<SubscriptionsDomainEvent.SubscriptionDeleted>(
-                                outboxMessage.Content,
-                                new JsonSerializerSettings
-                                {
-                                    TypeNameHandling = TypeNameHandling.All
-                                });
-                        await _publishEndpoint.Publish(subscriptionDeleted, context.CancellationToken);
-                        break;
                     // case nameof(PostgreMigrateDomainEvent.PostgreMigrate):
                     //     var postgreMigrate =
                     //         JsonConvert.DeserializeObject<PostgreMigrateDomainEvent.PostgreMigrate>(
@@ -92,16 +54,7 @@ public class ProcessOutboxMessagesJob : IJob
                     //             });
                     //     await _publishEndpoint.Publish(postgreMigrate, context.CancellationToken);
                     //     break;
-                    case nameof(SubscriptionsDomainEvent.SubscriptionStatusActivationChanged):
-                        var subscriptionStatusActivationChanged =
-                            JsonConvert.DeserializeObject<SubscriptionsDomainEvent.SubscriptionStatusActivationChanged>(
-                                outboxMessage.Content,
-                                new JsonSerializerSettings
-                                {
-                                    TypeNameHandling = TypeNameHandling.All
-                                });
-                        await _publishEndpoint.Publish(subscriptionStatusActivationChanged, context.CancellationToken);
-                        break;
+                    
                     case nameof(ClinicServiceDomainEvent.ClinicServiceCreated):
                         var clinicServiceCreated =
                             JsonConvert.DeserializeObject<ClinicServiceDomainEvent.ClinicServiceCreated>(
@@ -110,7 +63,7 @@ public class ProcessOutboxMessagesJob : IJob
                                 {
                                     TypeNameHandling = TypeNameHandling.All
                                 });
-                        await _publishEndpoint.Publish(clinicServiceCreated, context.CancellationToken);
+                        await publishEndpoint.Publish(clinicServiceCreated, context.CancellationToken);
                         break;
                     case nameof(ClinicServiceDomainEvent.ClinicServiceUpdated):
                         var clinicServiceUpdated =
@@ -120,7 +73,7 @@ public class ProcessOutboxMessagesJob : IJob
                                 {
                                     TypeNameHandling = TypeNameHandling.All
                                 });
-                        await _publishEndpoint.Publish(clinicServiceUpdated, context.CancellationToken);
+                        await publishEndpoint.Publish(clinicServiceUpdated, context.CancellationToken);
                         break;
                     case nameof(ProcedureDomainEvent.ProcedureCreated):
                         var procedureCreated =
@@ -130,7 +83,7 @@ public class ProcessOutboxMessagesJob : IJob
                                 {
                                     TypeNameHandling = TypeNameHandling.All
                                 });
-                        await _publishEndpoint.Publish(procedureCreated, context.CancellationToken);
+                        await publishEndpoint.Publish(procedureCreated, context.CancellationToken);
                         break;
 
                     case nameof(WorkingScheduleDomainEvent.WorkingScheduleCreated):
@@ -141,7 +94,7 @@ public class ProcessOutboxMessagesJob : IJob
                                 {
                                     TypeNameHandling = TypeNameHandling.All
                                 });
-                        await _publishEndpoint.Publish(workingScheduleCreated, context.CancellationToken);
+                        await publishEndpoint.Publish(workingScheduleCreated, context.CancellationToken);
                         break;
                     case nameof(WorkingScheduleDomainEvent.WorkingScheduleDeleted):
                         var workingScheduleDeleted =
@@ -151,7 +104,7 @@ public class ProcessOutboxMessagesJob : IJob
                                 {
                                     TypeNameHandling = TypeNameHandling.All
                                 });
-                        await _publishEndpoint.Publish(workingScheduleDeleted, context.CancellationToken);
+                        await publishEndpoint.Publish(workingScheduleDeleted, context.CancellationToken);
                         break;
                     case nameof(WorkingScheduleDomainEvent.WorkingScheduleUpdated):
                         var workingScheduleUpdated =
@@ -161,7 +114,7 @@ public class ProcessOutboxMessagesJob : IJob
                                 {
                                     TypeNameHandling = TypeNameHandling.All
                                 });
-                        await _publishEndpoint.Publish(workingScheduleUpdated, context.CancellationToken);
+                        await publishEndpoint.Publish(workingScheduleUpdated, context.CancellationToken);
                         break;
                     case nameof(ServicePromotionDomainEvent.ServicePromotionCreated):
                         var servicePromotionCreated =
@@ -171,7 +124,7 @@ public class ProcessOutboxMessagesJob : IJob
                                 {
                                     TypeNameHandling = TypeNameHandling.All
                                 });
-                        await _publishEndpoint.Publish(servicePromotionCreated, context.CancellationToken);
+                        await publishEndpoint.Publish(servicePromotionCreated, context.CancellationToken);
                         break;
                     case nameof(DomainEvents.DoctorServiceCreated):
                         var doctorServiceCreated =
@@ -181,7 +134,7 @@ public class ProcessOutboxMessagesJob : IJob
                                 {
                                     TypeNameHandling = TypeNameHandling.All
                                 });
-                        await _publishEndpoint.Publish(doctorServiceCreated, context.CancellationToken);
+                        await publishEndpoint.Publish(doctorServiceCreated, context.CancellationToken);
                         break;
                     case nameof(DomainEvents.DoctorServiceDeleted):
                         var doctorServiceDeleted =
@@ -191,7 +144,7 @@ public class ProcessOutboxMessagesJob : IJob
                                 {
                                     TypeNameHandling = TypeNameHandling.All
                                 });
-                        await _publishEndpoint.Publish(doctorServiceDeleted, context.CancellationToken);
+                        await publishEndpoint.Publish(doctorServiceDeleted, context.CancellationToken);
                         break;
                 }
                 outboxMessage.ProcessedOnUtc = DateTime.UtcNow;
@@ -202,6 +155,6 @@ public class ProcessOutboxMessagesJob : IJob
             }
         }
 
-        await _dbContext.SaveChangesAsync();
+        await dbContext.SaveChangesAsync();
     }
 }

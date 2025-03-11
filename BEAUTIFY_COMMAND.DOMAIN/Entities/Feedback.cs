@@ -6,7 +6,7 @@ public class Feedback : AggregateRoot<Guid>, IAuditableEntity
     /*
      * Thêm thằng OrderDetailId vào kh phân biệt được chiều của relationship
      */
-    //   public Guid OrderDetailId { get; set; }
+    public Guid OrderDetailId { get; set; }
     public virtual OrderDetail? OrderDetail { get; set; }
     [MaxLength(500)] public string? Content { get; set; }
     public int Rating { get; set; }
