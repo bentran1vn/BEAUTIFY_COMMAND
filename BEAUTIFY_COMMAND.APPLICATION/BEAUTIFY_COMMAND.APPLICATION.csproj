@@ -24,4 +24,8 @@
       <PackageVersion Update="BEAUTIFY_PACKAGES.SHARE" Version="1.5.8" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="UseCases\Commands\ClassificationRules\" />
+    </ItemGroup>
+
 </Project>
