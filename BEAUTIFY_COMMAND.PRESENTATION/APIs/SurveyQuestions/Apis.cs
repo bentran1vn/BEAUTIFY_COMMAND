@@ -13,7 +13,7 @@ public class Apis : ApiEndpoint, ICarterModule
     }
 
     private static async Task<IResult> CreateSurveyQuestion(ISender sender,
-        [FromForm] Commands.CreateSurveyQuestionCommand command)
+        [FromBody] Commands.SurveyQuestionCommandWithSurveyIdCommand command)
     {
         var result = await sender.Send(command);
         return result.IsFailure ? HandlerFailure(result) : Results.Ok(result);
