@@ -1,5 +1,4 @@
 namespace BEAUTIFY_COMMAND.CONTRACT.Services.Payments;
-
 public static class Commands
 {
     public class SepayBodyHook
@@ -18,14 +17,15 @@ public static class Commands
         public string description { get; set; }
     }
 
-    public class TriggerFromHookCommand: ICommand
+    public class TriggerFromHookCommand : ICommand
     {
-        public Guid Id{ get; set; }
+        public Guid Id { get; set; }
         public string PaymentDate { get; set; }
-        public int TransferAmount{ get; set; }
-        public int Type{ get; set; }
+        public int TransferAmount { get; set; }
+        public int Type { get; set; }
     }
 
     public record SubscriptionOrderCommand(Guid SubscriptionId, Guid ClinicId) : ICommand;
+
     public record SubscriptionOrderBody(Guid SubscriptionId);
 }

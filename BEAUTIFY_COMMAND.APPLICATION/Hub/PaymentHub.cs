@@ -1,7 +1,6 @@
 using Microsoft.AspNetCore.SignalR;
 
 namespace BEAUTIFY_COMMAND.APPLICATION.Hub;
-
 public class PaymentHub : Microsoft.AspNetCore.SignalR.Hub
 {
     public async Task JoinPaymentSession(string transactionId)

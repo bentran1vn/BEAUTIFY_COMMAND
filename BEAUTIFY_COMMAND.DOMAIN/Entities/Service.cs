@@ -1,7 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using BEAUTIFY_PACKAGES.BEAUTIFY_PACKAGES.CONTRACT.Services.ClinicServices;
-using BEAUTIFY_PACKAGES.BEAUTIFY_PACKAGES.DOMAIN.EntityEvents;
 
 namespace BEAUTIFY_COMMAND.DOMAIN.Entities;
 public class Service : AggregateRoot<Guid>, IAuditableEntity
@@ -16,8 +14,6 @@ public class Service : AggregateRoot<Guid>, IAuditableEntity
     public virtual Category? Category { get; set; }
 
     [Column(TypeName = "decimal(18,2)")] public decimal? DiscountPrice { get; set; }
-    public DateTimeOffset CreatedOnUtc { get; set; }
-    public DateTimeOffset? ModifiedOnUtc { get; set; }
 
     public virtual ICollection<ClinicService>? ClinicServices { get; set; }
     public virtual ICollection<ServiceMedia>? ServiceMedias { get; set; }
@@ -26,5 +22,6 @@ public class Service : AggregateRoot<Guid>, IAuditableEntity
     public virtual ICollection<CustomerSchedule>? CustomerSchedules { get; set; }
     public virtual ICollection<OrderDetail>? OrderDetails { get; set; }
     public virtual ICollection<ClinicVoucher>? ClinicVouchers { get; set; }
-    
+    public DateTimeOffset CreatedOnUtc { get; set; }
+    public DateTimeOffset? ModifiedOnUtc { get; set; }
 }

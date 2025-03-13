@@ -1,6 +1,5 @@
 namespace BEAUTIFY_COMMAND.CONTRACT.Services.Categories.Validators;
-
-public class DeleteCategoryCommandValidators: AbstractValidator<Commands.DeleteCategoryCommand>
+public class DeleteCategoryCommandValidators : AbstractValidator<Commands.DeleteCategoryCommand>
 {
     public DeleteCategoryCommandValidators()
     {

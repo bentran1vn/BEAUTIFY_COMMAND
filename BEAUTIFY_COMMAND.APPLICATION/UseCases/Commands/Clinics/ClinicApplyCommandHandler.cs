@@ -36,19 +36,17 @@ public class ClinicApplyCommandHandler(
                 }
 
                 if (isExist.ClinicOnBoardingRequests == null || isExist.ClinicOnBoardingRequests!.Count == 0)
-                {
                     return Result.Failure(new Error("404", "ClinicOnBoardingRequests Not Exist"));
-                }
 
                 isExist.TotalApply += 1;
 
                 // Check Send Date
-                var clinicOnBoardingRequest = new ClinicOnBoardingRequest()
+                var clinicOnBoardingRequest = new ClinicOnBoardingRequest
                 {
                     Id = Guid.NewGuid(),
                     ClinicId = isExist.Id,
                     Status = 0,
-                    SendMailDate = TimeZoneInfo.ConvertTime(DateTimeOffset.UtcNow, vietnamTimeZone),
+                    SendMailDate = TimeZoneInfo.ConvertTime(DateTimeOffset.UtcNow, vietnamTimeZone)
                 };
 
                 clinicOnBoardingRequestRepository.Add(clinicOnBoardingRequest);
@@ -70,7 +68,7 @@ public class ClinicApplyCommandHandler(
             var operatingLicenseUrl = uploadPromises[1];
             var profilePictureUrl = uploadPromises[2];
 
-            var clinic = new Clinic()
+            var clinic = new Clinic
             {
                 Id = Guid.NewGuid(),
                 Name = request.Name,
@@ -89,17 +87,17 @@ public class ClinicApplyCommandHandler(
                 Status = 0,
                 ProfilePictureUrl = profilePictureUrl,
                 TotalApply = 1,
-                OperatingLicenseExpiryDate = DateTimeOffset.Parse(request.OperatingLicenseExpiryDate),
+                OperatingLicenseExpiryDate = DateTimeOffset.Parse(request.OperatingLicenseExpiryDate)
             };
 
             clinicRepository.Add(clinic);
 
-            var clinicOnBoardingRequest = new ClinicOnBoardingRequest()
+            var clinicOnBoardingRequest = new ClinicOnBoardingRequest
             {
                 Id = Guid.NewGuid(),
                 ClinicId = clinic.Id,
                 Status = 0,
-                SendMailDate = TimeZoneInfo.ConvertTime(DateTimeOffset.UtcNow, vietnamTimeZone),
+                SendMailDate = TimeZoneInfo.ConvertTime(DateTimeOffset.UtcNow, vietnamTimeZone)
             };
 
             clinicOnBoardingRequestRepository.Add(clinicOnBoardingRequest);
@@ -107,7 +105,7 @@ public class ClinicApplyCommandHandler(
             await mailService.SendMail(new MailContent
             {
                 To = request.Email,
-                Subject = $"Your Request Has Been Registered !",
+                Subject = "Your Request Has Been Registered !",
                 Body = $@"
                     <p>Dear {request.Email},</p>
                     <p> System regis your information: </p>
@@ -116,7 +114,7 @@ public class ClinicApplyCommandHandler(
                     <p> Clinic contact tax code: {request.TaxCode}</p>
                     <p>Thank you for your application !</p>
                     <p>Our system will handle as soon as possible !</p>
-                ",
+                "
             });
         }
 

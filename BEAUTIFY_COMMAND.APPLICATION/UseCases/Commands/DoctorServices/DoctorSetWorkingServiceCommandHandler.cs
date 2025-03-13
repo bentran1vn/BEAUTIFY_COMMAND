@@ -1,7 +1,6 @@
 ﻿using BEAUTIFY_COMMAND.DOMAIN.Exceptions;
 using BEAUTIFY_PACKAGES.BEAUTIFY_PACKAGES.DOMAIN.Constrants;
 using BEAUTIFY_PACKAGES.BEAUTIFY_PACKAGES.DOMAIN.EntityEvents;
-using Microsoft.EntityFrameworkCore;
 
 namespace BEAUTIFY_COMMAND.APPLICATION.UseCases.Commands.DoctorServices;
 internal sealed class DoctorSetWorkingServiceCommandHandler(
@@ -14,15 +13,9 @@ internal sealed class DoctorSetWorkingServiceCommandHandler(
         CancellationToken cancellationToken)
     {
         var doctor = await userRepository.FindByIdAsync(request.DoctorId, cancellationToken);
-        if (doctor is null)
-        {
-            throw new UserException.UserNotFoundException(request.DoctorId);
-        }
+        if (doctor is null) throw new UserException.UserNotFoundException(request.DoctorId);
 
-        if (doctor.Role?.Name != Constant.Role.DOCTOR)
-        {
-            return Result.Failure(new Error("403", "User is not a doctor"));
-        }
+        if (doctor.Role?.Name != Constant.Role.DOCTOR) return Result.Failure(new Error("403", "User is not a doctor"));
 
         var existingServiceIds = serviceRepository.FindAll(x => request.ServiceIds.Contains(x.Id))
             .Select(x => x.Id)
@@ -59,7 +52,7 @@ internal sealed class DoctorSetWorkingServiceCommandHandler(
         {
             Id = x.Id,
             ServiceId = x.ServiceId,
-            Doctor = new EntityEvent.UserEntity()
+            Doctor = new EntityEvent.UserEntity
             {
                 Id = x.Doctor.Id,
                 FullName = x.Doctor.FirstName + " " + x.Doctor.LastName,

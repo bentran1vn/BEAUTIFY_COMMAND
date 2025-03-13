@@ -1,4 +1,3 @@
-using System.Text.Json;
 using BEAUTIFY_COMMAND.CONTRACT.Services.Clinics;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Models;
@@ -22,9 +21,9 @@ public class ClinicApi : ApiEndpoint, ICarterModule
                              " Clinic can apply multiple times when clinic request was rejected (Each apply time is" +
                              " 30 days apart). If Clinic is banned user can not send request again." +
                              "A clinics when apply again must send email, phone number, tax code same with the last request.")
-            .WithOpenApi(operation => new(operation)
+            .WithOpenApi(operation => new OpenApiOperation(operation)
                 {
-                    RequestBody = new OpenApiRequestBody()
+                    RequestBody = new OpenApiRequestBody
                     {
                         Content =
                         {

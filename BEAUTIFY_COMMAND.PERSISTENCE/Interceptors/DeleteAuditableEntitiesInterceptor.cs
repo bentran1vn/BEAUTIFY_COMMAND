@@ -1,5 +1,4 @@
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 
 namespace BEAUTIFY_COMMAND.PERSISTENCE.Interceptors;
@@ -10,24 +9,21 @@ public sealed class DeleteAuditableEntitiesInterceptor : SaveChangesInterceptor
         InterceptionResult<int> result,
         CancellationToken cancellationToken = default)
     {
-        DbContext? dbContext = eventData.Context;
+        var dbContext = eventData.Context;
 
         if (dbContext is null)
-        {
             return base.SavingChangesAsync(
                 eventData,
                 result,
                 cancellationToken);
-        }
 
-        IEnumerable<EntityEntry> entries =
+        var entries =
             dbContext
                 .ChangeTracker
                 .Entries();
 
-        TimeZoneInfo vietnamTimeZone = TimeZoneInfo.FindSystemTimeZoneById("SE Asia Standard Time");
-        foreach (EntityEntry entityEntry in entries)
-        {
+        var vietnamTimeZone = TimeZoneInfo.FindSystemTimeZoneById("SE Asia Standard Time");
+        foreach (var entityEntry in entries)
             if (entityEntry.State == EntityState.Deleted)
             {
                 var entity = entityEntry.Entity;
@@ -42,7 +38,6 @@ public sealed class DeleteAuditableEntitiesInterceptor : SaveChangesInterceptor
                         TimeZoneInfo.ConvertTime(DateTimeOffset.UtcNow, vietnamTimeZone));
                 }
             }
-        }
 
         return base.SavingChangesAsync(
             eventData,

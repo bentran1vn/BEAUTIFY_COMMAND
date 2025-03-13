@@ -1,5 +1,4 @@
 namespace BEAUTIFY_COMMAND.CONTRACT.Services.Clinics.Validators;
-
 public class ClinicApplyCommandValidators : AbstractValidator<Commands.ClinicApplyCommand>
 {
     public ClinicApplyCommandValidators()
@@ -8,17 +7,16 @@ public class ClinicApplyCommandValidators : AbstractValidator<Commands.ClinicApp
             .NotEmpty()
             .MinimumLength(5).WithMessage("Clinic Name must be at least 2 characters long")
             .MaximumLength(30).WithMessage("Clinic Name must exceed 30 characters");
-        
+
         RuleFor(x => x.Email)
             .NotEmpty()
             .EmailAddress().WithMessage("Invalid email format");
-        
+
         RuleFor(x => x.PhoneNumber)
             .NotEmpty()
             .Matches(@"^\+?[1-9]\d{1,14}$").WithMessage("Invalid phone number format");
-        
-       
-        
+
+
         RuleFor(x => x.TaxCode)
             .NotEmpty().WithMessage("Tax code is required");
 
@@ -35,7 +33,7 @@ public class ClinicApplyCommandValidators : AbstractValidator<Commands.ClinicApp
         RuleFor(x => x.ProfilePictureUrl)
             .NotEmpty().WithMessage("Profile Picture URL is required");
     }
-    
+
     private bool BeAValidUrl(string url)
     {
         return Uri.TryCreate(url, UriKind.Absolute, out _);

@@ -5,5 +5,6 @@ public static class Commands
 
 
     public sealed record DetermineSurveyAnswerCommand(Guid SurveyId, List<SurveyAnswer> SurveyAnswers) : ICommand;
+
     public record SurveyAnswer(string Answer, Guid SurveyQuestionId);
 }

@@ -17,14 +17,9 @@ internal sealed class CreateWorkingScheduleCommandHandler(
                      ?? throw new UserException.UserNotFoundException(request.DoctorId);
         var doctorName = $"{doctor.FirstName} {doctor.LastName}";
         if (doctor.UserClinics == null || doctor.UserClinics.Count == 0)
-        {
             throw new UserClinicException.UserClinicNotFoundException();
-        }
 
-        if (doctor.Role?.Name != Constant.Role.DOCTOR)
-        {
-            return Result.Failure(new Error("403", "User is not a doctor"));
-        }
+        if (doctor.Role?.Name != Constant.Role.DOCTOR) return Result.Failure(new Error("403", "User is not a doctor"));
 
         // 2. Validate clinic
         var doctorClinic = doctor.UserClinics.FirstOrDefault();
@@ -43,10 +38,8 @@ internal sealed class CreateWorkingScheduleCommandHandler(
 
             // 3a. Basic time validation
             if (startTime >= endTime)
-            {
                 return Result.Failure(new Error("InvalidTimeRange",
                     $"StartTime ({startTime}) must be earlier than EndTime ({endTime})."));
-            }
 
             // 3b. Check overlap with existing schedules in DB
             //     (Assuming you have a FindAsync/GetListAsync or similar method).
@@ -57,20 +50,16 @@ internal sealed class CreateWorkingScheduleCommandHandler(
                 TimesOverlap(x.StartTime, x.EndTime, startTime, endTime));
 
             if (overlapsWithExisting)
-            {
                 return Result.Failure(new Error("Overlap",
                     $"Cannot add schedule ({startTime} - {endTime}) on {date}. It overlaps with an existing schedule."));
-            }
 
             // 3c. Check overlap within the *new* schedules in this request
             var overlapsWithNew = schedulesToAdd.Any(x =>
                 x.Date == date && TimesOverlap(x.StartTime, x.EndTime, startTime, endTime));
 
             if (overlapsWithNew)
-            {
                 return Result.Failure(new Error("Overlap",
                     $"Cannot add schedule ({startTime} - {endTime}) on {date}. It overlaps with another schedule in this request."));
-            }
 
             // 3d. All good – add to the list
             schedulesToAdd.Add(new WorkingSchedule
@@ -85,9 +74,7 @@ internal sealed class CreateWorkingScheduleCommandHandler(
 
         // 4. If we have no schedules to add, return
         if (schedulesToAdd.Count == 0)
-        {
             return Result.Failure(new Error("NoValidSchedules", "No valid schedules to add."));
-        }
 
         schedulesToAdd[0].WorkingScheduleCreate(doctor.Id, clinic.Id, doctorName, schedulesToAdd);
 
@@ -99,7 +86,7 @@ internal sealed class CreateWorkingScheduleCommandHandler(
     }
 
     /// <summary>
-    /// Utility method to check if two time ranges overlap.
+    ///     Utility method to check if two time ranges overlap.
     /// </summary>
     private static bool TimesOverlap(TimeSpan start1, TimeSpan end1, TimeSpan start2, TimeSpan end2)
     {

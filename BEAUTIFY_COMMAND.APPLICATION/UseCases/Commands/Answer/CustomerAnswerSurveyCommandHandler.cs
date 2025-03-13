@@ -14,16 +14,13 @@ internal sealed class
         CancellationToken cancellationToken)
     {
         var survey = await surveyRepositoryBase.FindByIdAsync(request.SurveyId, cancellationToken);
-        if (survey == null)
-        {
-            return Result.Failure(new Error("404", "Survey not found."));
-        }
+        if (survey == null) return Result.Failure(new Error("404", "Survey not found."));
 
         var surveyResponse = new SurveyResponse
         {
             Id = Guid.NewGuid(),
             SurveyId = survey.Id,
-            CustomerId = currentUserService.UserId,
+            CustomerId = currentUserService.UserId
         };
 
         var surveyAnswers = request.SurveyAnswers

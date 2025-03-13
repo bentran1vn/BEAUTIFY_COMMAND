@@ -10,10 +10,7 @@ public class ClinicDeleteBranchCommandHandler(IRepositoryBase<Clinic, Guid> clin
         var clinic = await clinicRepository.FindByIdAsync(request.BranchId, cancellationToken) ??
                      throw new ClinicException.ClinicNotFoundException(request.BranchId);
 
-        if (clinic.IsParent == true)
-        {
-            return Result.Failure(new Error("404", "Cannot delete parent clinic"));
-        }
+        if (clinic.IsParent == true) return Result.Failure(new Error("404", "Cannot delete parent clinic"));
 
         var parentClinic = await clinicRepository.FindByIdAsync(clinic.ParentId.Value, cancellationToken) ??
                            throw new ClinicException.ClinicNotFoundException(clinic.ParentId.Value);

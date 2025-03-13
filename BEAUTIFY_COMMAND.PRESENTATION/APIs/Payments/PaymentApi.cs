@@ -1,5 +1,4 @@
 using BEAUTIFY_COMMAND.CONTRACT.Services.Payments;
-using BEAUTIFY_PACKAGES.BEAUTIFY_PACKAGES.CONTRACT.Abstractions.Shared;
 
 namespace BEAUTIFY_COMMAND.PRESENTATION.APIs.Payments;
 public class PaymentApi : ApiEndpoint, ICarterModule
@@ -18,7 +17,6 @@ public class PaymentApi : ApiEndpoint, ICarterModule
         gr1.MapPost("subscription", CreateSubscriptionOrder)
             .WithName("Subscription Payments")
             .WithSummary("Subscription Payments.").RequireAuthorization();
-        
     }
 
     private static async Task<IResult> TriggerFromHook(ISender sender,
@@ -26,22 +24,16 @@ public class PaymentApi : ApiEndpoint, ICarterModule
     {
         var (type, id) = QrContentParser.TakeOrderIdFromContent(command.content);
 
-        var request = new Commands.TriggerFromHookCommand()
+        var request = new Commands.TriggerFromHookCommand
         {
             Id = id,
             TransferAmount = command.transferAmount,
             PaymentDate = command.transactionDate
         };
 
-        if (type.Equals("ORDER"))
-        {
-            request.Type = 1;
-        }
+        if (type.Equals("ORDER")) request.Type = 1;
 
-        if (type.Equals("SUB"))
-        {
-            request.Type = 0;
-        }
+        if (type.Equals("SUB")) request.Type = 0;
 
         var result = await sender.Send(request);
 
@@ -60,6 +52,4 @@ public class PaymentApi : ApiEndpoint, ICarterModule
 
         return result.IsFailure ? HandlerFailure(result) : Results.Ok(result);
     }
-    
-   
 }

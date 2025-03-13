@@ -1,7 +1,6 @@
 using Microsoft.AspNetCore.Http;
 
 namespace BEAUTIFY_COMMAND.CONTRACT.Services.ServicePromotions;
-
 public static class Commands
 {
     public class CreatePromotionServicesBody
@@ -13,7 +12,7 @@ public static class Commands
         public DateTime StartDay { get; set; }
         public DateTime EndDate { get; set; }
     }
-    
+
     public record CreatePromotionServicesCommand(
         Guid UserId,
         Guid ClinicId,
@@ -23,15 +22,15 @@ public static class Commands
         IFormFile Image,
         DateTime StartDay,
         DateTime EndDate) : ICommand;
-    
+
     public record UpdatePromotionServicesBody(
         Guid PromotionId,
         string Name,
         double DiscountPercent,
         IFormFile Image,
         DateTime StartDay,
-        DateTime EndDate) ;
-    
+        DateTime EndDate);
+
     public record UpdatePromotionServicesCommand(
         Guid UserId,
         Guid PromotionId,
@@ -40,11 +39,11 @@ public static class Commands
         IFormFile Image,
         DateTime StartDay,
         DateTime EndDate) : ICommand;
-    
+
     public record DeletePromotionServicesBody(
         Guid PromotionId
     );
-    
+
     public record DeletePromotionServicesCommand(
         Guid UserId,
         Guid PromotionId

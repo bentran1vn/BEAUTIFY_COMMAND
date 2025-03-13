@@ -1,8 +1,7 @@
 namespace BEAUTIFY_COMMAND.CONTRACT.Services.ServicePromotions.Validators;
-
-public class CreatePromotionServicesCommandValidators: AbstractValidator<Commands.CreatePromotionServicesCommand>
+public class CreatePromotionServicesCommandValidators : AbstractValidator<Commands.CreatePromotionServicesCommand>
 {
-    public CreatePromotionServicesCommandValidators() 
+    public CreatePromotionServicesCommandValidators()
     {
         RuleFor(x => x.ServiceId)
             .NotEmpty().WithMessage("Service ID is required.");

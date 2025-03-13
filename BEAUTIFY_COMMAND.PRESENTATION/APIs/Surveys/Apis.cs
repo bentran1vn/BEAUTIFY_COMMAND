@@ -8,11 +8,12 @@ public class Apis : ApiEndpoint, ICarterModule
     public void AddRoutes(IEndpointRouteBuilder app)
     {
         var gr1 = app.NewVersionedApi("Surveys").MapGroup(BaseUrl).HasApiVersion(1);
-        gr1.MapPost("", CreateSurvey) .WithSummary("1 - Multiple Choice == 2 - Single Choice == 3 - Text\n ").DisableAntiforgery();
+        gr1.MapPost("", CreateSurvey).WithSummary("1 - Multiple Choice == 2 - Single Choice == 3 - Text\n ")
+            .DisableAntiforgery();
     }
 
     private static async Task<IResult> CreateSurvey(ISender sender,
-       [FromBody] Commands.CreateSurveyCommand command)
+        [FromBody] Commands.CreateSurveyCommand command)
     {
         var result = await sender.Send(command);
         return result.IsFailure ? HandlerFailure(result) : Results.Ok(result);

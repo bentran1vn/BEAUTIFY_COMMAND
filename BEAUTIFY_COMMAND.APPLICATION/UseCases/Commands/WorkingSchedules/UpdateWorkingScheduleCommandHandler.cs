@@ -15,10 +15,7 @@ public class UpdateWorkingScheduleCommandHandler(
             .Select(d => d.WorkingScheduleId)
             .ToList();
 
-        if (scheduleIdsToUpdate.Count == 0)
-        {
-            return Result.Failure(new Error("EmptyRequest", "No schedules to update."));
-        }
+        if (scheduleIdsToUpdate.Count == 0) return Result.Failure(new Error("EmptyRequest", "No schedules to update."));
 
         // 2. Fetch existing schedules from DB
         //    (Adjust this call to match your repository pattern.)
@@ -26,18 +23,13 @@ public class UpdateWorkingScheduleCommandHandler(
             .FindAll(s => scheduleIdsToUpdate.Contains(s.Id)).ToListAsync(cancellationToken);
         var user = await userRepository.FindSingleAsync(x => x.Id.Equals(existingSchedules[0].DoctorClinic!.UserId),
             cancellationToken);
-        if (user == null)
-        {
-            return Result.Failure(new Error("404", "Doctor not found"));
-        }
+        if (user == null) return Result.Failure(new Error("404", "Doctor not found"));
 
         var doctorName = $"{user.FirstName} {user.LastName}";
         // 3. Validate all schedules exist
         if (existingSchedules.Count != scheduleIdsToUpdate.Count)
-        {
             return Result.Failure(new Error("NotFound",
                 "Some of the schedules to update were not found in the database."));
-        }
 
         // 4. [Optional] Ensure all schedules belong to the same doctor or clinic
         //    (Adjust logic if you allow multiple doctors or clinics in a single update.)
@@ -47,10 +39,8 @@ public class UpdateWorkingScheduleCommandHandler(
             .ToList();
 
         if (distinctDoctorClinicIds.Count != 1)
-        {
             return Result.Failure(new Error("MultipleDoctorClinics",
                 "All schedules to be updated must belong to the same doctor/clinic."));
-        }
 
         var doctorClinicId = distinctDoctorClinicIds.Single();
 
@@ -69,10 +59,8 @@ public class UpdateWorkingScheduleCommandHandler(
         {
             var scheduleId = updateReq.WorkingScheduleId;
             if (!schedulesToUpdate.TryGetValue(scheduleId, out var scheduleEntity))
-            {
                 return Result.Failure(new Error("NotFound",
                     $"Working schedule with ID {scheduleId} not found."));
-            }
 
             // 7a. Parse new date/time
             var date = DateOnly.Parse(updateReq.Date);
@@ -81,21 +69,17 @@ public class UpdateWorkingScheduleCommandHandler(
 
             // 7b. Basic check: start < end
             if (startTime >= endTime)
-            {
                 return Result.Failure(new Error("InvalidTimeRange",
                     $"StartTime ({startTime}) must be earlier than EndTime ({endTime})."));
-            }
 
             // 7c. Check for overlap with "otherSchedules" from DB
             var overlapsWithExisting = otherSchedules.Any(s =>
                 s.Date == date && TimesOverlap(s.StartTime, s.EndTime, startTime, endTime));
 
             if (overlapsWithExisting)
-            {
                 return Result.Failure(new Error("Overlap",
                     $"Cannot update schedule ({startTime} - {endTime}) on {date}. " +
                     "It overlaps with an existing schedule in the database."));
-            }
 
             // 7d. Check for overlap with other updated schedules in this request
             //     We only check among the newly requested updates, not including the current one
@@ -107,11 +91,9 @@ public class UpdateWorkingScheduleCommandHandler(
                 s.Date == date && TimesOverlap(s.StartTime, s.EndTime, startTime, endTime));
 
             if (overlapsWithNew)
-            {
                 return Result.Failure(new Error("Overlap",
                     $"Cannot update schedule ({startTime} - {endTime}) on {date}. " +
                     "It overlaps with another schedule in this update request."));
-            }
 
             // 7e. If all checks pass, update in memory
             scheduleEntity.Date = date;
@@ -128,7 +110,7 @@ public class UpdateWorkingScheduleCommandHandler(
     }
 
     /// <summary>
-    /// Utility method to check if two time ranges overlap.
+    ///     Utility method to check if two time ranges overlap.
     /// </summary>
     private static bool TimesOverlap(TimeSpan start1, TimeSpan end1, TimeSpan start2, TimeSpan end2)
     {

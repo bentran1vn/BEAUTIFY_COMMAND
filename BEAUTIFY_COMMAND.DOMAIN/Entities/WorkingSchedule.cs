@@ -53,7 +53,7 @@ public class WorkingSchedule : AggregateRoot<Guid>, IAuditableEntity
             Date = x.Date,
             StartTime = x.StartTime,
             EndTime = x.EndTime,
-            IsDeleted = false,
+            IsDeleted = false
         }).ToList();
 
         // Raise the domain event

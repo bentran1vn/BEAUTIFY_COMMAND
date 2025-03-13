@@ -42,10 +42,7 @@ public class CategoryApi : ApiEndpoint, ICarterModule
     private static async Task<IResult> UpdateCatergory(ISender sender, Guid id,
         [FromBody] Commands.UpdateCategoryCommand command)
     {
-        if (id != command.Id)
-        {
-            return HandlerFailure(Result.Failure(new Error("400", "Id mismatch.")));
-        }
+        if (id != command.Id) return HandlerFailure(Result.Failure(new Error("400", "Id mismatch.")));
 
         var result = await sender.Send(command);
 
@@ -55,10 +52,7 @@ public class CategoryApi : ApiEndpoint, ICarterModule
     private static async Task<IResult> DeleteCatergory(ISender sender, Guid id,
         [FromBody] Commands.DeleteCategoryCommand command)
     {
-        if (id != command.Id)
-        {
-            return HandlerFailure(Result.Failure(new Error("400", "Id mismatch.")));
-        }
+        if (id != command.Id) return HandlerFailure(Result.Failure(new Error("400", "Id mismatch.")));
 
         var result = await sender.Send(command);
 

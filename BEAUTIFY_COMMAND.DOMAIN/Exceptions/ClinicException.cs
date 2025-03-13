@@ -9,7 +9,7 @@ public static class ClinicException
         }
 
         public ClinicNotFoundException()
-            : base($"The clinic was not found.")
+            : base("The clinic was not found.")
         {
         }
     }

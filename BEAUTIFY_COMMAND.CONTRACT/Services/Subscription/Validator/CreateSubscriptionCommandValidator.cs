@@ -17,7 +17,7 @@ internal sealed class CreateSubscriptionCommandValidator : AbstractValidator<Com
         RuleFor(x => x.Price)
             .NotEmpty()
             .GreaterThan(1000).WithMessage("Price must be greater than 1000");
-            
+
 
         RuleFor(x => x.Duration)
             .NotEmpty()

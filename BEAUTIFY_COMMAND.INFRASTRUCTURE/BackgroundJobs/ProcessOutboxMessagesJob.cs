@@ -17,7 +17,6 @@ namespace BEAUTIFY_COMMAND.INFRASTRUCTURE.BackgroundJobs;
 public class ProcessOutboxMessagesJob(ApplicationDbContext dbContext, IPublishEndpoint publishEndpoint)
     : IJob
 {
-
     public async Task Execute(IJobExecutionContext context)
     {
         var messages = await dbContext
@@ -54,7 +53,7 @@ public class ProcessOutboxMessagesJob(ApplicationDbContext dbContext, IPublishEn
                     //             });
                     //     await _publishEndpoint.Publish(postgreMigrate, context.CancellationToken);
                     //     break;
-                    
+
                     case nameof(ClinicServiceDomainEvent.ClinicServiceCreated):
                         var clinicServiceCreated =
                             JsonConvert.DeserializeObject<ClinicServiceDomainEvent.ClinicServiceCreated>(
@@ -147,6 +146,7 @@ public class ProcessOutboxMessagesJob(ApplicationDbContext dbContext, IPublishEn
                         await publishEndpoint.Publish(doctorServiceDeleted, context.CancellationToken);
                         break;
                 }
+
                 outboxMessage.ProcessedOnUtc = DateTime.UtcNow;
             }
             catch (Exception ex)

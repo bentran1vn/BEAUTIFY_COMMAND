@@ -1,7 +1,7 @@
+using BEAUTIFY_PACKAGES.BEAUTIFY_PACKAGES.DOMAIN.EntityEvents;
 using ProceduresDomainEvent = BEAUTIFY_PACKAGES.BEAUTIFY_PACKAGES.CONTRACT.Services.Procedures.DomainEvents;
 using ServicePromotionDomainEvent = BEAUTIFY_PACKAGES.BEAUTIFY_PACKAGES.CONTRACT.Services.ServicePromotion.DomainEvents;
 using ClinicServicesDomainEvent = BEAUTIFY_PACKAGES.BEAUTIFY_PACKAGES.CONTRACT.Services.ClinicServices.DomainEvents;
-using BEAUTIFY_PACKAGES.BEAUTIFY_PACKAGES.DOMAIN.EntityEvents;
 
 namespace BEAUTIFY_COMMAND.DOMAIN.Entities;
 public class TriggerOutbox : AggregateRoot<Guid>, IAuditableEntity
@@ -14,9 +14,9 @@ public class TriggerOutbox : AggregateRoot<Guid>, IAuditableEntity
         decimal maxPrice, decimal minPrice, decimal? discountMaxPrice, decimal? discountMinPrice,
         int stepIndex, string[] coverImage, ICollection<ProcedurePriceType> procedurePriceTypes)
     {
-        var triggerOutbox = new TriggerOutbox()
+        var triggerOutbox = new TriggerOutbox
         {
-            Id = Guid.NewGuid(),
+            Id = Guid.NewGuid()
         };
 
         triggerOutbox.RaiseDomainEvent(new ProceduresDomainEvent.ProcedureCreated(
@@ -43,9 +43,9 @@ public class TriggerOutbox : AggregateRoot<Guid>, IAuditableEntity
         DateTime StartDay,
         DateTime EndDate)
     {
-        var triggerOutbox = new TriggerOutbox()
+        var triggerOutbox = new TriggerOutbox
         {
-            Id = Guid.NewGuid(),
+            Id = Guid.NewGuid()
         };
 
         triggerOutbox.RaiseDomainEvent(new ServicePromotionDomainEvent.ServicePromotionCreated(
@@ -65,9 +65,9 @@ public class TriggerOutbox : AggregateRoot<Guid>, IAuditableEntity
         string CateDescription, List<Clinic> clinics
     )
     {
-        var triggerOutbox = new TriggerOutbox()
+        var triggerOutbox = new TriggerOutbox
         {
-            Id = Guid.NewGuid(),
+            Id = Guid.NewGuid()
         };
 
         triggerOutbox.RaiseDomainEvent(new ClinicServicesDomainEvent.ClinicServiceCreated(
@@ -96,9 +96,9 @@ public class TriggerOutbox : AggregateRoot<Guid>, IAuditableEntity
         string CateDescription, List<Clinic> clinics
     )
     {
-        var triggerOutbox = new TriggerOutbox()
+        var triggerOutbox = new TriggerOutbox
         {
-            Id = Guid.NewGuid(),
+            Id = Guid.NewGuid()
         };
 
         triggerOutbox.RaiseDomainEvent(new ClinicServicesDomainEvent.ClinicServiceUpdated(

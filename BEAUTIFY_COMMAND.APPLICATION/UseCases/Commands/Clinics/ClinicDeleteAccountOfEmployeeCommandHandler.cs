@@ -16,17 +16,11 @@ internal sealed class ClinicDeleteAccountOfEmployeeCommandHandler(
 
         var user = await userRepository.FindByIdAsync(request.UserId, cancellationToken) ??
                    throw new UserException.UserNotFoundException(request.UserId);
-        if (user?.Role?.Name == Constant.Role.CLINIC_ADMIN)
-        {
-            throw new UnauthorizedAccessException();
-        }
+        if (user?.Role?.Name == Constant.Role.CLINIC_ADMIN) throw new UnauthorizedAccessException();
 
         var clinic = await clinicRepository.FindByIdAsync(request.ClinicId, cancellationToken) ??
                      throw new ClinicException.ClinicNotFoundException(request.ClinicId);
-        if(user?.UserClinics.FirstOrDefault().ClinicId!=clinic.Id)
-        {
-            throw new UnauthorizedAccessException();
-        }
+        if (user?.UserClinics.FirstOrDefault().ClinicId != clinic.Id) throw new UnauthorizedAccessException();
 
         userRepository.Remove(user);
         userClinicRepository.Remove(user.UserClinics?.FirstOrDefault());

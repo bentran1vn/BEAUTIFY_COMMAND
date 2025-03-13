@@ -18,25 +18,15 @@ public class TriggerFromHookCommandHandler(
             {
                 var tran = await systemTransactionRepository.FindByIdAsync(request.Id, cancellationToken);
 
-                if (tran == null || tran.IsDeleted)
-                {
-                    return Result.Failure(new Error("404", "Transaction not found"));
-                }
+                if (tran == null || tran.IsDeleted) return Result.Failure(new Error("404", "Transaction not found"));
 
-                if (tran.Status != 0)
-                {
-                    return Result.Failure(new Error("400", "Transaction already handler"));
-                }
+                if (tran.Status != 0) return Result.Failure(new Error("400", "Transaction already handler"));
 
                 if (tran.Amount != request.TransferAmount)
-                {
                     return Result.Failure(new Error("422", "Transaction Amount invalid"));
-                }
 
                 if (tran.TransactionDate > DateTimeOffset.Now)
-                {
                     return Result.Failure(new Error("400", "Transaction Date invalid"));
-                }
 
                 tran.Status = 1;
 
@@ -47,20 +37,13 @@ public class TriggerFromHookCommandHandler(
             case 1:
             {
                 var order = await orderRepository.FindByIdAsync(request.Id, cancellationToken);
-                if (order == null || order.IsDeleted)
-                {
-                    return Result.Failure(new Error("404", "Order not found"));
-                }
+                if (order == null || order.IsDeleted) return Result.Failure(new Error("404", "Order not found"));
 
                 if (order.Status == Constant.OrderStatus.ORDER_COMPLETED)
-                {
                     return Result.Failure(new Error("400", "Order already completed"));
-                }
 
                 if (order.FinalAmount != request.TransferAmount)
-                {
                     return Result.Failure(new Error("422", "Order Amount invalid"));
-                }
 
                 order.Status = Constant.OrderStatus.ORDER_COMPLETED;
                 await hubContext.Clients.Group(order.Id.ToString())

@@ -1,20 +1,18 @@
 ﻿using BEAUTIFY_PACKAGES.BEAUTIFY_PACKAGES.API.DependencyInjection.Options;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
 using Swashbuckle.AspNetCore.SwaggerUI;
 
 namespace BEAUTIFY_COMMAND.API.DependencyInjection.Extensions;
-
 public static class SwaggerExtensions
 {
     public static void AddSwaggerAPI1(this IServiceCollection services)
     {
         services.AddSwaggerGen(c =>
         {
-            c.AddSecurityDefinition(JwtBearerDefaults.AuthenticationScheme, new OpenApiSecurityScheme()
+            c.AddSecurityDefinition(JwtBearerDefaults.AuthenticationScheme, new OpenApiSecurityScheme
             {
                 Description = @"JWT Authorization header using the Bearer scheme. 
 
@@ -25,10 +23,10 @@ Example: 'Bearer 12345abcdef'",
                 In = ParameterLocation.Header,
                 Type = SecuritySchemeType.Http,
                 Scheme = JwtBearerDefaults.AuthenticationScheme,
-                BearerFormat = "JWT",
+                BearerFormat = "JWT"
             });
-            
-            c.AddSecurityRequirement(new OpenApiSecurityRequirement()
+
+            c.AddSecurityRequirement(new OpenApiSecurityRequirement
             {
                 {
                     new OpenApiSecurityScheme
@@ -40,23 +38,23 @@ Example: 'Bearer 12345abcdef'",
                         },
                         Scheme = "oauth2",
                         Name = JwtBearerDefaults.AuthenticationScheme,
-                        In = ParameterLocation.Header,
+                        In = ParameterLocation.Header
                     },
                     new List<string>()
                 }
             });
-            
+
             // c.OperationFilter<SwaggerFormDataOperationFilter>();
-            
+
             // c.OperationFilter<FileUploadOperationFilter>();
-            
+
             c.EnableAnnotations();
-            
+
             // c.UseOneOfForPolymorphism();
         });
         services.AddTransient<IConfigureOptions<SwaggerGenOptions>, ConfigureSwaggerOptions>();
     }
-    
+
     // public class SwaggerFormDataOperationFilter : IOperationFilter
     // {
     //     public void Apply(OpenApiOperation operation, OperationFilterContext context)

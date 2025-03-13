@@ -22,13 +22,14 @@ namespace BEAUTIFY_COMMAND.INFRASTRUCTURE.DependencyInjection.Extensions;
 public static class ServiceCollectionExtensions
 {
     public static void AddServicesInfrastructure(this IServiceCollection services)
-        => services
+    {
+        services
             .AddTransient<IJwtTokenService, JwtTokenService>()
             .AddTransient<ICacheService, CacheService>()
             .AddSingleton<IMediaService, CloudinaryService>()
             .AddTransient<IPasswordHasherService, PasswordHasherService>()
             .AddSingleton<IMailService, MailService>()
-            .AddSingleton<Cloudinary>((provider) =>
+            .AddSingleton<Cloudinary>(provider =>
             {
                 var options = provider.GetRequiredService<IOptionsMonitor<CloudinaryOptions>>();
                 return new Cloudinary(new Account(
@@ -36,6 +37,7 @@ public static class ServiceCollectionExtensions
                     options.CurrentValue.ApiKey,
                     options.CurrentValue.ApiSecret));
             });
+    }
 
     // Configure Redis
     public static void AddRedisInfrastructure(this IServiceCollection services, IConfiguration configuration)
@@ -77,9 +79,9 @@ public static class ServiceCollectionExtensions
 
                 bus.UseMessageRetry(retry
                     => retry.Incremental(
-                        retryLimit: messageBusOption.RetryLimit,
-                        initialInterval: messageBusOption.InitialInterval,
-                        intervalIncrement: messageBusOption.IntervalIncrement));
+                        messageBusOption.RetryLimit,
+                        messageBusOption.InitialInterval,
+                        messageBusOption.IntervalIncrement));
 
                 bus.UseNewtonsoftJsonSerializer();
 
@@ -142,19 +144,23 @@ public static class ServiceCollectionExtensions
 
     public static OptionsBuilder<CloudinaryOptions> ConfigureCloudinaryOptionsInfrastucture(
         this IServiceCollection services, IConfigurationSection section)
-        => services
+    {
+        return services
             .AddOptions<CloudinaryOptions>()
             .Bind(section)
             .ValidateDataAnnotations()
             .ValidateOnStart();
+    }
 
     public static OptionsBuilder<MailOption> ConfigureMailOptionsInfrastucture(this IServiceCollection services,
         IConfigurationSection section)
-        => services
+    {
+        return services
             .AddOptions<MailOption>()
             .Bind(section)
             .ValidateDataAnnotations()
             .ValidateOnStart();
+    }
 
     // Configure MediatR
     public static void AddMediatRInfrastructure(this IServiceCollection services)

@@ -11,14 +11,13 @@ internal sealed class DeleteDoctorServiceCommandHandler(
             .ToList();
 
         if (doctorServicesToDelete.Count == 0)
-        {
             return Result.Failure(new Error("404", "No matching doctor services found for deletion"));
-        }
 
         // Delete the records
         doctorServiceRepository.RemoveMultiple(doctorServicesToDelete);
         doctorServicesToDelete[0]
-            .RaiseDoctorServiceDeletedEvent(doctorServicesToDelete[0].ServiceId,doctorServicesToDelete.Select(x => x.Id).ToList());
+            .RaiseDoctorServiceDeletedEvent(doctorServicesToDelete[0].ServiceId,
+                doctorServicesToDelete.Select(x => x.Id).ToList());
         return Result.Success();
     }
 }

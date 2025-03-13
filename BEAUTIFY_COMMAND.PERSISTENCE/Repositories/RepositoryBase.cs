@@ -8,7 +8,9 @@ public class RepositoryBase<TEntity, TKey>(ApplicationDbContext dbContext) : IRe
     where TEntity : Entity<TKey>
 {
     public void Dispose()
-        => dbContext?.Dispose();
+    {
+        dbContext?.Dispose();
+    }
 
     public IQueryable<TEntity> FindAll(Expression<Func<TEntity, bool>>? predicate = null,
         params Expression<Func<TEntity, object>>[] includeProperties)
@@ -25,32 +27,48 @@ public class RepositoryBase<TEntity, TKey>(ApplicationDbContext dbContext) : IRe
 
     public async Task<TEntity?> FindByIdAsync(TKey id, CancellationToken cancellationToken = default,
         params Expression<Func<TEntity, object>>[] includeProperties)
-        => await FindAll(null, includeProperties)
+    {
+        return await FindAll(null, includeProperties)
             .AsTracking()
             .SingleOrDefaultAsync(x => x.Id.Equals(id), cancellationToken);
+    }
 
     public async Task<TEntity?> FindSingleAsync(Expression<Func<TEntity, bool>>? predicate = null,
         CancellationToken cancellationToken = default, params Expression<Func<TEntity, object>>[] includeProperties)
-        => await FindAll(null, includeProperties)
+    {
+        return await FindAll(null, includeProperties)
             .AsTracking()
             .SingleOrDefaultAsync(predicate, cancellationToken);
+    }
 
     public void Add(TEntity entity)
-        => dbContext.Add(entity);
+    {
+        dbContext.Add(entity);
+    }
 
 
     public void AddRange(IEnumerable<TEntity> entities)
-        => dbContext.AddRange(entities);
+    {
+        dbContext.AddRange(entities);
+    }
 
     public void UpdateRange(IEnumerable<TEntity> entities)
-        => dbContext.UpdateRange(entities);
+    {
+        dbContext.UpdateRange(entities);
+    }
 
     public void Remove(TEntity entity)
-        => dbContext.Set<TEntity>().Remove(entity);
+    {
+        dbContext.Set<TEntity>().Remove(entity);
+    }
 
     public void RemoveMultiple(List<TEntity> entities)
-        => dbContext.Set<TEntity>().RemoveRange(entities);
+    {
+        dbContext.Set<TEntity>().RemoveRange(entities);
+    }
 
     public void Update(TEntity entity)
-        => dbContext.Set<TEntity>().Update(entity);
+    {
+        dbContext.Set<TEntity>().Update(entity);
+    }
 }

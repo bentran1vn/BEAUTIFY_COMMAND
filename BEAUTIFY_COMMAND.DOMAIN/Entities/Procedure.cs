@@ -1,6 +1,4 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using BEAUTIFY_PACKAGES.BEAUTIFY_PACKAGES.CONTRACT.Services.Procedures;
-using BEAUTIFY_PACKAGES.BEAUTIFY_PACKAGES.DOMAIN.EntityEvents;
 
 namespace BEAUTIFY_COMMAND.DOMAIN.Entities;
 public class Procedure : AggregateRoot<Guid>, IAuditableEntity
@@ -12,13 +10,13 @@ public class Procedure : AggregateRoot<Guid>, IAuditableEntity
     public virtual Guid? ProcedureBefore { get; set; }
     public Guid? ProcedureAfterId { get; set; }
     public virtual Guid? ProcedureAfter { get; set; }
-    
+
     public Guid? ServiceId { get; set; }
     public virtual Service? Service { get; set; }
-    
-    public DateTimeOffset CreatedOnUtc { get; set; }
-    public DateTimeOffset? ModifiedOnUtc { get; set; }
     public virtual ICollection<CustomerSchedule>? CustomerSchedules { get; set; } = [];
     public virtual ICollection<ProcedureMedia> ProcedureMedias { get; set; } = [];
     public virtual ICollection<ProcedurePriceType> ProcedurePriceTypes { get; set; } = [];
+
+    public DateTimeOffset CreatedOnUtc { get; set; }
+    public DateTimeOffset? ModifiedOnUtc { get; set; }
 }

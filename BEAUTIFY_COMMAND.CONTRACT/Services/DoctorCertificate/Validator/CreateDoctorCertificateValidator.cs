@@ -3,7 +3,6 @@ internal sealed class CreateDoctorCertificateValidator : AbstractValidator<Comma
 {
     public CreateDoctorCertificateValidator()
     {
-
         RuleFor(x => x.CertificateName)
             .NotEmpty()
             .MinimumLength(2).WithMessage("Certificate Name must be at least 2 characters long")
@@ -22,5 +21,4 @@ internal sealed class CreateDoctorCertificateValidator : AbstractValidator<Comma
         RuleFor(x => x.Note)
             .MaximumLength(200).WithMessage("Note must exceed 200 characters");
     }
-    
 }

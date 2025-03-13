@@ -40,7 +40,7 @@ internal sealed class
             BankName = request.BankName,
             BankAccountNumber = request.BankAccountNumber,
             ProfilePictureUrl = PUrl,
-            IsActivated = true,
+            IsActivated = true
         };
         parentClinic.TotalBranches++;
         // create account for branch
@@ -57,12 +57,12 @@ internal sealed class
             Ward = request.Ward,
             District = request.District,
             Address = request.Address,
-            RoleId = role.Id,
+            RoleId = role.Id
         };
         userClinicRepository.Add(new UserClinic
         {
             ClinicId = clinic.Id,
-            UserId = branchAccount.Id,
+            UserId = branchAccount.Id
         });
         clinicRepository.Add(clinic);
         userRepository.Add(branchAccount);

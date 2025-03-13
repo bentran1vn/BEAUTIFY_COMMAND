@@ -1,6 +1,5 @@
 ﻿using BEAUTIFY_COMMAND.PERSISTENCE.Outbox;
 using BEAUTIFY_PACKAGES.BEAUTIFY_PACKAGES.DOMAIN.Abstractions.Aggregates;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using Newtonsoft.Json;
 
@@ -13,12 +12,9 @@ public sealed class ConvertDomainEventsToOutboxMessagesInterceptor
         InterceptionResult<int> result,
         CancellationToken cancellationToken = default)
     {
-        DbContext? dbContext = eventData.Context;
+        var dbContext = eventData.Context;
 
-        if (dbContext is null)
-        {
-            return base.SavingChangesAsync(eventData, result, cancellationToken);
-        }
+        if (dbContext is null) return base.SavingChangesAsync(eventData, result, cancellationToken);
 
         var outboxMessages = dbContext.ChangeTracker
             .Entries<AggregateRoot<Guid>>()
@@ -31,7 +27,7 @@ public sealed class ConvertDomainEventsToOutboxMessagesInterceptor
 
                 return domainEvents;
             })
-            .Select(domainEvent => new OutboxMessage()
+            .Select(domainEvent => new OutboxMessage
             {
                 Id = Guid.NewGuid(),
                 OccurredOnUtc = DateTime.UtcNow,

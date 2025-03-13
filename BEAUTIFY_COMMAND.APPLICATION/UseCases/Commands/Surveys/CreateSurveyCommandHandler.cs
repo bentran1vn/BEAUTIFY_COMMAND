@@ -1,4 +1,3 @@
-using System.Linq.Expressions;
 using BEAUTIFY_PACKAGES.BEAUTIFY_PACKAGES.DOMAIN.Constrants;
 
 namespace BEAUTIFY_COMMAND.APPLICATION.UseCases.Commands.Surveys;
@@ -15,22 +14,17 @@ internal sealed class CreateSurveyCommandHandler(
         var trimmedName = request.Survey.Name.Trim();
         var trimmedDescription = request.Survey.Description.Trim();
         var category = await categoryRepositoryBase.FindByIdAsync(request.Survey.CategoryId, cancellationToken);
-        if (category == null)
-        {
-            return Result.Failure(new Error("404", "Category not found."));
-        }
+        if (category == null) return Result.Failure(new Error("404", "Category not found."));
 
         if (!category.Name.Contains(request.Survey.Type, StringComparison.CurrentCultureIgnoreCase))
-        {
             return Result.Failure(new Error("400", "Category not belong to survey."));
-        }
 
         var survey = new Survey
         {
             Id = Guid.NewGuid(),
             Name = trimmedName,
             Description = trimmedDescription,
-            CategoryId = category.Id,
+            CategoryId = category.Id
         };
         var questions = new List<SurveyQuestion>();
         var questionOptions = new List<SurveyQuestionOption>();
@@ -40,7 +34,7 @@ internal sealed class CreateSurveyCommandHandler(
             {
                 1 => Constant.SurveyQuestionType.MULTIPLE_CHOICE,
                 2 => Constant.SurveyQuestionType.SINGLE_CHOICE,
-                _ => Constant.SurveyQuestionType.TEXT,
+                _ => Constant.SurveyQuestionType.TEXT
             };
             var question = new SurveyQuestion
             {

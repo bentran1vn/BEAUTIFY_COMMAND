@@ -1,25 +1,24 @@
 namespace BEAUTIFY_COMMAND.CONTRACT.Services.Procedures.Validators;
-
-public class CreateProcedureCommandValidators: AbstractValidator<Commands.CreateProcedureCommand>
+public class CreateProcedureCommandValidators : AbstractValidator<Commands.CreateProcedureCommand>
 {
-    public CreateProcedureCommandValidators() 
+    public CreateProcedureCommandValidators()
     {
         RuleFor(x => x.ClinicServiceId).NotEmpty();
-        
+
         RuleFor(x => x.StepIndex).NotEmpty();
-        
+
         RuleFor(x => x.ProcedureCoverImage).NotEmpty();
-        
+
         RuleFor(x => x.Name)
             .NotEmpty()
             .MinimumLength(5).WithMessage("Clinic Name must be at least 2 characters long")
             .MaximumLength(30).WithMessage("Clinic Name must exceed 30 characters");
-        
+
         RuleFor(x => x.Description)
             .NotEmpty()
             .MinimumLength(5).WithMessage("Clinic Name must be at least 2 characters long")
             .MaximumLength(30).WithMessage("Clinic Name must exceed 30 characters");
-        
+
         RuleForEach(x => x.ProcedurePriceTypes)
             .SetValidator(new ProcedurePriceTypeValidator());
     }

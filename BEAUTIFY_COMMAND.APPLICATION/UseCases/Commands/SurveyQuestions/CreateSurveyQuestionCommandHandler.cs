@@ -14,20 +14,13 @@ internal sealed class CreateSurveyQuestionCommandHandler(
         if (request.SurveyQuestions.FirstOrDefault().Question.Equals("string") ||
             request.SurveyQuestions.FirstOrDefault().QuestionType == 0 ||
             request.SurveyQuestions.FirstOrDefault().Option.Equals("string"))
-        {
             return Result.Failure(new Error("400", "Invalid survey question."));
-        }
 
         var survey = await surveyRepositoryBase.FindByIdAsync(request.SurveyId, cancellationToken);
-        if (survey == null)
-        {
-            return Result.Failure(new Error("404", "Survey not found."));
-        }
+        if (survey == null) return Result.Failure(new Error("404", "Survey not found."));
 
         if (request.SurveyQuestions.Count == 0)
-        {
             return Result.Failure(new Error("400", "No survey questions provided."));
-        }
 
         var surveyQuestions = request.SurveyQuestions
             .Select(x => new SurveyQuestion

@@ -1,6 +1,5 @@
 using Microsoft.AspNetCore.Http;
 
-
 namespace BEAUTIFY_COMMAND.CONTRACT.Services.Clinics;
 public static class Commands
 {
@@ -54,7 +53,7 @@ public static class Commands
     ) : ICommand;
 
     #endregion
-    
+
     #region ClinicCreateAccountForEmployeeCommand
 
     public record ClinicCreateAccountForEmployeeCommand(

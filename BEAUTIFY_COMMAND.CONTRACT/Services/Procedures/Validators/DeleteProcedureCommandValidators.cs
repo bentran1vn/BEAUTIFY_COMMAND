@@ -1,6 +1,5 @@
 namespace BEAUTIFY_COMMAND.CONTRACT.Services.Procedures.Validators;
-
-public class DeleteProcedureCommandValidators: AbstractValidator<Commands.DeleteProcedureCommand>
+public class DeleteProcedureCommandValidators : AbstractValidator<Commands.DeleteProcedureCommand>
 {
     public DeleteProcedureCommandValidators()
     {

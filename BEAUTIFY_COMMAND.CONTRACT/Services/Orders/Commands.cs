@@ -2,5 +2,4 @@
 public static class Commands
 {
     public record CustomerOrderServiceCommand(List<Guid> ProcedureIds) : ICommand;
-    
 }

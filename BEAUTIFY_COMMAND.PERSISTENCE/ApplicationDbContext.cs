@@ -1,24 +1,24 @@
+using System.Reflection;
 using BEAUTIFY_COMMAND.DOMAIN.Entities;
 using BEAUTIFY_PACKAGES.BEAUTIFY_PACKAGES.DOMAIN.Abstractions.Entities;
-using Microsoft.EntityFrameworkCore;
-using System.Reflection;
 using BEAUTIFY_PACKAGES.BEAUTIFY_PACKAGES.DOMAIN.Constrants;
+using Microsoft.EntityFrameworkCore;
 
 namespace BEAUTIFY_COMMAND.PERSISTENCE;
 public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : DbContext(options)
 {
     public DbSet<TriggerOutbox> TriggerOutboxs { get; set; }
 
-    private static void SetSoftDeleteFilter<T>(ModelBuilder modelBuilder) where T : Entity<T>
-    {
-        modelBuilder.Entity<T>().HasQueryFilter(e => !e.IsDeleted);
-    }
-
     public virtual DbSet<Survey> Surveys { get; set; }
     public virtual DbSet<SurveyQuestion> SurveyQuestions { get; set; }
     public virtual DbSet<SurveyAnswer> SurveyAnswers { get; set; }
     public virtual DbSet<SurveyResponse> SurveyResponses { get; set; }
     public virtual DbSet<ClassificationRule> ClassificationRules { get; set; }
+
+    private static void SetSoftDeleteFilter<T>(ModelBuilder modelBuilder) where T : Entity<T>
+    {
+        modelBuilder.Entity<T>().HasQueryFilter(e => !e.IsDeleted);
+    }
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
@@ -59,7 +59,7 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
 
         builder.Entity<SubscriptionPackage>()
             .HasData(
-                new SubscriptionPackage()
+                new SubscriptionPackage
                 {
                     Id = new Guid("4b7171f4-3219-4688-9f7c-625687a95867"),
                     Name = "Trial",
@@ -71,7 +71,7 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
                     LimitLiveStream = 1,
                     EnhancedViewer = 0
                 },
-                new SubscriptionPackage()
+                new SubscriptionPackage
                 {
                     Id = new Guid("248bf96b-9782-4011-8bb0-b26e66658090"),
                     Name = "Bronze",
@@ -83,7 +83,7 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
                     LimitLiveStream = 5,
                     EnhancedViewer = 0
                 },
-                new SubscriptionPackage()
+                new SubscriptionPackage
                 {
                     Id = new Guid("b549752a-f156-4894-90ad-ab3994fd071d"),
                     Name = "Silver",
@@ -95,7 +95,7 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
                     LimitLiveStream = 10,
                     EnhancedViewer = 100
                 },
-                new SubscriptionPackage()
+                new SubscriptionPackage
                 {
                     Id = new Guid("b5db3ea1-f81c-465e-a23b-da7d6d361930"),
                     Name = "Gold",
@@ -932,10 +932,6 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
                 }
             );
 */
-
-        #endregion
-
-        #region Service
 
         #endregion
 

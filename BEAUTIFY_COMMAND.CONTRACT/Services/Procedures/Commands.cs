@@ -1,8 +1,6 @@
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
 
 namespace BEAUTIFY_COMMAND.CONTRACT.Services.Procedures;
-
 public class Commands
 {
     public record CreateProcedureCommand(
@@ -12,7 +10,7 @@ public class Commands
         int StepIndex,
         IFormFileCollection ProcedureCoverImage,
         IEnumerable<ProcedurePriceType>? ProcedurePriceTypes = null) : ICommand;
-    
+
     public record CreateProcedureBody(
         Guid ClinicServiceId,
         string Name,
@@ -22,8 +20,8 @@ public class Commands
         string? ProcedurePriceTypes = null);
 
     public record ProcedurePriceType(string Name, int Duration, decimal Price);
-    
+
     public record DeleteProcedureCommand(
         Guid Id
-        ) : ICommand;
+    ) : ICommand;
 }

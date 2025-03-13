@@ -10,8 +10,7 @@ internal sealed class ClinicCreateAccountForEmployeeCommandHandler(
     public async Task<Result> Handle(CONTRACT.Services.Clinics.Commands.ClinicCreateAccountForEmployeeCommand request,
         CancellationToken cancellationToken)
     {
-        
-       // var clinicId = currentUserService.ClinicId ?? throw new UnauthorizedAccessException();
+        // var clinicId = currentUserService.ClinicId ?? throw new UnauthorizedAccessException();
         var Id = Guid.NewGuid();
         var user = new User
         {
@@ -27,12 +26,11 @@ internal sealed class ClinicCreateAccountForEmployeeCommandHandler(
                 new()
                 {
                     ClinicId = request.ClinicId,
-                    UserId = Id,
+                    UserId = Id
                 }
             }
         };
         userRepository.Add(user);
         return Result.Success();
-        
     }
 }

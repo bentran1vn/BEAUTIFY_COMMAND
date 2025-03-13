@@ -7,7 +7,7 @@ public static class UserClinicException
         {
         }
 
-        public UserClinicNotFoundException() : base($"User Clinic not found")
+        public UserClinicNotFoundException() : base("User Clinic not found")
         {
         }
     }

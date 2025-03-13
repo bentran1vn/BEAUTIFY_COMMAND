@@ -17,7 +17,7 @@ internal sealed class DetermineSurveyAnswerCommandHandler(
         {
             Id = Guid.NewGuid(),
             SurveyId = request.SurveyId,
-            CustomerId = Guid.NewGuid(),
+            CustomerId = Guid.NewGuid()
         };
         var surveyAnswers = request.SurveyAnswers
             .Select(x => new SurveyAnswer

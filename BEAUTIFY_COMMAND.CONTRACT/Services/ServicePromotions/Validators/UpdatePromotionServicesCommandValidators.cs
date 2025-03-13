@@ -1,6 +1,5 @@
 namespace BEAUTIFY_COMMAND.CONTRACT.Services.ServicePromotions.Validators;
-
-public class UpdatePromotionServicesCommandValidators: AbstractValidator<Commands.UpdatePromotionServicesCommand>
+public class UpdatePromotionServicesCommandValidators : AbstractValidator<Commands.UpdatePromotionServicesCommand>
 {
     public UpdatePromotionServicesCommandValidators()
     {

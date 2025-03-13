@@ -18,20 +18,13 @@ public class ResponseClinicApplyCommandHandler(
             await clinicOnBoardingRequestRepository.FindByIdAsync(new Guid(request.RequestId), cancellationToken,
                 x => x.Clinic!);
 
-        if (applyRequest == null)
-        {
-            return Result.Failure(new Error("404", "Clinic Request Not Found"));
-        }
+        if (applyRequest == null) return Result.Failure(new Error("404", "Clinic Request Not Found"));
 
         if (applyRequest!.Status != 0 || applyRequest.IsDeleted)
-        {
             return Result.Failure(new Error("400", "Clinic Apply Request is Handled"));
-        }
 
         if (request.Action != 0 && request.RejectReason == null)
-        {
             return Result.Failure(new Error("400", "Missing Reject reason for Rejected or Banned Response"));
-        }
 
         var content = new MailContent
         {
@@ -84,7 +77,7 @@ public class ResponseClinicApplyCommandHandler(
 
             var hashingPassword = passwordHasherService.HashPassword($"{passwordRandom}");
 
-            var user = new User()
+            var user = new User
             {
                 Email = applyRequest.Clinic!.Email,
                 FirstName = "FirstNameAdmin",
@@ -98,15 +91,15 @@ public class ResponseClinicApplyCommandHandler(
                 Address = applyRequest.Clinic.Address,
                 Password = hashingPassword,
                 RoleId = new Guid("C6D93B8C-F509-4498-ABBB-FE63EDC66F2B"),
-                Status = 1,
+                Status = 1
             };
 
             userRepository.Add(user);
 
-            var userClinic = new UserClinic()
+            var userClinic = new UserClinic
             {
                 UserId = user.Id,
-                ClinicId = applyRequest.Clinic.Id,
+                ClinicId = applyRequest.Clinic.Id
             };
 
             userClinicRepository.Add(userClinic);
@@ -125,14 +118,11 @@ public class ResponseClinicApplyCommandHandler(
             var sub = await subscriptionPackageRepository.FindSingleAsync(x => x.Name.Equals("Trial"),
                 cancellationToken);
 
-            if (sub == null)
-            {
-                return Result.Failure(new Error("404", "Subscription package Not Found"));
-            }
+            if (sub == null) return Result.Failure(new Error("404", "Subscription package Not Found"));
 
             var vietnamTimeZone = TimeZoneInfo.FindSystemTimeZoneById("SE Asia Standard Time");
 
-            var trans = new SystemTransaction()
+            var trans = new SystemTransaction
             {
                 Id = Guid.NewGuid(),
                 ClinicId = applyRequest.Clinic.Id,

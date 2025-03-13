@@ -27,27 +27,20 @@ internal sealed class
             .ThenInclude(p => p.Service)
             .ToListAsync(cancellationToken);
 
-        if (procedures.Count == 0)
-        {
-            return Result.Failure(new Error("422", "No valid procedures found."));
-        }
+        if (procedures.Count == 0) return Result.Failure(new Error("422", "No valid procedures found."));
 
         // Extract ServiceIds from procedures
         var serviceIds = procedures.Select(x => x.Procedure.ServiceId).Distinct().ToList();
 
         if (serviceIds.Count > 1)
-        {
             return Result.Failure(new Error("422",
                 "Selected procedures belong to multiple services. Please choose procedures from the same service."));
-        }
 
         // Check for overlapping step indexes
         var stepIndexes = procedures.Select(x => x.Procedure.StepIndex).ToList();
         if (stepIndexes.Count != stepIndexes.Distinct().Count())
-        {
             return Result.Failure(new Error("422",
                 "Procedures have overlapping step indexes. Each step index must be unique."));
-        }
 
         var discount = procedures[0]!.Procedure!.Service!.DiscountPrice ?? 0;
         var order = new Order
@@ -56,7 +49,7 @@ internal sealed class
             CustomerId = user.Id,
             ServiceId = procedures[0].Procedure.ServiceId,
             Status = Constant.OrderStatus.ORDER_PENDING,
-            Discount = discount,
+            Discount = discount
         };
         //check if service discount is not null then apply discount
 
@@ -65,7 +58,7 @@ internal sealed class
             Id = Guid.NewGuid(),
             OrderId = order.Id,
             ProcedurePriceTypeId = x.Id,
-            Price = x.Price,
+            Price = x.Price
         }).ToList();
         order.TotalAmount = orderDetails.Sum(x => x.Price);
         order.FinalAmount = order.TotalAmount - discount;
@@ -80,7 +73,7 @@ internal sealed class
             BankGateway = "VietinBank",
             order.FinalAmount,
             OrderDescription = $"Customer Order: {order.Id}",
-            QrUrl = qrUrl,
+            QrUrl = qrUrl
         };
         return Result.Success(result);
     }

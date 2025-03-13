@@ -6,26 +6,15 @@ internal sealed class MoveSubCategoryToCategoryCommandHandler(IRepositoryBase<Ca
         CancellationToken cancellationToken)
     {
         if (request.SubCategoryId.Equals(request.CategoryId))
-        {
             return Result.Failure(new Error("400", "Category and SubCategory are the same"));
-        }
 
         var category = await categoryRepositoryBase.FindByIdAsync(request.CategoryId, cancellationToken);
-        if (category == null)
-        {
-            return Result.Failure(new Error("404", "Category not found"));
-        }
+        if (category == null) return Result.Failure(new Error("404", "Category not found"));
 
-        if (!category.IsParent)
-        {
-            return Result.Failure(new Error("400", "Category is not main category"));
-        }
+        if (!category.IsParent) return Result.Failure(new Error("400", "Category is not main category"));
 
         var subCategory = await categoryRepositoryBase.FindByIdAsync(request.SubCategoryId, cancellationToken);
-        if (subCategory == null)
-        {
-            return Result.Failure(new Error("404", "SubCategory not found"));
-        }
+        if (subCategory == null) return Result.Failure(new Error("404", "SubCategory not found"));
 
         subCategory.ParentId = category.Id;
         categoryRepositoryBase.Update(subCategory);
