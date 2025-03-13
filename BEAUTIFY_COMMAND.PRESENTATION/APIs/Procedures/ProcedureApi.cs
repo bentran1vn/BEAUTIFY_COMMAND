@@ -53,7 +53,7 @@ public class ProcedureApi: ApiEndpoint, ICarterModule
     {
         if (id != command.Id)
         {
-            return  HandlerFailure(Result.Failure(new Error("500", "Id mismatch.")));
+            return  HandlerFailure(Result.Failure(new Error("400", "Id mismatch.")));
         }
         
         var result = await sender.Send(command);

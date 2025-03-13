@@ -17,12 +17,12 @@ internal sealed class StaffChangeDoctorWorkingClinicCommandHandler(
 
         if (!clinic.IsActivated)
         {
-            return Result.Failure(new Error("500", "Clinic is not activated"));
+            return Result.Failure(new Error("400", "Clinic is not activated"));
         }
 
         if (user.UserClinics != null && user.UserClinics.Any(x => x.ClinicId == request.ClinicId))
         {
-            return Result.Failure(new Error("500", "Doctor already working in this clinic"));
+            return Result.Failure(new Error("400", "Doctor already working in this clinic"));
         }
 
         var userClinic =

@@ -55,7 +55,7 @@ public class ServicePromotionApi: ApiEndpoint, ICarterModule
     {
         if (id != command.PromotionId)
         {
-            return  HandlerFailure(Result.Failure(new Error("500", "Id mismatch.")));
+            return  HandlerFailure(Result.Failure(new Error("400", "Id mismatch.")));
         }
         
         var result = await sender.Send(new Commands.UpdatePromotionServicesCommand(
@@ -75,7 +75,7 @@ public class ServicePromotionApi: ApiEndpoint, ICarterModule
     {
         if (id != command.PromotionId)
         {
-            return  HandlerFailure(Result.Failure(new Error("500", "Id mismatch.")));
+            return  HandlerFailure(Result.Failure(new Error("400", "Id mismatch.")));
         }
         
         var result = await sender.Send(new Commands.DeletePromotionServicesCommand(

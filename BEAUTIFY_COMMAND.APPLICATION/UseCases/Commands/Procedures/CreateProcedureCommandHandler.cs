@@ -33,7 +33,7 @@ public class CreateProcedureCommandHandler: ICommandHandler<CONTRACT.Services.Pr
         
         if (isExisted.Procedures != null && isExisted.Procedures.Any(p => p.StepIndex == request.StepIndex && p.IsDeleted == false))
         {
-            return Result.Failure(new Error("500", "Step Index Exist !"));
+            return Result.Failure(new Error("400", "Step Index Exist !"));
         }
         
         if(request.ProcedurePriceTypes == null || request.ProcedurePriceTypes.Count() == 0)

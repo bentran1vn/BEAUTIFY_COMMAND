@@ -23,17 +23,17 @@ public class TriggerFromHookCommandHandler(
 
             if (tran.Status != 0)
             {
-                return Result.Failure(new Error("500", "Transaction already handler"));
+                return Result.Failure(new Error("400", "Transaction already handler"));
             }
 
             if (tran.Amount != request.TransferAmount)
             {
-                return Result.Failure(new Error("500", "Transaction Amount invalid"));
+                return Result.Failure(new Error("422", "Transaction Amount invalid"));
             }
 
             if (tran.TransactionDate > DateTimeOffset.Now)
             {
-                return Result.Failure(new Error("500", "Transaction Date invalid"));
+                return Result.Failure(new Error("400", "Transaction Date invalid"));
             }
 
             tran.Status = 1;
@@ -51,12 +51,12 @@ public class TriggerFromHookCommandHandler(
 
             if (order.Status == Constant.OrderStatus.ORDER_COMPLETED)
             {
-                return Result.Failure(new Error("500", "Order already completed"));
+                return Result.Failure(new Error("400", "Order already completed"));
             }
 
             if (order.FinalAmount != request.TransferAmount)
             {
-                return Result.Failure(new Error("500", "Order Amount invalid"));
+                return Result.Failure(new Error("422", "Order Amount invalid"));
             }
 
             order.Status = Constant.OrderStatus.ORDER_COMPLETED;

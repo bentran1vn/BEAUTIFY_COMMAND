@@ -20,17 +20,17 @@ public class ResponseClinicApplyCommandHandler(
 
         if (applyRequest == null)
         {
-            return Result.Failure(new Error("500", "Clinic Request Not Found"));
+            return Result.Failure(new Error("404", "Clinic Request Not Found"));
         }
 
         if (applyRequest!.Status != 0 || applyRequest.IsDeleted)
         {
-            return Result.Failure(new Error("500", "Clinic Apply Request is Handled"));
+            return Result.Failure(new Error("400", "Clinic Apply Request is Handled"));
         }
 
         if (request.Action != 0 && request.RejectReason == null)
         {
-            return Result.Failure(new Error("500", "Missing Reject reason for Rejected or Banned Response"));
+            return Result.Failure(new Error("400", "Missing Reject reason for Rejected or Banned Response"));
         }
 
         var content = new MailContent
@@ -127,7 +127,7 @@ public class ResponseClinicApplyCommandHandler(
 
             if (sub == null)
             {
-                return Result.Failure(new Error("500", "Subscription package Not Found"));
+                return Result.Failure(new Error("404", "Subscription package Not Found"));
             }
 
             var vietnamTimeZone = TimeZoneInfo.FindSystemTimeZoneById("SE Asia Standard Time");
