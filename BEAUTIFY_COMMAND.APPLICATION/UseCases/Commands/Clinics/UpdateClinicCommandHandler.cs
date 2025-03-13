@@ -42,9 +42,9 @@ public class UpdateClinicCommandHandler(
             clinic.Ward = request.Ward;
         }
 
-        if (request.HouseNumber != null)
+        if (request.Address != null)
         {
-            clinic.HouseNumber = request.HouseNumber;
+            clinic.Address = request.Address;
         }
 
         if (request.ProfilePicture != null)

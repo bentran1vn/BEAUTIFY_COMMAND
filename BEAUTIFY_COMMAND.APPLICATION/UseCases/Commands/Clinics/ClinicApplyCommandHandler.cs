@@ -78,7 +78,7 @@ public class ClinicApplyCommandHandler(
                 City = request.City,
                 Ward = request.Ward,
                 District = request.District,
-                HouseNumber = request.HouseNumber,
+                Address = request.Address,
                 PhoneNumber = request.PhoneNumber,
                 BankName = request.BankName,
                 BankAccountNumber = request.BankAccountNumber,

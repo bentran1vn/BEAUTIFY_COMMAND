@@ -29,7 +29,7 @@ internal sealed class
             City = request.City,
             Ward = request.Ward,
             District = request.District,
-            HouseNumber = request.HouseNumber,
+            Address = request.Address,
             ParentId = currentUserService.ClinicId.Value,
             PhoneNumber = request.PhoneNumber,
             TaxCode = parentClinic.TaxCode,
@@ -56,7 +56,7 @@ internal sealed class
             City = request.City,
             Ward = request.Ward,
             District = request.District,
-            HouseNumber = request.HouseNumber,
+            Address = request.Address,
             RoleId = role.Id,
         };
         userClinicRepository.Add(new UserClinic

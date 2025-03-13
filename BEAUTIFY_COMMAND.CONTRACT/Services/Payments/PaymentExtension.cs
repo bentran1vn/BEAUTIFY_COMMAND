@@ -2,9 +2,9 @@ using System.Text.RegularExpressions;
 
 namespace BEAUTIFY_COMMAND.CONTRACT.Services.Payments;
 
-public static class QrContentParser
+public static partial class QrContentParser
 {
-    public static Guid GuidParser(string guidString)
+    private static Guid GuidParser(string guidString)
     {
         if (guidString.Length != 32)
         {
@@ -12,21 +12,21 @@ public static class QrContentParser
         }
 
         // Insert hyphens to match the Guid format (8-4-4-4-12)
-        string formattedOrderId = $"{guidString.Substring(0, 8)}-{guidString.Substring(8, 4)}-{guidString.Substring(12, 4)}-{guidString.Substring(16, 4)}-{guidString.Substring(20)}";
+        var formattedOrderId = $"{guidString[..8]}-{guidString.Substring(8, 4)}-{guidString.Substring(12, 4)}-{guidString.Substring(16, 4)}-{guidString[20..]}";
 
         // Parse the string back into a Guid
         return Guid.Parse(formattedOrderId);
     }
 
-    public static QrParseResult ParseQrContent(string content)
+    private static QrParseResult ParseQrContent(string content)
     {
         // Convert content to lowercase first
-        string lowercaseContent = content.ToLower();
+        var lowercaseContent = content.ToLower();
 
         // Pattern now uses lowercase 'antree' since we've converted the content
         const string pattern = @"beautify(order|sub)([a-f0-9]{32})";
 
-        Match match = Regex.Match(lowercaseContent, pattern);
+        var match = MyRegex().Match(lowercaseContent);
         
         if (!match.Success)
         {
@@ -52,6 +52,9 @@ public static class QrContentParser
 
         return (parseResult.TransactionType, GuidParser(parseResult.TransactionId));
     }
+
+    [GeneratedRegex("beautify(order|sub)([a-f0-9]{32})")]
+    private static partial Regex MyRegex();
 }
 
 public class QrParseResult

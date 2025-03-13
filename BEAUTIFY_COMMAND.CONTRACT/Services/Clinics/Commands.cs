@@ -13,7 +13,7 @@ public static class Commands
         string City,
         string District,
         string Ward,
-        string HouseNumber,
+        string Address,
         string TaxCode,
         string BankName,
         string BankAccountNumber,
@@ -35,7 +35,7 @@ public static class Commands
         public string? City { get; set; }
         public string? District { get; set; }
         public string? Ward { get; set; }
-        public string? HouseNumber { get; set; }
+        public string? Address { get; set; }
         public IFormFile? ProfilePicture { get; set; }
         public bool? IsActivated { get; set; }
         public string? BankName { get; set; }
@@ -85,7 +85,7 @@ public static class Commands
         public string City { get; set; }
         public string District { get; set; }
         public string Ward { get; set; }
-        public string HouseNumber { get; set; }
+        public string Address { get; set; }
         public string PhoneNumber { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
@@ -112,7 +112,7 @@ public static class Commands
         string City,
         string District,
         string Ward,
-        string HouseNumber,
+        string Address,
         string BankName,
         string BankAccountNumber,
         IFormFile OperatingLicense,
@@ -132,7 +132,7 @@ public static class Commands
         public string City { get; set; }
         public string District { get; set; }
         public string Ward { get; set; }
-        public string HouseNumber { get; set; }
+        public string Address { get; set; }
         public bool IsActivated { get; set; }
         public IFormFile? ProfilePicture { get; set; }
     }

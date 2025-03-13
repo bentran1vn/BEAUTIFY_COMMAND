@@ -95,7 +95,7 @@ public class ResponseClinicApplyCommandHandler(
                 City = applyRequest.Clinic.City,
                 District = applyRequest.Clinic.District,
                 Ward = applyRequest.Clinic.Ward,
-                HouseNumber = applyRequest.Clinic.HouseNumber,
+                Address = applyRequest.Clinic.Address,
                 Password = hashingPassword,
                 RoleId = new Guid("C6D93B8C-F509-4498-ABBB-FE63EDC66F2B"),
                 Status = 1,

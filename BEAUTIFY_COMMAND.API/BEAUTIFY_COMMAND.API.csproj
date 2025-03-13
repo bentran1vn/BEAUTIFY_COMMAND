@@ -13,7 +13,7 @@
 
     <ItemGroup>   
 		
-        <PackageReference Include="BEAUTIFY_PACKAGES.SHARE" Version="1.6.4" />   
+        <PackageReference Include="BEAUTIFY_PACKAGES.SHARE" Version="1.6.7" />   
 		
         <PackageReference Include="Carter" Version="8.1.0" />
         <PackageReference Include="MicroElements.Swashbuckle.FluentValidation" Version="6.1.0" />

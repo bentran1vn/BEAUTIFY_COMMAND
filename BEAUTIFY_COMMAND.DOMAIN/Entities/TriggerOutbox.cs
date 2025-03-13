@@ -4,12 +4,11 @@ using ClinicServicesDomainEvent = BEAUTIFY_PACKAGES.BEAUTIFY_PACKAGES.CONTRACT.S
 using BEAUTIFY_PACKAGES.BEAUTIFY_PACKAGES.DOMAIN.EntityEvents;
 
 namespace BEAUTIFY_COMMAND.DOMAIN.Entities;
-
-public class TriggerOutbox: AggregateRoot<Guid>, IAuditableEntity
+public class TriggerOutbox : AggregateRoot<Guid>, IAuditableEntity
 {
     public DateTimeOffset CreatedOnUtc { get; set; }
     public DateTimeOffset? ModifiedOnUtc { get; set; }
-    
+
     public static TriggerOutbox RaiseCreateServiceProcedureEvent(
         Guid procedureId, Guid serviceId, string name, string description,
         decimal maxPrice, decimal minPrice, decimal? discountMaxPrice, decimal? discountMinPrice,
@@ -19,7 +18,7 @@ public class TriggerOutbox: AggregateRoot<Guid>, IAuditableEntity
         {
             Id = Guid.NewGuid(),
         };
-        
+
         triggerOutbox.RaiseDomainEvent(new ProceduresDomainEvent.ProcedureCreated(
             Guid.NewGuid(),
             new ProcedureEvent.CreateProcedure(
@@ -29,10 +28,10 @@ public class TriggerOutbox: AggregateRoot<Guid>, IAuditableEntity
                         x.Id, x.Name, x.Price
                     )).ToList()
             )));
-        
+
         return triggerOutbox;
     }
-    
+
     public static TriggerOutbox RaiseCreatePromotionEvent(
         Guid PromotionId,
         Guid ServiceId,
@@ -48,17 +47,17 @@ public class TriggerOutbox: AggregateRoot<Guid>, IAuditableEntity
         {
             Id = Guid.NewGuid(),
         };
-        
+
         triggerOutbox.RaiseDomainEvent(new ServicePromotionDomainEvent.ServicePromotionCreated(
             Guid.NewGuid(),
             new PromotionEvent.CreateServicePromotion(
                 PromotionId, ServiceId, Name, DiscountPercent, ImageUrl, DiscountMaxPrice,
                 DiscountMinPrice, StartDay, EndDate
             )));
-        
+
         return triggerOutbox;
     }
-    
+
     public static TriggerOutbox RaiseCreateClinicServiceEvent(
         Guid Id, string Name, string Description,
         ServiceMedia[] CoverImage, ServiceMedia[] DescriptionImage,
@@ -70,9 +69,9 @@ public class TriggerOutbox: AggregateRoot<Guid>, IAuditableEntity
         {
             Id = Guid.NewGuid(),
         };
-        
+
         triggerOutbox.RaiseDomainEvent(new ClinicServicesDomainEvent.ClinicServiceCreated(
-            Guid.NewGuid(), 
+            Guid.NewGuid(),
             new ClinicServiceEvent.CreateClinicService(
                 Id, Name, Description,
                 CoverImage.Select(x => new ClinicServiceEvent.Image(
@@ -83,12 +82,13 @@ public class TriggerOutbox: AggregateRoot<Guid>, IAuditableEntity
                 )).ToArray(),
                 new ClinicServiceEvent.Category(CateId, CateName, CateDescription),
                 clinics.Select(x => new ClinicServiceEvent.Clinic(x.Id, x.Name, x.Email,
-                    x.Address, x.PhoneNumber, x.ProfilePictureUrl, x.IsParent, x.ParentId)).ToList()
+                    x.City, x.Address, x.FullAddress, x.District, x.Ward, x.PhoneNumber, x.ProfilePictureUrl,
+                    x.IsParent, x.ParentId)).ToList()
             )));
 
         return triggerOutbox;
     }
-    
+
     public static TriggerOutbox RaiseUpdateClinicServiceEvent(
         Guid Id, string Name, string Description,
         ServiceMedia[] ChangeCoverImage, ServiceMedia[] ChangeDescriptionImage,
@@ -100,9 +100,9 @@ public class TriggerOutbox: AggregateRoot<Guid>, IAuditableEntity
         {
             Id = Guid.NewGuid(),
         };
-        
+
         triggerOutbox.RaiseDomainEvent(new ClinicServicesDomainEvent.ClinicServiceUpdated(
-            Guid.NewGuid(), 
+            Guid.NewGuid(),
             new ClinicServiceEvent.UpdateClinicService(
                 Id, Name, Description,
                 ChangeCoverImage.Select(x => new ClinicServiceEvent.Image(
@@ -113,7 +113,8 @@ public class TriggerOutbox: AggregateRoot<Guid>, IAuditableEntity
                 )).ToArray(),
                 new ClinicServiceEvent.Category(CateId, CateName, CateDescription),
                 clinics.Select(x => new ClinicServiceEvent.Clinic(x.Id, x.Name, x.Email,
-                    x.Address, x.PhoneNumber, x.ProfilePictureUrl, x.IsParent, x.ParentId)).ToList()
+                    x.City, x.Address, x.FullAddress, x.District, x.Ward, x.PhoneNumber, x.ProfilePictureUrl,
+                    x.IsParent, x.ParentId)).ToList()
             )));
 
         return triggerOutbox;
