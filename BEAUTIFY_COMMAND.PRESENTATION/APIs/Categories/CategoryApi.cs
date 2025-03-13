@@ -25,9 +25,9 @@ public class CategoryApi : ApiEndpoint, ICarterModule
             .WithName("Delete Catorgory")
             .WithSummary("Delete Catorgory")
             .WithDescription("");
-        gr1.MapPost("{SubCategoryId}/move-to/{CategoryId}", MoveSubCategoryToCategoryCommand)
-            .WithName("Move SubCategory To Category")
-            .WithSummary("Move SubCategory To Category")
+        gr1.MapPatch("{SubCategoryId}", UpdateSubCategoryCategoryCommand)
+            .WithName("Update SubCategory Category")
+            .WithSummary("Update the Category of a SubCategory")
             .WithDescription("");
     }
 
@@ -65,10 +65,18 @@ public class CategoryApi : ApiEndpoint, ICarterModule
         return result.IsFailure ? HandlerFailure(result) : Results.Ok(result);
     }
 
-    private static async Task<IResult> MoveSubCategoryToCategoryCommand(ISender sender, Guid SubCategoryId,
-        Guid CategoryId)
+    private static async Task<IResult> UpdateSubCategoryCategoryCommand(
+        ISender sender,
+        Guid SubCategoryId,
+        [FromBody] UpdateSubCategoryCategoryRequest request)
     {
-        var result = await sender.Send(new Commands.MoveSubCategoryToCategoryCommand(SubCategoryId, CategoryId));
+        var result =
+            await sender.Send(new Commands.MoveSubCategoryToCategoryCommand(SubCategoryId, request.CategoryId));
         return result.IsFailure ? HandlerFailure(result) : Results.Ok(result);
+    }
+
+    private class UpdateSubCategoryCategoryRequest
+    {
+        public Guid CategoryId { get; set; }
     }
 }
