@@ -12,56 +12,61 @@ public class TriggerFromHookCommandHandler(
     public async Task<Result> Handle(CONTRACT.Services.Payments.Commands.TriggerFromHookCommand request,
         CancellationToken cancellationToken)
     {
-        if (request.Type == 0)
+        switch (request.Type)
         {
-            var tran = await systemTransactionRepository.FindByIdAsync(request.Id, cancellationToken);
-
-            if (tran == null || tran.IsDeleted)
+            case 0:
             {
-                return Result.Failure(new Error("404", "Transaction not found"));
-            }
+                var tran = await systemTransactionRepository.FindByIdAsync(request.Id, cancellationToken);
 
-            if (tran.Status != 0)
+                if (tran == null || tran.IsDeleted)
+                {
+                    return Result.Failure(new Error("404", "Transaction not found"));
+                }
+
+                if (tran.Status != 0)
+                {
+                    return Result.Failure(new Error("400", "Transaction already handler"));
+                }
+
+                if (tran.Amount != request.TransferAmount)
+                {
+                    return Result.Failure(new Error("422", "Transaction Amount invalid"));
+                }
+
+                if (tran.TransactionDate > DateTimeOffset.Now)
+                {
+                    return Result.Failure(new Error("400", "Transaction Date invalid"));
+                }
+
+                tran.Status = 1;
+
+                await hubContext.Clients.Group(tran.Id.ToString())
+                    .SendAsync("ReceivePaymentStatus", true, cancellationToken);
+                break;
+            }
+            case 1:
             {
-                return Result.Failure(new Error("400", "Transaction already handler"));
+                var order = await orderRepository.FindByIdAsync(request.Id, cancellationToken);
+                if (order == null || order.IsDeleted)
+                {
+                    return Result.Failure(new Error("404", "Order not found"));
+                }
+
+                if (order.Status == Constant.OrderStatus.ORDER_COMPLETED)
+                {
+                    return Result.Failure(new Error("400", "Order already completed"));
+                }
+
+                if (order.FinalAmount != request.TransferAmount)
+                {
+                    return Result.Failure(new Error("422", "Order Amount invalid"));
+                }
+
+                order.Status = Constant.OrderStatus.ORDER_COMPLETED;
+                await hubContext.Clients.Group(order.Id.ToString())
+                    .SendAsync(Constant.OrderStatus.ORDER_COMPLETED, true, cancellationToken);
+                break;
             }
-
-            if (tran.Amount != request.TransferAmount)
-            {
-                return Result.Failure(new Error("422", "Transaction Amount invalid"));
-            }
-
-            if (tran.TransactionDate > DateTimeOffset.Now)
-            {
-                return Result.Failure(new Error("400", "Transaction Date invalid"));
-            }
-
-            tran.Status = 1;
-
-            await hubContext.Clients.Group(tran.Id.ToString())
-                .SendAsync("ReceivePaymentStatus", true, cancellationToken);
-        }
-        else if (request.Type == 1)
-        {
-            var order = await orderRepository.FindByIdAsync(request.Id, cancellationToken);
-            if (order == null || order.IsDeleted)
-            {
-                return Result.Failure(new Error("404", "Order not found"));
-            }
-
-            if (order.Status == Constant.OrderStatus.ORDER_COMPLETED)
-            {
-                return Result.Failure(new Error("400", "Order already completed"));
-            }
-
-            if (order.FinalAmount != request.TransferAmount)
-            {
-                return Result.Failure(new Error("422", "Order Amount invalid"));
-            }
-
-            order.Status = Constant.OrderStatus.ORDER_COMPLETED;
-            await hubContext.Clients.Group(order.Id.ToString())
-                .SendAsync(Constant.OrderStatus.ORDER_COMPLETED, true, cancellationToken);
         }
 
         return Result.Success("Handler successfully triggered.");

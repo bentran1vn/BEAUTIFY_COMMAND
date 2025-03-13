@@ -25,6 +25,7 @@
     </ItemGroup>
 
     <ItemGroup>
+      <Folder Include="UseCases\Commands\Bookings\" />
       <Folder Include="UseCases\Commands\ClassificationRules\" />
     </ItemGroup>
 
