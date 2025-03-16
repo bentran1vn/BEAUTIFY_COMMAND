@@ -145,4 +145,8 @@ public static class Commands
     ) : ICommand;
 
     #endregion
+    
+    public record ChangeClinicActivateStatusCommand(
+        Guid ClinicId
+    ) : ICommand;
 }

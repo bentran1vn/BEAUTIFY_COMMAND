@@ -61,16 +61,11 @@ public class CategoryApi : ApiEndpoint, ICarterModule
 
     private static async Task<IResult> UpdateSubCategoryCategoryCommand(
         ISender sender,
-        Guid SubCategoryId,
-        [FromBody] UpdateSubCategoryCategoryRequest request)
+        Guid subCategoryId,
+        [FromBody] Guid categoryId) // Directly receive CategoryId
     {
-        var result =
-            await sender.Send(new Commands.MoveSubCategoryToCategoryCommand(SubCategoryId, request.CategoryId));
+        var result = await sender.Send(new Commands.MoveSubCategoryToCategoryCommand(subCategoryId, categoryId));
         return result.IsFailure ? HandlerFailure(result) : Results.Ok(result);
     }
 
-    private class UpdateSubCategoryCategoryRequest
-    {
-        public Guid CategoryId { get; set; }
-    }
 }

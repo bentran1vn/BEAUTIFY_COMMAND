@@ -112,6 +112,9 @@ public class ClinicApi : ApiEndpoint, ICarterModule
         gr1.MapPost("create-branch", ClinicCreateBranch).DisableAntiforgery().RequireAuthorization();
         gr1.MapPut("update-branch", ClinicUpdateBranch).DisableAntiforgery().RequireAuthorization();
         gr1.MapDelete("delete-branch", ClinicDeleteBranch).DisableAntiforgery().RequireAuthorization();
+        gr1.MapPatch("{ClinicId:guid}/status", ClinicUpdateStatus)
+            .DisableAntiforgery()
+            .RequireAuthorization();
     }
 
 
@@ -198,6 +201,13 @@ public class ClinicApi : ApiEndpoint, ICarterModule
         [FromForm] Commands.ClinicDeleteBranchCommand command)
     {
         var result = await sender.Send(command);
+        return result.IsFailure ? HandlerFailure(result) : Results.Ok(result);
+    }
+
+    private static async Task<IResult> ClinicUpdateStatus(ISender sender, Guid ClinicId)
+    {
+        var result = await sender.Send(new Commands.ChangeClinicActivateStatusCommand(ClinicId));
+
         return result.IsFailure ? HandlerFailure(result) : Results.Ok(result);
     }
 }
