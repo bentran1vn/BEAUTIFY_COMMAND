@@ -169,6 +169,7 @@ public class ClinicApi : ApiEndpoint, ICarterModule
     private static async Task<IResult> ClinicUpdateBranch(ISender sender, [FromRoute] Guid id,
         [FromRoute] Guid branchId, [FromForm] Commands.ClinicUpdateBranchCommand command)
     {
+        command.BranchId = branchId;
         var result = await sender.Send(command);
         return result.IsFailure ? HandlerFailure(result) : Results.Ok(result);
     }
