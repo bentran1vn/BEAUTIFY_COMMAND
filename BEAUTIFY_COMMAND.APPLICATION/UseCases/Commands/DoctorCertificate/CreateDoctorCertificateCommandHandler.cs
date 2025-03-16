@@ -5,7 +5,7 @@ namespace BEAUTIFY_COMMAND.APPLICATION.UseCases.Commands.DoctorCertificate;
 public class CreateDoctorCertificateCommandHandler(
     IRepositoryBase<DOMAIN.Entities.DoctorCertificate, Guid> doctorCertificateRepository,
     IMediaService mediaService,
-    IRepositoryBase<User, Guid> userRepository
+    IRepositoryBase<Staff, Guid> staffRepository
 
     // ICurrentUserService currentUserService
 )
@@ -19,7 +19,7 @@ public class CreateDoctorCertificateCommandHandler(
              currentUserService.UserId ?? throw new UnauthorizedAccessException(); //check if user has role doctor
          //check if user has role doctor
          var user = await userRepository.FindByIdAsync(userId, cancellationToken);*/
-        var user = await userRepository.FindSingleAsync(x => x.Id == request.UserId, cancellationToken);
+        var user = await staffRepository.FindSingleAsync(x => x.Id == request.UserId, cancellationToken);
         if (user == null)
             throw new UnauthorizedAccessException();
         if (user.Role?.Name != Constant.Role.DOCTOR)

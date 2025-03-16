@@ -2,7 +2,7 @@
 
 namespace BEAUTIFY_COMMAND.APPLICATION.UseCases.Commands.Clinics;
 internal sealed class ClinicCreateAccountForEmployeeCommandHandler(
-    IRepositoryBase<User, Guid> userRepository,
+    IRepositoryBase<Staff, Guid> staffRepository,
     ICurrentUserService currentUserService,
     IPasswordHasherService passwordHasherService)
     : ICommandHandler<CONTRACT.Services.Clinics.Commands.ClinicCreateAccountForEmployeeCommand>
@@ -12,7 +12,7 @@ internal sealed class ClinicCreateAccountForEmployeeCommandHandler(
     {
         // var clinicId = currentUserService.ClinicId ?? throw new UnauthorizedAccessException();
         var Id = Guid.NewGuid();
-        var user = new User
+        var user = new Staff
         {
             Id = Id,
             Email = request.Email,
@@ -30,7 +30,7 @@ internal sealed class ClinicCreateAccountForEmployeeCommandHandler(
                 }
             }
         };
-        userRepository.Add(user);
+        staffRepository.Add(user);
         return Result.Success();
     }
 }

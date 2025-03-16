@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace BEAUTIFY_COMMAND.APPLICATION.UseCases.Commands.WorkingSchedules;
 internal sealed class CreateWorkingScheduleCommandHandler(
-    IRepositoryBase<User, Guid> userRepository,
+    IRepositoryBase<Staff, Guid> staffRepository,
     IRepositoryBase<WorkingSchedule, Guid> workingScheduleRepository,
     IRepositoryBase<Clinic, Guid> clinicRepository)
     : ICommandHandler<CONTRACT.Services.WorkingSchedules.Commands.CreateWorkingScheduleCommand>
@@ -13,7 +13,7 @@ internal sealed class CreateWorkingScheduleCommandHandler(
         CancellationToken cancellationToken)
     {
         // 1. Validate doctor
-        var doctor = await userRepository.FindByIdAsync(request.DoctorId, cancellationToken)
+        var doctor = await staffRepository.FindByIdAsync(request.DoctorId, cancellationToken)
                      ?? throw new UserException.UserNotFoundException(request.DoctorId);
         var doctorName = $"{doctor.FirstName} {doctor.LastName}";
         if (doctor.UserClinics == null || doctor.UserClinics.Count == 0)

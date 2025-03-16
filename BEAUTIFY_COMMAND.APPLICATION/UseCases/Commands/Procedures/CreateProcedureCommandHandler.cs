@@ -2,33 +2,19 @@ using BEAUTIFY_PACKAGES.BEAUTIFY_PACKAGES.APPLICATION.Abstractions;
 
 namespace BEAUTIFY_COMMAND.APPLICATION.UseCases.Commands.Procedures;
 public class
-    CreateProcedureCommandHandler : ICommandHandler<CONTRACT.Services.Procedures.Commands.CreateProcedureCommand>
-{
-    private readonly IRepositoryBase<Service, Guid> _clinicServiceRepository;
-    private readonly IMediaService _mediaService;
-    private readonly IRepositoryBase<ProcedureMedia, Guid> _procedureMediaServiceRepository;
-    private readonly IRepositoryBase<ProcedurePriceType, Guid> _procedurePriceTypeServiceRepository;
-    private readonly IRepositoryBase<Procedure, Guid> _procedureServiceRepository;
-    private readonly IRepositoryBase<TriggerOutbox, Guid> _triggerOutboxRepository;
-
-    public CreateProcedureCommandHandler(IRepositoryBase<Service, Guid> clinicServiceRepository,
-        IMediaService mediaService, IRepositoryBase<Procedure, Guid> procedureServiceRepository,
+    CreateProcedureCommandHandler(
+        IRepositoryBase<Service, Guid> clinicServiceRepository,
+        IMediaService mediaService,
+        IRepositoryBase<Procedure, Guid> procedureServiceRepository,
         IRepositoryBase<ProcedureMedia, Guid> procedureMediaServiceRepository,
         IRepositoryBase<ProcedurePriceType, Guid> procedurePriceTypeServiceRepository,
         IRepositoryBase<TriggerOutbox, Guid> triggerOutboxRepository)
-    {
-        _clinicServiceRepository = clinicServiceRepository;
-        _mediaService = mediaService;
-        _procedureServiceRepository = procedureServiceRepository;
-        _procedureMediaServiceRepository = procedureMediaServiceRepository;
-        _procedurePriceTypeServiceRepository = procedurePriceTypeServiceRepository;
-        _triggerOutboxRepository = triggerOutboxRepository;
-    }
-
+    : ICommandHandler<CONTRACT.Services.Procedures.Commands.CreateProcedureCommand>
+{
     public async Task<Result> Handle(CONTRACT.Services.Procedures.Commands.CreateProcedureCommand request,
         CancellationToken cancellationToken)
     {
-        var isExisted = await _clinicServiceRepository.FindByIdAsync(request.ClinicServiceId, cancellationToken,
+        var isExisted = await clinicServiceRepository.FindByIdAsync(request.ClinicServiceId, cancellationToken,
             x => x.Promotions);
 
         if (isExisted == null || isExisted.IsDeleted) return Result.Failure(new Error("404", "Services not found !"));
@@ -37,7 +23,7 @@ public class
             isExisted.Procedures.Any(p => p.StepIndex == request.StepIndex && p.IsDeleted == false))
             return Result.Failure(new Error("400", "Step Index Exist !"));
 
-        if (request.ProcedurePriceTypes == null || request.ProcedurePriceTypes.Count() == 0)
+        if (request.ProcedurePriceTypes == null || !request.ProcedurePriceTypes.Any())
             return Result.Failure(new Error("400", "No Price Types !"));
 
         var procedure = new Procedure
@@ -49,9 +35,9 @@ public class
             ServiceId = request.ClinicServiceId
         };
 
-        _procedureServiceRepository.Add(procedure);
+        procedureServiceRepository.Add(procedure);
 
-        var coverImageTasks = request.ProcedureCoverImage.Select(x => _mediaService.UploadImageAsync(x));
+        var coverImageTasks = request.ProcedureCoverImage.Select(mediaService.UploadImageAsync);
 
         var coverImageUrls = await Task.WhenAll(coverImageTasks);
 
@@ -63,19 +49,21 @@ public class
             ProcedureId = procedure.Id
         }).ToList();
 
-        _procedureMediaServiceRepository.AddRange(medias);
+        procedureMediaServiceRepository.AddRange(medias);
 
         var procedurePriceTypes = request.ProcedurePriceTypes.Select(x => new ProcedurePriceType
         {
             Id = Guid.NewGuid(),
             Name = x.Name,
             Price = x.Price,
+            Duration = x.Duration,
+            IsDefault = x.IsDefault,
             ProcedureId = procedure.Id
         });
 
         var priceTypes = procedurePriceTypes.ToList();
 
-        _procedurePriceTypeServiceRepository.AddRange(priceTypes);
+        procedurePriceTypeServiceRepository.AddRange(priceTypes);
 
         var lowestPrice = isExisted.Procedures?.Sum(procedure =>
             procedure.ProcedurePriceTypes.Any()
@@ -96,7 +84,7 @@ public class
             lowestPrice - (decimal?)discountPercent * lowestPrice,
             procedure.StepIndex, coverImageUrls, priceTypes);
 
-        _triggerOutboxRepository.Add(trigger);
+        triggerOutboxRepository.Add(trigger);
 
         return Result.Success("Create Service's Procedure Successfully");
     }

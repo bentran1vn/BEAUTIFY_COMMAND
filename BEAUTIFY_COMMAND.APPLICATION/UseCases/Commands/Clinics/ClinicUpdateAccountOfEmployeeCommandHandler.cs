@@ -4,14 +4,14 @@ using BEAUTIFY_PACKAGES.BEAUTIFY_PACKAGES.DOMAIN.Constrants;
 
 namespace BEAUTIFY_COMMAND.APPLICATION.UseCases.Commands.Clinics;
 public class ClinicUpdateAccountOfEmployeeCommandHandler(
-    IRepositoryBase<User, Guid> userRepository,
+    IRepositoryBase<Staff, Guid> staffRepository,
     IMediaService mediaService)
     : ICommandHandler<CONTRACT.Services.Clinics.Commands.ClinicUpdateAccountOfEmployeeCommand>
 {
     public async Task<Result> Handle(CONTRACT.Services.Clinics.Commands.ClinicUpdateAccountOfEmployeeCommand request,
         CancellationToken cancellationToken)
     {
-        var user = await userRepository.FindByIdAsync(request.UserId, cancellationToken) ??
+        var user = await staffRepository.FindByIdAsync(request.UserId, cancellationToken) ??
                    throw new UserException.UserNotFoundException(request.UserId);
 
         if (user.Role?.Name == Constant.Role.CLINIC_ADMIN) throw new UnauthorizedAccessException();

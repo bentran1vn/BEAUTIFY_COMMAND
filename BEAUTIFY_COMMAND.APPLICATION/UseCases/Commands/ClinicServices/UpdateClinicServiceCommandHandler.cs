@@ -3,56 +3,39 @@ using Microsoft.EntityFrameworkCore;
 
 namespace BEAUTIFY_COMMAND.APPLICATION.UseCases.Commands.ClinicServices;
 public class
-    UpdateClinicServiceCommandHandler : ICommandHandler<
-    CONTRACT.Services.ClinicSerivices.Commands.UpdateClinicServiceCommand>
-{
-    private readonly IRepositoryBase<Category, Guid> _categoryRepository;
-    private readonly IRepositoryBase<Clinic, Guid> _clinicRepository;
-    private readonly IRepositoryBase<ClinicService, Guid> _clinicServiceRepository;
-    private readonly IMediaService _mediaService;
-    private readonly IRepositoryBase<ServiceMedia, Guid> _serviceMediaRepository;
-    private readonly IRepositoryBase<Service, Guid> _serviceRepository;
-    private readonly IRepositoryBase<TriggerOutbox, Guid> _triggerOutboxRepository;
-    private readonly IRepositoryBase<UserClinic, Guid> _userClinicRepository;
-
-    public UpdateClinicServiceCommandHandler(IRepositoryBase<Service, Guid> serviceRepository,
-        IRepositoryBase<Category, Guid> categoryRepository, IMediaService mediaService,
-        IRepositoryBase<ServiceMedia, Guid> serviceMediaRepository, IRepositoryBase<Clinic, Guid> clinicRepository,
+    UpdateClinicServiceCommandHandler(
+        IRepositoryBase<Service, Guid> serviceRepository,
+        IRepositoryBase<Category, Guid> categoryRepository,
+        IMediaService mediaService,
+        IRepositoryBase<ServiceMedia, Guid> serviceMediaRepository,
+        IRepositoryBase<Clinic, Guid> clinicRepository,
         IRepositoryBase<ClinicService, Guid> clinicServiceRepository,
         IRepositoryBase<TriggerOutbox, Guid> triggerOutboxRepository,
         IRepositoryBase<UserClinic, Guid> userClinicRepository)
-    {
-        _serviceRepository = serviceRepository;
-        _categoryRepository = categoryRepository;
-        _mediaService = mediaService;
-        _serviceMediaRepository = serviceMediaRepository;
-        _clinicRepository = clinicRepository;
-        _clinicServiceRepository = clinicServiceRepository;
-        _triggerOutboxRepository = triggerOutboxRepository;
-        _userClinicRepository = userClinicRepository;
-    }
-
+    : ICommandHandler<
+        CONTRACT.Services.ClinicSerivices.Commands.UpdateClinicServiceCommand>
+{
     public async Task<Result> Handle(CONTRACT.Services.ClinicSerivices.Commands.UpdateClinicServiceCommand request,
         CancellationToken cancellationToken)
     {
-        var service = await _serviceRepository.FindByIdAsync(request.Id, cancellationToken,
+        var service = await serviceRepository.FindByIdAsync(request.Id, cancellationToken,
             x => x.ServiceMedias, y => y.ClinicServices);
 
         if (service == null || service.IsDeleted) return Result.Failure(new Error("404", "Service not found "));
 
-        var category = await _categoryRepository.FindAll(x => x.Id.Equals(request.CategoryId))
+        var category = await categoryRepository.FindAll(x => x.Id.Equals(request.CategoryId))
             .FirstOrDefaultAsync(cancellationToken);
 
         if (category == null || category.IsDeleted) return Result.Failure(new Error("404", "Category not found "));
 
         // Fetch all required clinic data in one go
         var clinicIds = request.ClinicId.ToHashSet();
-        var clinics = await _clinicRepository.FindAll(x => request.ClinicId.Contains(x.Id))
+        var clinics = await clinicRepository.FindAll(x => request.ClinicId.Contains(x.Id))
             .ToListAsync(cancellationToken);
 
         if (clinics.Count != clinicIds.Count) return Result.Failure(new Error("404", "Clinic not found "));
 
-        var userClinicIds = (await _userClinicRepository.FindAll(
+        var userClinicIds = (await userClinicRepository.FindAll(
                     x =>
                         x.UserId.Equals(request.UserId) &&
                         x.User != null &&
@@ -74,7 +57,7 @@ public class
         var clinicsToRemove = existingClinicIds.Except(clinicIds).ToList();
 
         if (clinicsToRemove.Any())
-            _clinicServiceRepository.RemoveMultiple(service.ClinicServices
+            clinicServiceRepository.RemoveMultiple(service.ClinicServices
                 .Where(x => clinicsToRemove.Contains(x.ClinicId)).ToList());
 
         // Add new clinics
@@ -87,7 +70,7 @@ public class
                 ClinicId = id,
                 ServiceId = service.Id
             }).ToList();
-            _clinicServiceRepository.AddRange(newClinicServices);
+            clinicServiceRepository.AddRange(newClinicServices);
         }
 
         // Handle media updates efficiently
@@ -103,9 +86,9 @@ public class
                      !x.IsDeleted).ToList();
 
             if (coverMediaToDelete != null && coverMediaToDelete.Any())
-                _serviceMediaRepository.RemoveMultiple(coverMediaToDelete);
+                serviceMediaRepository.RemoveMultiple(coverMediaToDelete);
 
-            var coverImageUrls = await Task.WhenAll(coverImageFiles.Select(x => _mediaService.UploadImageAsync(x)));
+            var coverImageUrls = await Task.WhenAll(coverImageFiles.Select(x => mediaService.UploadImageAsync(x)));
             var newCoverMedias = coverImageUrls.Select((x, idx) => new ServiceMedia
             {
                 Id = Guid.NewGuid(),
@@ -128,10 +111,10 @@ public class
                      !x.IsDeleted).ToList();
 
             if (descriptionMediaToDelete != null && descriptionMediaToDelete.Any())
-                _serviceMediaRepository.RemoveMultiple(descriptionMediaToDelete);
+                serviceMediaRepository.RemoveMultiple(descriptionMediaToDelete);
 
             var descriptionImageUrls =
-                await Task.WhenAll(descriptionImageFiles.Select(x => _mediaService.UploadImageAsync(x)));
+                await Task.WhenAll(descriptionImageFiles.Select(x => mediaService.UploadImageAsync(x)));
             var newDescriptionMedias = descriptionImageUrls.Select((x, idx) => new ServiceMedia
             {
                 Id = Guid.NewGuid(),
@@ -144,9 +127,9 @@ public class
             serviceMediaList.AddRange(newDescriptionMedias);
         }
 
-        if (serviceMediaList.Any()) _serviceMediaRepository.AddRange(serviceMediaList);
+        if (serviceMediaList.Any()) serviceMediaRepository.AddRange(serviceMediaList);
 
-        _serviceRepository.Update(service);
+        serviceRepository.Update(service);
 
         // Trigger event
         var trigger = TriggerOutbox.RaiseUpdateClinicServiceEvent(
@@ -156,7 +139,7 @@ public class
             request.CategoryId, category.Name, category.Description ?? "", clinics
         );
 
-        _triggerOutboxRepository.Add(trigger);
+        triggerOutboxRepository.Add(trigger);
 
         return Result.Success("Updated Clinic Services Successfully");
     }

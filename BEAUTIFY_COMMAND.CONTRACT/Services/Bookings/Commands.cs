@@ -7,5 +7,6 @@ public static class Commands
         DateTimeOffset BookingDate,
         Guid ClinicId,
         Guid ServiceId,
-        List<Guid> ProcedurePriceTypeIds) : ICommand;
+        List<Guid> ProcedurePriceTypeIds,
+        bool IsDefault) : ICommand;
 }

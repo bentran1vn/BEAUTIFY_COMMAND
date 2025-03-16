@@ -155,7 +155,7 @@ public class ClinicApi : ApiEndpoint, ICarterModule
     private static async Task<IResult> ResponseClinicApply(ISender sender, [FromRoute] string id,
         Commands.ResponseClinicApplyCommand command)
     {
-        var result = await sender.Send(command);
+        var result = await sender.Send(command with { RequestId = id });
         return result.IsFailure ? HandlerFailure(result) : Results.Ok(result);
     }
 
@@ -177,7 +177,7 @@ public class ClinicApi : ApiEndpoint, ICarterModule
     private static async Task<IResult> ClinicDeleteBranch(ISender sender, [FromRoute] Guid id,
         [FromRoute] Guid branchId, [FromForm] Commands.ClinicDeleteBranchCommand command)
     {
-        var result = await sender.Send(command);
+        var result = await sender.Send(new Commands.ClinicDeleteBranchCommand(BranchId: branchId));
         return result.IsFailure ? HandlerFailure(result) : Results.Ok(result);
     }
 }

@@ -3,41 +3,26 @@ using Microsoft.EntityFrameworkCore;
 
 namespace BEAUTIFY_COMMAND.APPLICATION.UseCases.Commands.ClinicServices;
 public class
-    CreateClinicServiceCommandHandler : ICommandHandler<
-    CONTRACT.Services.ClinicSerivices.Commands.CreateClinicServiceCommand>
-{
-    private readonly IRepositoryBase<Category, Guid> _categoryRepository;
-    private readonly IRepositoryBase<Clinic, Guid> _clinicRepository;
-    private readonly IRepositoryBase<ClinicService, Guid> _clinicServiceRepository;
-    private readonly IMediaService _mediaService;
-    private readonly IRepositoryBase<ServiceMedia, Guid> _serviceMediaRepository;
-    private readonly IRepositoryBase<Service, Guid> _serviceRepository;
-    private readonly IRepositoryBase<TriggerOutbox, Guid> _triggerOutboxRepository;
-
-    public CreateClinicServiceCommandHandler(IRepositoryBase<Service, Guid> serviceRepository,
-        IRepositoryBase<Category, Guid> categoryRepository, IMediaService mediaService,
-        IRepositoryBase<ServiceMedia, Guid> serviceMediaRepository, IRepositoryBase<Clinic, Guid> clinicRepository,
+    CreateClinicServiceCommandHandler(
+        IRepositoryBase<Service, Guid> serviceRepository,
+        IRepositoryBase<Category, Guid> categoryRepository,
+        IMediaService mediaService,
+        IRepositoryBase<ServiceMedia, Guid> serviceMediaRepository,
+        IRepositoryBase<Clinic, Guid> clinicRepository,
         IRepositoryBase<ClinicService, Guid> clinicServiceRepository,
         IRepositoryBase<TriggerOutbox, Guid> triggerOutboxRepository)
-    {
-        _serviceRepository = serviceRepository;
-        _categoryRepository = categoryRepository;
-        _mediaService = mediaService;
-        _serviceMediaRepository = serviceMediaRepository;
-        _clinicRepository = clinicRepository;
-        _clinicServiceRepository = clinicServiceRepository;
-        _triggerOutboxRepository = triggerOutboxRepository;
-    }
-
+    : ICommandHandler<
+        CONTRACT.Services.ClinicSerivices.Commands.CreateClinicServiceCommand>
+{
     public async Task<Result> Handle(CONTRACT.Services.ClinicSerivices.Commands.CreateClinicServiceCommand request,
         CancellationToken cancellationToken)
     {
-        var isCategoryExisted = await _categoryRepository.FindByIdAsync(request.CategoryId, cancellationToken);
+        var isCategoryExisted = await categoryRepository.FindByIdAsync(request.CategoryId, cancellationToken);
 
         if (isCategoryExisted == null || isCategoryExisted.IsDeleted)
             return Result.Failure(new Error("404", "Category not found "));
 
-        var isClinicExisted = await _clinicRepository.FindAll(x => request.ClinicId.Contains(x.Id))
+        var isClinicExisted = await clinicRepository.FindAll(x => request.ClinicId.Contains(x.Id))
             .ToListAsync(cancellationToken);
 
         if (isClinicExisted.Count != request.ClinicId.Count)
@@ -47,13 +32,13 @@ public class
 
         var coverImagesFilter = request.CoverImages.Where(x => x.Name.Equals("coverImages")).ToList();
 
-        var servicesCoverImageTasks = coverImagesFilter.Select(x => _mediaService.UploadImageAsync(x));
+        var servicesCoverImageTasks = coverImagesFilter.Select(mediaService.UploadImageAsync);
 
         var coverImageUrls = await Task.WhenAll(servicesCoverImageTasks);
 
         var descriptionImagesFilter = request.DescriptionImages.Where(x => x.Name.Equals("descriptionImages")).ToList();
 
-        var servicesDescriptionImageTasks = descriptionImagesFilter.Select(x => _mediaService.UploadImageAsync(x));
+        var servicesDescriptionImageTasks = descriptionImagesFilter.Select(mediaService.UploadImageAsync);
 
         var desImageUrls = await Task.WhenAll(servicesDescriptionImageTasks);
 
@@ -65,7 +50,7 @@ public class
             CategoryId = request.CategoryId
         };
 
-        _serviceRepository.Add(service);
+        serviceRepository.Add(service);
 
         var clinicServices = request.ClinicId.Select(x => new ClinicService
         {
@@ -74,7 +59,7 @@ public class
             ClinicId = x
         });
 
-        _clinicServiceRepository.AddRange(clinicServices);
+        clinicServiceRepository.AddRange(clinicServices);
 
         var medias = coverImageUrls.Select((x, idx) => new ServiceMedia
         {
@@ -98,14 +83,14 @@ public class
 
         serviceMediaList.AddRange(desMedias);
 
-        _serviceMediaRepository.AddRange(serviceMediaList);
+        serviceMediaRepository.AddRange(serviceMediaList);
 
         var trigger = TriggerOutbox.RaiseCreateClinicServiceEvent(
             service.Id, service.Name, service.Description, medias.ToArray(), desMedias.ToArray(),
             request.CategoryId, isCategoryExisted.Name, isCategoryExisted.Description ?? "", isClinicExisted
         );
 
-        _triggerOutboxRepository.Add(trigger);
+        triggerOutboxRepository.Add(trigger);
 
         return Result.Success("Clinic service created successfully");
     }

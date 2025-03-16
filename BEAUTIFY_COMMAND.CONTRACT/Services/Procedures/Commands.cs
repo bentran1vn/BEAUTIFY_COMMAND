@@ -19,7 +19,7 @@ public class Commands
         IFormFileCollection ProcedureCoverImage,
         string? ProcedurePriceTypes = null);
 
-    public record ProcedurePriceType(string Name, int Duration, decimal Price);
+    public record ProcedurePriceType(string Name, int Duration, decimal Price,bool IsDefault);
 
     public record DeleteProcedureCommand(
         Guid Id

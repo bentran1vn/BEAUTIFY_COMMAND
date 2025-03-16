@@ -2,7 +2,7 @@
 
 namespace BEAUTIFY_COMMAND.APPLICATION.UseCases.Commands.Clinics;
 internal sealed class StaffChangeDoctorWorkingClinicCommandHandler(
-    IRepositoryBase<User, Guid> userRepository,
+    IRepositoryBase<Staff, Guid> staffRepository,
     IRepositoryBase<Clinic, Guid> clinicRepository,
     IRepositoryBase<UserClinic, Guid> userClinicRepository)
     : ICommandHandler<CONTRACT.Services.Clinics.Commands.StaffChangeDoctorWorkingClinicCommand>
@@ -10,7 +10,7 @@ internal sealed class StaffChangeDoctorWorkingClinicCommandHandler(
     public async Task<Result> Handle(CONTRACT.Services.Clinics.Commands.StaffChangeDoctorWorkingClinicCommand request,
         CancellationToken cancellationToken)
     {
-        var user = await userRepository.FindByIdAsync(request.DoctorId, cancellationToken) ??
+        var user = await staffRepository.FindByIdAsync(request.DoctorId, cancellationToken) ??
                    throw new UserException.UserNotFoundException(request.DoctorId);
         var clinic = await clinicRepository.FindByIdAsync(request.ClinicId, cancellationToken) ??
                      throw new ClinicException.ClinicNotFoundException(request.ClinicId);

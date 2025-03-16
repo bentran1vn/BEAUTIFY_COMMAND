@@ -5,7 +5,7 @@ namespace BEAUTIFY_COMMAND.DOMAIN.Entities;
 public class DoctorService : AggregateRoot<Guid>, IAuditableEntity
 {
     public Guid DoctorId { get; set; }
-    public virtual User? Doctor { get; set; }
+    public virtual Staff? Doctor { get; set; }
     public Guid ServiceId { get; set; }
     public virtual Service? Service { get; set; }
     public DateTimeOffset CreatedOnUtc { get; set; }

@@ -2,7 +2,7 @@ using BEAUTIFY_PACKAGES.BEAUTIFY_PACKAGES.APPLICATION.Abstractions;
 
 namespace BEAUTIFY_COMMAND.APPLICATION.UseCases.Commands.Clinics;
 public class ResponseClinicApplyCommandHandler(
-    IRepositoryBase<User, Guid> userRepository,
+    IRepositoryBase<Staff, Guid> staffRepository,
     IRepositoryBase<ClinicOnBoardingRequest, Guid> clinicOnBoardingRequestRepository,
     IMailService mailService,
     IPasswordHasherService passwordHasherService,
@@ -53,7 +53,7 @@ public class ResponseClinicApplyCommandHandler(
                     But according to your application, we have to say that we regret that
                     your application still does not meet the requirements ({applyRequest.RejectReason}).,
                     so your registration request has been rejected.
-                    You have 30 days to prepare again for the next application and I hope you understand this.
+                    You have to prepare again for the next application and I hope you understand this.
                     If you have any questions, please reply to this email.</p>
                     <p>Thank you for your application !</p>
                 "; // 2 is Banned
@@ -77,7 +77,7 @@ public class ResponseClinicApplyCommandHandler(
 
             var hashingPassword = passwordHasherService.HashPassword($"{passwordRandom}");
 
-            var user = new User
+            var user = new Staff
             {
                 Email = applyRequest.Clinic!.Email,
                 FirstName = "FirstNameAdmin",
@@ -94,7 +94,7 @@ public class ResponseClinicApplyCommandHandler(
                 Status = 1
             };
 
-            userRepository.Add(user);
+            staffRepository.Add(user);
 
             var userClinic = new UserClinic
             {

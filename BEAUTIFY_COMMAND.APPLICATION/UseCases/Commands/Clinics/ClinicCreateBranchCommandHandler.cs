@@ -4,7 +4,7 @@ using BEAUTIFY_PACKAGES.BEAUTIFY_PACKAGES.APPLICATION.Abstractions;
 namespace BEAUTIFY_COMMAND.APPLICATION.UseCases.Commands.Clinics;
 internal sealed class
     ClinicCreateBranchCommandHandler(
-        IRepositoryBase<User, Guid> userRepository,
+        IRepositoryBase<Staff, Guid> staffRepository,
         IRepositoryBase<Clinic, Guid> clinicRepository,
         IMediaService mediaService,
         IPasswordHasherService passwordHasherService,
@@ -44,7 +44,7 @@ internal sealed class
         };
         parentClinic.TotalBranches++;
         // create account for branch
-        var branchAccount = new User
+        var branchAccount = new Staff
         {
             Id = Guid.NewGuid(),
             Email = request.Email,
@@ -65,7 +65,7 @@ internal sealed class
             UserId = branchAccount.Id
         });
         clinicRepository.Add(clinic);
-        userRepository.Add(branchAccount);
+        staffRepository.Add(branchAccount);
         return Result.Success();
     }
 }

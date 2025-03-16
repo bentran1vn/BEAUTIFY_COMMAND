@@ -7,7 +7,9 @@ public class ProcedurePriceType : AggregateRoot<Guid>, IAuditableEntity
 
     [Column(TypeName = "decimal(18,2)")] public decimal Price { get; set; }
 
-    public int Duration { get; set; }
+    public required int Duration { get; set; }
+
+    public required bool IsDefault { get; set; }
 
 
     public Guid ProcedureId { get; set; } = default!;

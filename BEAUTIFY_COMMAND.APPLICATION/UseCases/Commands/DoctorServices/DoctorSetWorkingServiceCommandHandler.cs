@@ -4,7 +4,7 @@ using BEAUTIFY_PACKAGES.BEAUTIFY_PACKAGES.DOMAIN.EntityEvents;
 
 namespace BEAUTIFY_COMMAND.APPLICATION.UseCases.Commands.DoctorServices;
 internal sealed class DoctorSetWorkingServiceCommandHandler(
-    IRepositoryBase<User, Guid> userRepository,
+    IRepositoryBase<Staff, Guid> staffRepository,
     IRepositoryBase<Service, Guid> serviceRepository,
     IRepositoryBase<DoctorService, Guid> doctorServiceRepository)
     : ICommandHandler<CONTRACT.Services.DoctorServices.Commands.DoctorSetWorkingServiceCommand>
@@ -12,7 +12,7 @@ internal sealed class DoctorSetWorkingServiceCommandHandler(
     public async Task<Result> Handle(CONTRACT.Services.DoctorServices.Commands.DoctorSetWorkingServiceCommand request,
         CancellationToken cancellationToken)
     {
-        var doctor = await userRepository.FindByIdAsync(request.DoctorId, cancellationToken);
+        var doctor = await staffRepository.FindByIdAsync(request.DoctorId, cancellationToken);
         if (doctor is null) throw new UserException.UserNotFoundException(request.DoctorId);
 
         if (doctor.Role?.Name != Constant.Role.DOCTOR) return Result.Failure(new Error("403", "User is not a doctor"));
