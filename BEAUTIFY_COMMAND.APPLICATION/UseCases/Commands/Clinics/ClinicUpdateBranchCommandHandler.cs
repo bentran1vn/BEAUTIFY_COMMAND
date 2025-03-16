@@ -9,14 +9,31 @@ internal sealed class
     public async Task<Result> Handle(CONTRACT.Services.Clinics.Commands.ClinicUpdateBranchCommand request,
         CancellationToken cancellationToken)
     {
-        var clinic = await clinicRepository.FindByIdAsync(request.BranchId, cancellationToken) ??
-                     throw new ClinicException.ClinicNotFoundException(request.BranchId);
+        var clinic =
+            await clinicRepository.FindSingleAsync(x => x.Id.Equals(request.BranchId) && !x.IsDeleted,
+                cancellationToken) ??
+            throw new ClinicException.ClinicNotFoundException(request.BranchId);
         if (request.ProfilePicture != null)
         {
             var profilePictureUrl = await mediaService.UploadImageAsync(request.ProfilePicture);
             clinic.ProfilePictureUrl = profilePictureUrl;
         }
 
+        if (request.OperatingLicense != null)
+        {
+            var operatingLicenseUrl = await mediaService.UploadImageAsync(request.OperatingLicense);
+            clinic.OperatingLicenseUrl = operatingLicenseUrl;
+        }
+
+        if (request.BusinessLicense != null)
+        {
+            var businessLicenseUrl = await mediaService.UploadImageAsync(request.BusinessLicense);
+            clinic.BusinessLicenseUrl = businessLicenseUrl;
+        }
+
+        clinic.OperatingLicenseExpiryDate = request.OperatingLicenseExpiryDate;
+        clinic.BankAccountNumber = request.BankAccountNumber;
+        clinic.BankName = request.BankName;
         clinic.Name = request.Name;
         clinic.City = request.City;
         clinic.District = request.District;
