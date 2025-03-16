@@ -32,8 +32,6 @@ internal sealed class
         }
 
         clinic.OperatingLicenseExpiryDate = request.OperatingLicenseExpiryDate;
-        clinic.BankAccountNumber = request.BankAccountNumber;
-        clinic.BankName = request.BankName;
         clinic.Name = request.Name;
         clinic.City = request.City;
         clinic.District = request.District;

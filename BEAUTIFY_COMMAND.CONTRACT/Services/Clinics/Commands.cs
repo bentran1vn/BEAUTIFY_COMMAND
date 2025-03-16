@@ -132,8 +132,6 @@ public static class Commands
         public string District { get; set; }
         public string Ward { get; set; }
         public string Address { get; set; }
-        public string BankName { get; set; }
-        public string BankAccountNumber { get; set; }
         public bool IsActivated { get; set; }
         public IFormFile? BusinessLicense { get; set; }
         public IFormFile? OperatingLicense { get; set; }
