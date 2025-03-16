@@ -125,8 +125,8 @@ public static class Commands
 
     public class ClinicUpdateBranchCommand : ICommand
     {
-        public Guid BranchId { get; }
-        public string Name { get; }
+        public Guid BranchId { get; set; }
+        public string Name { get; set; }
         public string PhoneNumber { get; set; }
         public string City { get; set; }
         public string District { get; set; }
