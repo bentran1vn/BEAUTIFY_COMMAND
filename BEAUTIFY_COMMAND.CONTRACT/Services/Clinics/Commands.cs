@@ -1,3 +1,4 @@
+using BEAUTIFY_PACKAGES.BEAUTIFY_PACKAGES.DOMAIN.Constrants;
 using Microsoft.AspNetCore.Http;
 
 namespace BEAUTIFY_COMMAND.CONTRACT.Services.Clinics;
@@ -59,13 +60,19 @@ public static class Commands
     public record ClinicCreateAccountForEmployeeCommand(
         Guid ClinicId,
         string Email,
-        string Password,
         string FirstName,
         string LastName,
-        Guid RoleId
+        Roles RoleType
     ) : ICommand;
 
+    public enum Roles
+    {
+        DOCTOR = 1,
+        CLINIC_STAFF = 2
+    }
+
     #endregion
+
 
     #region ClinicDeleteAccountOfEmployeeCommand
 

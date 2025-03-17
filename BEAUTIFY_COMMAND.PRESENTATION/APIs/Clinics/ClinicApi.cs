@@ -71,6 +71,8 @@ public class ClinicApi : ApiEndpoint, ICarterModule
             .RequireAuthorization();
 
         gr1.MapPost("{id:guid}/accounts", ClinicCreateAccountForEmployee)
+            .DisableAntiforgery()
+            .WithSummary("1 - Doctor, 2 - Clinic Staff")
             .RequireAuthorization();
 
         gr1.MapDelete("{id:guid}/accounts/{userId:guid}", ClinicRemoveAccountForEmployee)
@@ -126,7 +128,7 @@ public class ClinicApi : ApiEndpoint, ICarterModule
     private static async Task<IResult> ClinicCreateAccountForEmployee(ISender sender, [FromRoute] Guid id,
         [FromForm] Commands.ClinicCreateAccountForEmployeeCommand command)
     {
-        var result = await sender.Send(command);
+        var result = await sender.Send(command with { ClinicId = id });
         return result.IsFailure ? HandlerFailure(result) : Results.Ok(result);
     }
 

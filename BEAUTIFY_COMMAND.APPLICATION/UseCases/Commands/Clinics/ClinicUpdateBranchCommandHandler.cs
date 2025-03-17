@@ -40,6 +40,7 @@ internal sealed class
         {
             clinic.BankName = request.BankName;
         }
+        
 
         clinic.OperatingLicenseExpiryDate = request.OperatingLicenseExpiryDate;
         clinic.Name = request.Name;

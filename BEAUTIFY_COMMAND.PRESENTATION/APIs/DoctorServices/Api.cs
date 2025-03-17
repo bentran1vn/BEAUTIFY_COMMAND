@@ -8,8 +8,8 @@ public class Api : ApiEndpoint, ICarterModule
     public void AddRoutes(IEndpointRouteBuilder app)
     {
         var gr1 = app.NewVersionedApi("Doctor Services").MapGroup(BaseUrl).HasApiVersion(1);
-        gr1.MapPost(string.Empty, CreateDoctorService);
-        gr1.MapDelete(string.Empty, DeleteDoctorService);
+        gr1.MapPost(string.Empty, CreateDoctorService).DisableAntiforgery();
+        gr1.MapDelete(string.Empty, DeleteDoctorService).DisableAntiforgery();
     }
 
 

@@ -38,6 +38,7 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
         builder.Entity<User>()
             .HasIndex(x => x.PhoneNumber)
             .IsUnique();
+        builder.Entity<Clinic>().HasQueryFilter(x => !x.IsDeleted);
         builder.Entity<Category>()
             .HasQueryFilter(x => !x.IsDeleted);
         builder.Entity<SubscriptionPackage>()

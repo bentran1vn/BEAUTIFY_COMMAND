@@ -1,4 +1,5 @@
-﻿using BEAUTIFY_PACKAGES.BEAUTIFY_PACKAGES.DOMAIN.Constrants;
+﻿using System.Globalization;
+using BEAUTIFY_PACKAGES.BEAUTIFY_PACKAGES.DOMAIN.Constrants;
 using Microsoft.EntityFrameworkCore;
 
 namespace BEAUTIFY_COMMAND.APPLICATION.UseCases.Commands.Bookings;
@@ -41,18 +42,13 @@ internal sealed class
         if (service is null)
             return Result.Failure(new Error("404", "Service Not Found !"));
 
-        if (!clinic.ClinicServices.Any(x => x.Services.Id.Equals(request.ClinicId)))
-        {
-            return Result.Failure(new Error("404", "Clinic Service Not Found !"));
-        }
-
         var userClinic = await userClinicRepositoryBase.FindSingleAsync(x =>
-                x.UserId.Equals(currentUserService.UserId) && x.ClinicId.Equals(request.ClinicId) && !x.IsDeleted,
+                x.UserId.Equals(request.DoctorId) && x.ClinicId.Equals(request.ClinicId) && !x.IsDeleted,
             cancellationToken);
         if (userClinic is null)
             return Result.Failure(new Error("404", "User Clinic Not Found !"));
         var query = procedurePriceTypeRepositoryBase.FindAll(x =>
-                x.Procedure.Service.ClinicServices.Any(cs => cs.ClinicId == request.ClinicId) && !x.IsDeleted)
+                request.ProcedurePriceTypeIds.Contains(x.Id) && !x.IsDeleted)
             .Select(x => new
             {
                 x.Id,
@@ -60,8 +56,9 @@ internal sealed class
                 x.IsDefault,
                 x.Duration,
                 ProcedureServiceId = x.Procedure.ServiceId,
-                StepIndex = x.Procedure.StepIndex,
-                DiscountPrice = x.Procedure.Service.DiscountPrice
+                x.Procedure.StepIndex,
+                x.Procedure.Service.DiscountPrice,
+                x.Procedure
             });
 
         if (request.IsDefault)
@@ -75,7 +72,8 @@ internal sealed class
             return Result.Failure(new Error("404", "No valid procedures found."));
 
         var serviceIds = list.Select(x => x.ProcedureServiceId).Distinct().ToList();
-        var stepIndexes = list.Select(x => x.StepIndex).ToList();
+
+        var stepIndexes = list.Select(x => x.Procedure.StepIndex).ToList();
         if (serviceIds.Count > 1 || stepIndexes.Count != stepIndexes.Distinct().Count())
         {
             return Result.Failure(new Error("400", "Conflicting procedures: Multiple services or overlapping steps."));
@@ -111,7 +109,7 @@ internal sealed class
             OrderId = order.Id,
             StartTime = request.StartTime,
             EndTime = request.StartTime.Add(TimeSpan.FromHours(durationOfProcedures)),
-            Date = request.BookingDate,
+            Date = DateOnly.Parse(request.BookingDate.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture)),
             ProcedurePriceTypeId = initialProcedure,
             Status = Constant.OrderStatus.ORDER_PENDING,
         };
@@ -121,12 +119,15 @@ internal sealed class
             DoctorClinicId = userClinic.Id,
             StartTime = request.StartTime,
             EndTime = request.StartTime.Add(TimeSpan.FromHours(durationOfProcedures)),
-            Date = DateOnly.Parse(request.BookingDate.ToString())
+            Date = DateOnly.Parse(request.BookingDate.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture)),
         };
+
         orderRepositoryBase.Add(order);
         orderDetailRepositoryBase.AddRange(orderDetails);
         workingScheduleRepositoryBase.Add(doctorSchedule);
         customerScheduleRepositoryBase.Add(customerschedule);
+        doctorSchedule.WorkingScheduleCreate(doctor.Id, clinic.Id, doctor.FirstName + " " + doctor.LastName,
+            [doctorSchedule]);
         return Result.Success();
     }
 }
