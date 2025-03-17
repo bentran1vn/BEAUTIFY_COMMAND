@@ -137,6 +137,8 @@ public static class Commands
         public IFormFile? OperatingLicense { get; set; }
         public DateTimeOffset OperatingLicenseExpiryDate { get; set; }
         public IFormFile? ProfilePicture { get; set; }
+        public string? BankName { get; set; }
+        public string? BankAccountNumber { get; set; }
     }
 
     #endregion

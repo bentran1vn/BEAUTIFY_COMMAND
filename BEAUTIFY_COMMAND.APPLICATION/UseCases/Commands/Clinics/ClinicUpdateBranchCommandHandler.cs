@@ -31,6 +31,16 @@ internal sealed class
             clinic.BusinessLicenseUrl = businessLicenseUrl;
         }
 
+        if (request.BankAccountNumber != null)
+        {
+            clinic.BankAccountNumber = request.BankAccountNumber;
+        }
+
+        if (request.BankName != null)
+        {
+            clinic.BankName = request.BankName;
+        }
+
         clinic.OperatingLicenseExpiryDate = request.OperatingLicenseExpiryDate;
         clinic.Name = request.Name;
         clinic.City = request.City;
