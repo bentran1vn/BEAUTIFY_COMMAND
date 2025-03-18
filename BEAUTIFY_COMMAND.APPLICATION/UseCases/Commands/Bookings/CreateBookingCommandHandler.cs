@@ -25,46 +25,52 @@ internal sealed class
             x.Id.Equals(currentUserService.UserId) && !x.IsDeleted, cancellationToken);
         if (user is null)
             return Result.Failure(new Error("404", "User Not Found !"));
+
+
         var doctor = await staffRepositoryBase.FindSingleAsync(x =>
             x.Id.Equals(request.DoctorId) && !x.IsDeleted, cancellationToken);
         if (doctor is null)
             return Result.Failure(new Error("404", "Doctor Not Found !"));
         if (!doctor.DoctorServices.Any(x => x.ServiceId.Equals(request.ServiceId)))
             return Result.Failure(new Error("400", "Doctor Cannot Perform This Service !"));
+
+
         var clinic = await clinicRepositoryBase.FindSingleAsync(x =>
             x.Id.Equals(request.ClinicId) && !x.IsDeleted, cancellationToken);
         if (clinic is null)
             return Result.Failure(new Error("404", "Clinic Not Found !"));
         if (!clinic.ClinicServices.Any(x => x.ServiceId.Equals(request.ServiceId)))
             return Result.Failure(new Error("400", "Clinic Cannot Perform This Service !"));
+
+
         var service = await serviceRepositoryBase.FindSingleAsync(x =>
             x.Id.Equals(request.ServiceId) && !x.IsDeleted, cancellationToken);
         if (service is null)
             return Result.Failure(new Error("404", "Service Not Found !"));
 
-        var userClinic = await userClinicRepositoryBase.FindSingleAsync(x =>
-                x.UserId.Equals(request.DoctorId) && x.ClinicId.Equals(request.ClinicId) && !x.IsDeleted,
+
+        var userClinic = await userClinicRepositoryBase.FindSingleAsync(
+            x => x.UserId.Equals(request.DoctorId) && x.ClinicId.Equals(request.ClinicId) && !x.IsDeleted,
             cancellationToken);
         if (userClinic is null)
             return Result.Failure(new Error("404", "User Clinic Not Found !"));
         var query = procedurePriceTypeRepositoryBase.FindAll(x =>
-                request.ProcedurePriceTypeIds.Contains(x.Id) && !x.IsDeleted)
-            .Select(x => new
-            {
-                x.Id,
-                x.Price,
-                x.IsDefault,
-                x.Duration,
-                ProcedureServiceId = x.Procedure.ServiceId,
-                x.Procedure.StepIndex,
-                x.Procedure.Service.DiscountPrice,
-                x.Procedure
-            });
-
-        if (request.IsDefault)
+            !x.IsDeleted).Select(x => new
         {
-            query = query.Where(x => x.IsDefault);
-        }
+            x.Id,
+            x.Price,
+            x.IsDefault,
+            x.Duration,
+            ProcedureServiceId = x.Procedure.ServiceId,
+            x.Procedure.StepIndex,
+            x.Procedure.Service.DiscountPrice,
+            x.Procedure
+        });
+
+        query = request.IsDefault
+            ? query.Where(x => x.IsDefault)
+            : query.Where(x => request.ProcedurePriceTypeIds.Contains(x.Id));
+
 
         var list = await query.ToListAsync(cancellationToken);
 
@@ -77,6 +83,13 @@ internal sealed class
         if (serviceIds.Count > 1 || stepIndexes.Count != stepIndexes.Distinct().Count())
         {
             return Result.Failure(new Error("400", "Conflicting procedures: Multiple services or overlapping steps."));
+        }
+
+        var maxStepIndex = stepIndexes.Max();
+        var expectedSteps = Enumerable.Range(1, maxStepIndex).ToList();
+        if (!stepIndexes.OrderBy(x => x).SequenceEqual(expectedSteps))
+        {
+            return Result.Failure(new Error("400", "Step indexes are not in a valid sequence or steps are missing."));
         }
 
         var discount = list.FirstOrDefault()?.DiscountPrice ?? 0;
