@@ -25,7 +25,7 @@ public class TriggerOutbox : AggregateRoot<Guid>, IAuditableEntity
                 procedureId, serviceId, name, description, maxPrice, minPrice, discountMaxPrice,
                 discountMinPrice, stepIndex, coverImage, procedurePriceTypes.Select(
                     x => new ProcedureEvent.ProcedurePriceType(
-                        x.Id, x.Name, x.Price
+                        x.Id, x.Name, x.Price, x.Duration, x.IsDefault
                     )).ToList()
             )));
 

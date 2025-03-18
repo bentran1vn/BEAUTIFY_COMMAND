@@ -1,4 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using BEAUTIFY_PACKAGES.BEAUTIFY_PACKAGES.CONTRACT.Services.CustomerSchedules;
+using BEAUTIFY_PACKAGES.BEAUTIFY_PACKAGES.DOMAIN.EntityEvents;
 
 namespace BEAUTIFY_COMMAND.DOMAIN.Entities;
 public class CustomerSchedule : AggregateRoot<Guid>, IAuditableEntity
@@ -21,4 +23,31 @@ public class CustomerSchedule : AggregateRoot<Guid>, IAuditableEntity
     public virtual Order? Order { get; set; }
     public DateTimeOffset CreatedOnUtc { get; set; }
     public DateTimeOffset? ModifiedOnUtc { get; set; }
+
+    public void Create(CustomerSchedule customerSchedule)
+    {
+        var entity = new EntityEvent.CustomerScheduleEntity
+        {
+            Id = customerSchedule.Id,
+            CustomerName = customerSchedule.Customer.FirstName + " " + customerSchedule.Customer.LastName,
+            StepIndex = customerSchedule.ProcedurePriceType.Procedure.StepIndex.ToString(),
+            CustomerId = customerSchedule.CustomerId,
+            StartTime = customerSchedule.StartTime,
+            EndTime = customerSchedule.EndTime,
+            Date = customerSchedule.Date,
+            ServiceId = customerSchedule.ServiceId,
+            ServiceName = customerSchedule.Service.Name,
+            DoctorId = customerSchedule.DoctorId,
+            DoctorName = customerSchedule.Doctor.User.FirstName + " " + customerSchedule.Doctor.User.LastName,
+            ClinicId = customerSchedule.Doctor.ClinicId,
+            ClinicName = customerSchedule.Doctor.Clinic.Name,
+            CurrentProcedureName = customerSchedule.ProcedurePriceType.Name,
+            Status = customerSchedule.Status,
+            CompletedProcedures = [],
+            PendingProcedures = []
+        };
+
+        // Raise the domain event
+        RaiseDomainEvent(new DomainEvents.CustomerScheduleCreated(Guid.NewGuid(), entity));
+    }
 }

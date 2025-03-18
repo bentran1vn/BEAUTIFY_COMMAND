@@ -145,6 +145,33 @@ public class ProcessOutboxMessagesJob(ApplicationDbContext dbContext, IPublishEn
                                 });
                         await publishEndpoint.Publish(doctorServiceDeleted, context.CancellationToken);
                         break;
+
+                    case nameof(BEAUTIFY_PACKAGES.BEAUTIFY_PACKAGES.CONTRACT.Services.CustomerSchedules.DomainEvents
+                        .CustomerScheduleDeleted):
+                        var customerScheduleDeleted =
+                            JsonConvert
+                                .DeserializeObject<BEAUTIFY_PACKAGES.BEAUTIFY_PACKAGES.CONTRACT.Services.
+                                    CustomerSchedules.DomainEvents.CustomerScheduleDeleted>(
+                                    outboxMessage.Content,
+                                    new JsonSerializerSettings
+                                    {
+                                        TypeNameHandling = TypeNameHandling.All
+                                    });
+                        await publishEndpoint.Publish(customerScheduleDeleted, context.CancellationToken);
+                        break;
+                    case nameof(BEAUTIFY_PACKAGES.BEAUTIFY_PACKAGES.CONTRACT.Services.CustomerSchedules.DomainEvents
+                        .CustomerScheduleCreated):
+                        var customerScheduleCreated =
+                            JsonConvert
+                                .DeserializeObject<BEAUTIFY_PACKAGES.BEAUTIFY_PACKAGES.CONTRACT.Services.
+                                    CustomerSchedules.DomainEvents.CustomerScheduleCreated>(
+                                    outboxMessage.Content,
+                                    new JsonSerializerSettings
+                                    {
+                                        TypeNameHandling = TypeNameHandling.All
+                                    });
+                        await publishEndpoint.Publish(customerScheduleCreated, context.CancellationToken);
+                        break;
                 }
 
                 outboxMessage.ProcessedOnUtc = DateTime.UtcNow;

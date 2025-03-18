@@ -110,10 +110,11 @@ internal sealed class
             ProcedurePriceTypeId = x.Id,
             Price = x.Price
         }).ToList();
-        var durationOfProcedures = list.Sum(x => x.Duration) / 60.0;
+        var durationOfProcedures = list.Sum(x => x.Duration) / 60.0 + 0.5;
         var initialProcedure = list.Where(x => x.StepIndex == 1).Select(x => x.Id).FirstOrDefault();
+        var procedure = await procedurePriceTypeRepositoryBase.FindByIdAsync(initialProcedure, cancellationToken);
 
-        var customerschedule = new CustomerSchedule
+        var customerSchedule = new CustomerSchedule
         {
             Id = Guid.NewGuid(),
             CustomerId = currentUserService.UserId!.Value,
@@ -122,8 +123,9 @@ internal sealed class
             OrderId = order.Id,
             StartTime = request.StartTime,
             EndTime = request.StartTime.Add(TimeSpan.FromHours(durationOfProcedures)),
-            Date = DateOnly.Parse(request.BookingDate.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture)),
+            Date = request.BookingDate,
             ProcedurePriceTypeId = initialProcedure,
+            ProcedurePriceType = procedure,
             Status = Constant.OrderStatus.ORDER_PENDING,
         };
         var doctorSchedule = new WorkingSchedule
@@ -132,15 +134,16 @@ internal sealed class
             DoctorClinicId = userClinic.Id,
             StartTime = request.StartTime,
             EndTime = request.StartTime.Add(TimeSpan.FromHours(durationOfProcedures)),
-            Date = DateOnly.Parse(request.BookingDate.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture)),
+            Date = request.BookingDate,
         };
 
         orderRepositoryBase.Add(order);
         orderDetailRepositoryBase.AddRange(orderDetails);
         workingScheduleRepositoryBase.Add(doctorSchedule);
-        customerScheduleRepositoryBase.Add(customerschedule);
+        customerScheduleRepositoryBase.Add(customerSchedule);
         doctorSchedule.WorkingScheduleCreate(doctor.Id, clinic.Id, doctor.FirstName + " " + doctor.LastName,
             [doctorSchedule]);
+        customerSchedule.Create(customerSchedule);
         return Result.Success();
     }
 }

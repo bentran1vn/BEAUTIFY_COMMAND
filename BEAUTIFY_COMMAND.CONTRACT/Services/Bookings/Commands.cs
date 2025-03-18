@@ -4,7 +4,7 @@ public static class Commands
     public record CreateBookingCommand(
         Guid DoctorId,
         TimeSpan StartTime,
-        DateTimeOffset BookingDate,
+        DateOnly BookingDate,
         Guid ClinicId,
         Guid ServiceId,
         List<Guid> ProcedurePriceTypeIds,
