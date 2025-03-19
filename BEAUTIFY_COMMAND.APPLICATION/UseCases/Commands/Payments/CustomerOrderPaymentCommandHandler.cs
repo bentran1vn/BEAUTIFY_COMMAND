@@ -21,6 +21,7 @@ internal sealed class CustomerOrderPaymentCommandHandler(
         systemTransactionRepositoryBase.Add(new SystemTransaction
         {
             Id = id,
+            ClinicId = order.Service.ClinicServices.FirstOrDefault().ClinicId,
             OrderId = order.Id,
             SubscriptionPackageId = null,
             Status = 0,
