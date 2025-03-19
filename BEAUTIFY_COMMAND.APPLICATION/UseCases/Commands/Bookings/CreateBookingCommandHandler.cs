@@ -174,6 +174,7 @@ internal sealed class
         <p>Your booking has been successfully created. Here are the details:</p>
         
         <ul style=""list-style-type: none; padding: 0;"">
+            <li><strong>Booking ID:</strong> " + order.Id + @"</li>
             <li><strong>Booking Date:</strong> " +
                    request.BookingDate.ToString("dd/MM/yyyy", CultureInfo.InvariantCulture) + @"</li>
             <li><strong>Start Time:</strong> " + request.StartTime.ToString(@"hh\:mm") + @"</li>

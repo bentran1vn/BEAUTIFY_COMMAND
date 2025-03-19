@@ -17,7 +17,7 @@ public class PaymentApi : ApiEndpoint, ICarterModule
         gr1.MapPost("subscription", CreateSubscriptionOrder)
             .WithName("Subscription Payments")
             .WithSummary("Subscription Payments.").RequireAuthorization();
-        gr1.MapPost("order/{id:guid}/{ammount:decimal}/{paymentMethod}/", CustomerOrderPayment);
+        gr1.MapPost("order/{id:guid}/{amount:decimal}/{paymentMethod}/", CustomerOrderPayment);
     }
 
     private static async Task<IResult> TriggerFromHook(ISender sender,
