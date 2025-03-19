@@ -25,6 +25,8 @@ public static class Commands
         public int Type { get; set; }
     }
 
+    public record CustomerOrderPaymentCommand(Guid OrderId, string PaymentMethod, decimal Amount) : ICommand;
+
     public record SubscriptionOrderCommand(Guid SubscriptionId, Guid ClinicId) : ICommand;
 
     public record SubscriptionOrderBody(Guid SubscriptionId);

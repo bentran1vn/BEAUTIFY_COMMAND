@@ -1,4 +1,5 @@
 ﻿using System.Globalization;
+using BEAUTIFY_PACKAGES.BEAUTIFY_PACKAGES.APPLICATION.Abstractions;
 using BEAUTIFY_PACKAGES.BEAUTIFY_PACKAGES.DOMAIN.Constrants;
 using Microsoft.EntityFrameworkCore;
 
@@ -15,12 +16,15 @@ internal sealed class
         IRepositoryBase<OrderDetail, Guid> orderDetailRepositoryBase,
         IRepositoryBase<Service, Guid> serviceRepositoryBase,
         IRepositoryBase<WorkingSchedule, Guid> workingScheduleRepositoryBase,
-        IRepositoryBase<CustomerSchedule, Guid> customerScheduleRepositoryBase)
+        IRepositoryBase<CustomerSchedule, Guid> customerScheduleRepositoryBase,
+        IMailService mailService)
     : ICommandHandler<CONTRACT.Services.Bookings.Commands.CreateBookingCommand>
 {
     public async Task<Result> Handle(CONTRACT.Services.Bookings.Commands.CreateBookingCommand request,
         CancellationToken cancellationToken)
     {
+        #region Validate Input
+
         var user = await userRepositoryBase.FindSingleAsync(x =>
             x.Id.Equals(currentUserService.UserId) && !x.IsDeleted, cancellationToken);
         if (user is null)
@@ -54,23 +58,37 @@ internal sealed class
             cancellationToken);
         if (userClinic is null)
             return Result.Failure(new Error("404", "User Clinic Not Found !"));
-        var query = procedurePriceTypeRepositoryBase.FindAll(x =>
-            !x.IsDeleted).Select(x => new
+
+        #endregion
+
+        var query = procedurePriceTypeRepositoryBase.FindAll(x => !x.IsDeleted)
+            .Select(x => new
+            {
+                x.Id,
+                x.Price,
+                x.IsDefault,
+                x.Duration,
+                ProcedureServiceId = x.Procedure.ServiceId,
+                StepIndex = x.Procedure.StepIndex,
+                DiscountPrice = x.Procedure.Service.DiscountPrice ?? 0,
+                Procedure = x.Procedure
+            });
+
+        if (request.IsDefault)
         {
-            x.Id,
-            x.Price,
-            x.IsDefault,
-            x.Duration,
-            ProcedureServiceId = x.Procedure.ServiceId,
-            x.Procedure.StepIndex,
-            x.Procedure.Service.DiscountPrice,
-            x.Procedure
-        });
+            // Join with a subquery to get min prices per StepIndex
+            var minPrices = query
+                .GroupBy(x => x.StepIndex)
+                .Select(g => new { StepIndex = g.Key, MinPrice = g.Min(x => x.Price) });
 
-        query = request.IsDefault
-            ? query.Where(x => x.IsDefault)
-            : query.Where(x => request.ProcedurePriceTypeIds.Contains(x.Id));
-
+            query = from q in query
+                join mp in minPrices on new { q.StepIndex, q.Price } equals new { mp.StepIndex, Price = mp.MinPrice }
+                select q;
+        }
+        else
+        {
+            query = query.Where(x => request.ProcedurePriceTypeIds.Contains(x.Id));
+        }
 
         var list = await query.ToListAsync(cancellationToken);
 
@@ -144,6 +162,37 @@ internal sealed class
         doctorSchedule.WorkingScheduleCreate(doctor.Id, clinic.Id, doctor.FirstName + " " + doctor.LastName,
             [doctorSchedule]);
         customerSchedule.Create(customerSchedule);
+        await mailService.SendMail(new MailContent
+        {
+            To = user.Email,
+            Subject = "Booking Confirmation",
+            Body = @"
+    <html>
+    <body style='font-family: Arial, sans-serif; color: #333; line-height: 1.6;'>
+        <p>Dear " + user.FirstName + " " + user.LastName + @",</p>
+        
+        <p>Your booking has been successfully created. Here are the details:</p>
+        
+        <ul style=""list-style-type: none; padding: 0;"">
+            <li><strong>Booking Date:</strong> " +
+                   request.BookingDate.ToString("dd/MM/yyyy", CultureInfo.InvariantCulture) + @"</li>
+            <li><strong>Start Time:</strong> " + request.StartTime.ToString(@"hh\:mm") + @"</li>
+            <li><strong>End Time:</strong> " + customerSchedule.EndTime.ToString(@"hh\:mm") + @"</li>
+            <li><strong>Service:</strong> " + service.Name + @"</li>
+            <li><strong>Doctor:</strong> " + doctor.FirstName + " " + doctor.LastName + @"</li>
+            <li><strong>Address:</strong> " + clinic.Address + @"</li>
+        </ul>
+        
+        <p>Thank you for choosing our service!</p>
+        
+        <p>When arrived at the clinic, please provide this email or provide to the staff with your full name and phone number.</p>
+        
+        <p>Best regards,</p>
+        <p><strong>" + clinic.Name + @" Clinic</strong></p>
+    </body>
+    </html>
+"
+        });
         return Result.Success();
     }
 }

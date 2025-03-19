@@ -3,7 +3,7 @@ using BEAUTIFY_PACKAGES.BEAUTIFY_PACKAGES.DOMAIN.Constrants;
 using Microsoft.AspNetCore.SignalR;
 
 namespace BEAUTIFY_COMMAND.APPLICATION.UseCases.Commands.Payments;
-public class TriggerFromHookCommandHandler(
+public sealed class TriggerFromHookCommandHandler(
     IRepositoryBase<SystemTransaction, Guid> systemTransactionRepository,
     IHubContext<PaymentHub> hubContext,
     IRepositoryBase<Order, Guid> orderRepository)
@@ -12,46 +12,93 @@ public class TriggerFromHookCommandHandler(
     public async Task<Result> Handle(CONTRACT.Services.Payments.Commands.TriggerFromHookCommand request,
         CancellationToken cancellationToken)
     {
+        var transaction = await ValidateAndGetTransactionAsync(request, cancellationToken);
+        if (transaction is null)
+            return Result.Failure(new Error("404", "Transaction not found"));
+
+        if (!ValidateTransaction(request, transaction, out var transactionError))
+            return Result.Failure(transactionError);
+
+        transaction.Status = 1;
+
         switch (request.Type)
         {
             case 0:
-            {
-                var tran = await systemTransactionRepository.FindByIdAsync(request.Id, cancellationToken);
-
-                if (tran == null || tran.IsDeleted) return Result.Failure(new Error("404", "Transaction not found"));
-
-                if (tran.Status != 0) return Result.Failure(new Error("400", "Transaction already handler"));
-
-                if (tran.Amount != request.TransferAmount)
-                    return Result.Failure(new Error("422", "Transaction Amount invalid"));
-
-                if (tran.TransactionDate > DateTimeOffset.Now)
-                    return Result.Failure(new Error("400", "Transaction Date invalid"));
-
-                tran.Status = 1;
-
-                await hubContext.Clients.Group(tran.Id.ToString())
-                    .SendAsync("ReceivePaymentStatus", true, cancellationToken);
-                break;
-            }
+                await NotifyClientsAsync(transaction.Id.ToString(), "ReceivePaymentStatus", true, cancellationToken);
+                return Result.Success("Transaction processed successfully.");
             case 1:
             {
-                var order = await orderRepository.FindByIdAsync(request.Id, cancellationToken);
-                if (order == null || order.IsDeleted) return Result.Failure(new Error("404", "Order not found"));
+                var order = await ValidateAndUpdateOrderAsync(request, transaction, cancellationToken);
+                if (order is null)
+                    return Result.Failure(new Error("404", "Order not found or invalid"));
 
-                if (order.Status == Constant.OrderStatus.ORDER_COMPLETED)
-                    return Result.Failure(new Error("400", "Order already completed"));
-
-                if (order.FinalAmount != request.TransferAmount)
-                    return Result.Failure(new Error("422", "Order Amount invalid"));
-
-                order.Status = Constant.OrderStatus.ORDER_COMPLETED;
-                await hubContext.Clients.Group(order.Id.ToString())
-                    .SendAsync(Constant.OrderStatus.ORDER_COMPLETED, true, cancellationToken);
-                break;
+                await NotifyClientsAsync(order.Id.ToString(), Constant.OrderStatus.ORDER_COMPLETED, true,
+                    cancellationToken);
+                return Result.Success("Order completed successfully.");
             }
+            default:
+                return Result.Failure(new Error("400", "Invalid request type"));
+        }
+    }
+
+    private async Task<SystemTransaction?> ValidateAndGetTransactionAsync(
+        CONTRACT.Services.Payments.Commands.TriggerFromHookCommand request, CancellationToken cancellationToken) =>
+        await systemTransactionRepository.FindByIdAsync(request.Id, cancellationToken);
+
+    private static bool ValidateTransaction(CONTRACT.Services.Payments.Commands.TriggerFromHookCommand request,
+        SystemTransaction transaction, out Error error)
+    {
+        if (transaction.IsDeleted)
+        {
+            error = new Error("404", "Transaction not found");
+            return false;
         }
 
-        return Result.Success("Handler successfully triggered.");
+        if (transaction.Status != 0)
+        {
+            error = new Error("400", "Transaction already handled");
+            return false;
+        }
+
+        if (transaction.Amount != request.TransferAmount)
+        {
+            error = new Error("422", "Transaction amount invalid");
+            return false;
+        }
+
+        if (transaction.TransactionDate > DateTimeOffset.Now)
+        {
+            error = new Error("400", "Transaction date invalid");
+            return false;
+        }
+
+        error = null!;
+        return true;
     }
+
+    private async Task<Order?> ValidateAndUpdateOrderAsync(
+        CONTRACT.Services.Payments.Commands.TriggerFromHookCommand request,
+        SystemTransaction transaction,
+        CancellationToken cancellationToken)
+    {
+        if (!transaction.OrderId.HasValue)
+            return null;
+
+        var order = await orderRepository.FindByIdAsync(transaction.OrderId.Value, cancellationToken);
+        if (order == null || order.IsDeleted)
+            return null;
+
+        if (order.Status == Constant.OrderStatus.ORDER_COMPLETED)
+            return null;
+
+        if (order.FinalAmount != request.TransferAmount)
+            return null;
+
+        order.Status = Constant.OrderStatus.ORDER_COMPLETED;
+        return order;
+    }
+
+    private async Task NotifyClientsAsync(string groupId, string method, bool status,
+        CancellationToken cancellationToken) =>
+        await hubContext.Clients.Group(groupId).SendAsync(method, status, cancellationToken);
 }

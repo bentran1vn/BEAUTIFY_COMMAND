@@ -17,6 +17,7 @@ public class PaymentApi : ApiEndpoint, ICarterModule
         gr1.MapPost("subscription", CreateSubscriptionOrder)
             .WithName("Subscription Payments")
             .WithSummary("Subscription Payments.").RequireAuthorization();
+        gr1.MapPost("order/{id:guid}/", CustomerOrderPayment);
     }
 
     private static async Task<IResult> TriggerFromHook(ISender sender,
@@ -31,9 +32,12 @@ public class PaymentApi : ApiEndpoint, ICarterModule
             PaymentDate = command.transactionDate
         };
 
-        if (type.Equals("ORDER")) request.Type = 1;
-
-        if (type.Equals("SUB")) request.Type = 0;
+        request.Type = type switch
+        {
+            "ORDER" => 1,
+            "SUB" => 0,
+            _ => request.Type
+        };
 
         var result = await sender.Send(request);
 
@@ -50,6 +54,13 @@ public class PaymentApi : ApiEndpoint, ICarterModule
                 command.SubscriptionId,
                 new Guid(clinicId)));
 
+        return result.IsFailure ? HandlerFailure(result) : Results.Ok(result);
+    }
+
+    private static async Task<IResult> CustomerOrderPayment(ISender sender,
+        [FromBody] Commands.CustomerOrderPaymentCommand command)
+    {
+        var result = await sender.Send(command);
         return result.IsFailure ? HandlerFailure(result) : Results.Ok(result);
     }
 }

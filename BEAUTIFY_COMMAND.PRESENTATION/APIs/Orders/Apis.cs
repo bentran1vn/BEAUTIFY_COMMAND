@@ -9,7 +9,7 @@ public class Apis : ApiEndpoint, ICarterModule
     {
         var gr1 = app.NewVersionedApi("Orders")
             .MapGroup(BaseUrl).HasApiVersion(1);
-        gr1.MapPost(string.Empty, CreateOrder).RequireAuthorization();
+     //   gr1.MapPost(string.Empty, CreateOrder).RequireAuthorization();
     }
 
     private static async Task<IResult> CreateOrder(ISender sender,
