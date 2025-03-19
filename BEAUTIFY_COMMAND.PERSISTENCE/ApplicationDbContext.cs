@@ -54,6 +54,11 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
             method.Invoke(null, [builder]);
         }
 
+        builder.Entity<ClinicOnBoardingRequest>().HasQueryFilter(x => !x.IsDeleted);
+        builder.Entity<ClinicVoucher>().HasQueryFilter(x => !x.IsDeleted);
+        builder.Entity<ClinicService>().HasQueryFilter(x => !x.IsDeleted);
+        builder.Entity<SystemTransaction>().HasQueryFilter(x => !x.IsDeleted);
+
         #endregion
 
         #region Subscription
