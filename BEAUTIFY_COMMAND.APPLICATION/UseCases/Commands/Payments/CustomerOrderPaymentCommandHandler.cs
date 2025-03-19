@@ -22,6 +22,7 @@ internal sealed class CustomerOrderPaymentCommandHandler(
         {
             Id = id,
             OrderId = order.Id,
+            SubscriptionPackageId = null,
             Status = 0,
             Amount = request.Amount,
             TransactionDate = transactionDate,
