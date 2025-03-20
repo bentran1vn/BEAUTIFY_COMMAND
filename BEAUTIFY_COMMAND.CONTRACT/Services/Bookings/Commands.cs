@@ -8,5 +8,6 @@ public static class Commands
         Guid ClinicId,
         Guid ServiceId,
         List<Guid> ProcedurePriceTypeIds,
+        Guid? LiveStreamRoomId,
         bool IsDefault) : ICommand;
 }

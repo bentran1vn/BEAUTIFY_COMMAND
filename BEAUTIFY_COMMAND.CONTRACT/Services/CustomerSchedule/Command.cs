@@ -9,4 +9,7 @@ public static class Command
         string Time,
         string Note
     ) : ICommand;
+
+
+    public record UpdateCustomerScheduleAfterPaymentCompletedCommand(Guid CustomerScheduleId,string Status) : ICommand;
 }

@@ -50,4 +50,11 @@ public class CustomerSchedule : AggregateRoot<Guid>, IAuditableEntity
         // Raise the domain event
         RaiseDomainEvent(new DomainEvents.CustomerScheduleCreated(Guid.NewGuid(), entity));
     }
+
+    public void UpdateCustomerScheduleStatus(Guid customerScheduleId, string status)
+    {
+        // Raise the domain event
+        RaiseDomainEvent(
+            new DomainEvents.CustomerScheduleUpdateAfterPaymentCompleted(Guid.NewGuid(), customerScheduleId, status));
+    }
 }
