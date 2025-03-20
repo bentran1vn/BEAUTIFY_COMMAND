@@ -20,7 +20,8 @@ internal sealed class
                            throw new ClinicException.ClinicNotFoundException(currentUserService.ClinicId.Value);
         var role = await roleRepository.FindSingleAsync(x => x.Name == "Clinic Staff", cancellationToken);
         var OUrl = await mediaService.UploadImageAsync(request.OperatingLicense);
-        var PUrl = await mediaService.UploadImageAsync(request.ProfilePictureUrl);
+
+
         var clinic = new Clinic
         {
             Id = Guid.NewGuid(),
@@ -39,9 +40,14 @@ internal sealed class
             Status = 1,
             BankName = request.BankName,
             BankAccountNumber = request.BankAccountNumber,
-            ProfilePictureUrl = PUrl,
             IsActivated = true
         };
+        if (request.ProfilePictureUrl != null)
+        {
+            var PUrl = await mediaService.UploadImageAsync(request.ProfilePictureUrl);
+            clinic.ProfilePictureUrl = PUrl;
+        }
+
         parentClinic.TotalBranches++;
         // create account for branch
         var branchAccount = new Staff
