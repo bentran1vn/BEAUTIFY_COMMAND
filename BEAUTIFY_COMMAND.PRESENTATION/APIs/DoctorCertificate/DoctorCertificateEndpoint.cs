@@ -8,7 +8,7 @@ public class DoctorCertificateEndpoint : ApiEndpoint, ICarterModule
     public void AddRoutes(IEndpointRouteBuilder app)
     {
         var gr1 = app.NewVersionedApi("Doctor Certificates").MapGroup(BaseUrl).HasApiVersion(1);
-        gr1.MapPost(string.Empty, CreateDoctorCertificate).DisableAntiforgery();
+        gr1.MapPost(string.Empty, CreateDoctorCertificate).DisableAntiforgery().RequireAuthorization();
         gr1.MapPut("{id:guid}", UpdateDoctorCertificate);
         gr1.MapDelete("{id:guid}", DeleteDoctorCertificate);
     }

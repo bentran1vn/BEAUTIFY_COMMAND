@@ -17,7 +17,8 @@ internal sealed class
         IRepositoryBase<Service, Guid> serviceRepositoryBase,
         IRepositoryBase<WorkingSchedule, Guid> workingScheduleRepositoryBase,
         IRepositoryBase<CustomerSchedule, Guid> customerScheduleRepositoryBase,
-        IMailService mailService)
+        IMailService mailService,
+        IRepositoryBase<Promotion, Guid> promotionRepositoryBase)
     : ICommandHandler<CONTRACT.Services.Bookings.Commands.CreateBookingCommand>
 {
     public async Task<Result> Handle(CONTRACT.Services.Bookings.Commands.CreateBookingCommand request,
@@ -110,16 +111,24 @@ internal sealed class
             return Result.Failure(new Error("400", "Step indexes are not in a valid sequence or steps are missing."));
         }
 
-        var discount = list.FirstOrDefault()?.DiscountPrice ?? 0;
+        var discount = await promotionRepositoryBase.FindSingleAsync(
+            x => x.ServiceId == request.ServiceId && x.IsActivated && x.LivestreamRoomId == null, cancellationToken);
+        decimal discountPrice = 0;
+        var total = list.Sum(x => x.Price);
+        if (discount != null)
+        {
+            discountPrice = total * (decimal)discount.DiscountPercent;
+        }
+
         var order = new Order
         {
             Id = Guid.NewGuid(),
             CustomerId = user.Id,
             ServiceId = list.First().ProcedureServiceId,
             Status = Constant.OrderStatus.ORDER_PENDING,
-            Discount = discount,
-            TotalAmount = list.Sum(x => x.Price),
-            FinalAmount = list.Sum(x => x.Price) - discount
+            Discount = discountPrice,
+            TotalAmount = total,
+            FinalAmount = total - discountPrice
         };
         var orderDetails = list.Select(x => new OrderDetail
         {
@@ -194,6 +203,8 @@ internal sealed class
     </html>
 "
         });
+
+
         return Result.Success();
     }
 }

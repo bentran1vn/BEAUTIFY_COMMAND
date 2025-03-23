@@ -4,7 +4,6 @@ namespace BEAUTIFY_COMMAND.CONTRACT.Services.DoctorCertificate;
 public static class Commands
 {
     public record CreateDoctorCertificateCommand(
-        Guid UserId,
         string CertificateName,
         IFormFile CertificateFile,
         DateTimeOffset ExpiryDate,

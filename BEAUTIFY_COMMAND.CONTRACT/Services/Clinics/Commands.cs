@@ -110,21 +110,24 @@ public static class Commands
     #endregion
 
     #region ClinicCreateBranchCommand
+    
 
-    public record ClinicCreateBranchCommand(
-        string Name,
-        string Email,
-        string PhoneNumber,
-        string City,
-        string District,
-        string Ward,
-        string Address,
-        string BankName,
-        string BankAccountNumber,
-        IFormFile OperatingLicense,
-        DateTimeOffset OperatingLicenseExpiryDate,
-        IFormFile ProfilePictureUrl
-    ) : ICommand;
+public class ClinicCreateBranchCommand : ICommand
+{
+    public string Name { get; set; }
+    public string Email { get; set; }
+    public string PhoneNumber { get; set; }
+    public string City { get; set; }
+    public string District { get; set; }
+    public string Ward { get; set; }
+    public string Address { get; set; }
+    public string BankName { get; set; }
+    public string BankAccountNumber { get; set; }
+    public IFormFile OperatingLicense { get; set; }
+    public DateTimeOffset OperatingLicenseExpiryDate { get; set; }
+    public IFormFile? ProfilePictureUrl { get; set; }
+}
+
 
     #endregion
 

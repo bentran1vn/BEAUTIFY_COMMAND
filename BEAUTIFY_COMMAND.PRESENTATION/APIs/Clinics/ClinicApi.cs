@@ -110,9 +110,9 @@ public class ClinicApi : ApiEndpoint, ICarterModule
     }
 
     private static async Task<IResult> StaffChangeDoctorWorkingClinic(ISender sender,
-        [FromForm] Commands.StaffChangeDoctorWorkingClinicCommand command)
+        [FromForm] Commands.StaffChangeDoctorWorkingClinicCommand command, Guid id)
     {
-        var result = await sender.Send(command);
+        var result = await sender.Send(command with { ClinicId = id });
 
         return result.IsFailure ? HandlerFailure(result) : Results.Ok(result);
     }
