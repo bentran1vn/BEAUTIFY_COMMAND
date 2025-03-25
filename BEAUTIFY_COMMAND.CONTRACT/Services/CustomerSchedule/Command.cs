@@ -11,5 +11,11 @@ public static class Command
     ) : ICommand;
 
 
-    public record UpdateCustomerScheduleAfterPaymentCompletedCommand(Guid CustomerScheduleId,string Status) : ICommand;
+    public record UpdateCustomerScheduleAfterPaymentCompletedCommand(Guid CustomerScheduleId, string Status) : ICommand;
+
+
+    public record StaffUpdateCustomerScheduleStatusAfterCheckInCommand(
+        Guid CustomerScheduleId,
+        string Status
+    ) : ICommand;
 }

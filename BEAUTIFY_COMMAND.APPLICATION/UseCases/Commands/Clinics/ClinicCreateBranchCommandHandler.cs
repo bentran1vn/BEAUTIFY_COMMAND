@@ -10,7 +10,8 @@ internal sealed class
         IPasswordHasherService passwordHasherService,
         IRepositoryBase<Role, Guid> roleRepository,
         ICurrentUserService currentUserService,
-        IRepositoryBase<UserClinic, Guid> userClinicRepository)
+        IRepositoryBase<UserClinic, Guid> userClinicRepository,
+        IRepositoryBase<SystemTransaction, Guid> systemTransactionRepository)
     : ICommandHandler<CONTRACT.Services.Clinics.Commands.ClinicCreateBranchCommand>
 {
     public async Task<Result> Handle(CONTRACT.Services.Clinics.Commands.ClinicCreateBranchCommand request,
@@ -18,6 +19,20 @@ internal sealed class
     {
         var parentClinic = await clinicRepository.FindByIdAsync(currentUserService.ClinicId.Value, cancellationToken) ??
                            throw new ClinicException.ClinicNotFoundException(currentUserService.ClinicId.Value);
+        var systemTrans = await systemTransactionRepository.FindSingleAsync(
+            x => x.ClinicId == parentClinic.Id && x.TransactionDate == DateTime.UtcNow.Date && x.Status == 1,
+            cancellationToken);
+        if (systemTrans == null)
+        {
+            return Result.Failure(new Error("403", "You have not paid the system fee"));
+        }
+
+        if (parentClinic.TotalBranches >= systemTrans.SubscriptionPackage!.LimitBranch)
+        {
+            return Result.Failure(new Error("403", "You have reached the maximum number of branches"));
+        }
+
+
         var role = await roleRepository.FindSingleAsync(x => x.Name == "Clinic Staff", cancellationToken);
         var OUrl = await mediaService.UploadImageAsync(request.OperatingLicense);
 
