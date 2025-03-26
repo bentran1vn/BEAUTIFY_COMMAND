@@ -943,6 +943,12 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
         #endregion
 
 
+        builder.Entity<OrderDetail>()
+            .HasOne(od => od.Feedback)
+            .WithOne(f => f.OrderDetail)
+            .HasForeignKey<Feedback>(f => f.OrderDetailId);
+
+
         var surveyDaId = Guid.Parse("11111111-1111-1111-1111-111111111111");
         Guid[] questionIds =
         [

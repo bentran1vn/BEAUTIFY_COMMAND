@@ -44,11 +44,10 @@ internal sealed class
             scoreByLabel[rule.ClassificationLabel] += rule.Points;
         }
 
-        //take key with max value in dictionary
-        var maxScore = scoreByLabel.Aggregate((l, r) => l.Value > r.Value ? l : r).Key;
-
+        var maxScore = scoreByLabel.Max(x => x.Value);
+        var maxLabels = scoreByLabel.Where(x => x.Value == maxScore).Select(x => x.Key).ToList();
         surveyResponseRepositoryBase.Add(surveyResponse);
         surveyAnswerRepositoryBase.AddRange(surveyAnswers);
-        return Result.Success(maxScore);
+        return Result.Success(maxLabels);
     }
 }

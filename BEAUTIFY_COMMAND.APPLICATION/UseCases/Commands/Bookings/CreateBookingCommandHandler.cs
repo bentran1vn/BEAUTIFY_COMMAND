@@ -16,7 +16,7 @@ internal sealed class
         IRepositoryBase<OrderDetail, Guid> orderDetailRepositoryBase,
         IRepositoryBase<Service, Guid> serviceRepositoryBase,
         IRepositoryBase<WorkingSchedule, Guid> workingScheduleRepositoryBase,
-        IRepositoryBase<CustomerSchedule, Guid> customerScheduleRepositoryBase,
+        IRepositoryBase<CustomerSchedule?, Guid> customerScheduleRepositoryBase,
         IMailService mailService,
         IRepositoryBase<Promotion, Guid> promotionRepositoryBase)
     : ICommandHandler<CONTRACT.Services.Bookings.Commands.CreateBookingCommand>
@@ -158,6 +158,7 @@ internal sealed class
         var doctorSchedule = new WorkingSchedule
         {
             Id = Guid.NewGuid(),
+            CustomerScheduleId = customerSchedule.Id,
             DoctorClinicId = userClinic.Id,
             StartTime = request.StartTime,
             EndTime = request.StartTime.Add(TimeSpan.FromHours(durationOfProcedures)),
@@ -169,7 +170,7 @@ internal sealed class
         workingScheduleRepositoryBase.Add(doctorSchedule);
         customerScheduleRepositoryBase.Add(customerSchedule);
         doctorSchedule.WorkingScheduleCreate(doctor.Id, clinic.Id, doctor.FirstName + " " + doctor.LastName,
-            [doctorSchedule]);
+            [doctorSchedule], customerSchedule);
         customerSchedule.Create(customerSchedule);
         await mailService.SendMail(new MailContent
         {

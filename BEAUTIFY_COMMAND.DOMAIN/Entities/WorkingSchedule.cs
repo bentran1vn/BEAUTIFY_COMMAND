@@ -1,4 +1,5 @@
 ﻿using BEAUTIFY_PACKAGES.BEAUTIFY_PACKAGES.CONTRACT.Services.WorkingSchedules;
+using BEAUTIFY_PACKAGES.BEAUTIFY_PACKAGES.DOMAIN.Constrants;
 using BEAUTIFY_PACKAGES.BEAUTIFY_PACKAGES.DOMAIN.EntityEvents;
 
 namespace BEAUTIFY_COMMAND.DOMAIN.Entities;
@@ -6,6 +7,9 @@ public class WorkingSchedule : AggregateRoot<Guid>, IAuditableEntity
 {
     public Guid? DoctorClinicId { get; set; }
     public virtual UserClinic? DoctorClinic { get; set; }
+
+    public Guid? CustomerScheduleId { get; set; }
+    public virtual CustomerSchedule? CustomerSchedule { get; set; }
     public DateOnly Date { get; set; }
     public TimeSpan StartTime { get; set; }
     public TimeSpan EndTime { get; set; }
@@ -14,7 +18,7 @@ public class WorkingSchedule : AggregateRoot<Guid>, IAuditableEntity
 
 
     public void WorkingScheduleCreate(Guid DoctorId, Guid ClinicId, string DoctorName,
-        List<WorkingSchedule> workingSchedule)
+        List<WorkingSchedule> workingSchedule, CustomerSchedule? customerSchedule)
     {
         //map from workingSchedule to WorkingScheduleEntities
         var workingScheduleEntities = workingSchedule.Select(x => new EntityEvent.WorkingScheduleEntity
@@ -26,7 +30,29 @@ public class WorkingSchedule : AggregateRoot<Guid>, IAuditableEntity
             StartTime = x.StartTime,
             EndTime = x.EndTime,
             IsDeleted = false,
-            ModifiedOnUtc = null
+            ModifiedOnUtc = null,
+            Status = Constant.OrderStatus.ORDER_PENDING,
+            Note = string.Empty,
+            CustomerScheduleEntity = new EntityEvent.CustomerScheduleEntity
+            {
+                Id = customerSchedule.Id,
+                CustomerName = customerSchedule.Customer.FirstName + " " + customerSchedule.Customer.LastName,
+                StepIndex = customerSchedule.ProcedurePriceType.Procedure.StepIndex.ToString(),
+                CustomerId = customerSchedule.CustomerId,
+                StartTime = customerSchedule.StartTime,
+                EndTime = customerSchedule.EndTime,
+                Date = customerSchedule.Date,
+                ServiceId = customerSchedule.ServiceId,
+                ServiceName = customerSchedule.Service.Name,
+                DoctorId = customerSchedule.DoctorId,
+                DoctorName = customerSchedule.Doctor.User.FirstName + " " + customerSchedule.Doctor.User.LastName,
+                ClinicId = customerSchedule.Doctor.ClinicId,
+                ClinicName = customerSchedule.Doctor.Clinic.Name,
+                CurrentProcedureName = customerSchedule.ProcedurePriceType.Name,
+                Status = customerSchedule.Status,
+                CompletedProcedures = [],
+                PendingProcedures = []
+            }
         }).ToList();
 
 
@@ -36,10 +62,9 @@ public class WorkingSchedule : AggregateRoot<Guid>, IAuditableEntity
             workingScheduleEntities, DoctorName));
     }
 
+
     public void WorkingScheduleDelete(Guid WorkingScheduleId)
     {
-        Console.BackgroundColor = ConsoleColor.DarkGreen;
-        Console.WriteLine("WorkingScheduleCreate");
         // Raise the domain event
         RaiseDomainEvent(new DomainEvents.WorkingScheduleDeleted(Guid.NewGuid(), WorkingScheduleId));
     }

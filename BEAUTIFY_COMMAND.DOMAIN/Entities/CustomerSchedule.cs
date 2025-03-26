@@ -24,7 +24,7 @@ public class CustomerSchedule : AggregateRoot<Guid>, IAuditableEntity
     public DateTimeOffset CreatedOnUtc { get; set; }
     public DateTimeOffset? ModifiedOnUtc { get; set; }
 
-    public void Create(CustomerSchedule customerSchedule)
+    public void Create(CustomerSchedule? customerSchedule)
     {
         var entity = new EntityEvent.CustomerScheduleEntity
         {
