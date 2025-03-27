@@ -76,7 +76,7 @@ internal sealed class CreateWorkingScheduleCommandHandler(
         if (schedulesToAdd.Count == 0)
             return Result.Failure(new Error("NoValidSchedules", "No valid schedules to add."));
 
-        schedulesToAdd[0].WorkingScheduleCreate(doctor.Id, clinic.Id, doctorName, schedulesToAdd);
+        schedulesToAdd[0].WorkingScheduleCreate(doctor.Id, clinic.Id, doctorName, schedulesToAdd, null);
 
         workingScheduleRepository.AddRange(schedulesToAdd);
         // Save changes if your repository requires an explicit save:
