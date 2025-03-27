@@ -13,10 +13,8 @@ public class User : AggregateRoot<Guid>, IAuditableEntity
     [MaxLength(255)] public required string Password { get; set; }
 
     [MaxLength(50)] public required int Status { get; set; }
-
-    public string? FullName => $"{FirstName} {LastName}".Trim();
-
     // 0 Pending 1 Approve 2 Reject 3 Banned
+    public string? FullName => $"{FirstName} {LastName}".Trim();
     public DateOnly? DateOfBirth { get; set; }
     public Guid? RoleId { get; set; }
     public virtual Role? Role { get; set; }
