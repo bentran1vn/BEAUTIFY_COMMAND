@@ -115,7 +115,7 @@ public class ResponseClinicApplyCommandHandler(
                 <p>Thank you for your application !</p>
             ";
 
-            var sub = await subscriptionPackageRepository.FindSingleAsync(x => x.Name.Equals("Trial"),
+            var sub = await subscriptionPackageRepository.FindSingleAsync(x => x.Name.Equals("Dùng Thử"),
                 cancellationToken);
 
             if (sub == null) return Result.Failure(new Error("404", "Subscription package Not Found"));
