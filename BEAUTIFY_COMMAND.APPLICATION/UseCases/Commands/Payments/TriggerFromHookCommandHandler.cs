@@ -59,7 +59,7 @@ public class TriggerFromHookCommandHandler(
                     return Result.Failure(new Error("422", "Order Amount invalid"));
 
                 order.Status = Constant.OrderStatus.ORDER_COMPLETED;
-                await hubContext.Clients.Group(order.Id.ToString())
+                await hubContext.Clients.Group(tran.Id.ToString())
                     .SendAsync("ReceivePaymentStatus", true, cancellationToken);
                 break;
             }
