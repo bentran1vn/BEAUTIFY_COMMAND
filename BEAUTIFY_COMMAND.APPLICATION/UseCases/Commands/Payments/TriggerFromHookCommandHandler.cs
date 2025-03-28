@@ -60,7 +60,7 @@ public class TriggerFromHookCommandHandler(
 
                 order.Status = Constant.OrderStatus.ORDER_COMPLETED;
                 await hubContext.Clients.Group(order.Id.ToString())
-                    .SendAsync(Constant.OrderStatus.ORDER_COMPLETED, true, cancellationToken);
+                    .SendAsync("ReceivePaymentStatus", true, cancellationToken);
                 break;
             }
         }
