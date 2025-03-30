@@ -26,9 +26,9 @@ public class UpdateSubscriptionCommandHandler(IRepositoryBase<SubscriptionPackag
         existingSubscription.Description = request.Description;
         existingSubscription.Price = request.Price;
         existingSubscription.Duration = request.Duration;
-        existingSubscription.LimitBranch = request.LimitBranches;
+        existingSubscription.LimitBranch = request.LimitBranch;
         existingSubscription.LimitLiveStream = request.LimitLiveStream;
-        existingSubscription.EnhancedViewer = request.EnhancedView;
+        existingSubscription.EnhancedViewer = request.EnhancedViewer;
         // 4. Save updates via repository
         repositoryBase.Update(existingSubscription);
 
