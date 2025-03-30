@@ -17,9 +17,9 @@ public static class Commands
         decimal Price,
         int Duration,
         bool IsActivated,
-        int LimitBranches,
+        int LimitBranch,
         int LimitLiveStream,
-        int EnhancedView)
+        int EnhancedViewer)
         : ICommand;
 
     public record DeleteSubscriptionCommand(Guid Id) : ICommand;
