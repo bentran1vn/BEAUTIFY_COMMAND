@@ -18,14 +18,12 @@ public class UpdateCategoryCommandHandler : ICommandHandler<CONTRACT.Services.Ca
         isExisted.Name = request.Name;
         isExisted.Description = request.Description;
 
-        if (request.ParentId != null)
-        {
-            var isParentExisted = await _categoryRepository.FindByIdAsync((Guid)request.ParentId, cancellationToken);
+        if (request.ParentId == null) return Result.Success("Category updated.");
+        var isParentExisted = await _categoryRepository.FindByIdAsync((Guid)request.ParentId, cancellationToken);
 
-            if (isParentExisted == null || isParentExisted.IsDeleted)
-                return Result.Failure(new Error("404", "Parent Category not found "));
-            isExisted.ParentId = isParentExisted.Id;
-        }
+        if (isParentExisted == null || isParentExisted.IsDeleted)
+            return Result.Failure(new Error("404", "Parent Category not found "));
+        isExisted.ParentId = isParentExisted.Id;
 
         return Result.Success("Category updated.");
     }
