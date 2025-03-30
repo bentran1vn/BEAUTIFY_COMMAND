@@ -6,8 +6,7 @@ internal sealed class UpdateSubscriptionCommandValidator : AbstractValidator<Com
         RuleFor(x => x.Name)
             //  .NotEmpty()
             .MinimumLength(2).WithMessage("Name must be at least 2 characters long")
-            .MaximumLength(50).WithMessage("Name must exceed 50 characters")
-            .Matches("^[a-zA-Z0-9 ]*$").WithMessage("Name must contain only letters and numbers");
+            .MaximumLength(50).WithMessage("Name must exceed 50 characters");
 
         RuleFor(x => x.Description)
             //  .NotEmpty()
