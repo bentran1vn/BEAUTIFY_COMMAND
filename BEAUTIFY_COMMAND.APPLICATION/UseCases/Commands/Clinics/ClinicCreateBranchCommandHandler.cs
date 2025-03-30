@@ -20,7 +20,7 @@ internal sealed class
         var parentClinic = await clinicRepository.FindByIdAsync(currentUserService.ClinicId.Value, cancellationToken) ??
                            throw new ClinicException.ClinicNotFoundException(currentUserService.ClinicId.Value);
         var systemTrans = await systemTransactionRepository.FindSingleAsync(
-            x => x.ClinicId == parentClinic.Id && x.TransactionDate == DateTime.UtcNow.Date && x.Status == 1,
+            x => x.ClinicId == parentClinic.Id && x.TransactionDate.Date == DateTime.UtcNow.Date && x.Status == 1,
             cancellationToken);
         if (systemTrans == null)
         {
