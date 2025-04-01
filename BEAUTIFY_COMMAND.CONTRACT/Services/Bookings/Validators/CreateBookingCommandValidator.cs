@@ -22,7 +22,9 @@ public class CreateBookingCommandValidator : AbstractValidator<Commands.CreateBo
 
                 return true;
             })
-            .WithMessage("Start time must be at least 2 hours from now for today's bookings");
+            .WithMessage("Start time must be at least 2 hours from now for today's bookings")
+            .Must(startTime => startTime >= TimeSpan.FromHours(8) && startTime <= TimeSpan.FromHours(21))
+            .WithMessage("Booking time must be between 8AM and 9PM");
 
         RuleFor(x => x)
             .Must(command =>
