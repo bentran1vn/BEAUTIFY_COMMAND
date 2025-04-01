@@ -26,24 +26,22 @@ internal sealed class DoctorSetWorkingServiceCommandHandler(
             var missingServicesMessage = $"Services not found: {string.Join(", ", missingServiceIds)}";
             return Result.Failure(new Error("404", missingServicesMessage));
         }
-        var clinicId = doctor.UserClinics.FirstOrDefault().ClinicId;
-        var servicesNotInClinic = existingServices.Where(s => s.ClinicServices.FirstOrDefault().ClinicId != clinicId).ToList();
-        if (servicesNotInClinic.Count != 0)
-        {
-            var invalidServicesMessage = $"Services do not belong to the doctor's clinic: {string.Join(", ", servicesNotInClinic.Select(s => s.Id))}";
-            return Result.Failure(new Error("400", invalidServicesMessage));
-        }
+        
+        
+
         var existingDoctorServices = doctorServiceRepository
             .FindAll(ds => ds.DoctorId == request.DoctorId && request.ServiceIds.Contains(ds.ServiceId))
             .Include(ds => ds.Service)
             .ToList();
 
         var existingDoctorServiceIds = existingDoctorServices.Select(ds => ds.ServiceId).ToHashSet();
-        var existingServiceNames = existingDoctorServices.Select(ds => ds.Service?.Name).Where(name => name != null).ToList();
+        var existingServiceNames =
+            existingDoctorServices.Select(ds => ds.Service?.Name).Where(name => name != null).ToList();
 
         if (existingServiceNames.Count > 0)
         {
-            var duplicateServicesMessage = $"Doctor already has these services: {string.Join(", ", existingServiceNames)}";
+            var duplicateServicesMessage =
+                $"Doctor already has these services: {string.Join(", ", existingServiceNames)}";
             return Result.Failure(new Error("409", duplicateServicesMessage));
         }
 
