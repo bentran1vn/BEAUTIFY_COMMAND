@@ -5,7 +5,7 @@ namespace BEAUTIFY_COMMAND.DOMAIN.Entities;
 public class Service : AggregateRoot<Guid>, IAuditableEntity
 {
     [MaxLength(50)] public required string Name { get; set; }
-    [MaxLength(200)] public required string Description { get; set; }
+    public required string Description { get; set; }
     [Column(TypeName = "decimal(18,2)")] public decimal MaxPrice { get; set; }
     [Column(TypeName = "decimal(18,2)")] public decimal MinPrice { get; set; }
     public int NumberOfCustomersUsed { get; set; } = 0;
