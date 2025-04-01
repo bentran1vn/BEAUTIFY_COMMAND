@@ -56,7 +56,8 @@ public class
         if (isValidService == null) return Result.Failure(new Error("404", "Service Not Found"));
 
         var lastestPromotion = await _promotionrepository.FindSingleAsync(
-            x => x.IsActivated && !x.IsDeleted, cancellationToken);
+            x => x.IsActivated &&
+                 !x.IsDeleted && x.LivestreamRoomId == null, cancellationToken);
 
         if (lastestPromotion != null) lastestPromotion.IsActivated = false;
 
