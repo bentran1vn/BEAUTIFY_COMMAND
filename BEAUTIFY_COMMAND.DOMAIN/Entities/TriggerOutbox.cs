@@ -33,8 +33,9 @@ public class TriggerOutbox : AggregateRoot<Guid>, IAuditableEntity
     }
     
     public static TriggerOutbox RaiseDeleteServiceProcedureEvent(
-        Guid serviceId,
-        Guid procedureId
+        Guid serviceId, Guid procedureId,
+        decimal maxPrice, decimal minPrice,
+        decimal discountMaxPrice, decimal discountMinPrice
         
     )
     {
@@ -46,7 +47,9 @@ public class TriggerOutbox : AggregateRoot<Guid>, IAuditableEntity
         triggerOutbox.RaiseDomainEvent(new ProceduresDomainEvent.ProcedureDelete(
             Guid.NewGuid(),
             new ProcedureEvent.DeleteProcedure(
-                procedureId, serviceId
+                procedureId, serviceId,
+                maxPrice, minPrice, discountMaxPrice,
+                discountMinPrice
             )));
 
         return triggerOutbox;
@@ -79,7 +82,6 @@ public class TriggerOutbox : AggregateRoot<Guid>, IAuditableEntity
     }
     
     
-
     public static TriggerOutbox RaiseCreateClinicServiceEvent(
         Guid Id, string Name, string Description,
         ServiceMedia[] CoverImage, ServiceMedia[] DescriptionImage,
