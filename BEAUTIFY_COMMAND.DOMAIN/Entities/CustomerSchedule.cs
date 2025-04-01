@@ -12,20 +12,25 @@ public class CustomerSchedule : AggregateRoot<Guid>, IAuditableEntity
     public Guid DoctorId { get; set; }
     public virtual UserClinic? Doctor { get; set; }
 
-    public TimeSpan StartTime { get; set; }
-    public TimeSpan EndTime { get; set; }
-    public DateOnly Date { get; set; }
+    public TimeSpan? StartTime { get; set; }
+    public TimeSpan? EndTime { get; set; }
+    public DateOnly? Date { get; set; }
 
     [MaxLength(50)] public string? Status { get; set; }
     public Guid? ProcedurePriceTypeId { get; set; }
     public virtual ProcedurePriceType? ProcedurePriceType { get; set; }
     public Guid? OrderId { get; set; }
+
     public virtual Order? Order { get; set; }
+
+    //[MaxLength(2000)] public string? Note { get; set; }
     public DateTimeOffset CreatedOnUtc { get; set; }
     public DateTimeOffset? ModifiedOnUtc { get; set; }
 
     public void Create(CustomerSchedule? customerSchedule)
     {
+        //check endtime and start time and date null ortherwise send that data
+
         var entity = new EntityEvent.CustomerScheduleEntity
         {
             Id = customerSchedule.Id,

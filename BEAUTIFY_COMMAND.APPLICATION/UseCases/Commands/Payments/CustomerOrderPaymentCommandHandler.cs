@@ -25,18 +25,18 @@ internal sealed class CustomerOrderPaymentCommandHandler(
             OrderId = order.Id,
             SubscriptionPackageId = null,
             Status = 0,
-            Amount = request.Amount,
+            Amount = order.FinalAmount.Value,
             TransactionDate = transactionDate,
             PaymentMethod = request.PaymentMethod,
         });
         var qrUrl =
-            $"https://qr.sepay.vn/img?bank=MBBank&acc=0901928382&template=&amount={request.Amount}&des=BeautifyOrder{id}";
+            $"https://qr.sepay.vn/img?bank=MBBank&acc=0901928382&template=&amount={order.FinalAmount.Value}&des=BeautifyOrder{id}";
         var result = new
         {
             TransactionId = id,
             BankNumber = "100879223979",
             BankGateway = "VietinBank",
-            request.Amount,
+            order.FinalAmount.Value,
             OrderDescription = $"Customer Order: {request.OrderId}",
             QrUrl = qrUrl
         };
