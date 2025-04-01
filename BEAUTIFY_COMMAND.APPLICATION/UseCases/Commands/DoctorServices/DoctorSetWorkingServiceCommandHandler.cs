@@ -1,6 +1,7 @@
 ﻿using BEAUTIFY_COMMAND.DOMAIN.Exceptions;
 using BEAUTIFY_PACKAGES.BEAUTIFY_PACKAGES.DOMAIN.Constrants;
 using BEAUTIFY_PACKAGES.BEAUTIFY_PACKAGES.DOMAIN.EntityEvents;
+using Microsoft.EntityFrameworkCore;
 
 namespace BEAUTIFY_COMMAND.APPLICATION.UseCases.Commands.DoctorServices;
 internal sealed class DoctorSetWorkingServiceCommandHandler(
@@ -17,24 +18,34 @@ internal sealed class DoctorSetWorkingServiceCommandHandler(
 
         if (doctor.Role?.Name != Constant.Role.DOCTOR) return Result.Failure(new Error("403", "User is not a doctor"));
 
-        var existingServiceIds = serviceRepository.FindAll(x => request.ServiceIds.Contains(x.Id))
-            .Select(x => x.Id)
-            .ToHashSet(); // Convert it into HashSet<Guid>
-
-
-        // Identify missing services
+        var existingServices = serviceRepository.FindAll(x => request.ServiceIds.Contains(x.Id)).ToList();
+        var existingServiceIds = existingServices.Select(x => x.Id).ToHashSet();
         var missingServiceIds = request.ServiceIds.Except(existingServiceIds).ToList();
         if (missingServiceIds.Count != 0)
         {
             var missingServicesMessage = $"Services not found: {string.Join(", ", missingServiceIds)}";
             return Result.Failure(new Error("404", missingServicesMessage));
         }
-
-        // Prevent duplicate entries
-        var existingDoctorServiceIds = doctorServiceRepository
+        var clinicId = doctor.UserClinics.FirstOrDefault().ClinicId;
+        var servicesNotInClinic = existingServices.Where(s => s.ClinicServices.FirstOrDefault().ClinicId != clinicId).ToList();
+        if (servicesNotInClinic.Count != 0)
+        {
+            var invalidServicesMessage = $"Services do not belong to the doctor's clinic: {string.Join(", ", servicesNotInClinic.Select(s => s.Id))}";
+            return Result.Failure(new Error("400", invalidServicesMessage));
+        }
+        var existingDoctorServices = doctorServiceRepository
             .FindAll(ds => ds.DoctorId == request.DoctorId && request.ServiceIds.Contains(ds.ServiceId))
-            .Select(ds => ds.ServiceId).ToHashSet();
+            .Include(ds => ds.Service)
+            .ToList();
 
+        var existingDoctorServiceIds = existingDoctorServices.Select(ds => ds.ServiceId).ToHashSet();
+        var existingServiceNames = existingDoctorServices.Select(ds => ds.Service?.Name).Where(name => name != null).ToList();
+
+        if (existingServiceNames.Count > 0)
+        {
+            var duplicateServicesMessage = $"Doctor already has these services: {string.Join(", ", existingServiceNames)}";
+            return Result.Failure(new Error("409", duplicateServicesMessage));
+        }
 
         var newDoctorServices = request.ServiceIds
             .Where(serviceId => !existingDoctorServiceIds.Contains(serviceId))
@@ -63,7 +74,6 @@ internal sealed class DoctorSetWorkingServiceCommandHandler(
         }).ToList();
         newDoctorServices.FirstOrDefault().RaiseDoctorServiceCreatedEvent(doctorService);
         doctorServiceRepository.AddRange(newDoctorServices);
-
 
         return Result.Success();
     }
