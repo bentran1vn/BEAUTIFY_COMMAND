@@ -86,8 +86,10 @@ public class ClinicServiceApi : ApiEndpoint, ICarterModule
 
         var result = await sender.Send(new Commands.UpdateClinicServiceCommand(
             command.Id, new Guid(userId), clinicId, command.Name, numbersIndexCoverImagesChange,
-            command.CoverImages, command.Description, numbersIndexDescriptionImagesChange,
-            command.DescriptionImages, command.CategoryId
+            command.CoverImages,
+            command.Description, numbersIndexDescriptionImagesChange,
+            command.DescriptionImages,
+            command.CategoryId
         ));
 
         return result.IsFailure ? HandlerFailure(result) : Results.Ok(result);

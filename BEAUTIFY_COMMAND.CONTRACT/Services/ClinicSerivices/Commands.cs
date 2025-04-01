@@ -24,11 +24,9 @@ public class Commands
         public Guid Id { get; set; }
         public string ClinicId { get; set; }
         public string Name { get; set; }
-
         public string? IndexCoverImagesChange { get; set; }
         public IFormFileCollection? CoverImages { get; set; }
         public string Description { get; set; }
-
         public string? IndexDescriptionImagesChange { get; set; }
         public IFormFileCollection? DescriptionImages { get; set; }
         public Guid CategoryId { get; set; }
