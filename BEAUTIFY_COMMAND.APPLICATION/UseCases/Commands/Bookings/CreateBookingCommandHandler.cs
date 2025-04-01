@@ -188,7 +188,7 @@ internal sealed class
             <li><strong>Booking Date:</strong> " +
                    request.BookingDate.ToString("dd/MM/yyyy", CultureInfo.InvariantCulture) + @"</li>
             <li><strong>Start Time:</strong> " + request.StartTime.ToString(@"hh\:mm") + @"</li>
-            <li><strong>End Time:</strong> " + customerSchedule.EndTime.ToString(@"hh\:mm") + @"</li>
+<li><strong>End Time:</strong> " + (customerSchedule.EndTime?.ToString(@"hh\:mm") ?? "N/A") + @"</li>
             <li><strong>Service:</strong> " + service.Name + @"</li>
             <li><strong>Doctor:</strong> " + doctor.FirstName + " " + doctor.LastName + @"</li>
             <li><strong>Address:</strong> " + clinic.Address + @"</li>

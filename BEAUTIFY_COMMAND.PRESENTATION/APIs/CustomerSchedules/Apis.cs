@@ -12,6 +12,7 @@ public class Apis : ApiEndpoint, ICarterModule
         gr1.MapPatch("{scheduleId:guid}/{status}", UpdateCustomerScheduleAfterPaymentCompleted);
         gr1.MapPatch("staff/{scheduleId:guid}/{status}",
             StaffUpdateCustomerScheduleStatusAfterCheckIn).RequireAuthorization();
+        gr1.MapPost("generate/{customerScheduleId:guid}", GenerateCustomerScheduleAfterPayment);
     }
 
     private static async Task<IResult> UpdateCustomerScheduleAfterPaymentCompleted(ISender sender,
@@ -27,6 +28,13 @@ public class Apis : ApiEndpoint, ICarterModule
     {
         var result = await sender.Send(
             new Command.StaffUpdateCustomerScheduleStatusAfterCheckInCommand(scheduleId, status));
+        return result.IsFailure ? HandlerFailure(result) : Results.Ok(result);
+    }
+
+    private static async Task<IResult> GenerateCustomerScheduleAfterPayment(ISender sender, Guid customerScheduleId)
+    {
+        var result = await sender.Send(
+            new Command.GenerateCustomerScheduleAfterPaymentCompletedCommand(customerScheduleId));
         return result.IsFailure ? HandlerFailure(result) : Results.Ok(result);
     }
 }

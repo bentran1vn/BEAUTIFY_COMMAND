@@ -33,15 +33,16 @@ public class WorkingSchedule : AggregateRoot<Guid>, IAuditableEntity
             ModifiedOnUtc = null,
             Status = Constant.OrderStatus.ORDER_PENDING,
             Note = string.Empty,
+            CustomerScheduleId = customerSchedule!.Id,
             CustomerScheduleEntity = new EntityEvent.CustomerScheduleEntity
             {
                 Id = customerSchedule.Id,
                 CustomerName = customerSchedule.Customer.FirstName + " " + customerSchedule.Customer.LastName,
                 StepIndex = customerSchedule.ProcedurePriceType.Procedure.StepIndex.ToString(),
                 CustomerId = customerSchedule.CustomerId,
-                StartTime = customerSchedule.StartTime,
-                EndTime = customerSchedule.EndTime,
-                Date = customerSchedule.Date,
+                StartTime = customerSchedule.StartTime.Value,
+                EndTime = customerSchedule.EndTime.Value,
+                Date = customerSchedule.Date.Value,
                 ServiceId = customerSchedule.ServiceId,
                 ServiceName = customerSchedule.Service.Name,
                 DoctorId = customerSchedule.DoctorId,
@@ -78,7 +79,8 @@ public class WorkingSchedule : AggregateRoot<Guid>, IAuditableEntity
             Date = x.Date,
             StartTime = x.StartTime,
             EndTime = x.EndTime,
-            IsDeleted = false
+            IsDeleted = false,
+            CustomerScheduleId = x.CustomerScheduleId.Value,
         }).ToList();
 
         // Raise the domain event

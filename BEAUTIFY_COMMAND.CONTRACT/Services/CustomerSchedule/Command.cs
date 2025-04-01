@@ -18,4 +18,8 @@ public static class Command
         Guid CustomerScheduleId,
         string Status
     ) : ICommand;
+
+    public record GenerateCustomerScheduleAfterPaymentCompletedCommand(
+        Guid CustomerScheduleId
+    ) : ICommand;
 }
