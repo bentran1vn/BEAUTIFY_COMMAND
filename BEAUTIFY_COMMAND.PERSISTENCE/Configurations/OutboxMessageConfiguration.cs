@@ -2858,7 +2858,7 @@ internal sealed class OutboxMessageConfiguration : IEntityTypeConfiguration<Outb
             Guid.NewGuid(),
             new ProcedureEvent.CreateProcedure(
                 pro.Id, (Guid)pro.ServiceId!, pro.Name, pro.Description, 0, 0, 0,
-                0, pro.StepIndex, [""], procedurePriceTypes.Where(prt => prt.ProcedureId.Equals(pro.Id)).Select(
+                0, pro.StepIndex, procedurePriceTypes.Where(prt => prt.ProcedureId.Equals(pro.Id)).Select(
                     x => new ProcedureEvent.ProcedurePriceType(
                         x.Id, x.Name, x.Price, x.Duration, x.IsDefault
                     )).ToList()
@@ -2869,7 +2869,6 @@ internal sealed class OutboxMessageConfiguration : IEntityTypeConfiguration<Outb
             Guid.NewGuid(),
             new ClinicServiceEvent.CreateClinicService(
                 se.Id, se.Name, se.Description,
-                [],
                 [],
                 new ClinicServiceEvent.Category(
                     categories.FirstOrDefault(x => x.Id.Equals(se.CategoryId))!.Id,

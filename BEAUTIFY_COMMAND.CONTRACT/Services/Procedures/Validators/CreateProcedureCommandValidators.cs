@@ -7,8 +7,6 @@ public class CreateProcedureCommandValidators : AbstractValidator<Commands.Creat
 
         RuleFor(x => x.StepIndex).NotEmpty();
 
-        RuleFor(x => x.ProcedureCoverImage).NotEmpty();
-
         RuleFor(x => x.Name)
             .NotEmpty()
             .MinimumLength(5).WithMessage("Clinic Name must be at least 2 characters long")
@@ -16,8 +14,7 @@ public class CreateProcedureCommandValidators : AbstractValidator<Commands.Creat
 
         RuleFor(x => x.Description)
             .NotEmpty()
-            .MinimumLength(5).WithMessage("Clinic Name must be at least 2 characters long")
-            .MaximumLength(30).WithMessage("Clinic Name must exceed 30 characters");
+            .MinimumLength(5).WithMessage("Clinic Name must be at least 2 characters long");
 
         RuleForEach(x => x.ProcedurePriceTypes)
             .SetValidator(new ProcedurePriceTypeValidator());

@@ -47,8 +47,8 @@ public class ClinicServiceApi : ApiEndpoint, ICarterModule
         if (clinicId == null) return HandlerFailure(Result.Failure(new Error("404", "Empty Clinics")));
 
         var result = await sender.Send(new Commands.CreateClinicServiceCommand(
-            clinicId, command.Name, command.CoverImages, command.Description,
-            command.DescriptionImages, command.CategoryId
+            clinicId, command.Name, command.CoverImages,
+            command.Description, command.CategoryId
         ));
 
         return result.IsFailure ? HandlerFailure(result) : Results.Ok(result);
@@ -77,18 +77,10 @@ public class ClinicServiceApi : ApiEndpoint, ICarterModule
                 command.IndexCoverImagesChange
             );
 
-        List<int>? numbersIndexDescriptionImagesChange = null;
-
-        if (!string.IsNullOrWhiteSpace(command.IndexDescriptionImagesChange))
-            numbersIndexDescriptionImagesChange = JsonSerializer.Deserialize<List<int>>(
-                command.IndexDescriptionImagesChange
-            );
-
         var result = await sender.Send(new Commands.UpdateClinicServiceCommand(
             command.Id, new Guid(userId), clinicId, command.Name, numbersIndexCoverImagesChange,
             command.CoverImages,
-            command.Description, numbersIndexDescriptionImagesChange,
-            command.DescriptionImages,
+            command.Description, 
             command.CategoryId
         ));
 

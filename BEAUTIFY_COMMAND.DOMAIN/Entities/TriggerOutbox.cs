@@ -12,7 +12,7 @@ public class TriggerOutbox : AggregateRoot<Guid>, IAuditableEntity
     public static TriggerOutbox RaiseCreateServiceProcedureEvent(
         Guid procedureId, Guid serviceId, string name, string description,
         decimal maxPrice, decimal minPrice, decimal? discountMaxPrice, decimal? discountMinPrice,
-        int stepIndex, string[] coverImage, ICollection<ProcedurePriceType> procedurePriceTypes)
+        int stepIndex, ICollection<ProcedurePriceType> procedurePriceTypes)
     {
         var triggerOutbox = new TriggerOutbox
         {
@@ -23,7 +23,30 @@ public class TriggerOutbox : AggregateRoot<Guid>, IAuditableEntity
             Guid.NewGuid(),
             new ProcedureEvent.CreateProcedure(
                 procedureId, serviceId, name, description, maxPrice, minPrice, discountMaxPrice,
-                discountMinPrice, stepIndex, coverImage, procedurePriceTypes.Select(
+                discountMinPrice, stepIndex, procedurePriceTypes.Select(
+                    x => new ProcedureEvent.ProcedurePriceType(
+                        x.Id, x.Name, x.Price, x.Duration, x.IsDefault
+                    )).ToList()
+            )));
+
+        return triggerOutbox;
+    }
+    
+    public static TriggerOutbox RaiseUpdateServiceProcedureEvent(
+        Guid procedureId, Guid serviceId, string name, string description,
+        decimal maxPrice, decimal minPrice, decimal? discountMaxPrice, decimal? discountMinPrice,
+        int stepIndex, ICollection<ProcedurePriceType> procedurePriceTypes)
+    {
+        var triggerOutbox = new TriggerOutbox
+        {
+            Id = Guid.NewGuid()
+        };
+
+        triggerOutbox.RaiseDomainEvent(new ProceduresDomainEvent.ProcedureUpdate(
+            Guid.NewGuid(),
+            new ProcedureEvent.CreateProcedure(
+                procedureId, serviceId, name, description, maxPrice, minPrice, discountMaxPrice,
+                discountMinPrice, stepIndex, procedurePriceTypes.Select(
                     x => new ProcedureEvent.ProcedurePriceType(
                         x.Id, x.Name, x.Price, x.Duration, x.IsDefault
                     )).ToList()
@@ -101,9 +124,7 @@ public class TriggerOutbox : AggregateRoot<Guid>, IAuditableEntity
                 CoverImage.Select(x => new ClinicServiceEvent.Image(
                     x.Id, x.IndexNumber, x.ImageUrl
                 )).ToArray(),
-                DescriptionImage.Select(x => new ClinicServiceEvent.Image(
-                    x.Id, x.IndexNumber, x.ImageUrl
-                )).ToArray(),
+                
                 new ClinicServiceEvent.Category(CateId, CateName, CateDescription),
                 clinics.Select(x => new ClinicServiceEvent.Clinic(x.Id, x.Name, x.Email,
                     x.City, x.Address, x.FullAddress, x.District, x.Ward, x.PhoneNumber, x.ProfilePictureUrl,
@@ -130,9 +151,6 @@ public class TriggerOutbox : AggregateRoot<Guid>, IAuditableEntity
             new ClinicServiceEvent.UpdateClinicService(
                 Id, Name, Description,
                 ChangeCoverImage.Select(x => new ClinicServiceEvent.Image(
-                    x.Id, x.IndexNumber, x.ImageUrl
-                )).ToArray(),
-                ChangeDescriptionImage.Select(x => new ClinicServiceEvent.Image(
                     x.Id, x.IndexNumber, x.ImageUrl
                 )).ToArray(),
                 new ClinicServiceEvent.Category(CateId, CateName, CateDescription),

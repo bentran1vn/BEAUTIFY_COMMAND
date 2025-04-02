@@ -8,7 +8,6 @@ public class Commands
         string Name,
         IFormFileCollection CoverImages,
         string Description,
-        IFormFileCollection DescriptionImages,
         Guid CategoryId);
 
     public record CreateClinicServiceCommand(
@@ -16,7 +15,6 @@ public class Commands
         string Name,
         IFormFileCollection CoverImages,
         string Description,
-        IFormFileCollection DescriptionImages,
         Guid CategoryId) : ICommand;
 
     public class UpdateClinicServiceBody
@@ -27,8 +25,6 @@ public class Commands
         public string? IndexCoverImagesChange { get; set; }
         public IFormFileCollection? CoverImages { get; set; }
         public string Description { get; set; }
-        public string? IndexDescriptionImagesChange { get; set; }
-        public IFormFileCollection? DescriptionImages { get; set; }
         public Guid CategoryId { get; set; }
     }
 
@@ -40,8 +36,6 @@ public class Commands
         List<int>? IndexCoverImagesChange,
         IFormFileCollection? CoverImages,
         string Description,
-        List<int>? IndexDescriptionImagesChange,
-        IFormFileCollection? DescriptionImages,
         Guid CategoryId) : ICommand;
 
     public record DeleteClinicServiceCommand(Guid Id) : ICommand;

@@ -8,18 +8,25 @@ public class Commands
         string Name,
         string Description,
         int StepIndex,
-        IFormFileCollection ProcedureCoverImage,
-        IEnumerable<ProcedurePriceType>? ProcedurePriceTypes = null) : ICommand;
+        IEnumerable<ProcedurePriceType> ProcedurePriceTypes) : ICommand;
+    
+    public record UpdateProcedureCommand(
+        Guid ServiceId,
+        Guid ProcedureId,
+        string Name,
+        string Description,
+        int StepIndex,
+        IEnumerable<ProcedurePriceType> ProcedurePriceTypes) : ICommand;
 
     public record CreateProcedureBody(
         Guid ClinicServiceId,
         string Name,
         string Description,
         int StepIndex,
-        IFormFileCollection ProcedureCoverImage,
         string? ProcedurePriceTypes = null);
 
-    public record ProcedurePriceType(string Name, int Duration, decimal Price,bool IsDefault);
+    public record ProcedurePriceType(
+        string Name, int Duration, decimal Price,bool IsDefault);
 
     public record DeleteProcedureCommand(
         Guid Id
