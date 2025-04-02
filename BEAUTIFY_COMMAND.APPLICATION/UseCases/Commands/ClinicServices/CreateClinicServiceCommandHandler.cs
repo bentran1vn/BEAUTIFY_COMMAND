@@ -36,12 +36,6 @@ public class
 
         var coverImageUrls = await Task.WhenAll(servicesCoverImageTasks);
 
-        var descriptionImagesFilter = request.DescriptionImages.Where(x => x.Name.Equals("descriptionImages")).ToList();
-
-        var servicesDescriptionImageTasks = descriptionImagesFilter.Select(mediaService.UploadImageAsync);
-
-        var desImageUrls = await Task.WhenAll(servicesDescriptionImageTasks);
-
         var service = new Service
         {
             Id = Guid.NewGuid(),
@@ -72,21 +66,10 @@ public class
 
         serviceMediaList.AddRange(medias);
 
-        var desMedias = desImageUrls.Select((x, idx) => new ServiceMedia
-        {
-            Id = Guid.NewGuid(),
-            ImageUrl = x,
-            IndexNumber = idx,
-            ServiceMediaType = 1,
-            ServiceId = service.Id
-        }).ToList();
-
-        serviceMediaList.AddRange(desMedias);
-
         serviceMediaRepository.AddRange(serviceMediaList);
 
         var trigger = TriggerOutbox.RaiseCreateClinicServiceEvent(
-            service.Id, service.Name, service.Description, medias.ToArray(), desMedias.ToArray(),
+            service.Id, service.Name, service.Description, medias.ToArray(), [],
             request.CategoryId, isCategoryExisted.Name, isCategoryExisted.Description ?? "", isClinicExisted
         );
 

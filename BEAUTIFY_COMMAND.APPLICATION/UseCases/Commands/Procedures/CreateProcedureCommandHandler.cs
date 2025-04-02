@@ -4,9 +4,7 @@ namespace BEAUTIFY_COMMAND.APPLICATION.UseCases.Commands.Procedures;
 public class
     CreateProcedureCommandHandler(
         IRepositoryBase<Service, Guid> clinicServiceRepository,
-        IMediaService mediaService,
         IRepositoryBase<Procedure, Guid> procedureServiceRepository,
-        IRepositoryBase<ProcedureMedia, Guid> procedureMediaServiceRepository,
         IRepositoryBase<ProcedurePriceType, Guid> procedurePriceTypeServiceRepository,
         IRepositoryBase<TriggerOutbox, Guid> triggerOutboxRepository)
     : ICommandHandler<CONTRACT.Services.Procedures.Commands.CreateProcedureCommand>
@@ -37,20 +35,6 @@ public class
 
         procedureServiceRepository.Add(procedure);
 
-        var coverImageTasks = request.ProcedureCoverImage.Select(mediaService.UploadImageAsync);
-
-        var coverImageUrls = await Task.WhenAll(coverImageTasks);
-
-        var medias = coverImageUrls.Select((x, idx) => new ProcedureMedia
-        {
-            Id = Guid.NewGuid(),
-            ImageUrl = x,
-            IndexNumber = idx,
-            ProcedureId = procedure.Id
-        }).ToList();
-
-        procedureMediaServiceRepository.AddRange(medias);
-
         var procedurePriceTypes = request.ProcedurePriceTypes.Select(x => new ProcedurePriceType
         {
             Id = Guid.NewGuid(),
@@ -75,14 +59,16 @@ public class
                 ? procedure.ProcedurePriceTypes.Max(pt => pt.Price)
                 : 0) ?? 0;
 
-        var discountPercent = isExisted.Promotions?.FirstOrDefault(x => x.IsActivated)?.DiscountPercent;
+        var discountPercent = isExisted.Promotions?.FirstOrDefault(x =>
+            x.IsActivated && x.ServiceId.Equals(request.ClinicServiceId) &&
+                          !x.IsDeleted  && x.LivestreamRoom == null)?.DiscountPercent;
 
         var trigger = TriggerOutbox.RaiseCreateServiceProcedureEvent(
             procedure.Id, isExisted.Id, procedure.Name, procedure.Description,
             highestPrice, lowestPrice,
             highestPrice - (decimal?)discountPercent * highestPrice,
             lowestPrice - (decimal?)discountPercent * lowestPrice,
-            procedure.StepIndex, coverImageUrls, priceTypes);
+            procedure.StepIndex, priceTypes);
 
         triggerOutboxRepository.Add(trigger);
 

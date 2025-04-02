@@ -18,9 +18,6 @@ public class CreateClinicServiceCommandValidators : AbstractValidator<Commands.C
         RuleFor(x => x.CoverImages)
             .NotEmpty();
 
-        RuleFor(x => x.DescriptionImages)
-            .NotEmpty();
-
         RuleFor(x => x.CategoryId)
             .NotEmpty();
     }
