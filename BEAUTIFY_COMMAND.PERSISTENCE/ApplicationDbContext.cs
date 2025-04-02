@@ -57,5 +57,6 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
         builder.Entity<ClinicService>().HasQueryFilter(x => !x.IsDeleted);
         builder.Entity<SystemTransaction>().HasQueryFilter(x => !x.IsDeleted);
         builder.Entity<Promotion>().HasQueryFilter(x => !x.IsDeleted);
+        builder.Entity<DoctorService>().HasQueryFilter(x => !x.IsDeleted);
     }
 }

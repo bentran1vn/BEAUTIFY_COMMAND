@@ -25,7 +25,7 @@ public class CategoryApi : ApiEndpoint, ICarterModule
             .WithName("Delete Catorgory")
             .WithSummary("Delete Catorgory")
             .WithDescription("");
-        gr1.MapPatch("{SubCategoryId}", UpdateSubCategoryCategoryCommand)
+        gr1.MapPatch("{categoryId:guid}/{SubCategoryId:guid}", UpdateSubCategoryCategoryCommand)
             .WithName("Update SubCategory Category")
             .WithSummary("Update the Category of a SubCategory")
             .WithDescription("");
@@ -61,11 +61,9 @@ public class CategoryApi : ApiEndpoint, ICarterModule
 
     private static async Task<IResult> UpdateSubCategoryCategoryCommand(
         ISender sender,
-        Guid subCategoryId,
-        [FromBody] Guid categoryId) // Directly receive CategoryId
+        Guid subCategoryId,Guid categoryId) // Directly receive CategoryId
     {
         var result = await sender.Send(new Commands.MoveSubCategoryToCategoryCommand(subCategoryId, categoryId));
         return result.IsFailure ? HandlerFailure(result) : Results.Ok(result);
     }
-
 }
