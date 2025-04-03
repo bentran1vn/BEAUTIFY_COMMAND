@@ -22,4 +22,9 @@ public static class Command
     public record GenerateCustomerScheduleAfterPaymentCompletedCommand(
         Guid CustomerScheduleId
     ) : ICommand;
+
+    public record DoctorUpdateCustomerScheduleNoteCommand(
+        Guid CustomerScheduleId,
+        string DoctorNote
+    ) : ICommand;
 }

@@ -23,7 +23,7 @@ public class CustomerSchedule : AggregateRoot<Guid>, IAuditableEntity
 
     public virtual Order? Order { get; set; }
 
-    //[MaxLength(2000)] public string? Note { get; set; }
+    [MaxLength(2000)] public string? DoctorNote { get; set; }
     public DateTimeOffset CreatedOnUtc { get; set; }
     public DateTimeOffset? ModifiedOnUtc { get; set; }
 
@@ -35,7 +35,7 @@ public class CustomerSchedule : AggregateRoot<Guid>, IAuditableEntity
         {
             Id = customerSchedule.Id,
             CustomerName = customerSchedule.Customer.FirstName + " " + customerSchedule.Customer.LastName,
-            StepIndex = customerSchedule.ProcedurePriceType.Procedure.StepIndex.ToString(),
+            //  StepIndex = customerSchedule.ProcedurePriceType.Procedure.StepIndex.ToString(),
             CustomerId = customerSchedule.CustomerId,
             StartTime = customerSchedule.StartTime,
             EndTime = customerSchedule.EndTime,
@@ -46,7 +46,15 @@ public class CustomerSchedule : AggregateRoot<Guid>, IAuditableEntity
             DoctorName = customerSchedule.Doctor.User.FirstName + " " + customerSchedule.Doctor.User.LastName,
             ClinicId = customerSchedule.Doctor.ClinicId,
             ClinicName = customerSchedule.Doctor.Clinic.Name,
-            CurrentProcedureName = customerSchedule.ProcedurePriceType.Name,
+            DoctorNote = customerSchedule.DoctorNote,
+            CurrentProcedure = new EntityEvent.ProcedurePriceTypeEntity
+            {
+                Name = customerSchedule.ProcedurePriceType.Name,
+                Id = customerSchedule.ProcedurePriceTypeId.Value,
+                StepIndex = customerSchedule.ProcedurePriceType.Procedure.StepIndex.ToString(),
+                DateCompleted = (DateOnly)customerSchedule.Date,
+                Duration = 0,
+            },
             Status = customerSchedule.Status,
             CompletedProcedures = [],
             PendingProcedures = []
@@ -61,5 +69,12 @@ public class CustomerSchedule : AggregateRoot<Guid>, IAuditableEntity
         // Raise the domain event
         RaiseDomainEvent(
             new DomainEvents.CustomerScheduleUpdateAfterPaymentCompleted(Guid.NewGuid(), customerScheduleId, status));
+    }
+
+    public void UpdateCustomerScheduleNote(Guid customerScheduleId, string note)
+    {
+        // Raise the domain event
+        RaiseDomainEvent(
+            new DomainEvents.CustomerScheduleUpdatedDoctorNote(Guid.NewGuid(), customerScheduleId, note));
     }
 }

@@ -50,7 +50,7 @@ internal sealed class
             Status = Constant.OrderStatus.ORDER_PENDING,
             ProcedurePriceTypeId = x,
             OrderId = order.Id,
-            //  Note = customerSchedule.Note
+            DoctorNote = customerSchedule.DoctorNote, 
         }).ToList();
         customerScheduleRepositoryBase.AddRange(customerScheduleList);
         foreach (var x in customerScheduleList)

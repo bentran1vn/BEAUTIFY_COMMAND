@@ -38,7 +38,6 @@ public class WorkingSchedule : AggregateRoot<Guid>, IAuditableEntity
             {
                 Id = customerSchedule.Id,
                 CustomerName = customerSchedule.Customer.FirstName + " " + customerSchedule.Customer.LastName,
-                StepIndex = customerSchedule.ProcedurePriceType.Procedure.StepIndex.ToString(),
                 CustomerId = customerSchedule.CustomerId,
                 StartTime = customerSchedule.StartTime.Value,
                 EndTime = customerSchedule.EndTime.Value,
@@ -49,7 +48,14 @@ public class WorkingSchedule : AggregateRoot<Guid>, IAuditableEntity
                 DoctorName = customerSchedule.Doctor.User.FirstName + " " + customerSchedule.Doctor.User.LastName,
                 ClinicId = customerSchedule.Doctor.ClinicId,
                 ClinicName = customerSchedule.Doctor.Clinic.Name,
-                CurrentProcedureName = customerSchedule.ProcedurePriceType.Name,
+                CurrentProcedure = new EntityEvent.ProcedurePriceTypeEntity
+                {
+                    Name = customerSchedule.ProcedurePriceType.Name,
+                    Id = customerSchedule.ProcedurePriceTypeId.Value,
+                    StepIndex = customerSchedule.ProcedurePriceType.Procedure.StepIndex.ToString(),
+                    DateCompleted = (DateOnly)customerSchedule.Date,
+                    Duration = 0,
+                },
                 Status = customerSchedule.Status,
                 CompletedProcedures = [],
                 PendingProcedures = []
