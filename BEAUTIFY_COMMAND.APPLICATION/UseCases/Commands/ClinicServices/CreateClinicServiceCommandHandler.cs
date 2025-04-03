@@ -69,7 +69,7 @@ public class
         serviceMediaRepository.AddRange(serviceMediaList);
 
         var trigger = TriggerOutbox.RaiseCreateClinicServiceEvent(
-            service.Id, service.Name, service.Description, medias.ToArray(), [],
+            service.Id, service.Name, service.Description, medias.ToArray(), 
             request.CategoryId, isCategoryExisted.Name, isCategoryExisted.Description ?? "", isClinicExisted
         );
 

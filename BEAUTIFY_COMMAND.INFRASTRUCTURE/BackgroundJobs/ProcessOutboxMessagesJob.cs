@@ -74,6 +74,16 @@ public class ProcessOutboxMessagesJob(ApplicationDbContext dbContext, IPublishEn
                                 });
                         await publishEndpoint.Publish(clinicServiceUpdated, context.CancellationToken);
                         break;
+                    case nameof(ClinicServiceDomainEvent.ClinicServiceDeleted):
+                        var clinicServiceDeleted =
+                            JsonConvert.DeserializeObject<ClinicServiceDomainEvent.ClinicServiceDeleted>(
+                                outboxMessage.Content,
+                                new JsonSerializerSettings
+                                {
+                                    TypeNameHandling = TypeNameHandling.All
+                                });
+                        await publishEndpoint.Publish(clinicServiceDeleted, context.CancellationToken);
+                        break;
                     case nameof(ProcedureDomainEvent.ProcedureCreated):
                         var procedureCreated =
                             JsonConvert.DeserializeObject<ProcedureDomainEvent.ProcedureCreated>(
