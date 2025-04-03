@@ -53,7 +53,7 @@ public class UpdateProcedureCommandHandler(
             isExisted.StepIndex = request.StepIndex;
         }else
         {
-            var nextStepIndex = procedures?.Max(x => x.StepIndex) + 1 ?? 0;
+            var nextStepIndex = procedures.Any() ? procedures.Max(x => x.StepIndex) + 1 : 1;
             isExisted.StepIndex = nextStepIndex;
         }
         
@@ -76,7 +76,7 @@ public class UpdateProcedureCommandHandler(
             Duration = x.Duration,
             IsDefault = x.IsDefault,
             ProcedureId = isExisted.Id
-        });
+        }).ToList();
         
         procedurePriceTypeServiceRepository.AddRange(newProcedurePriceTypes);
         

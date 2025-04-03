@@ -25,7 +25,7 @@ public class
         
         if (request.StepIndex == null)
         {
-            var nextStepIndex = isExisted.Procedures?.Max(x => x.StepIndex) + 1 ?? 0;
+            var nextStepIndex = isExisted.Procedures?.Any() == true ? isExisted.Procedures.Max(x => x.StepIndex) + 1 : 1;
             
             procedure = new Procedure
             {
@@ -59,9 +59,7 @@ public class
             }
             else
             {
-                bool? any = isExisted.Procedures != null && isExisted.Procedures.Count != 0;
-
-                indexToAdd = any == true ? isExisted.Procedures.Max(x => x.StepIndex) + 1 : 0;
+                indexToAdd = isExisted.Procedures?.Any() == true ? isExisted.Procedures?.Max(x => x.StepIndex) + 1 : 1;
             }
             
             procedure = new Procedure
