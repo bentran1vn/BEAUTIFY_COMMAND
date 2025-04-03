@@ -9,8 +9,7 @@ public class CreateProcedureCommandValidators : AbstractValidator<Commands.Creat
 
         RuleFor(x => x.Name)
             .NotEmpty()
-            .MinimumLength(5).WithMessage("Clinic Name must be at least 2 characters long")
-            .MaximumLength(30).WithMessage("Clinic Name must exceed 30 characters");
+            .MinimumLength(5).WithMessage("Clinic Name must be at least 2 characters long");
 
         RuleFor(x => x.Description)
             .NotEmpty()

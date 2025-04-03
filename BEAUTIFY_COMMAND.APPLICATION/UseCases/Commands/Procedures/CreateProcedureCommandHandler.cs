@@ -23,6 +23,9 @@ public class
 
         if (request.ProcedurePriceTypes == null || !request.ProcedurePriceTypes.Any())
             return Result.Failure(new Error("400", "No Price Types !"));
+        
+        if(request.ProcedurePriceTypes.Where(x => x.IsDefault).Count() > 1)
+            return Result.Failure(new Error("400", "Only one price type can be default !"));
 
         var procedure = new Procedure
         {
