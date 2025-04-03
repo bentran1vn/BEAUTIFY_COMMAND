@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using MongoDB.Driver.Linq;
 
 namespace BEAUTIFY_COMMAND.APPLICATION.UseCases.Commands.Procedures;
 
@@ -21,6 +22,9 @@ public class UpdateProcedureCommandHandler(
         
         if (procedures.Any(p => p.StepIndex == request.StepIndex && p.IsDeleted == false && p.Id != request.ProcedureId))
             return Result.Failure(new Error("400", "Step Index Exist !"));
+        
+        if(request.ProcedurePriceTypes.Where(x => x.IsDefault).Count() > 1)
+            return Result.Failure(new Error("400", "Only one price type can be default !"));
         
         isExisted.Name = request.Name;
         isExisted.Description = request.Description;
