@@ -69,8 +69,8 @@ internal sealed class
         {
             Id = Guid.NewGuid(),
             Email = request.Email,
-            FirstName = parentClinic.Name,
-            LastName = request.Name,
+            FirstName = request.Name,
+            LastName = $" ({parentClinic.Name})",
             Password = passwordHasherService.HashPassword("123456789"),
             Status = 1,
             PhoneNumber = request.PhoneNumber,

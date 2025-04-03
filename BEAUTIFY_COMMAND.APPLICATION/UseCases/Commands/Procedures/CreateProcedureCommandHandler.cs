@@ -61,7 +61,9 @@ public class
             }
             else
             {
-                indexToAdd = isExisted.Procedures?.Max(x => x.StepIndex) + 1 ?? 0;
+                bool? any = isExisted.Procedures != null && isExisted.Procedures.Count != 0;
+
+                indexToAdd = any == true ? isExisted.Procedures.Max(x => x.StepIndex) + 1 : 0;
             }
             
             procedure = new Procedure
