@@ -13,28 +13,66 @@ public class
         CancellationToken cancellationToken)
     {
         var isExisted = await clinicServiceRepository.FindByIdAsync(request.ClinicServiceId, cancellationToken,
-            x => x.Promotions);
+            x => x.Promotions, x => x.Procedures);
 
         if (isExisted == null || isExisted.IsDeleted) return Result.Failure(new Error("404", "Services not found !"));
 
-        if (isExisted.Procedures != null &&
-            isExisted.Procedures.Any(p => p.StepIndex == request.StepIndex && p.IsDeleted == false))
-            return Result.Failure(new Error("400", "Step Index Exist !"));
-
-        if (request.ProcedurePriceTypes == null || !request.ProcedurePriceTypes.Any())
+        if (!request.ProcedurePriceTypes.Any())
             return Result.Failure(new Error("400", "No Price Types !"));
         
-        if(request.ProcedurePriceTypes.Where(x => x.IsDefault).Count() > 1)
+        if(request.ProcedurePriceTypes.Count(x => x.IsDefault) > 1)
             return Result.Failure(new Error("400", "Only one price type can be default !"));
 
-        var procedure = new Procedure
+        Procedure? procedure = null;
+        
+        if (request.StepIndex == null)
         {
-            Id = Guid.NewGuid(),
-            Name = request.Name,
-            Description = request.Description,
-            StepIndex = request.StepIndex,
-            ServiceId = request.ClinicServiceId
-        };
+            var nextStepIndex = isExisted.Procedures?.Max(x => x.StepIndex) + 1 ?? 0;
+            
+            procedure = new Procedure
+            {
+                Id = Guid.NewGuid(),
+                Name = request.Name,
+                Description = request.Description,
+                StepIndex = nextStepIndex,
+                ServiceId = request.ClinicServiceId
+            };
+        }
+        else
+        {
+            var existIndex = isExisted.Procedures?.FirstOrDefault(
+                x => x.StepIndex == request.StepIndex && x.IsDeleted == false
+            );
+            
+            int? indexToAdd = null;
+            
+            if (existIndex != null)
+            {
+                var procedures = isExisted.Procedures?.Where(x => x.StepIndex >= request.StepIndex).ToList();
+                if (procedures != null)
+                {
+                    foreach (var item in procedures)
+                    {
+                        item.StepIndex += 1;
+                    }
+                    procedureServiceRepository.UpdateRange(procedures);
+                }
+                indexToAdd = request.StepIndex;
+            }
+            else
+            {
+                indexToAdd = isExisted.Procedures?.Max(x => x.StepIndex) + 1 ?? 0;
+            }
+            
+            procedure = new Procedure
+            {
+                Id = Guid.NewGuid(),
+                Name = request.Name,
+                Description = request.Description,
+                StepIndex = (int)indexToAdd,
+                ServiceId = request.ClinicServiceId
+            };
+        }
 
         procedureServiceRepository.Add(procedure);
 

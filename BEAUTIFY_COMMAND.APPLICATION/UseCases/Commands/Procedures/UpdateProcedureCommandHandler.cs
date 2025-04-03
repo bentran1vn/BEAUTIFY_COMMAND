@@ -20,25 +20,45 @@ public class UpdateProcedureCommandHandler(
         
         if(isExisted == null || isExisted.IsDeleted) return Result.Failure(new Error("404", "Procedure not found !"));
         
-        if (procedures.Any(p => p.StepIndex == request.StepIndex && p.IsDeleted == false && p.Id != request.ProcedureId))
-            return Result.Failure(new Error("400", "Step Index Exist !"));
-        
-        if(request.ProcedurePriceTypes.Where(x => x.IsDefault).Count() > 1)
+        if(request.ProcedurePriceTypes.Count(x => x.IsDefault) > 1)
             return Result.Failure(new Error("400", "Only one price type can be default !"));
         
         isExisted.Name = request.Name;
         isExisted.Description = request.Description;
-        isExisted.StepIndex = request.StepIndex;
+        
+        if(isExisted.StepIndex != request.StepIndex)
+        {
+            List<Procedure> proceduresToUpdate = new List<Procedure>();
+            
+            if(isExisted.StepIndex > request.StepIndex)
+            {
+                proceduresToUpdate = procedures.Where(x => x.StepIndex < request.StepIndex).ToList();
+                foreach (var item in proceduresToUpdate)
+                {
+                    item.StepIndex -= 1;
+                }
+            }
+            
+            if(isExisted.StepIndex < request.StepIndex)
+            {
+                proceduresToUpdate = procedures.Where(x => x.StepIndex > request.StepIndex).ToList();
+                foreach (var item in proceduresToUpdate)
+                {
+                    item.StepIndex += 1;
+                }
+            }
+
+            if(proceduresToUpdate.Any()) 
+                procedureServiceRepository.UpdateRange(proceduresToUpdate);
+            
+            isExisted.StepIndex = request.StepIndex;
+        }else
+        {
+            var nextStepIndex = procedures?.Max(x => x.StepIndex) + 1 ?? 0;
+            isExisted.StepIndex = nextStepIndex;
+        }
+        
         isExisted.ServiceId = request.ServiceId;
-        // isExisted.ProcedurePriceTypes = request.ProcedurePriceTypes.Select(x => new ProcedurePriceType
-        // {
-        //     Id = Guid.NewGuid(),
-        //     Name = x.Name,
-        //     Price = x.Price,
-        //     Duration = x.Duration,
-        //     IsDefault = x.IsDefault,
-        //     ProcedureId = isExisted.Id
-        // }).ToList();
         
         procedureServiceRepository.Update(isExisted);
 
