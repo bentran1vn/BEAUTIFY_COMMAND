@@ -13,9 +13,7 @@ public class UpdateClinicServiceCommandValidators : AbstractValidator<Commands.U
 
         RuleFor(x => x.Description)
             .NotEmpty()
-            .MinimumLength(5).WithMessage("Category Description must be at least 5 characters long")
-            .MaximumLength(100).WithMessage("Category Description must exceed 100 characters");
-
+            .MinimumLength(5).WithMessage("Description must be at least 5 characters long");
         RuleFor(x => x.CategoryId)
             .NotEmpty();
     }
