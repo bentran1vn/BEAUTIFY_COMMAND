@@ -52,7 +52,7 @@ public class
                 .ToListAsync(cancellationToken))
             .ToHashSet();
 
-        if(clinics.Select(x => x.ParentId).ToHashSet().Any(x => !userClinicIds.Contains(x.Value)))
+        if(clinics.Where(x => x.ParentId != null).Select(x => x.ParentId).ToHashSet().Any(x => !userClinicIds.Contains(x.Value)))
             return Result.Failure(new Error("403", "You are not authorized to update this service"));
         
         // Update Service Properties
