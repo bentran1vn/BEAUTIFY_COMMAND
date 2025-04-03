@@ -1,10 +1,12 @@
 using Microsoft.EntityFrameworkCore;
+using MongoDB.Driver.Linq;
 
 namespace BEAUTIFY_COMMAND.APPLICATION.UseCases.Commands.Procedures;
 
 public class UpdateProcedureCommandHandler(
         IRepositoryBase<Service, Guid> clinicServiceRepository,
         IRepositoryBase<Procedure, Guid> procedureServiceRepository,
+        IRepositoryBase<ProcedurePriceType, Guid> procedurePriceTypeServiceRepository,
         IRepositoryBase<TriggerOutbox, Guid> triggerOutboxRepository
     ) : ICommandHandler<CONTRACT.Services.Procedures.Commands.UpdateProcedureCommand>
 {
@@ -12,7 +14,7 @@ public class UpdateProcedureCommandHandler(
     {
         var procedures = await procedureServiceRepository.FindAll(
             x => x.ServiceId.Equals(request.ServiceId) &&
-                 !x.IsDeleted).ToListAsync(cancellationToken);
+                 !x.IsDeleted).Include(x => x.ProcedurePriceTypes).ToListAsync(cancellationToken);
         
         var isExisted = procedures.FirstOrDefault(x => x.Id.Equals(request.ProcedureId));
         
@@ -21,11 +23,33 @@ public class UpdateProcedureCommandHandler(
         if (procedures.Any(p => p.StepIndex == request.StepIndex && p.IsDeleted == false && p.Id != request.ProcedureId))
             return Result.Failure(new Error("400", "Step Index Exist !"));
         
+        if(request.ProcedurePriceTypes.Where(x => x.IsDefault).Count() > 1)
+            return Result.Failure(new Error("400", "Only one price type can be default !"));
+        
         isExisted.Name = request.Name;
         isExisted.Description = request.Description;
         isExisted.StepIndex = request.StepIndex;
         isExisted.ServiceId = request.ServiceId;
-        isExisted.ProcedurePriceTypes = request.ProcedurePriceTypes.Select(x => new ProcedurePriceType
+        // isExisted.ProcedurePriceTypes = request.ProcedurePriceTypes.Select(x => new ProcedurePriceType
+        // {
+        //     Id = Guid.NewGuid(),
+        //     Name = x.Name,
+        //     Price = x.Price,
+        //     Duration = x.Duration,
+        //     IsDefault = x.IsDefault,
+        //     ProcedureId = isExisted.Id
+        // }).ToList();
+        
+        procedureServiceRepository.Update(isExisted);
+
+        foreach (var item in isExisted.ProcedurePriceTypes)
+        {
+            item.IsDeleted = true;
+        }
+        
+        procedurePriceTypeServiceRepository.UpdateRange(isExisted.ProcedurePriceTypes);
+        
+        var newProcedurePriceTypes = request.ProcedurePriceTypes.Select(x => new ProcedurePriceType
         {
             Id = Guid.NewGuid(),
             Name = x.Name,
@@ -33,9 +57,9 @@ public class UpdateProcedureCommandHandler(
             Duration = x.Duration,
             IsDefault = x.IsDefault,
             ProcedureId = isExisted.Id
-        }).ToList();
+        });
         
-        procedureServiceRepository.Update(isExisted);
+        procedurePriceTypeServiceRepository.AddRange(newProcedurePriceTypes);
         
         var service = await clinicServiceRepository.FindByIdAsync(request.ServiceId, cancellationToken,
             x => x.Promotions);
@@ -58,7 +82,7 @@ public class UpdateProcedureCommandHandler(
             isExisted.Id, (Guid)isExisted.ServiceId, isExisted.Name, isExisted.Description,
             highestPrice, lowestPrice, highestPrice - (decimal?)discountPercent * highestPrice,
             lowestPrice - (decimal?)discountPercent * lowestPrice, isExisted.StepIndex,
-            isExisted.ProcedurePriceTypes);
+            newProcedurePriceTypes.ToList());
         
         triggerOutboxRepository.Add(triggerOutbox);
         
