@@ -25,15 +25,26 @@ public class
 
         if (isExisted == null || isExisted.IsDeleted) return Result.Failure(new Error("404", "Procedure not found "));
         
-        _procedureRepository.Remove(isExisted);
-        
-        var service = await _serviceRepository.FindAll(x => x.Id.Equals(isExisted.ServiceId) && x.IsDeleted == false)
+        var service = await _serviceRepository.FindAll(
+                x => x.Id.Equals(isExisted.ServiceId!) && x.IsDeleted == false)
             .Include(x => x.Promotions)
             .Include(x => x.Procedures)
             .ThenInclude(x => x.ProcedurePriceTypes)
             .FirstOrDefaultAsync(cancellationToken);
         
         if(service == null) return Result.Failure(new Error("404", "Service not found"));
+        
+        var procedureUpdates = service.Procedures
+            .Where(x => x.StepIndex > isExisted.StepIndex && x.IsDeleted == false)
+            .ToList();
+        
+        foreach (var item in procedureUpdates)
+        {
+            item.StepIndex -= 1;
+        }
+        
+        _procedureRepository.UpdateRange(procedureUpdates);
+        _procedureRepository.Remove(isExisted);
         
         var procedureTotal = service.Procedures?.Where(x => x.Id != request.Id).ToList();
         var promotionTotal = service.Promotions?.ToList();
@@ -48,7 +59,9 @@ public class
                 ? procedure.ProcedurePriceTypes.Max(pt => pt.Price)
                 : 0) ?? 0;
 
-        var discountPercent = promotionTotal?.FirstOrDefault(x => x.IsActivated)?.DiscountPercent ?? 0.0;
+        var discountPercent = promotionTotal.FirstOrDefault(x =>
+            x.IsActivated && x.ServiceId.Equals(service.Id) &&
+            !x.IsDeleted  && x.LivestreamRoom == null)?.DiscountPercent;
         
         var trigger = TriggerOutbox.RaiseDeleteServiceProcedureEvent(
             (Guid)isExisted.ServiceId!, isExisted.Id,

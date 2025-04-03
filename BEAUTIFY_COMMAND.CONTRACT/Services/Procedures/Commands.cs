@@ -7,7 +7,7 @@ public class Commands
         Guid ClinicServiceId,
         string Name,
         string Description,
-        int StepIndex,
+        int? StepIndex,
         IEnumerable<ProcedurePriceType> ProcedurePriceTypes) : ICommand;
     
     public record UpdateProcedureCommand(
@@ -17,13 +17,6 @@ public class Commands
         string Description,
         int StepIndex,
         IEnumerable<ProcedurePriceType> ProcedurePriceTypes) : ICommand;
-
-    public record CreateProcedureBody(
-        Guid ClinicServiceId,
-        string Name,
-        string Description,
-        int StepIndex,
-        string? ProcedurePriceTypes = null);
 
     public record ProcedurePriceType(
         string Name, int Duration, decimal Price,bool IsDefault);

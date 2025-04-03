@@ -5,7 +5,7 @@ public class CreateProcedureCommandValidators : AbstractValidator<Commands.Creat
     {
         RuleFor(x => x.ClinicServiceId).NotEmpty();
 
-        RuleFor(x => x.StepIndex).NotEmpty();
+        // RuleFor(x => x.StepIndex).NotEmpty();
 
         RuleFor(x => x.Name)
             .NotEmpty()
