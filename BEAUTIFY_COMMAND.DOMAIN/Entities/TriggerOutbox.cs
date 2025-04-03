@@ -79,15 +79,15 @@ public class TriggerOutbox : AggregateRoot<Guid>, IAuditableEntity
     }
 
     public static TriggerOutbox RaiseCreatePromotionEvent(
-        Guid PromotionId,
-        Guid ServiceId,
-        string Name,
-        double DiscountPercent,
-        string ImageUrl,
-        decimal DiscountMaxPrice,
-        decimal DiscountMinPrice,
-        DateTime StartDay,
-        DateTime EndDate)
+        Guid promotionId,
+        Guid serviceId,
+        string name,
+        double discountPercent,
+        string imageUrl,
+        decimal discountMaxPrice,
+        decimal discountMinPrice,
+        DateTime startDay,
+        DateTime endDate)
     {
         var triggerOutbox = new TriggerOutbox
         {
@@ -97,8 +97,8 @@ public class TriggerOutbox : AggregateRoot<Guid>, IAuditableEntity
         triggerOutbox.RaiseDomainEvent(new ServicePromotionDomainEvent.ServicePromotionCreated(
             Guid.NewGuid(),
             new PromotionEvent.CreateServicePromotion(
-                PromotionId, ServiceId, Name, DiscountPercent, ImageUrl, DiscountMaxPrice,
-                DiscountMinPrice, StartDay, EndDate
+                promotionId, serviceId, name, discountPercent, imageUrl, discountMaxPrice,
+                discountMinPrice, startDay, endDate
             )));
 
         return triggerOutbox;
@@ -106,10 +106,10 @@ public class TriggerOutbox : AggregateRoot<Guid>, IAuditableEntity
     
     
     public static TriggerOutbox RaiseCreateClinicServiceEvent(
-        Guid Id, string Name, string Description,
-        ServiceMedia[] CoverImage, ServiceMedia[] DescriptionImage,
-        Guid CateId, string CateName,
-        string CateDescription, List<Clinic> clinics
+        Guid id, string name, string description,
+        ServiceMedia[] coverImage,
+        Guid cateId, string cateName,
+        string cateDescription, List<Clinic> clinics
     )
     {
         var triggerOutbox = new TriggerOutbox
@@ -120,12 +120,12 @@ public class TriggerOutbox : AggregateRoot<Guid>, IAuditableEntity
         triggerOutbox.RaiseDomainEvent(new ClinicServicesDomainEvent.ClinicServiceCreated(
             Guid.NewGuid(),
             new ClinicServiceEvent.CreateClinicService(
-                Id, Name, Description,
-                CoverImage.Select(x => new ClinicServiceEvent.Image(
+                id, name, description,
+                coverImage.Select(x => new ClinicServiceEvent.Image(
                     x.Id, x.IndexNumber, x.ImageUrl
                 )).ToArray(),
                 
-                new ClinicServiceEvent.Category(CateId, CateName, CateDescription),
+                new ClinicServiceEvent.Category(cateId, cateName, cateDescription),
                 clinics.Select(x => new ClinicServiceEvent.Clinic(x.Id, x.Name, x.Email,
                     x.City, x.Address, x.FullAddress, x.District, x.Ward, x.PhoneNumber, x.ProfilePictureUrl,
                     x.IsParent, x.ParentId)).ToList()
@@ -135,10 +135,10 @@ public class TriggerOutbox : AggregateRoot<Guid>, IAuditableEntity
     }
 
     public static TriggerOutbox RaiseUpdateClinicServiceEvent(
-        Guid Id, string Name, string Description,
-        ServiceMedia[] ChangeCoverImage, ServiceMedia[] ChangeDescriptionImage,
-        Guid CateId, string CateName,
-        string CateDescription, List<Clinic> clinics
+        Guid id, string name, string description,
+        ServiceMedia[] changeCoverImage, ServiceMedia[] changeDescriptionImage,
+        Guid cateId, string cateName,
+        string cateDescription, List<Clinic> clinics
     )
     {
         var triggerOutbox = new TriggerOutbox
@@ -149,14 +149,32 @@ public class TriggerOutbox : AggregateRoot<Guid>, IAuditableEntity
         triggerOutbox.RaiseDomainEvent(new ClinicServicesDomainEvent.ClinicServiceUpdated(
             Guid.NewGuid(),
             new ClinicServiceEvent.UpdateClinicService(
-                Id, Name, Description,
-                ChangeCoverImage.Select(x => new ClinicServiceEvent.Image(
+                id, name, description,
+                changeCoverImage.Select(x => new ClinicServiceEvent.Image(
                     x.Id, x.IndexNumber, x.ImageUrl
                 )).ToArray(),
-                new ClinicServiceEvent.Category(CateId, CateName, CateDescription),
+                new ClinicServiceEvent.Category(cateId, cateName, cateDescription),
                 clinics.Select(x => new ClinicServiceEvent.Clinic(x.Id, x.Name, x.Email,
                     x.City, x.Address, x.FullAddress, x.District, x.Ward, x.PhoneNumber, x.ProfilePictureUrl,
                     x.IsParent, x.ParentId)).ToList()
+            )));
+
+        return triggerOutbox;
+    }
+    
+    public static TriggerOutbox RaiseDeleteClinicServiceEvent(
+        Guid id
+    )
+    {
+        var triggerOutbox = new TriggerOutbox
+        {
+            Id = Guid.NewGuid()
+        };
+
+        triggerOutbox.RaiseDomainEvent(new ClinicServicesDomainEvent.ClinicServiceDeleted(
+            Guid.NewGuid(),
+            new ClinicServiceEvent.DeleteClinicService(
+                id
             )));
 
         return triggerOutbox;
