@@ -52,8 +52,8 @@ public class
                 .ToListAsync(cancellationToken))
             .ToHashSet();
 
-        if (!clinicIds.IsSubsetOf(userClinicIds))
-            return Result.Failure(new Error("403", "User is not an admin of one or more clinics"));
+        if(clinics.Select(x => x.ParentId).ToHashSet().Any(x => !userClinicIds.Contains(x.Value)))
+            return Result.Failure(new Error("403", "You are not authorized to update this service"));
         
         // Update Service Properties
         service.Name = request.Name;
@@ -82,6 +82,7 @@ public class
         
         List<ServiceMedia> serviceMediaList = new List<ServiceMedia>();
         List<ServiceMedia> serviceMediaListUpdate = new List<ServiceMedia>();
+        List<ServiceMedia> serviceMediaListAdd = new List<ServiceMedia>();
         
         if (request.IndexCoverImagesChange?.Count > 0)
         {
@@ -137,7 +138,6 @@ public class
                         ServiceMediaType = 0,
                         ServiceId = service.Id
                     }).ToList();
-                    
                 }
                 else
                 {
@@ -154,12 +154,13 @@ public class
                     }).ToList();
                 }
                 serviceMediaList.AddRange(newCoverMedias);
-                serviceMediaListUpdate.AddRange(newCoverMedias);
+                serviceMediaListAdd.AddRange(newCoverMedias);
             }
         }
         
         // Update Service Media
-        if (serviceMediaListUpdate.Any()) _serviceMediaRepository.AddRange(serviceMediaListUpdate);
+        if (serviceMediaListUpdate.Any()) _serviceMediaRepository.UpdateRange(serviceMediaListUpdate);
+        if (serviceMediaListAdd.Any()) _serviceMediaRepository.AddRange(serviceMediaListAdd);
 
         // Update Service
         serviceRepository.Update(service);
