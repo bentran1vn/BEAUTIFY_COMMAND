@@ -1,8 +1,4 @@
-﻿using BEAUTIFY_COMMAND.DOMAIN.Exceptions;
-using BEAUTIFY_PACKAGES.BEAUTIFY_PACKAGES.DOMAIN.Constrants;
-using Microsoft.EntityFrameworkCore;
-
-namespace BEAUTIFY_COMMAND.APPLICATION.UseCases.Commands.Clinics;
+﻿namespace BEAUTIFY_COMMAND.APPLICATION.UseCases.Commands.Clinics;
 
 internal sealed class ChangeClinicActivateStatusCommandHandler(
     IRepositoryBase<Clinic, Guid> clinicRepositoryBase,

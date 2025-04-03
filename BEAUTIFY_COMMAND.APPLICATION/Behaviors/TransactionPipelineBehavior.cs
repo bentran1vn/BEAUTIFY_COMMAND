@@ -1,6 +1,5 @@
 using BEAUTIFY_COMMAND.PERSISTENCE;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
 
 namespace BEAUTIFY_COMMAND.APPLICATION.Behaviors;
 public sealed class TransactionPipelineBehavior<TRequest, TResponse>

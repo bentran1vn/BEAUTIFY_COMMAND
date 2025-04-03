@@ -1,7 +1,4 @@
-﻿using BEAUTIFY_COMMAND.DOMAIN.Exceptions;
-using BEAUTIFY_PACKAGES.BEAUTIFY_PACKAGES.DOMAIN.Constrants;
-
-namespace BEAUTIFY_COMMAND.APPLICATION.UseCases.Commands.Clinics;
+﻿namespace BEAUTIFY_COMMAND.APPLICATION.UseCases.Commands.Clinics;
 internal sealed class ClinicDeleteAccountOfEmployeeCommandHandler(
     IRepositoryBase<Staff, Guid> staffRepository,
     IRepositoryBase<Clinic, Guid> clinicRepository,

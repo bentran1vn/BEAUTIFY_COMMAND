@@ -1,7 +1,4 @@
-﻿using BEAUTIFY_PACKAGES.BEAUTIFY_PACKAGES.APPLICATION.Abstractions;
-using BEAUTIFY_PACKAGES.BEAUTIFY_PACKAGES.DOMAIN.Constrants;
-
-namespace BEAUTIFY_COMMAND.APPLICATION.UseCases.Commands.Clinics;
+﻿namespace BEAUTIFY_COMMAND.APPLICATION.UseCases.Commands.Clinics;
 internal sealed class ClinicCreateAccountForEmployeeCommandHandler(
     IRepositoryBase<Staff, Guid> staffRepository,
     IRepositoryBase<User, Guid> userRepository,

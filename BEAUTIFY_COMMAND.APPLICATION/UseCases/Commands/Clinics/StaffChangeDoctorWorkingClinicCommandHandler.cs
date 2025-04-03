@@ -1,6 +1,4 @@
-﻿using BEAUTIFY_COMMAND.DOMAIN.Exceptions;
-
-namespace BEAUTIFY_COMMAND.APPLICATION.UseCases.Commands.Clinics;
+﻿namespace BEAUTIFY_COMMAND.APPLICATION.UseCases.Commands.Clinics;
 internal sealed class StaffChangeDoctorWorkingClinicCommandHandler(
     IRepositoryBase<Staff, Guid> staffRepository,
     IRepositoryBase<Clinic, Guid> clinicRepository,

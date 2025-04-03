@@ -1,6 +1,3 @@
-using BEAUTIFY_PACKAGES.BEAUTIFY_PACKAGES.APPLICATION.Abstractions;
-using Microsoft.EntityFrameworkCore;
-
 namespace BEAUTIFY_COMMAND.APPLICATION.UseCases.Commands.ClinicServices;
 public class
     UpdateClinicServiceCommandHandler(

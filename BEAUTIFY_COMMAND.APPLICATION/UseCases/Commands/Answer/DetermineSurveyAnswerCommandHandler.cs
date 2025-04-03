@@ -1,6 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-
-namespace BEAUTIFY_COMMAND.APPLICATION.UseCases.Commands.Answer;
+﻿namespace BEAUTIFY_COMMAND.APPLICATION.UseCases.Commands.Answer;
 internal sealed class DetermineSurveyAnswerCommandHandler(
     IRepositoryBase<ClassificationRule, Guid> classificationRuleRepositoryBase,
     IRepositoryBase<SurveyQuestion, Guid> surveyQuestionRepositoryBase,

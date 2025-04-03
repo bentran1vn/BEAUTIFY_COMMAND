@@ -1,8 +1,4 @@
-﻿using BEAUTIFY_COMMAND.DOMAIN.Exceptions;
-using BEAUTIFY_PACKAGES.BEAUTIFY_PACKAGES.DOMAIN.Constrants;
-using Microsoft.EntityFrameworkCore;
-
-namespace BEAUTIFY_COMMAND.APPLICATION.UseCases.Commands.Orders;
+﻿namespace BEAUTIFY_COMMAND.APPLICATION.UseCases.Commands.Orders;
 internal sealed class
     CustomerOrderServiceCommandHandler(
         IRepositoryBase<Service, Guid> serviceRepositoryBase,

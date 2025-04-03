@@ -27,4 +27,6 @@ public static class Command
         Guid CustomerScheduleId,
         string DoctorNote
     ) : ICommand;
+
+    public record CustomerRequestScheduleCommand(Guid CustomerScheduleId, DateOnly Date, TimeSpan StartTime) : ICommand;
 }

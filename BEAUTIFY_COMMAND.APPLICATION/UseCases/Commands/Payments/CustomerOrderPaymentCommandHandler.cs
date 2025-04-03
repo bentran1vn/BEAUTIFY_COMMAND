@@ -1,6 +1,4 @@
-﻿using BEAUTIFY_PACKAGES.BEAUTIFY_PACKAGES.DOMAIN.Constrants;
-
-namespace BEAUTIFY_COMMAND.APPLICATION.UseCases.Commands.Payments;
+﻿namespace BEAUTIFY_COMMAND.APPLICATION.UseCases.Commands.Payments;
 internal sealed class CustomerOrderPaymentCommandHandler(
     IRepositoryBase<Order, Guid> orderRepositoryBase,
     IRepositoryBase<SystemTransaction, Guid> systemTransactionRepositoryBase)

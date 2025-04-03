@@ -230,6 +230,21 @@ public class ProcessOutboxMessagesJob(ApplicationDbContext dbContext, IPublishEn
                                     });
                         await publishEndpoint.Publish(customerScheduleUpdatedDoctorNote, context.CancellationToken);
                         break;
+
+                    case nameof(BEAUTIFY_PACKAGES.BEAUTIFY_PACKAGES.CONTRACT.Services.CustomerSchedules.DomainEvents
+                        .CustomerScheduleUpdateDateAndTime):
+                        var customerScheduleUpdateDateAndTime =
+                            JsonConvert
+                                .DeserializeObject<BEAUTIFY_PACKAGES.BEAUTIFY_PACKAGES.CONTRACT.Services.
+                                    CustomerSchedules.DomainEvents.CustomerScheduleUpdateDateAndTime>(
+                                    outboxMessage.Content,
+                                    new JsonSerializerSettings
+                                    {
+                                        TypeNameHandling = TypeNameHandling.All
+                                    });
+
+                        await publishEndpoint.Publish(customerScheduleUpdateDateAndTime, context.CancellationToken);
+                        break;
                 }
 
                 outboxMessage.ProcessedOnUtc = DateTime.UtcNow;

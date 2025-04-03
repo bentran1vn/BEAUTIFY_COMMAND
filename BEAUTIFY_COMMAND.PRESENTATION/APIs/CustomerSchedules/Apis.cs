@@ -12,8 +12,10 @@ public class Apis : ApiEndpoint, ICarterModule
         gr1.MapPatch("{scheduleId:guid}/{status}", UpdateCustomerScheduleAfterPaymentCompleted);
         gr1.MapPatch("staff/{scheduleId:guid}/{status}",
             StaffUpdateCustomerScheduleStatusAfterCheckIn).RequireAuthorization();
-        gr1.MapPost("generate/{customerScheduleId:guid}", GenerateCustomerScheduleAfterPayment);
+        gr1.MapPost("generate/{customerScheduleId:guid}", GenerateCustomerScheduleAfterPayment)
+            .RequireAuthorization(Constant.Role.CLINIC_STAFF);
         gr1.MapPatch("doctor/{customerScheduleId:guid}/", DoctorUpdateCustomerScheduleNote);
+        gr1.MapPut("customer/{customerScheduleId:guid}/", CustomerRequestSchedule);
     }
 
     private static async Task<IResult> UpdateCustomerScheduleAfterPaymentCompleted(ISender sender,
@@ -44,6 +46,13 @@ public class Apis : ApiEndpoint, ICarterModule
     {
         var result = await sender.Send(
             new Command.DoctorUpdateCustomerScheduleNoteCommand(customerScheduleId, doctorNote));
+        return result.IsFailure ? HandlerFailure(result) : Results.Ok(result);
+    }
+
+    private static async Task<IResult> CustomerRequestSchedule(ISender sender,
+        Guid customerScheduleId, Command.CustomerRequestScheduleCommand command)
+    {
+        var result = await sender.Send(command with { CustomerScheduleId = customerScheduleId });
         return result.IsFailure ? HandlerFailure(result) : Results.Ok(result);
     }
 }

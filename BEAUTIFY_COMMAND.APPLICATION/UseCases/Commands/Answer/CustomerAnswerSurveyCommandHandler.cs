@@ -1,6 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-
-namespace BEAUTIFY_COMMAND.APPLICATION.UseCases.Commands.Answer;
+﻿namespace BEAUTIFY_COMMAND.APPLICATION.UseCases.Commands.Answer;
 internal sealed class
     CustomerAnswerSurveyCommandHandler(
         IRepositoryBase<Survey, Guid> surveyRepositoryBase,

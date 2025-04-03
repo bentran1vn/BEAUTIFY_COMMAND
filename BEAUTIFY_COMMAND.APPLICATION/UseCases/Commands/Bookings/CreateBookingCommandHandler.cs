@@ -1,7 +1,4 @@
 ﻿using System.Globalization;
-using BEAUTIFY_PACKAGES.BEAUTIFY_PACKAGES.APPLICATION.Abstractions;
-using BEAUTIFY_PACKAGES.BEAUTIFY_PACKAGES.DOMAIN.Constrants;
-using Microsoft.EntityFrameworkCore;
 
 namespace BEAUTIFY_COMMAND.APPLICATION.UseCases.Commands.Bookings;
 internal sealed class
@@ -137,7 +134,8 @@ internal sealed class
             ProcedurePriceTypeId = x.Id,
             Price = x.Price
         }).ToList();
-        var durationOfProcedures = list.Sum(x => x.Duration) / 60.0 + 0.5;
+        var durationOfProcedures =
+            list.Where(x => x.StepIndex == 1).Select(x => x.Duration).FirstOrDefault() / 60.0 + 0.5;
         var initialProcedure = list.Where(x => x.StepIndex == 1).Select(x => x.Id).FirstOrDefault();
         var procedure = await procedurePriceTypeRepositoryBase.FindByIdAsync(initialProcedure, cancellationToken);
 

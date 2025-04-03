@@ -1,7 +1,4 @@
-﻿using BEAUTIFY_COMMAND.DOMAIN.Exceptions;
-using BEAUTIFY_PACKAGES.BEAUTIFY_PACKAGES.APPLICATION.Abstractions;
-
-namespace BEAUTIFY_COMMAND.APPLICATION.UseCases.Commands.Clinics;
+﻿namespace BEAUTIFY_COMMAND.APPLICATION.UseCases.Commands.Clinics;
 internal sealed class
     ClinicUpdateBranchCommandHandler(IRepositoryBase<Clinic, Guid> clinicRepository, IMediaService mediaService)
     : ICommandHandler<CONTRACT.Services.Clinics.Commands.ClinicUpdateBranchCommand>
