@@ -52,7 +52,7 @@ public class CustomerSchedule : AggregateRoot<Guid>, IAuditableEntity
                 Name = customerSchedule.ProcedurePriceType.Name,
                 Id = customerSchedule.ProcedurePriceTypeId.Value,
                 StepIndex = customerSchedule.ProcedurePriceType.Procedure.StepIndex.ToString(),
-                DateCompleted = (DateOnly)customerSchedule.Date,
+                DateCompleted = customerSchedule.Date,
                 Duration = 0,
             },
             Status = customerSchedule.Status,
@@ -76,5 +76,12 @@ public class CustomerSchedule : AggregateRoot<Guid>, IAuditableEntity
         // Raise the domain event
         RaiseDomainEvent(
             new DomainEvents.CustomerScheduleUpdatedDoctorNote(Guid.NewGuid(), customerScheduleId, note));
+    }
+
+    public void CustomerScheduleUpdateDateAndTime(CustomerSchedule customerSchedule)
+    {
+        RaiseDomainEvent(new DomainEvents.CustomerScheduleUpdateDateAndTime(Guid.NewGuid(),
+            customerSchedule.Id, customerSchedule.StartTime.Value, customerSchedule.EndTime.Value,
+            customerSchedule.Date.Value));
     }
 }

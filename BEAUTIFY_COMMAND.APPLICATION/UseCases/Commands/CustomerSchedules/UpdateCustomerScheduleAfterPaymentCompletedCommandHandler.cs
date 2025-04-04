@@ -1,5 +1,4 @@
 ﻿using BEAUTIFY_COMMAND.CONTRACT.Services.CustomerSchedule;
-using BEAUTIFY_PACKAGES.BEAUTIFY_PACKAGES.DOMAIN.Constrants;
 
 namespace BEAUTIFY_COMMAND.APPLICATION.UseCases.Commands.CustomerSchedules;
 internal sealed class UpdateCustomerScheduleAfterPaymentCompletedCommandHandler(

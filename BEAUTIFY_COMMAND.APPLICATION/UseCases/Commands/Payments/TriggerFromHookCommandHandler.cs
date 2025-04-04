@@ -1,5 +1,4 @@
 using BEAUTIFY_COMMAND.APPLICATION.Hub;
-using BEAUTIFY_PACKAGES.BEAUTIFY_PACKAGES.DOMAIN.Constrants;
 using Microsoft.AspNetCore.SignalR;
 
 namespace BEAUTIFY_COMMAND.APPLICATION.UseCases.Commands.Payments;

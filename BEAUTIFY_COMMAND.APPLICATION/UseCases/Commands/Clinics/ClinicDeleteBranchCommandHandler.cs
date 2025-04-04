@@ -1,6 +1,4 @@
-﻿using BEAUTIFY_COMMAND.DOMAIN.Exceptions;
-
-namespace BEAUTIFY_COMMAND.APPLICATION.UseCases.Commands.Clinics;
+﻿namespace BEAUTIFY_COMMAND.APPLICATION.UseCases.Commands.Clinics;
 public class ClinicDeleteBranchCommandHandler(IRepositoryBase<Clinic, Guid> clinicRepository)
     : ICommandHandler<CONTRACT.Services.Clinics.Commands.ClinicDeleteBranchCommand>
 {

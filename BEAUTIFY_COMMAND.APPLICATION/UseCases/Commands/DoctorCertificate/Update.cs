@@ -1,6 +1,4 @@
-﻿using BEAUTIFY_PACKAGES.BEAUTIFY_PACKAGES.APPLICATION.Abstractions;
-
-namespace BEAUTIFY_COMMAND.APPLICATION.UseCases.Commands.DoctorCertificate;
+﻿namespace BEAUTIFY_COMMAND.APPLICATION.UseCases.Commands.DoctorCertificate;
 internal sealed class Update(
     IRepositoryBase<DOMAIN.Entities.DoctorCertificate, Guid> _repositoryBase,
     IMediaService mediaService)

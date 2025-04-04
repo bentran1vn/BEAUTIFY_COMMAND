@@ -1,6 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-
-namespace BEAUTIFY_COMMAND.APPLICATION.UseCases.Commands.WorkingSchedules;
+﻿namespace BEAUTIFY_COMMAND.APPLICATION.UseCases.Commands.WorkingSchedules;
 public class UpdateWorkingScheduleCommandHandler(
     IRepositoryBase<WorkingSchedule, Guid> workingScheduleRepository,
     IRepositoryBase<User, Guid> userRepository)

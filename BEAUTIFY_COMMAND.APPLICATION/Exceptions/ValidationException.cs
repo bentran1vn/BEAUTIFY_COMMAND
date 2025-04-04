@@ -1,5 +1,3 @@
-using BEAUTIFY_COMMAND.DOMAIN.Exceptions;
-
 namespace BEAUTIFY_COMMAND.APPLICATION.Exceptions;
 public sealed class ValidationException : DomainException
 {

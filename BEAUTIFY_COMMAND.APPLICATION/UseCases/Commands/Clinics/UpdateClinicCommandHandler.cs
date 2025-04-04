@@ -1,5 +1,3 @@
-using BEAUTIFY_PACKAGES.BEAUTIFY_PACKAGES.APPLICATION.Abstractions;
-
 namespace BEAUTIFY_COMMAND.APPLICATION.UseCases.Commands.Clinics;
 public class UpdateClinicCommandHandler(
     IRepositoryBase<Clinic, Guid> clinicRepository,

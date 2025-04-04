@@ -1,5 +1,3 @@
-using BEAUTIFY_PACKAGES.BEAUTIFY_PACKAGES.DOMAIN.Constrants;
-
 namespace BEAUTIFY_COMMAND.APPLICATION.UseCases.Commands.Surveys;
 internal sealed class CreateSurveyCommandHandler(
     IRepositoryBase<Survey, Guid> surveyRepositoryBase,

@@ -1,7 +1,4 @@
-﻿using BEAUTIFY_PACKAGES.BEAUTIFY_PACKAGES.APPLICATION.Abstractions;
-using BEAUTIFY_PACKAGES.BEAUTIFY_PACKAGES.DOMAIN.Constrants;
-
-namespace BEAUTIFY_COMMAND.APPLICATION.UseCases.Commands.DoctorCertificate;
+﻿namespace BEAUTIFY_COMMAND.APPLICATION.UseCases.Commands.DoctorCertificate;
 public class CreateDoctorCertificateCommandHandler(
     IRepositoryBase<DOMAIN.Entities.DoctorCertificate, Guid> doctorCertificateRepository,
     IMediaService mediaService,

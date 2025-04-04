@@ -1,4 +1,3 @@
-using Microsoft.EntityFrameworkCore;
 using MongoDB.Driver.Linq;
 
 namespace BEAUTIFY_COMMAND.APPLICATION.UseCases.Commands.Procedures;
