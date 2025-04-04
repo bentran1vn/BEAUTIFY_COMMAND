@@ -25,25 +25,38 @@ public class UpdateProcedureCommandHandler(
         isExisted.Name = request.Name;
         isExisted.Description = request.Description;
         
+        if (procedures.Max(x => x.StepIndex) < request.StepIndex ||
+            request.StepIndex < procedures.Min(x => x.StepIndex))
+        {
+            return Result.Failure(new Error("400", "Step index is out of range !"));
+        }
+        
         if(isExisted.StepIndex != request.StepIndex)
         {
             List<Procedure> proceduresToUpdate = new List<Procedure>();
             
+            // Jump back
             if(isExisted.StepIndex > request.StepIndex)
             {
-                proceduresToUpdate = procedures.Where(x => x.StepIndex < request.StepIndex).ToList();
-                foreach (var item in proceduresToUpdate)
-                {
-                    item.StepIndex -= 1;
-                }
-            }
-            
-            if(isExisted.StepIndex < request.StepIndex)
-            {
-                proceduresToUpdate = procedures.Where(x => x.StepIndex > request.StepIndex).ToList();
+                proceduresToUpdate = procedures
+                    .Where(x => x.StepIndex >= request.StepIndex &&
+                        x.StepIndex < isExisted.StepIndex).ToList();
+                
                 foreach (var item in proceduresToUpdate)
                 {
                     item.StepIndex += 1;
+                }
+            }
+            
+            // Jump next
+            if(isExisted.StepIndex < request.StepIndex)
+            {
+                proceduresToUpdate = procedures
+                    .Where(x => x.StepIndex <= request.StepIndex &&
+                                x.StepIndex > isExisted.StepIndex).ToList();
+                foreach (var item in proceduresToUpdate)
+                {
+                    item.StepIndex -= 1;
                 }
             }
 
@@ -51,15 +64,9 @@ public class UpdateProcedureCommandHandler(
                 procedureServiceRepository.UpdateRange(proceduresToUpdate);
             
             isExisted.StepIndex = request.StepIndex;
-        }else
-        {
-            var nextStepIndex = procedures.Any() ? procedures.Max(x => x.StepIndex) + 1 : 1;
-            isExisted.StepIndex = nextStepIndex;
         }
         
-        isExisted.ServiceId = request.ServiceId;
-        
-        procedureServiceRepository.Update(isExisted);
+        // procedureServiceRepository.Update(isExisted);
 
         foreach (var item in isExisted.ProcedurePriceTypes)
         {

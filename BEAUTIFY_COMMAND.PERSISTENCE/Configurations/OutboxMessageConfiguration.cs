@@ -3174,19 +3174,7 @@ internal sealed class OutboxMessageConfiguration : IEntityTypeConfiguration<Outb
                     RoleId = new Guid("b549752a-f156-4894-90ad-ab3994fd071d")
                 }
             };
-
-        var createProcedureEvents = procedures.Select(pro => new ProceduresDomainEvent.ProcedureCreated(
-            Guid.NewGuid(),
-            new ProcedureEvent.CreateProcedure(
-                pro.Id, (Guid)pro.ServiceId!, pro.Name, pro.Description, 0, 0, 0,
-                0, pro.StepIndex, procedurePriceTypes.Where(prt => prt.ProcedureId.Equals(pro.Id)).Select(
-                    x => new ProcedureEvent.ProcedurePriceType(
-                        x.Id, x.Name, x.Price, x.Duration, x.IsDefault
-                    )).ToList()
-            ))).ToList();
         
-        
-
         var createServiceEvents = services.Select(se => new ClinicServicesDomainEvent.ClinicServiceCreated(
             Guid.NewGuid(),
             new ClinicServiceEvent.CreateClinicService(
@@ -3207,6 +3195,17 @@ internal sealed class OutboxMessageConfiguration : IEntityTypeConfiguration<Outb
                             x.IsParent, x.ParentId);
                     }).ToList()
             ))).ToList();
+        
+        var createProcedureEvents = procedures.Select(pro => new ProceduresDomainEvent.ProcedureCreated(
+            Guid.NewGuid(),
+            new ProcedureEvent.CreateProcedure(
+                pro.Id, (Guid)pro.ServiceId!, pro.Name, pro.Description, 0, 0, 0,
+                0, pro.StepIndex, procedurePriceTypes.Where(prt => prt.ProcedureId.Equals(pro.Id)).Select(
+                    x => new ProcedureEvent.ProcedurePriceType(
+                        x.Id, x.Name, x.Price, x.Duration, x.IsDefault
+                    )).ToList()
+            ))).ToList();
+        
         
         var doctorServiceEventEntity = doctorServices
             .Select(x =>
@@ -3273,7 +3272,9 @@ internal sealed class OutboxMessageConfiguration : IEntityTypeConfiguration<Outb
         var outBoxList = new List<OutboxMessage>();
         
         outBoxList.AddRange(outBoxCreateServices);
+        
         outBoxList.AddRange(outBoxCreateProcedures);
+        
         outBoxList.Add(outBoxCreateDoctorServices);
 
         builder.HasData(outBoxList);
