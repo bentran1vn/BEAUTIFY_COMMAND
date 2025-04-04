@@ -232,11 +232,11 @@ public class ProcessOutboxMessagesJob(ApplicationDbContext dbContext, IPublishEn
                         break;
 
                     case nameof(BEAUTIFY_PACKAGES.BEAUTIFY_PACKAGES.CONTRACT.Services.CustomerSchedules.DomainEvents
-                        .CustomerScheduleUpdateDateAndTime):
+                        .CustomerScheduleUpdateDateAndTimeAndStatus):
                         var customerScheduleUpdateDateAndTime =
                             JsonConvert
                                 .DeserializeObject<BEAUTIFY_PACKAGES.BEAUTIFY_PACKAGES.CONTRACT.Services.
-                                    CustomerSchedules.DomainEvents.CustomerScheduleUpdateDateAndTime>(
+                                    CustomerSchedules.DomainEvents.CustomerScheduleUpdateDateAndTimeAndStatus>(
                                     outboxMessage.Content,
                                     new JsonSerializerSettings
                                     {

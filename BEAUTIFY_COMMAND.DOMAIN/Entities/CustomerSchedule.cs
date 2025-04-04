@@ -80,8 +80,8 @@ public class CustomerSchedule : AggregateRoot<Guid>, IAuditableEntity
 
     public void CustomerScheduleUpdateDateAndTime(CustomerSchedule customerSchedule)
     {
-        RaiseDomainEvent(new DomainEvents.CustomerScheduleUpdateDateAndTime(Guid.NewGuid(),
+        RaiseDomainEvent(new DomainEvents.CustomerScheduleUpdateDateAndTimeAndStatus(Guid.NewGuid(),
             customerSchedule.Id, customerSchedule.StartTime.Value, customerSchedule.EndTime.Value,
-            customerSchedule.Date.Value));
+            customerSchedule.Date.Value, customerSchedule.Status));
     }
 }

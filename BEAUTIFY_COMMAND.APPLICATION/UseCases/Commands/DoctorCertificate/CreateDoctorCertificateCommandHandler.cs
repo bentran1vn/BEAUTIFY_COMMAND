@@ -13,7 +13,6 @@ public class CreateDoctorCertificateCommandHandler(
     {
         var UserId =
             currentUserService.UserId ?? throw new UnauthorizedAccessException(); //check if user has role doctor
-
         var user = await staffRepository.FindByIdAsync(UserId, cancellationToken);
         if (user == null)
             return Result.Failure(new Error("404", "User Not Found"));
