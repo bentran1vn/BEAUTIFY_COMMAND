@@ -154,6 +154,26 @@ public class ProcessOutboxMessagesJob(ApplicationDbContext dbContext, IPublishEn
                                 });
                         await publishEndpoint.Publish(servicePromotionCreated, context.CancellationToken);
                         break;
+                    case nameof(ServicePromotionDomainEvent.ServicePromotionUpdated):
+                        var servicePromotionUpdated =
+                            JsonConvert.DeserializeObject<ServicePromotionDomainEvent.ServicePromotionUpdated>(
+                                outboxMessage.Content,
+                                new JsonSerializerSettings
+                                {
+                                    TypeNameHandling = TypeNameHandling.All
+                                });
+                        await publishEndpoint.Publish(servicePromotionUpdated, context.CancellationToken);
+                        break;
+                    case nameof(ServicePromotionDomainEvent.ServicePromotionDeleted):
+                        var servicePromotionDeleted =
+                            JsonConvert.DeserializeObject<ServicePromotionDomainEvent.ServicePromotionDeleted>(
+                                outboxMessage.Content,
+                                new JsonSerializerSettings
+                                {
+                                    TypeNameHandling = TypeNameHandling.All
+                                });
+                        await publishEndpoint.Publish(servicePromotionDeleted, context.CancellationToken);
+                        break;
                     case nameof(DomainEvents.DoctorServiceCreated):
                         var doctorServiceCreated =
                             JsonConvert.DeserializeObject<DomainEvents.DoctorServiceCreated>(

@@ -44,9 +44,7 @@ public class
 
         isValidServiceQuery = isValidServiceQuery
             .Include(x => x.Clinics)
-            .Include(x => x.Services)
-            .ThenInclude(x => x.Procedures)!
-            .ThenInclude(x => x.ProcedurePriceTypes);
+            .Include(x => x.Services);
 
         var isValidService = await isValidServiceQuery.FirstOrDefaultAsync(cancellationToken);
 
@@ -58,7 +56,12 @@ public class
 
         if (lastestPromotion != null) lastestPromotion.IsActivated = false;
 
-        var imageUrl = await _mediaService.UploadImageAsync(request.Image);
+        string imageUrl = string.Empty;
+        
+        if (request.Image != null)
+        {
+            imageUrl = await _mediaService.UploadImageAsync(request.Image);
+        }
 
         var promotion = new Promotion
         {
@@ -74,24 +77,26 @@ public class
 
         _promotionrepository.Add(promotion);
 
-        var lowestPrice = isValidService.Services?.Procedures?.Sum(procedure =>
-            procedure.ProcedurePriceTypes.Any()
-                ? procedure.ProcedurePriceTypes.Min(pt => pt.Price)
-                : 0) ?? 0;
+        // var lowestPrice = isValidService.Services?.Procedures?.Sum(procedure =>
+        //     procedure.ProcedurePriceTypes.Any()
+        //         ? procedure.ProcedurePriceTypes.Min(pt => pt.Price)
+        //         : 0) ?? 0;
+        //
+        // var highestPrice = isValidService.Services?.Procedures?.Sum(procedure =>
+        //     procedure.ProcedurePriceTypes.Any()
+        //         ? procedure.ProcedurePriceTypes.Max(pt => pt.Price)
+        //         : 0) ?? 0;
+        //
+        // isValidService.Services!.MinPrice = lowestPrice * (decimal)promotion.DiscountPercent;
+        // isValidService.Services!.MaxPrice = highestPrice * (decimal)promotion.DiscountPercent;
 
-        var highestPrice = isValidService.Services?.Procedures?.Sum(procedure =>
-            procedure.ProcedurePriceTypes.Any()
-                ? procedure.ProcedurePriceTypes.Max(pt => pt.Price)
-                : 0) ?? 0;
-
-        isValidService.Services!.MinPrice = lowestPrice * (decimal)promotion.DiscountPercent;
-        isValidService.Services!.MaxPrice = highestPrice * (decimal)promotion.DiscountPercent;
-
+        isValidService.Services.DiscountPrice = (decimal)promotion.DiscountPercent;
+        
         var trigger = TriggerOutbox.RaiseCreatePromotionEvent(
             promotion.Id, request.ServiceId, promotion.Name,
             promotion.DiscountPercent, promotion.ImageUrl,
-            highestPrice - highestPrice * (decimal)promotion.DiscountPercent,
-            lowestPrice - lowestPrice * (decimal)promotion.DiscountPercent,
+            isValidService.Services.MaxPrice - isValidService.Services.MaxPrice * (decimal)promotion.DiscountPercent,
+            isValidService.Services.MinPrice - isValidService.Services.MinPrice * (decimal)promotion.DiscountPercent,
             request.StartDay, request.EndDate);
 
         _triggerOutboxrepository.Add(trigger);
