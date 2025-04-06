@@ -1,6 +1,7 @@
 using BEAUTIFY_COMMAND.DOMAIN.Entities;
 using BEAUTIFY_COMMAND.PERSISTENCE.Constants;
 using BEAUTIFY_COMMAND.PERSISTENCE.Outbox;
+using BEAUTIFY_PACKAGES.BEAUTIFY_PACKAGES.CONTRACT.Services.DoctorServices;
 using BEAUTIFY_PACKAGES.BEAUTIFY_PACKAGES.DOMAIN.EntityEvents;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
@@ -2853,18 +2854,327 @@ internal sealed class OutboxMessageConfiguration : IEntityTypeConfiguration<Outb
                 ProcedureId = idSCDN_S5_P4
             }
         };
+        
+        var doctorServices = new List<DoctorService>()
+        {
+            // Beauty Center Sài Gòn - Chi nhánh Quận 1
+            new DoctorService()
+            {
+                Id = Guid.NewGuid(),
+                DoctorId = Guid.Parse("ab23d158-44e2-44d4-b679-d7c568993702"), // Lê Thị Thanh Đoan
+                ServiceId = Guid.Parse("a1d3d799-3f62-4a2f-b6b5-3d05b7e1f2a3"), // BCSG Service 1
+            },
+            new DoctorService()
+            {
+                Id = Guid.NewGuid(),
+                DoctorId = Guid.Parse("ab23d158-44e2-44d4-b679-d7c568993702"), // Lê Thị Thanh Đoan
+                ServiceId = Guid.Parse("a2d3d799-3f62-4a2f-b6b5-3d05b7e1f2a3"), // BCSG Service 2
+            },
+            new DoctorService()
+            {
+                Id = Guid.NewGuid(),
+                DoctorId = Guid.Parse("a2b21279-5bbd-40c3-8981-6821c7f6b2ea"), // Phạm Minh Hoàng
+                ServiceId = Guid.Parse("a3d3d799-3f62-4a2f-b6b5-3d05b7e1f2a3"), // BCSG Service 3
+            },
+            new DoctorService()
+            {
+                Id = Guid.NewGuid(),
+                DoctorId = Guid.Parse("a2b21279-5bbd-40c3-8981-6821c7f6b2ea"), // Phạm Minh Hoàng
+                ServiceId = Guid.Parse("a4d3d799-3f62-4a2f-b6b5-3d05b7e1f2a3"), // BCSG Service 4
+            },
+            new DoctorService()
+            {
+                Id = Guid.NewGuid(),
+                DoctorId = Guid.Parse("ab23d158-44e2-44d4-b679-d7c568993702"), // Lê Thị Thanh Đoan
+                ServiceId = Guid.Parse("a5d3d799-3f62-4a2f-b6b5-3d05b7e1f2a3"), // BCSG Service 5
+            },
 
-        var createProcedureEvents = procedures.Select(pro => new ProceduresDomainEvent.ProcedureCreated(
-            Guid.NewGuid(),
-            new ProcedureEvent.CreateProcedure(
-                pro.Id, (Guid)pro.ServiceId!, pro.Name, pro.Description, 0, 0, 0,
-                0, pro.StepIndex, procedurePriceTypes.Where(prt => prt.ProcedureId.Equals(pro.Id)).Select(
-                    x => new ProcedureEvent.ProcedurePriceType(
-                        x.Id, x.Name, x.Price, x.Duration, x.IsDefault
-                    )).ToList()
-            ))).ToList();
+            // Beauty Center Sài Gòn - Chi nhánh Quận 3
+            new DoctorService()
+            {
+                Id = Guid.NewGuid(),
+                DoctorId = Guid.Parse("da2d6a80-75cc-4757-8ed3-e0b508ffb080"), // Trịnh Thượng Lâm
+                ServiceId = Guid.Parse("a1d3d799-3f62-4a2f-b6b5-3d05b7e1f2a3"), // BCSG Service 1
+            },
+            new DoctorService()
+            {
+                Id = Guid.NewGuid(),
+                DoctorId = Guid.Parse("da2d6a80-75cc-4757-8ed3-e0b508ffb080"), // Trịnh Thượng Lâm
+                ServiceId = Guid.Parse("a2d3d799-3f62-4a2f-b6b5-3d05b7e1f2a3"), // BCSG Service 2
+            },
+            new DoctorService()
+            {
+                Id = Guid.NewGuid(),
+                DoctorId = Guid.Parse("8b0f0b23-f07f-453d-b8bc-1acb26d03d87"), // Đoàn Thanh Tiến
+                ServiceId = Guid.Parse("a3d3d799-3f62-4a2f-b6b5-3d05b7e1f2a3"), // BCSG Service 3
+            },
+            new DoctorService()
+            {
+                Id = Guid.NewGuid(),
+                DoctorId = Guid.Parse("8b0f0b23-f07f-453d-b8bc-1acb26d03d87"), // Đoàn Thanh Tiến
+                ServiceId = Guid.Parse("a4d3d799-3f62-4a2f-b6b5-3d05b7e1f2a3"), // BCSG Service 4
+            },
+            new DoctorService()
+            {
+                Id = Guid.NewGuid(),
+                DoctorId = Guid.Parse("da2d6a80-75cc-4757-8ed3-e0b508ffb080"), // Trịnh Thượng Lâm
+                ServiceId = Guid.Parse("a5d3d799-3f62-4a2f-b6b5-3d05b7e1f2a3"), // BCSG Service 5
+            },
 
+            // Hanoi Beauty Spa - Chi nhánh Đống Đa
+            new DoctorService()
+            {
+                Id = Guid.NewGuid(),
+                DoctorId = Guid.Parse("79f207d4-dbbf-488d-848d-fc74a7fdbb29"), // Phan Văn Khoa
+                ServiceId = Guid.Parse("b1d3d799-3f62-4a2f-b6b5-3d05b7e1f2a3"), // HBS Service 1
+            },
+            new DoctorService()
+            {
+                Id = Guid.NewGuid(),
+                DoctorId = Guid.Parse("79f207d4-dbbf-488d-848d-fc74a7fdbb29"), // Phan Văn Khoa
+                ServiceId = Guid.Parse("b2d3d799-3f62-4a2f-b6b5-3d05b7e1f2a3"), // HBS Service 2
+            },
+            new DoctorService()
+            {
+                Id = Guid.NewGuid(),
+                DoctorId = Guid.Parse("32e8cfbb-d8b4-4768-8695-81b6b7e63c63"), // Hoàng Minh Trang
+                ServiceId = Guid.Parse("b3d3d799-3f62-4a2f-b6b5-3d05b7e1f2a3"), // HBS Service 3
+            },
+            new DoctorService()
+            {
+                Id = Guid.NewGuid(),
+                DoctorId = Guid.Parse("32e8cfbb-d8b4-4768-8695-81b6b7e63c63"), // Hoàng Minh Trang
+                ServiceId = Guid.Parse("b4d3d799-3f62-4a2f-b6b5-3d05b7e1f2a3"), // HBS Service 4
+            },
+            new DoctorService()
+            {
+                Id = Guid.NewGuid(),
+                DoctorId = Guid.Parse("79f207d4-dbbf-488d-848d-fc74a7fdbb29"), // Phan Văn Khoa
+                ServiceId = Guid.Parse("b5d3d799-3f62-4a2f-b6b5-3d05b7e1f2a3"), // HBS Service 5
+            },
 
+            // Hanoi Beauty Spa - Chi nhánh Cầu Giấy
+            new DoctorService()
+            {
+                Id = Guid.NewGuid(),
+                DoctorId = Guid.Parse("c21fa13a-b2f6-4eba-8b77-d2c57854bc5f"), // Trần Thanh Long
+                ServiceId = Guid.Parse("b1d3d799-3f62-4a2f-b6b5-3d05b7e1f2a3"), // HBS Service 1
+            },
+            new DoctorService()
+            {
+                Id = Guid.NewGuid(),
+                DoctorId = Guid.Parse("c21fa13a-b2f6-4eba-8b77-d2c57854bc5f"), // Trần Thanh Long
+                ServiceId = Guid.Parse("b2d3d799-3f62-4a2f-b6b5-3d05b7e1f2a3"), // HBS Service 2
+            },
+            new DoctorService()
+            {
+                Id = Guid.NewGuid(),
+                DoctorId = Guid.Parse("bd3c9480-7bca-43d7-94ed-58cea8b32733"), // Nguyễn Ngọc Mai Hương
+                ServiceId = Guid.Parse("b3d3d799-3f62-4a2f-b6b5-3d05b7e1f2a3"), // HBS Service 3
+            },
+            new DoctorService()
+            {
+                Id = Guid.NewGuid(),
+                DoctorId = Guid.Parse("bd3c9480-7bca-43d7-94ed-58cea8b32733"), // Nguyễn Ngọc Mai Hương
+                ServiceId = Guid.Parse("b4d3d799-3f62-4a2f-b6b5-3d05b7e1f2a3"), // HBS Service 4
+            },
+            new DoctorService()
+            {
+                Id = Guid.NewGuid(),
+                DoctorId = Guid.Parse("c21fa13a-b2f6-4eba-8b77-d2c57854bc5f"), // Trần Thanh Long
+                ServiceId = Guid.Parse("b5d3d799-3f62-4a2f-b6b5-3d05b7e1f2a3"), // HBS Service 5
+            },
+
+            // Skin Care Đà Nẵng - Chi nhánh Hải Châu
+            new DoctorService()
+            {
+                Id = Guid.NewGuid(),
+                DoctorId = Guid.Parse("5e9bd8dd-fb53-4f74-bf59-b3aedb96aa7c"), // Võ Anh Quân
+                ServiceId = Guid.Parse("c1d3d799-3f62-4a2f-b6b5-3d05b7e1f2a3"), // SCDN Service 1
+            },
+            new DoctorService()
+            {
+                Id = Guid.NewGuid(),
+                DoctorId = Guid.Parse("5e9bd8dd-fb53-4f74-bf59-b3aedb96aa7c"), // Võ Anh Quân
+                ServiceId = Guid.Parse("c2d3d799-3f62-4a2f-b6b5-3d05b7e1f2a3"), // SCDN Service 2
+            },
+            new DoctorService()
+            {
+                Id = Guid.NewGuid(),
+                DoctorId = Guid.Parse("71ddc3c7-a3a0-4e6b-bd1d-f03d5deedbfa"), // Lê Thị Kim Hoa
+                ServiceId = Guid.Parse("c3d3d799-3f62-4a2f-b6b5-3d05b7e1f2a3"), // SCDN Service 3
+            },
+            new DoctorService()
+            {
+                Id = Guid.NewGuid(),
+                DoctorId = Guid.Parse("71ddc3c7-a3a0-4e6b-bd1d-f03d5deedbfa"), // Lê Thị Kim Hoa
+                ServiceId = Guid.Parse("c4d3d799-3f62-4a2f-b6b5-3d05b7e1f2a3"), // SCDN Service 4
+            },
+            new DoctorService()
+            {
+                Id = Guid.NewGuid(),
+                DoctorId = Guid.Parse("5e9bd8dd-fb53-4f74-bf59-b3aedb96aa7c"), // Võ Anh Quân
+                ServiceId = Guid.Parse("c5d3d799-3f62-4a2f-b6b5-3d05b7e1f2a3"), // SCDN Service 5
+            },
+
+            // Skin Care Đà Nẵng - Chi nhánh Sơn Trà
+            new DoctorService()
+            {
+                Id = Guid.NewGuid(),
+                DoctorId = Guid.Parse("e8e3f18b-9179-48a6-94bb-1e5320fb8f30"), // Phạm Tuấn Minh
+                ServiceId = Guid.Parse("c1d3d799-3f62-4a2f-b6b5-3d05b7e1f2a3"), // SCDN Service 1
+            },
+            new DoctorService()
+            {
+                Id = Guid.NewGuid(),
+                DoctorId = Guid.Parse("e8e3f18b-9179-48a6-94bb-1e5320fb8f30"), // Phạm Tuấn Minh
+                ServiceId = Guid.Parse("c2d3d799-3f62-4a2f-b6b5-3d05b7e1f2a3"), // SCDN Service 2
+            },
+            new DoctorService()
+            {
+                Id = Guid.NewGuid(),
+                DoctorId = Guid.Parse("f76d8ab1-c9eb-4e29-a9f1-5302b543c283"), // Nguyễn Minh Hiếu
+                ServiceId = Guid.Parse("c3d3d799-3f62-4a2f-b6b5-3d05b7e1f2a3"), // SCDN Service 3
+            },
+            new DoctorService()
+            {
+                Id = Guid.NewGuid(),
+                DoctorId = Guid.Parse("f76d8ab1-c9eb-4e29-a9f1-5302b543c283"), // Nguyễn Minh Hiếu
+                ServiceId = Guid.Parse("c4d3d799-3f62-4a2f-b6b5-3d05b7e1f2a3"), // SCDN Service 4
+            },
+            new DoctorService()
+            {
+                Id = Guid.NewGuid(),
+                DoctorId = Guid.Parse("e8e3f18b-9179-48a6-94bb-1e5320fb8f30"), // Phạm Tuấn Minh
+                ServiceId = Guid.Parse("c5d3d799-3f62-4a2f-b6b5-3d05b7e1f2a3"), // SCDN Service 5
+            }
+        };
+        
+        var staff = new List<Staff>
+            {
+                // Doctors (12) - Each staff manages 2 doctors (total 12 doctors for 6 staff)
+                new ()
+                {
+                    Id = new Guid("ab23d158-44e2-44d4-b679-d7c568993702"),
+                    Email = "lethithanhdoan@gmail.com",
+                    FirstName = "Lê Thị Thanh",
+                    LastName = "Đoan",
+                    Password = "QFUsZBROui+rvdxQ0JkaJg==:6z/WlleDL/PeFU/GLZ3ZHy50E8GTUNzv0mRqB77oE8w=",
+                    Status = 1,
+                    RoleId = new Guid("b549752a-f156-4894-90ad-ab3994fd071d")
+                },
+                new ()
+                {
+                    Id = new Guid("a2b21279-5bbd-40c3-8981-6821c7f6b2ea"),
+                    Email = "phamminhhoang@gmail.com",
+                    FirstName = "Phạm Minh",
+                    LastName = "Hoàng",
+                    Password = "QFUsZBROui+rvdxQ0JkaJg==:6z/WlleDL/PeFU/GLZ3ZHy50E8GTUNzv0mRqB77oE8w=",
+                    Status = 1,
+                    RoleId = new Guid("b549752a-f156-4894-90ad-ab3994fd071d")
+                },
+                new ()
+                {
+                    Id = new Guid("da2d6a80-75cc-4757-8ed3-e0b508ffb080"),
+                    Email = "trinhthuonglam@gmail.com",
+                    FirstName = "Trịnh Thượng",
+                    LastName = "Lâm",
+                    Password = "QFUsZBROui+rvdxQ0JkaJg==:6z/WlleDL/PeFU/GLZ3ZHy50E8GTUNzv0mRqB77oE8w=",
+                    Status = 1,
+                    RoleId = new Guid("b549752a-f156-4894-90ad-ab3994fd071d")
+                },
+                new ()
+                {
+                    Id = new Guid("8b0f0b23-f07f-453d-b8bc-1acb26d03d87"),
+                    Email = "doanthanhtien@gmail.com",
+                    FirstName = "Đoàn Thanh",
+                    LastName = "Tiến",
+                    Password = "QFUsZBROui+rvdxQ0JkaJg==:6z/WlleDL/PeFU/GLZ3ZHy50E8GTUNzv0mRqB77oE8w=",
+                    Status = 1,
+                    RoleId = new Guid("b549752a-f156-4894-90ad-ab3994fd071d")
+                },
+                new ()
+                {
+                    Id = new Guid("79f207d4-dbbf-488d-848d-fc74a7fdbb29"),
+                    Email = "phanvankhoa@gmail.com",
+                    FirstName = "Phan Văn",
+                    LastName = "Khoa",
+                    Password = "QFUsZBROui+rvdxQ0JkaJg==:6z/WlleDL/PeFU/GLZ3ZHy50E8GTUNzv0mRqB77oE8w=",
+                    Status = 1,
+                    RoleId = new Guid("b549752a-f156-4894-90ad-ab3994fd071d")
+                },
+                new ()
+                {
+                    Id = new Guid("32e8cfbb-d8b4-4768-8695-81b6b7e63c63"),
+                    Email = "hoangminhtrang@gmail.com",
+                    FirstName = "Hoàng Minh",
+                    LastName = "Trang",
+                    Password = "QFUsZBROui+rvdxQ0JkaJg==:6z/WlleDL/PeFU/GLZ3ZHy50E8GTUNzv0mRqB77oE8w=",
+                    Status = 1,
+                    RoleId = new Guid("b549752a-f156-4894-90ad-ab3994fd071d")
+                },
+                new ()
+                {
+                    Id = new Guid("c21fa13a-b2f6-4eba-8b77-d2c57854bc5f"),
+                    Email = "tranthanhlong@gmail.com",
+                    FirstName = "Trần Thanh",
+                    LastName = "Long",
+                    Password = "QFUsZBROui+rvdxQ0JkaJg==:6z/WlleDL/PeFU/GLZ3ZHy50E8GTUNzv0mRqB77oE8w=",
+                    Status = 1,
+                    RoleId = new Guid("b549752a-f156-4894-90ad-ab3994fd071d")
+                },
+                new ()
+                {
+                    Id = new Guid("bd3c9480-7bca-43d7-94ed-58cea8b32733"),
+                    Email = "nguyenngocmaihuong@gmail.com",
+                    FirstName = "Nguyễn Ngọc Mai",
+                    LastName = "Hương",
+                    Password = "QFUsZBROui+rvdxQ0JkaJg==:6z/WlleDL/PeFU/GLZ3ZHy50E8GTUNzv0mRqB77oE8w=",
+                    Status = 1,
+                    RoleId = new Guid("b549752a-f156-4894-90ad-ab3994fd071d")
+                },
+                new ()
+                {
+                    Id = new Guid("5e9bd8dd-fb53-4f74-bf59-b3aedb96aa7c"),
+                    Email = "voanhquan@gmail.com",
+                    FirstName = "Võ Anh",
+                    LastName = "Quân",
+                    Password = "QFUsZBROui+rvdxQ0JkaJg==:6z/WlleDL/PeFU/GLZ3ZHy50E8GTUNzv0mRqB77oE8w=",
+                    Status = 1,
+                    RoleId = new Guid("b549752a-f156-4894-90ad-ab3994fd071d")
+                },
+                new ()
+                {
+                    Id = new Guid("71ddc3c7-a3a0-4e6b-bd1d-f03d5deedbfa"),
+                    Email = "lethikimhoa@gmail.com",
+                    FirstName = "Lê Thị Kim",
+                    LastName = "Hoa",
+                    Password = "QFUsZBROui+rvdxQ0JkaJg==:6z/WlleDL/PeFU/GLZ3ZHy50E8GTUNzv0mRqB77oE8w=",
+                    Status = 1,
+                    RoleId = new Guid("b549752a-f156-4894-90ad-ab3994fd071d")
+                },
+                new ()
+                {
+                    Id = new Guid("e8e3f18b-9179-48a6-94bb-1e5320fb8f30"),
+                    Email = "phamtuanminh@gmail.com",
+                    FirstName = "Phạm Tuấn",
+                    LastName = "Minh",
+                    Password = "QFUsZBROui+rvdxQ0JkaJg==:6z/WlleDL/PeFU/GLZ3ZHy50E8GTUNzv0mRqB77oE8w=",
+                    Status = 1,
+                    RoleId = new Guid("b549752a-f156-4894-90ad-ab3994fd071d")
+                },
+                new ()
+                {
+                    Id = new Guid("f76d8ab1-c9eb-4e29-a9f1-5302b543c283"),
+                    Email = "nguyenminhhieu@gmail.com",
+                    FirstName = "Nguyễn Minh",
+                    LastName = "Hiếu",
+                    Password = "QFUsZBROui+rvdxQ0JkaJg==:6z/WlleDL/PeFU/GLZ3ZHy50E8GTUNzv0mRqB77oE8w=",
+                    Status = 1,
+                    RoleId = new Guid("b549752a-f156-4894-90ad-ab3994fd071d")
+                }
+            };
+        
         var createServiceEvents = services.Select(se => new ClinicServicesDomainEvent.ClinicServiceCreated(
             Guid.NewGuid(),
             new ClinicServiceEvent.CreateClinicService(
@@ -2885,6 +3195,38 @@ internal sealed class OutboxMessageConfiguration : IEntityTypeConfiguration<Outb
                             x.IsParent, x.ParentId);
                     }).ToList()
             ))).ToList();
+        
+        var createProcedureEvents = procedures.Select(pro => new ProceduresDomainEvent.ProcedureCreated(
+            Guid.NewGuid(),
+            new ProcedureEvent.CreateProcedure(
+                pro.Id, (Guid)pro.ServiceId!, pro.Name, pro.Description, 0, 0, 0,
+                0, pro.StepIndex, procedurePriceTypes.Where(prt => prt.ProcedureId.Equals(pro.Id)).Select(
+                    x => new ProcedureEvent.ProcedurePriceType(
+                        x.Id, x.Name, x.Price, x.Duration, x.IsDefault
+                    )).ToList()
+            ))).ToList();
+        
+        
+        var doctorServiceEventEntity = doctorServices
+            .Select(x =>
+            {
+                var doctor = staff.FirstOrDefault(y => y.Id.Equals(x.DoctorId))!;
+                return new EntityEvent.DoctorServiceEntity()
+                {
+                    Id = Guid.NewGuid(),
+                    ServiceId = x.ServiceId,
+                    Doctor = new EntityEvent.UserEntity()
+                    {
+                        Id = x.DoctorId,
+                        FullName = doctor.FirstName + " " + doctor.LastName,
+                        Email = doctor.Email,
+                        PhoneNumber = doctor.PhoneNumber,
+                        ProfilePictureUrl = doctor.ProfilePicture
+                    }
+                };
+            }).ToList();
+
+        var doctorServiceEvent = new DomainEvents.DoctorServiceCreated(Guid.NewGuid(), doctorServiceEventEntity);
         
         var outBoxCreateServices = createServiceEvents.Select(domainEvent => new OutboxMessage
             {
@@ -2914,10 +3256,26 @@ internal sealed class OutboxMessageConfiguration : IEntityTypeConfiguration<Outb
             })
             .ToList();
 
+        var outBoxCreateDoctorServices = new OutboxMessage
+        {
+            Id = Guid.NewGuid(),
+            OccurredOnUtc = DateTime.UtcNow,
+            Type = doctorServiceEvent.GetType().Name,
+            Content = JsonConvert.SerializeObject(
+                doctorServiceEvent,
+                new JsonSerializerSettings
+                {
+                    TypeNameHandling = TypeNameHandling.All
+                })
+        };
+        
         var outBoxList = new List<OutboxMessage>();
         
         outBoxList.AddRange(outBoxCreateServices);
+        
         outBoxList.AddRange(outBoxCreateProcedures);
+        
+        outBoxList.Add(outBoxCreateDoctorServices);
 
         builder.HasData(outBoxList);
     }

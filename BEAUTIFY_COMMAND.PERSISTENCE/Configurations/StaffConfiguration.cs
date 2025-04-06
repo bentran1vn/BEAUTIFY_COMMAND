@@ -14,9 +14,9 @@ namespace BEAUTIFY_COMMAND.PERSISTENCE.Configurations
                 new ()
                 {
                     Id = new Guid("c5514d77-31b0-4c07-b1fe-bf3219e249db"),
-                    Email = "nguyenquocbao@gmail.com",
-                    FirstName = "Nguyễn Quốc",
-                    LastName = "Bảo",
+                    Email = "beautycenter.saigon@gmail.com",
+                    FirstName = "Beauty Center Sài Gòn",
+                    LastName = "Beauty Center Sài Gòn",
                     Password = "QFUsZBROui+rvdxQ0JkaJg==:6z/WlleDL/PeFU/GLZ3ZHy50E8GTUNzv0mRqB77oE8w=",
                     Status = 1,
                     RoleId = new Guid("c6d93b8c-f509-4498-abbb-fe63edc66f2b")
@@ -24,9 +24,9 @@ namespace BEAUTIFY_COMMAND.PERSISTENCE.Configurations
                 new ()
                 {
                     Id = new Guid("f3850b25-56de-4e0d-8e66-d46617cc6f92"),
-                    Email = "hoangquangduy@gmail.com",
-                    FirstName = "Hoàng Quang",
-                    LastName = "Duy",
+                    Email = "hanoi.beautyspa@gmail.com",
+                    FirstName = "Hanoi Beauty Spa",
+                    LastName = "Hanoi Beauty Spa",
                     Password = "QFUsZBROui+rvdxQ0JkaJg==:6z/WlleDL/PeFU/GLZ3ZHy50E8GTUNzv0mRqB77oE8w=",
                     Status = 1,
                     RoleId = new Guid("c6d93b8c-f509-4498-abbb-fe63edc66f2b")
@@ -34,9 +34,9 @@ namespace BEAUTIFY_COMMAND.PERSISTENCE.Configurations
                 new ()
                 {
                     Id = new Guid("a283eb13-8d68-46c9-8a1d-450e0cc7ad13"),
-                    Email = "phamducnguyen@gmail.com",
-                    FirstName = "Phạm Đức",
-                    LastName = "Nguyên",
+                    Email = "skincare.danang@gmail.com",
+                    FirstName = "Skin Care Đà Nẵng",
+                    LastName = "Skin Care Đà Nẵng",
                     Password = "QFUsZBROui+rvdxQ0JkaJg==:6z/WlleDL/PeFU/GLZ3ZHy50E8GTUNzv0mRqB77oE8w=",
                     Status = 1,
                     RoleId = new Guid("c6d93b8c-f509-4498-abbb-fe63edc66f2b")
