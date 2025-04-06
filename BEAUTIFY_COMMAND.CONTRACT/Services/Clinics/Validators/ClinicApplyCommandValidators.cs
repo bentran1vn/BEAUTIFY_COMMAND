@@ -12,9 +12,14 @@ public class ClinicApplyCommandValidators : AbstractValidator<Commands.ClinicApp
             .NotEmpty()
             .EmailAddress().WithMessage("Invalid email format");
 
+        /*RuleFor(x => x.PhoneNumber)
+            .NotEmpty()
+            .Matches(@"^\+?[1-9]\d{1,14}$").WithMessage("Invalid phone number format");*/
+
+        //rule for phone number to contain only number and has 10 digits and start with 0
         RuleFor(x => x.PhoneNumber)
             .NotEmpty()
-            .Matches(@"^\+?[1-9]\d{1,14}$").WithMessage("Invalid phone number format");
+            .Matches(@"^0[0-9]{9}$").WithMessage("Invalid phone number format");
 
 
         RuleFor(x => x.TaxCode)
