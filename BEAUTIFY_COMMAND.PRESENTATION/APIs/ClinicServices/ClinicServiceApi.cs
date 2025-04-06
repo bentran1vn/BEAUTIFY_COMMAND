@@ -16,7 +16,8 @@ public class ClinicServiceApi : ApiEndpoint, ICarterModule
             .DisableAntiforgery()
             .WithName("Create Clinic's Service")
             .WithSummary("Create Clinic's Service.")
-            .WithDescription("");
+            .WithDescription("")
+            .RequireAuthorization();
 
         gr1.MapPut("{id}", UpdateClinicServices)
             .DisableAntiforgery()
@@ -35,9 +36,10 @@ public class ClinicServiceApi : ApiEndpoint, ICarterModule
     }
 
     private static async Task<IResult> CreateClinicServices(ISender sender,
-        [FromForm] Commands.CreateClinicServiceBody command)
+        HttpContext httpContext, [FromForm] Commands.CreateClinicServiceBody command)
     {
         List<Guid>? clinicId = null;
+        var parentId = httpContext.User.FindFirst(c => c.Type == "ClinicId")?.Value!;
 
         if (!string.IsNullOrWhiteSpace(command.ClinicId))
             clinicId = (JsonSerializer.Deserialize<List<string>>(
@@ -46,7 +48,7 @@ public class ClinicServiceApi : ApiEndpoint, ICarterModule
 
         if (clinicId == null) return HandlerFailure(Result.Failure(new Error("404", "Empty Clinics")));
 
-        var result = await sender.Send(new Commands.CreateClinicServiceCommand(
+        var result = await sender.Send(new Commands.CreateClinicServiceCommand(new Guid(parentId),
             clinicId, command.Name, command.CoverImages,
             command.Description, command.CategoryId
         ));
