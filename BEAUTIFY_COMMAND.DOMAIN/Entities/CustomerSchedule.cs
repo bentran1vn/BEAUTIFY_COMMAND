@@ -29,13 +29,13 @@ public class CustomerSchedule : AggregateRoot<Guid>, IAuditableEntity
 
     public void Create(CustomerSchedule? customerSchedule)
     {
-        //check endtime and start time and date null ortherwise send that data
+        //check endtime and start time and date null otherwise send that data
 
         var entity = new EntityEvent.CustomerScheduleEntity
         {
             Id = customerSchedule.Id,
             CustomerName = customerSchedule.Customer.FirstName + " " + customerSchedule.Customer.LastName,
-            //  StepIndex = customerSchedule.ProcedurePriceType.Procedure.StepIndex.ToString(),
+            OrderId = customerSchedule.OrderId.Value,
             CustomerId = customerSchedule.CustomerId,
             StartTime = customerSchedule.StartTime,
             EndTime = customerSchedule.EndTime,
