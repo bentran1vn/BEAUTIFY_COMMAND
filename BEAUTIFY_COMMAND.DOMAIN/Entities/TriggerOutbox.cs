@@ -153,6 +153,7 @@ public class TriggerOutbox : AggregateRoot<Guid>, IAuditableEntity
     
     public static TriggerOutbox RaiseCreateClinicServiceEvent(
         Guid id, string name, string description,
+        Clinic branding,
         ServiceMedia[] coverImage,
         Guid cateId, string cateName,
         string cateDescription, List<Clinic> clinics
@@ -166,7 +167,9 @@ public class TriggerOutbox : AggregateRoot<Guid>, IAuditableEntity
         triggerOutbox.RaiseDomainEvent(new ClinicServicesDomainEvent.ClinicServiceCreated(
             Guid.NewGuid(),
             new ClinicServiceEvent.CreateClinicService(
-                id, name, description,
+                id, name, description, new ClinicServiceEvent.Clinic(branding.Id, branding.Name, branding.Email,
+                    branding.City, branding.Address, branding.FullAddress, branding.District, branding.Ward, branding.PhoneNumber, branding.ProfilePictureUrl,
+                    branding.IsParent, branding.ParentId),
                 coverImage.Select(x => new ClinicServiceEvent.Image(
                     x.Id, x.IndexNumber, x.ImageUrl
                 )).ToArray(),

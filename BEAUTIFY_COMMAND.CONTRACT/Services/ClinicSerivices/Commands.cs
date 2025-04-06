@@ -11,6 +11,7 @@ public class Commands
         Guid CategoryId);
 
     public record CreateClinicServiceCommand(
+        Guid ParentId,
         List<Guid> ClinicId,
         string Name,
         IFormFileCollection CoverImages,

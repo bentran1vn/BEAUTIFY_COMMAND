@@ -26,11 +26,12 @@ public class
             return Result.Failure(new Error("404", "Clinic not found "));
         
         var parentClinic = await clinicRepository
-            .FindSingleAsync(x => 
-                    isClinicExisted.Any(y => y.ParentId == x.Id ||
-                                             y.Id == x.Id)
+            .FindSingleAsync(x => x.Id == request.ParentId
                 , cancellationToken);
 
+        if (parentClinic == null || parentClinic.IsDeleted || parentClinic.ParentId != null || parentClinic.IsParent == false)
+            return Result.Failure(new Error("404", "Clinic Parent not found "));
+        
         List<ServiceMedia> serviceMediaList = new List<ServiceMedia>();
 
         var coverImagesFilter = request.CoverImages.Where(x => x.Name.Equals("coverImages")).ToList();
@@ -72,7 +73,7 @@ public class
         serviceMediaRepository.AddRange(serviceMediaList);
 
         var trigger = TriggerOutbox.RaiseCreateClinicServiceEvent(
-            service.Id, service.Name, service.Description, medias.ToArray(), 
+            service.Id, service.Name, service.Description, parentClinic, medias.ToArray(), 
             request.CategoryId, isCategoryExisted.Name, isCategoryExisted.Description ?? "", isClinicExisted
         );
 

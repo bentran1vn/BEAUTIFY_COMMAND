@@ -3178,7 +3178,7 @@ internal sealed class OutboxMessageConfiguration : IEntityTypeConfiguration<Outb
         var createServiceEvents = services.Select(se => new ClinicServicesDomainEvent.ClinicServiceCreated(
             Guid.NewGuid(),
             new ClinicServiceEvent.CreateClinicService(
-                se.Id, se.Name, se.Description,
+                se.Id, se.Name, se.Description, null,
                 [],
                 new ClinicServiceEvent.Category(
                     categories.FirstOrDefault(x => x.Id.Equals(se.CategoryId))!.Id,
