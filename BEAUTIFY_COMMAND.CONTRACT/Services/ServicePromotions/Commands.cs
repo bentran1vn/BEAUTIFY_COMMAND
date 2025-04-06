@@ -8,7 +8,7 @@ public static class Commands
         public Guid ServiceId { get; set; }
         public string Name { get; set; } = string.Empty;
         public double DiscountPercent { get; set; } // Ensure valid default value
-        public IFormFile Image { get; set; }
+        public IFormFile? Image { get; set; }
         public DateTime StartDay { get; set; }
         public DateTime EndDate { get; set; }
     }
@@ -19,33 +19,37 @@ public static class Commands
         Guid ServiceId,
         string Name,
         double DiscountPercent,
-        IFormFile Image,
+        IFormFile? Image,
         DateTime StartDay,
         DateTime EndDate) : ICommand;
 
-    public record UpdatePromotionServicesBody(
-        Guid PromotionId,
-        string Name,
-        double DiscountPercent,
-        IFormFile Image,
-        DateTime StartDay,
-        DateTime EndDate);
+    public class UpdatePromotionServicesBody
+    {
+        public Guid PromotionId { get; set; }
+        public string Name { get; set; } = string.Empty;
+        public double DiscountPercent { get; set; } // Ensure valid default value
+        public IFormFile? Image { get; set; }
+        public DateTime StartDay { get; set; }
+        public DateTime EndDate { get; set; }
+        public bool IsActivated { get; set; }
+    };
 
     public record UpdatePromotionServicesCommand(
-        Guid UserId,
+        Guid ClinicId,
         Guid PromotionId,
         string Name,
         double DiscountPercent,
-        IFormFile Image,
+        IFormFile? Image,
         DateTime StartDay,
-        DateTime EndDate) : ICommand;
+        DateTime EndDate,
+        bool IsActivated) : ICommand;
 
     public record DeletePromotionServicesBody(
         Guid PromotionId
     );
 
     public record DeletePromotionServicesCommand(
-        Guid UserId,
+        Guid ClinicId,
         Guid PromotionId
     ) : ICommand;
 }

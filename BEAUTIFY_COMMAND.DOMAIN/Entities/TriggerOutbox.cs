@@ -104,6 +104,52 @@ public class TriggerOutbox : AggregateRoot<Guid>, IAuditableEntity
         return triggerOutbox;
     }
     
+    public static TriggerOutbox RaiseUpdatePromotionEvent(
+        Guid promotionId,
+        Guid serviceId,
+        string name,
+        double discountPercent,
+        string imageUrl,
+        decimal discountMaxPrice,
+        decimal discountMinPrice,
+        DateTime startDay,
+        DateTime endDate,
+        bool isActivated)
+    {
+        var triggerOutbox = new TriggerOutbox
+        {
+            Id = Guid.NewGuid()
+        };
+
+        triggerOutbox.RaiseDomainEvent(new ServicePromotionDomainEvent.ServicePromotionUpdated(
+            Guid.NewGuid(),
+            new PromotionEvent.UpdateServicePromotion(
+                serviceId, promotionId , name, discountPercent, imageUrl, discountMaxPrice,
+                discountMinPrice, startDay, endDate, isActivated
+            )));
+
+        return triggerOutbox;
+    }
+    
+    public static TriggerOutbox RaiseDeletePromotionEvent(
+        Guid promotionId,
+        Guid serviceId
+        )
+    {
+        var triggerOutbox = new TriggerOutbox
+        {
+            Id = Guid.NewGuid()
+        };
+
+        triggerOutbox.RaiseDomainEvent(new ServicePromotionDomainEvent.ServicePromotionDeleted(
+            Guid.NewGuid(),
+            new PromotionEvent.RemoveServicePromotion(
+                serviceId, promotionId 
+            )));
+
+        return triggerOutbox;
+    }
+
     
     public static TriggerOutbox RaiseCreateClinicServiceEvent(
         Guid id, string name, string description,

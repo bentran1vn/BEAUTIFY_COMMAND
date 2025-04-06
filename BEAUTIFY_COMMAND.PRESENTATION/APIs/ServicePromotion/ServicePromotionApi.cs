@@ -1,5 +1,6 @@
 using BEAUTIFY_COMMAND.CONTRACT.Services.ServicePromotions;
 using BEAUTIFY_PACKAGES.BEAUTIFY_PACKAGES.CONTRACT.Abstractions.Shared;
+using BEAUTIFY_PACKAGES.BEAUTIFY_PACKAGES.DOMAIN.Constrants;
 
 namespace BEAUTIFY_COMMAND.PRESENTATION.APIs.ServicePromotion;
 public class ServicePromotionApi : ApiEndpoint, ICarterModule
@@ -21,12 +22,15 @@ public class ServicePromotionApi : ApiEndpoint, ICarterModule
         gr1.MapPut("{id}", UpdatePromotionServices)
             .WithName("Update Clinic's Service Promotion")
             .WithSummary("Update Clinic's Service Promotion")
-            .WithDescription("");
+            .WithDescription("")
+            .DisableAntiforgery()
+            .RequireAuthorization();
 
         gr1.MapDelete("{id}", DeletePromotionServices)
             .WithName("Delete Clinic's Service Promotion")
             .WithSummary("Delete Clinic's Service Promotion")
-            .WithDescription("");
+            .WithDescription("")
+            .RequireAuthorization();
     }
 
     private static async Task<IResult> CreatePromotionServices(ISender sender
@@ -50,29 +54,34 @@ public class ServicePromotionApi : ApiEndpoint, ICarterModule
     }
 
     private static async Task<IResult> UpdatePromotionServices(ISender sender, Guid id,
-        [FromBody] Commands.UpdatePromotionServicesBody command)
+        HttpContext httpContext, [FromForm] Commands.UpdatePromotionServicesBody command)
     {
         if (id != command.PromotionId) return HandlerFailure(Result.Failure(new Error("400", "Id mismatch.")));
+        
+        var clinicId = httpContext.User.FindFirst(c => c.Type == "ClinicId")?.Value!;
 
         var result = await sender.Send(new Commands.UpdatePromotionServicesCommand(
-            Guid.NewGuid(),
+            Guid.Parse(clinicId),
             command.PromotionId,
             command.Name,
             command.DiscountPercent,
             command.Image,
             command.StartDay,
-            command.EndDate));
+            command.EndDate,
+            command.IsActivated));
 
         return result.IsFailure ? HandlerFailure(result) : Results.Ok(result);
     }
 
     private static async Task<IResult> DeletePromotionServices(ISender sender, Guid id,
-        [FromBody] Commands.DeletePromotionServicesBody command)
+        HttpContext httpContext, [FromBody] Commands.DeletePromotionServicesBody command)
     {
         if (id != command.PromotionId) return HandlerFailure(Result.Failure(new Error("400", "Id mismatch.")));
-
+        
+        var clinicId = httpContext.User.FindFirst(c => c.Type == "ClinicId")?.Value!;
+        
         var result = await sender.Send(new Commands.DeletePromotionServicesCommand(
-            Guid.NewGuid(),
+            Guid.Parse(clinicId),
             command.PromotionId));
 
         return result.IsFailure ? HandlerFailure(result) : Results.Ok(result);

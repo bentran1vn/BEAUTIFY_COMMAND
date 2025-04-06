@@ -18,12 +18,18 @@ public class
 
         if (isCategoryExisted == null || isCategoryExisted.IsDeleted)
             return Result.Failure(new Error("404", "Category not found "));
-
+        
         var isClinicExisted = await clinicRepository.FindAll(x => request.ClinicId.Contains(x.Id))
             .ToListAsync(cancellationToken);
 
         if (isClinicExisted.Count != request.ClinicId.Count)
             return Result.Failure(new Error("404", "Clinic not found "));
+        
+        var parentClinic = await clinicRepository
+            .FindSingleAsync(x => 
+                    isClinicExisted.Any(y => y.ParentId == x.Id ||
+                                             y.Id == x.Id)
+                , cancellationToken);
 
         List<ServiceMedia> serviceMediaList = new List<ServiceMedia>();
 

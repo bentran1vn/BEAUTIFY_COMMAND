@@ -16,9 +16,6 @@ public class CreatePromotionServicesCommandValidators : AbstractValidator<Comman
             .GreaterThan(0).WithMessage("Discount Percent must be greater than 0.")
             .LessThan(100).WithMessage("Discount Percent must be less than 100.");
 
-        RuleFor(x => x.Image)
-            .NotEmpty().WithMessage("Image is required.");
-
         RuleFor(x => x.StartDay)
             .NotEmpty().WithMessage("Start date is required.");
 
