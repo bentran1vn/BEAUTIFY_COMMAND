@@ -94,14 +94,14 @@ public class UpdateProcedureCommandHandler(
             x => x.ServiceId.Equals(request.ServiceId) &&
                  !x.IsDeleted && x.IsActivated && x.LivestreamRoom == null)?.DiscountPercent;
         
-        var lowestPrice = service.Procedures?.Sum(procedure =>
+        var lowestPrice = service.Procedures?.Where(x => !x.IsDeleted).Sum(procedure =>
             procedure.ProcedurePriceTypes.Any()
-                ? procedure.ProcedurePriceTypes.Min(pt => pt.Price)
+                ? procedure.ProcedurePriceTypes.Where(x => !x.IsDeleted).Min(pt => pt.Price)
                 : 0) ?? 0;
 
-        var highestPrice = service.Procedures?.Sum(procedure =>
+        var highestPrice = service.Procedures?.Where(x => !x.IsDeleted).Sum(procedure =>
             procedure.ProcedurePriceTypes.Any()
-                ? procedure.ProcedurePriceTypes.Max(pt => pt.Price)
+                ? procedure.ProcedurePriceTypes.Where(x => !x.IsDeleted).Max(pt => pt.Price)
                 : 0) ?? 0;
         
         var triggerOutbox = TriggerOutbox.RaiseUpdateServiceProcedureEvent(
