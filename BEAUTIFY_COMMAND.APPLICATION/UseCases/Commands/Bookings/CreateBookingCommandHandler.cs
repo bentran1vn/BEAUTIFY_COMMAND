@@ -72,21 +72,8 @@ internal sealed class
                 Procedure = x.Procedure
             });
 
-        if (request.IsDefault)
-        {
-            // Join with a subquery to get min prices per StepIndex
-            var minPrices = query
-                .GroupBy(x => x.StepIndex)
-                .Select(g => new { StepIndex = g.Key, MinPrice = g.Min(x => x.Price) });
-
-            query = from q in query
-                join mp in minPrices on new { q.StepIndex, q.Price } equals new { mp.StepIndex, Price = mp.MinPrice }
-                select q;
-        }
-        else
-        {
-            query = query.Where(x => request.ProcedurePriceTypeIds.Contains(x.Id));
-        }
+        // Join with a subquery to get min prices per StepIndex
+        query = request.IsDefault ? query.Where(x => x.Procedure.ServiceId == service.Id && x.IsDefault) : query.Where(x => request.ProcedurePriceTypeIds.Contains(x.Id));
 
         var list = await query.ToListAsync(cancellationToken);
 

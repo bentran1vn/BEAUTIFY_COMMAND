@@ -1,4 +1,5 @@
 using BEAUTIFY_COMMAND.CONTRACT.Services.Clinics;
+using BEAUTIFY_PACKAGES.BEAUTIFY_PACKAGES.DOMAIN.Constrants;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Models;
 
@@ -84,7 +85,7 @@ public class ClinicApi : ApiEndpoint, ICarterModule
 
         gr1.MapPatch("{id:guid}/status", ClinicUpdateStatus)
             .DisableAntiforgery()
-            .RequireAuthorization();
+            .RequireAuthorization(Constant.Role.CLINIC_ADMIN);
 
         gr1.MapPatch("{id:guid}/staff/doctor", StaffChangeDoctorWorkingClinic)
             .DisableAntiforgery()

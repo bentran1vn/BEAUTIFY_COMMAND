@@ -1,8 +1,10 @@
 ﻿using BEAUTIFY_COMMAND.CONTRACT.Services.CustomerSchedule;
 
+
 namespace BEAUTIFY_COMMAND.APPLICATION.UseCases.Commands.CustomerSchedules;
 internal sealed class CustomerRequestScheduleCommandHandler(
-    IRepositoryBase<CustomerSchedule, Guid> customerScheduleRepositoryBase)
+    IRepositoryBase<CustomerSchedule, Guid> customerScheduleRepositoryBase,
+    IMailService mailService)
     : ICommandHandler<Command.CustomerRequestScheduleCommand>
 {
     public async Task<Result> Handle(Command.CustomerRequestScheduleCommand request,
@@ -26,6 +28,14 @@ internal sealed class CustomerRequestScheduleCommandHandler(
 
         customerScheduleRepositoryBase.Update(customerSchedule);
         customerSchedule.CustomerScheduleUpdateDateAndTime(customerSchedule);
+
+        mailService.SendMail(new MailContent
+        {
+            To = customerSchedule.Customer.Email,
+            Subject = "Yêu cầu lịch hẹn đã được cập nhật",
+            Body =
+                $"Lịch của bạn đã được cập nhật {customerSchedule.StartTime.ToString()} và sẽ được thẫm mỹ viện duyệt trong 24h "
+        });
         return Result.Success();
     }
 }

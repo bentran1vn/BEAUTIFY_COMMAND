@@ -1,22 +1,15 @@
 ﻿namespace BEAUTIFY_COMMAND.APPLICATION.UseCases.Commands.Clinics;
-
 internal sealed class ChangeClinicActivateStatusCommandHandler(
-    IRepositoryBase<Clinic, Guid> clinicRepositoryBase,
-    ICurrentUserService currentUserService)
+    IRepositoryBase<Clinic, Guid> clinicRepositoryBase
+)
     : ICommandHandler<CONTRACT.Services.Clinics.Commands.ChangeClinicActivateStatusCommand>
 {
     public async Task<Result> Handle(
         CONTRACT.Services.Clinics.Commands.ChangeClinicActivateStatusCommand request,
         CancellationToken cancellationToken)
     {
-        // ✅ Ensure the user is a clinic admin
-        if (currentUserService.Role != Constant.Role.CLINIC_ADMIN)
-        {
-            return Result.Failure(new Error("401", "Only clinic admin can change status"));
-        }
-
         var clinic = await clinicRepositoryBase.FindByIdAsync(request.ClinicId, cancellationToken)
-            ?? throw new ClinicException.ClinicNotFoundException(request.ClinicId);
+                     ?? throw new ClinicException.ClinicNotFoundException(request.ClinicId);
 
         // ✅ Toggle current state
         var targetState = !clinic.IsActivated;
