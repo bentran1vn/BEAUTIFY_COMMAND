@@ -58,9 +58,9 @@ public class
                 ? procedure.ProcedurePriceTypes.Max(pt => pt.Price)
                 : 0) ?? 0;
 
-        var discountPercent = promotionTotal.FirstOrDefault(x =>
+        var discountPercent = promotionTotal?.FirstOrDefault(x =>
             x.IsActivated && x.ServiceId.Equals(service.Id) &&
-            !x.IsDeleted  && x.LivestreamRoom == null)?.DiscountPercent;
+            !x.IsDeleted  && x.LivestreamRoom == null)?.DiscountPercent ?? 0;
         
         var trigger = TriggerOutbox.RaiseDeleteServiceProcedureEvent(
             (Guid)isExisted.ServiceId!, isExisted.Id,
