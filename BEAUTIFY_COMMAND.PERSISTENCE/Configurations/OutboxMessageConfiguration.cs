@@ -3174,27 +3174,110 @@ internal sealed class OutboxMessageConfiguration : IEntityTypeConfiguration<Outb
                     RoleId = new Guid("b549752a-f156-4894-90ad-ab3994fd071d")
                 }
             };
-        
-        var createServiceEvents = services.Select(se => new ClinicServicesDomainEvent.ClinicServiceCreated(
-            Guid.NewGuid(),
-            new ClinicServiceEvent.CreateClinicService(
-                se.Id, se.Name, se.Description, null,
-                [],
-                new ClinicServiceEvent.Category(
-                    categories.FirstOrDefault(x => x.Id.Equals(se.CategoryId))!.Id,
-                    categories.FirstOrDefault(x => x.Id.Equals(se.CategoryId))!.Name,
-                    categories.FirstOrDefault(x => x.Id.Equals(se.CategoryId)).Description
-                ),
-                clinicServices.Where(cs => cs.ServiceId.Equals(se.Id))
-                    .Select(y =>
-                    {
-                        var x = clinics.FirstOrDefault(z => z.Id.Equals(y.ClinicId));
 
-                        return new ClinicServiceEvent.Clinic(x.Id, x.Name, x.Email,
-                            x.City, x.Address, x.FullAddress, x.District, x.Ward, x.PhoneNumber, x.ProfilePictureUrl,
-                            x.IsParent, x.ParentId);
-                    }).ToList()
-            ))).ToList();
+        var branding = new List<Clinic>
+        {
+            // Main Clinics (3) - one for each Clinic Admin
+            new Clinic
+            {
+                Id = new Guid("78705cfa-7097-408f-93e2-70950fc886a3"),
+                Name = "Beauty Center Sài Gòn",
+                Email = "beautycenter.saigon@gmail.com",
+                PhoneNumber = "0283456789",
+                City = "Hồ Chí Minh",
+                TaxCode = "12345678901",
+                BusinessLicenseUrl = "https://storage.googleapis.com/licenses/business-license-1.pdf",
+                OperatingLicenseUrl = "https://storage.googleapis.com/licenses/operating-license-1.pdf",
+                Status = 1,
+                TotalBranches = 2,
+                IsParent = true,
+                ParentId = null,
+                BankName = "Vietcombank",
+                BankAccountNumber = "1234567890123"
+            },
+            new Clinic
+            {
+                Id = new Guid("a96d68d9-3f28-48f3-add5-a74a6b882e93"),
+                Name = "Hanoi Beauty Spa",
+                Email = "hanoi.beautyspa@gmail.com",
+                PhoneNumber = "0243812345",
+                City = "Hà Nội",
+                TaxCode = "23456789012",
+                BusinessLicenseUrl = "https://storage.googleapis.com/licenses/business-license-2.pdf",
+                OperatingLicenseUrl = "https://storage.googleapis.com/licenses/operating-license-2.pdf",
+                Status = 1,
+                TotalBranches = 2,
+                IsParent = true,
+                ParentId = null,
+                BankName = "BIDV",
+                BankAccountNumber = "2345678901234"
+            },
+            new Clinic
+            {
+                Id = new Guid("e5a759cd-af8d-4a1c-8c05-43cc2c95e067"),
+                Name = "Skin Care Đà Nẵng",
+                Email = "skincare.danang@gmail.com",
+                PhoneNumber = "0236789123",
+                City = "Đà Nẵng",
+                TaxCode = "34567890123",
+                BusinessLicenseUrl = "https://storage.googleapis.com/licenses/business-license-3.pdf",
+                OperatingLicenseUrl = "https://storage.googleapis.com/licenses/operating-license-3.pdf",
+                Status = 1,
+                TotalBranches = 2,
+                IsParent = true,
+                ParentId = null,
+                BankName = "Agribank",
+                BankAccountNumber = "3456789012345"
+            }
+        };
+        
+        var clinicDictionary = new Dictionary<Guid, Guid>
+        {
+            { Guid.Parse("c0b7058f-8e72-4dee-8742-0df6206d1843"), Guid.Parse("78705cfa-7097-408f-93e2-70950fc886a3") }, // Child -> Parent
+            { Guid.Parse("6e7e4870-d28d-4a2d-9d0f-9e29f2930fc5"), Guid.Parse("78705cfa-7097-408f-93e2-70950fc886a3") },
+            { Guid.Parse("f3e6a7ca-28f9-4c7b-a190-c065cecf7be3"), Guid.Parse("a96d68d9-3f28-48f3-add5-a74a6b882e93") },
+            { Guid.Parse("c96de07e-32d7-41d5-b417-060cd95ee7ff"), Guid.Parse("a96d68d9-3f28-48f3-add5-a74a6b882e93") },
+            { Guid.Parse("3c8b8f3d-2f3f-4b17-9b46-0517c0183a50"), Guid.Parse("e5a759cd-af8d-4a1c-8c05-43cc2c95e067") },
+            { Guid.Parse("6ed1aefc-863e-4f2e-9c24-83eec7c0181c"), Guid.Parse("e5a759cd-af8d-4a1c-8c05-43cc2c95e067") }
+        };
+        
+        var createServiceEvents = services.Select(se =>
+        {
+            var clinicOfServices = clinicServices.Where(cs => cs.ServiceId.Equals(se.Id));
+            
+            var parentId = clinicDictionary
+                .FirstOrDefault(x => x.Key.Equals(clinicOfServices.FirstOrDefault()!.ClinicId)).Value;
+            
+            var brand = branding
+                .FirstOrDefault(x => x.Id.Equals(parentId))!;
+            
+            return new ClinicServicesDomainEvent.ClinicServiceCreated(
+                Guid.NewGuid(),
+                new ClinicServiceEvent.CreateClinicService(
+                    se.Id, se.Name, se.Description, new ClinicServiceEvent.Clinic(
+                        brand.Id, brand.Name, brand.Email,
+                        brand.City, brand.Address, brand.FullAddress,
+                        brand.District, brand.Ward, brand.PhoneNumber,
+                        brand.ProfilePictureUrl,
+                        brand.IsParent, brand.ParentId),
+                    [],
+                    new ClinicServiceEvent.Category(
+                        categories.FirstOrDefault(x => x.Id.Equals(se.CategoryId))!.Id,
+                        categories.FirstOrDefault(x => x.Id.Equals(se.CategoryId))!.Name,
+                        categories.FirstOrDefault(x => x.Id.Equals(se.CategoryId)).Description
+                    ),
+                    clinicOfServices
+                        .Select(y =>
+                        {
+                            var x = clinics.FirstOrDefault(z => z.Id.Equals(y.ClinicId));
+
+                            return new ClinicServiceEvent.Clinic(x.Id, x.Name, x.Email,
+                                x.City, x.Address, x.FullAddress, x.District, x.Ward, x.PhoneNumber,
+                                x.ProfilePictureUrl,
+                                x.IsParent, x.ParentId);
+                        }).ToList()
+                ));
+        }).ToList();
         
         var createProcedureEvents = procedures.Select(pro => new ProceduresDomainEvent.ProcedureCreated(
             Guid.NewGuid(),

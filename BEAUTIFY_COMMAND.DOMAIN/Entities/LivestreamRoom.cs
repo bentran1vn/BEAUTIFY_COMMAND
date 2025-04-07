@@ -4,6 +4,8 @@ namespace BEAUTIFY_COMMAND.DOMAIN.Entities;
 public class LivestreamRoom : AggregateRoot<Guid>, IAuditableEntity
 {
     [MaxLength(100)] public required string Name { get; set; }
+    public string ? Description { get; set; }
+    public string? Image { get; set; }
     public TimeOnly? StartDate { get; set; }
     public TimeOnly? EndDate { get; set; }
     [MaxLength(50)] public string? Status { get; set; }
