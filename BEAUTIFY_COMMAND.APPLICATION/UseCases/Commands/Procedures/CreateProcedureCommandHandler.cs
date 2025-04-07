@@ -88,14 +88,14 @@ public class
 
         procedurePriceTypeServiceRepository.AddRange(priceTypes);
 
-        var lowestPrice = isExisted.Procedures?.Sum(procedure =>
+        var lowestPrice = isExisted.Procedures?.Where(x => !x.IsDeleted).Sum(procedure =>
             procedure.ProcedurePriceTypes.Any()
-                ? procedure.ProcedurePriceTypes.Min(pt => pt.Price)
+                ? procedure.ProcedurePriceTypes.Where(x => !x.IsDeleted).Min(pt => pt.Price)
                 : 0) ?? 0;
 
-        var highestPrice = isExisted.Procedures?.Sum(procedure =>
+        var highestPrice = isExisted.Procedures?.Where(x => !x.IsDeleted).Sum(procedure =>
             procedure.ProcedurePriceTypes.Any()
-                ? procedure.ProcedurePriceTypes.Max(pt => pt.Price)
+                ? procedure.ProcedurePriceTypes.Where(x => !x.IsDeleted).Max(pt => pt.Price)
                 : 0) ?? 0;
 
         var discountPercent = isExisted.Promotions?.FirstOrDefault(x =>
