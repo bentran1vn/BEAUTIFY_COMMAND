@@ -104,6 +104,9 @@ public class UpdateProcedureCommandHandler(
                 ? procedure.ProcedurePriceTypes.Where(x => !x.IsDeleted).Max(pt => pt.Price)
                 : 0) ?? 0;
         
+        service.MaxPrice = highestPrice;
+        service.MinPrice = lowestPrice;
+        
         var triggerOutbox = TriggerOutbox.RaiseUpdateServiceProcedureEvent(
             isExisted.Id, (Guid)isExisted.ServiceId, isExisted.Name, isExisted.Description,
             highestPrice, lowestPrice, highestPrice - (decimal?)discountPercent * highestPrice,
