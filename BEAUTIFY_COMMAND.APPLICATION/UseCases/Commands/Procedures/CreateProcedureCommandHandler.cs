@@ -102,6 +102,9 @@ public class
             x.IsActivated && x.ServiceId.Equals(request.ClinicServiceId) &&
                           !x.IsDeleted  && x.LivestreamRoom == null)?.DiscountPercent;
 
+        isExisted.MaxPrice = highestPrice;
+        isExisted.MinPrice = lowestPrice;
+
         var trigger = TriggerOutbox.RaiseCreateServiceProcedureEvent(
             procedure.Id, isExisted.Id, procedure.Name, procedure.Description,
             highestPrice, lowestPrice,

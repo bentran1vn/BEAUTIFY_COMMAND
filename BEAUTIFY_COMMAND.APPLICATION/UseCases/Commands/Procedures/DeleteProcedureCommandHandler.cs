@@ -64,6 +64,15 @@ public class
             procedure.ProcedurePriceTypes.Any()
                 ? procedure.ProcedurePriceTypes.Where(x => !x.IsDeleted).Max(pt => pt.Price)
                 : 0) ?? 0;
+        
+        var newService = await _serviceRepository.FindAll(x => x.Id == service.Id)
+            .AsNoTracking()
+            .FirstOrDefaultAsync(cancellationToken);
+        
+        newService!.MaxPrice = highestPrice;
+        newService!.MinPrice = lowestPrice;
+        
+        _serviceRepository.Update(newService);
 
         var discountPercent = promotionTotal?.FirstOrDefault(x =>
             x.IsActivated && x.ServiceId.Equals(service.Id) &&
