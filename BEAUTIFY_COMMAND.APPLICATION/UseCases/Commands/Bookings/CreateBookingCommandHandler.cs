@@ -135,7 +135,7 @@ internal sealed class
             Discount = discountPrice,
             TotalAmount = total,
             FinalAmount = total - discountPrice,
-            IsFromLiveStream = request.LiveStreamRoomId != null
+            LivestreamRoomId = request.LiveStreamRoomId
         };
         var orderDetails = list.Select(x => new OrderDetail
         {
