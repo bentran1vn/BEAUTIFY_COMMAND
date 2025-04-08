@@ -95,15 +95,20 @@ internal sealed class
             return Result.Failure(new Error("400", "Step indexes are not in a valid sequence or steps are missing."));
         }
 
+        #region livestream
+
         var discount = await promotionRepositoryBase.FindSingleAsync(
-            x => x.ServiceId == request.ServiceId && x.IsActivated && x.LivestreamRoomId == null, cancellationToken);
+            x => x.ServiceId == request.ServiceId && x.IsActivated && x.LivestreamRoomId == request.LiveStreamRoomId, cancellationToken);
         decimal discountPrice = 0;
         var total = list.Sum(x => x.Price);
         if (discount != null)
         {
             discountPrice = total * (decimal)discount.DiscountPercent;
         }
-
+        else{
+            discountPrice=list.procedure.service.DiscountPrice;
+        }
+        #endregion livestream
         var order = new Order
         {
             Id = Guid.NewGuid(),
@@ -112,7 +117,9 @@ internal sealed class
             Status = Constant.OrderStatus.ORDER_PENDING,
             Discount = discountPrice,
             TotalAmount = total,
-            FinalAmount = total - discountPrice
+            FinalAmount = total - discountPrice,
+            IsFromLiveStream= request.LiveStreamRoomId!= null
+            
         };
         var orderDetails = list.Select(x => new OrderDetail
         {

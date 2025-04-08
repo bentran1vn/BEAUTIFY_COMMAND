@@ -10,6 +10,7 @@ public class Order : AggregateRoot<Guid>, IAuditableEntity
     [Column(TypeName = "decimal(18,2)")] public decimal? Discount { get; set; }
     [Column(TypeName = "decimal(18,2)")] public decimal? FinalAmount { get; set; }
     public DateTimeOffset OrderDate { get; set; } = DateTimeOffset.UtcNow;
+    public bool? IsFromLiveStream {get;set;} = false;
     public Guid? ServiceId { get; set; }
     public virtual Service? Service { get; set; }
 
