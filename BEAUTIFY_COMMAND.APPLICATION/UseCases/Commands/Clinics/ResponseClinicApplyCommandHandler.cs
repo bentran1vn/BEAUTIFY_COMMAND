@@ -1,3 +1,5 @@
+using BEAUTIFY_COMMAND.CONTRACT.MailTemplates;
+
 namespace BEAUTIFY_COMMAND.APPLICATION.UseCases.Commands.Clinics;
 public class ResponseClinicApplyCommandHandler(
     IRepositoryBase<Staff, Guid> staffRepository,
@@ -27,7 +29,7 @@ public class ResponseClinicApplyCommandHandler(
         var content = new MailContent
         {
             To = applyRequest.Clinic!.Email,
-            Subject = "Response the Clinic Apply Request"
+            Subject = "Clinic Application Decision"
         };
         applyRequest.Status = request.Action + 1;
 
@@ -37,43 +39,18 @@ public class ResponseClinicApplyCommandHandler(
             applyRequest.Clinic!.Status = request.Action + 1;
 
             content.Body = request.Action % 2 == 0
-                ? $@"
-                    <p>Dear {applyRequest.Clinic.Email},</p>
-                    <p>First of all, our System thanks you for your application!
-                    But according to your application, we have to say that we are sorry that
-                    you violated the standard rules of the system, so your registration request was banned ({applyRequest.RejectReason}).
-                    If you have any questions, please reply to this email.</p>
-                    <p>Thank you for your application !</p>
-                "
-                : $@"
-                    <p>Dear {applyRequest.Clinic.Email},</p>
-                    <p>First of all, our System thanks you for submitting your application!
-                    But according to your application, we have to say that we regret that
-                    your application still does not meet the requirements ({applyRequest.RejectReason}).,
-                    so your registration request has been rejected.
-                    You have to prepare again for the next application and I hope you understand this.
-                    If you have any questions, please reply to this email.</p>
-                    <p>Thank you for your application !</p>
-                "; // 2 is Banned
+                ? ClinicApplicationEmailTemplates.GetBannedTemplate(applyRequest.Clinic.Email,
+                    applyRequest.RejectReason)
+                : ClinicApplicationEmailTemplates.GetRejectedTemplate(applyRequest.Clinic.Email,
+                    applyRequest.RejectReason);
         }
         else
         {
             applyRequest.Clinic!.Status = 1;
             applyRequest.Clinic!.IsActivated = true;
 
-            var guid = Guid.NewGuid().ToString("N").ToLower(); // Convert to lowercase
-            const string specialChars = "!@#$%^&*";
-
-            var random = new Random();
-
-            // Ensure first character is uppercase
-            var firstChar = char.ToUpper(guid[0]);
-            var specialChar = specialChars[random.Next(specialChars.Length)];
-
-            // Construct the password
-            var passwordRandom = $"{firstChar}{guid.Substring(1, 5)}{specialChar}{guid.Substring(6, 2)}";
-
-            var hashingPassword = passwordHasherService.HashPassword($"{passwordRandom}");
+            var passwordRandom = GenerateRandomPassword();
+            var hashingPassword = passwordHasherService.HashPassword(passwordRandom);
 
             var user = new Staff
             {
@@ -82,7 +59,6 @@ public class ResponseClinicApplyCommandHandler(
                 LastName = "LastNameAdmin",
                 PhoneNumber = applyRequest.Clinic!.PhoneNumber,
                 DateOfBirth = DateOnly.Parse("1999-01-01"),
-                //Address = applyRequest.Clinic!.Address,
                 City = applyRequest.Clinic.City,
                 District = applyRequest.Clinic.District,
                 Ward = applyRequest.Clinic.Ward,
@@ -102,16 +78,8 @@ public class ResponseClinicApplyCommandHandler(
 
             userClinicRepository.Add(userClinic);
 
-            content.Body = $@"
-                <p>Dear {applyRequest.Clinic.Email},</p>
-                <p>First of all, our System thanks you for submitting your application!
-                We are congratulations to say that your application has been approve</p>
-                <p>Your admin account for login to manage clinic: </p>
-                <p>Email: {applyRequest.Clinic.Email}</p>
-                <p>Password: {passwordRandom}</p>
-                <p>If you have any questions, please reply to this email.</p>
-                <p>Thank you for your application !</p>
-            ";
+            content.Body =
+                ClinicApplicationEmailTemplates.GetApprovedTemplate(applyRequest.Clinic.Email, passwordRandom);
 
             var sub = await subscriptionPackageRepository.FindSingleAsync(x => x.Name.Equals("Dùng Thử"),
                 cancellationToken);
@@ -136,5 +104,19 @@ public class ResponseClinicApplyCommandHandler(
         await mailService.SendMail(content);
 
         return Result.Success("Response the request successfully !");
+    }
+
+    private static string GenerateRandomPassword()
+    {
+        var guid = Guid.NewGuid().ToString("N").ToLower();
+        const string specialChars = "!@#$%^&*";
+        var random = new Random();
+
+        // Ensure first character is uppercase
+        var firstChar = char.ToUpper(guid[0]);
+        var specialChar = specialChars[random.Next(specialChars.Length)];
+
+        // Construct the password
+        return $"{firstChar}{guid.Substring(1, 5)}{specialChar}{guid.Substring(6, 2)}";
     }
 }
