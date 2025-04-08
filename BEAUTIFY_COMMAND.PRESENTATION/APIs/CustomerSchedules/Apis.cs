@@ -11,13 +11,17 @@ public class Apis : ApiEndpoint, ICarterModule
         var gr1 = app.NewVersionedApi("CustomerSchedules").MapGroup(BaseUrl).HasApiVersion(1);
         gr1.MapPatch("{scheduleId:guid}/{status}", UpdateCustomerScheduleAfterPaymentCompleted);
         gr1.MapPatch("staff/{scheduleId:guid}/{status}",
-            StaffUpdateCustomerScheduleStatusAfterCheckIn).RequireAuthorization();
+            StaffUpdateCustomerScheduleStatusAfterCheckIn).RequireAuthorization(Constant.Role.CLINIC_STAFF);
         gr1.MapPost("generate/{customerScheduleId:guid}", GenerateCustomerScheduleAfterPayment)
             .RequireAuthorization(Constant.Role.CLINIC_STAFF);
-        gr1.MapPatch("doctor/{customerScheduleId:guid}/", DoctorUpdateCustomerScheduleNote);
+        gr1.MapPatch("doctor/{customerScheduleId:guid}/", DoctorUpdateCustomerScheduleNote)
+            .RequireAuthorization(Constant.Role.DOCTOR);
+        ;
         gr1.MapPut("customer/{customerScheduleId:guid}/", CustomerRequestSchedule);
-        gr1.MapPatch("staff/{customerScheduleId:guid}/", StaffUpdateCustomerScheduleTimeCommand);
-        gr1.MapPatch("staff/approve/{customerScheduleId:guid}/", StaffUpdateCustomerScheduleStatusAfterCustomerRequest);
+        gr1.MapPatch("staff/{customerScheduleId:guid}/", StaffUpdateCustomerScheduleTimeCommand)
+            .RequireAuthorization(Constant.Role.CLINIC_STAFF);
+        gr1.MapPatch("staff/approve/{customerScheduleId:guid}/", StaffUpdateCustomerScheduleStatusAfterCustomerRequest)
+            .RequireAuthorization(Constant.Role.CLINIC_STAFF);
     }
 
 
