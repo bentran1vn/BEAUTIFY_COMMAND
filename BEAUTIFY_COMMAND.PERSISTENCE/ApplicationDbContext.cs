@@ -29,13 +29,6 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
             .HasForeignKey(cs => cs.CustomerId)
             .OnDelete(DeleteBehavior.NoAction); // Prevent cascade delete
 
-        builder.Entity<User>()
-            .HasIndex(x => x.Email)
-            .IsUnique()
-            .HasAnnotation("SqlServer:CaseSensitive", true);
-        builder.Entity<User>()
-            .HasIndex(x => x.PhoneNumber)
-            .IsUnique();
         builder.Entity<Clinic>().HasQueryFilter(x => !x.IsDeleted);
         builder.Entity<Category>()
             .HasQueryFilter(x => !x.IsDeleted);
@@ -52,6 +45,7 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
             method?.Invoke(null, [builder]);
         }
 
+        builder.Entity<Staff>().HasQueryFilter(x => !x.IsDeleted);
         builder.Entity<ClinicOnBoardingRequest>().HasQueryFilter(x => !x.IsDeleted);
         builder.Entity<ClinicVoucher>().HasQueryFilter(x => !x.IsDeleted);
         builder.Entity<ClinicService>().HasQueryFilter(x => !x.IsDeleted);
