@@ -13,9 +13,10 @@ internal sealed class
         IRepositoryBase<OrderDetail, Guid> orderDetailRepositoryBase,
         IRepositoryBase<Service, Guid> serviceRepositoryBase,
         IRepositoryBase<WorkingSchedule, Guid> workingScheduleRepositoryBase,
-        IRepositoryBase<CustomerSchedule?, Guid> customerScheduleRepositoryBase,
+        IRepositoryBase<CustomerSchedule, Guid> customerScheduleRepositoryBase,
         IMailService mailService,
-        IRepositoryBase<Promotion, Guid> promotionRepositoryBase)
+        IRepositoryBase<Promotion, Guid> promotionRepositoryBase,
+        IRepositoryBase<LivestreamRoom, Guid> livestreamRoomRepositoryBase)
     : ICommandHandler<CONTRACT.Services.Bookings.Commands.CreateBookingCommand>
 {
     public async Task<Result> Handle(CONTRACT.Services.Bookings.Commands.CreateBookingCommand request,
@@ -67,13 +68,15 @@ internal sealed class
                 x.IsDefault,
                 x.Duration,
                 ProcedureServiceId = x.Procedure.ServiceId,
-                StepIndex = x.Procedure.StepIndex,
+                x.Procedure.StepIndex,
                 DiscountPrice = x.Procedure.Service.DiscountPrice ?? 0,
-                Procedure = x.Procedure
+                x.Procedure
             });
 
         // Join with a subquery to get min prices per StepIndex
-        query = request.IsDefault ? query.Where(x => x.Procedure.ServiceId == service.Id && x.IsDefault) : query.Where(x => request.ProcedurePriceTypeIds.Contains(x.Id));
+        query = request.IsDefault
+            ? query.Where(x => x.Procedure.ServiceId == service.Id && x.IsDefault)
+            : query.Where(x => request.ProcedurePriceTypeIds.Contains(x.Id));
 
         var list = await query.ToListAsync(cancellationToken);
 
@@ -97,18 +100,32 @@ internal sealed class
 
         #region livestream
 
-        var discount = await promotionRepositoryBase.FindSingleAsync(
-            x => x.ServiceId == request.ServiceId && x.IsActivated && x.LivestreamRoomId == request.LiveStreamRoomId, cancellationToken);
-        decimal discountPrice = 0;
+        decimal? discountPrice = 0;
         var total = list.Sum(x => x.Price);
-        if (discount != null)
+        //todo check valid live stream id
+        if (request.LiveStreamRoomId != null)
         {
-            discountPrice = total * (decimal)discount.DiscountPercent;
+            var livestreamRoom = await livestreamRoomRepositoryBase.FindSingleAsync(
+                x => x.Id == request.LiveStreamRoomId && x.Status == "live" && x.Date == null, cancellationToken);
+            if (livestreamRoom == null)
+                return Result.Failure(new Error("404", "Livestream room not found or not available"));
+            var discount = await promotionRepositoryBase.FindSingleAsync(
+                x => x.ServiceId == request.ServiceId && x.IsActivated &&
+                     x.LivestreamRoomId == request.LiveStreamRoomId,
+                cancellationToken);
+
+            if (discount != null)
+            {
+                discountPrice = total * (decimal)discount.DiscountPercent;
+            }
+            else
+            {
+                discountPrice = service.DiscountPrice;
+            }
         }
-        else{
-            discountPrice=list.procedure.service.DiscountPrice;
-        }
+
         #endregion livestream
+
         var order = new Order
         {
             Id = Guid.NewGuid(),
@@ -118,8 +135,7 @@ internal sealed class
             Discount = discountPrice,
             TotalAmount = total,
             FinalAmount = total - discountPrice,
-            IsFromLiveStream= request.LiveStreamRoomId!= null
-            
+            IsFromLiveStream = request.LiveStreamRoomId != null
         };
         var orderDetails = list.Select(x => new OrderDetail
         {

@@ -29,4 +29,18 @@ public static class Command
     ) : ICommand;
 
     public record CustomerRequestScheduleCommand(Guid CustomerScheduleId, DateOnly Date, TimeSpan StartTime) : ICommand;
+
+
+    public record StaffUpdateCustomerScheduleTimeCommand(
+        Guid CustomerScheduleId,
+        DateOnly Date,
+        TimeSpan StartTime
+    ) : ICommand;
+
+    
+    //todo 
+    public record StaffApproveCustomerScheduleCommand(
+        Guid CustomerScheduleId,
+        string Status
+    ) : ICommand;
 }
