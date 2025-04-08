@@ -42,7 +42,7 @@ public class CustomerSchedule : AggregateRoot<Guid>, IAuditableEntity
             Date = customerSchedule.Date,
             ServiceId = customerSchedule.ServiceId,
             ServiceName = customerSchedule.Service.Name,
-            DoctorId = customerSchedule.DoctorId,
+            DoctorId = customerSchedule.Doctor.UserId,
             DoctorName = customerSchedule.Doctor.User.FirstName + " " + customerSchedule.Doctor.User.LastName,
             ClinicId = customerSchedule.Doctor.ClinicId,
             ClinicName = customerSchedule.Doctor.Clinic.Name,

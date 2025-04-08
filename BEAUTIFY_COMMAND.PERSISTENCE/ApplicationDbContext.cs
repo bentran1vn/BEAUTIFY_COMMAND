@@ -45,6 +45,9 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
             method?.Invoke(null, [builder]);
         }
 
+        builder.Entity<Service>().Property(x => x.Description).HasColumnType("text");
+        builder.Entity<Procedure>().Property(x => x.Description).HasColumnType("text");
+
         builder.Entity<Staff>().HasQueryFilter(x => !x.IsDeleted);
         builder.Entity<ClinicOnBoardingRequest>().HasQueryFilter(x => !x.IsDeleted);
         builder.Entity<ClinicVoucher>().HasQueryFilter(x => !x.IsDeleted);
