@@ -9,19 +9,22 @@ internal sealed class DoctorSetWorkingServiceCommandHandler(
 {
     public async Task<Result> Handle(CONTRACT.Services.DoctorServices.Commands.DoctorSetWorkingServiceCommand request, CancellationToken cancellationToken)
     {
-        var doctors = await Task.WhenAll(request.DoctorId.Select(id => staffRepository.FindByIdAsync(id, cancellationToken)));
-        if (doctors.Any(d => d is null)) {
-            var missingDoctorId = request.DoctorId.First(id => doctors[Array.IndexOf(request.DoctorId.ToArray(), id)] is null);
-            return Result.Failure(new Error("404", $"Doctor not found with ID: {missingDoctorId}"));
+        var doctors = await staffRepository.FindAll(x => request.DoctorId.Contains(x.Id)).ToListAsync(cancellationToken);
+        
+        if (doctors.Count != request.DoctorId.Count) {
+            return Result.Failure(new Error("404", $"Doctor not found"));
         }
+        
         if (doctors.Any(d => d?.Role?.Name != Constant.Role.DOCTOR))
             return Result.Failure(new Error("403", $"User {request.DoctorId.First(id => doctors[Array.IndexOf(request.DoctorId.ToArray(), id)]?.Role?.Name != Constant.Role.DOCTOR)} is not a doctor"));
+        
         var service = await serviceRepository.FindByIdAsync(request.ServiceIds, cancellationToken);
         if (service is null) return Result.Failure(new Error("404", $"Service not found: {request.ServiceIds}"));
-        var existingDoctorServices = doctorServiceRepository
+        
+        var existingDoctorServices = await doctorServiceRepository
             .FindAll(ds => request.DoctorId.Contains(ds.DoctorId) && ds.ServiceId == request.ServiceIds)
             .Include(ds => ds.Doctor)
-            .ToList();
+            .ToListAsync(cancellationToken);
 
         if (existingDoctorServices.Count > 0)
         {
