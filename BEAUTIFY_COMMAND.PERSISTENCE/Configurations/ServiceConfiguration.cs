@@ -126,6 +126,13 @@ namespace BEAUTIFY_COMMAND.PERSISTENCE.Configurations
                     MaxPrice = 70000000,
                     MinPrice = 50000000,
                     CategoryId = idThuNhoNguc,
+                    ServiceMedias = [
+                        new ServiceMedia
+                        {
+                            Id = Guid.NewGuid(),
+                            ImageUrl = "https://res.cloudinary.com/dvadlh7ah/image/upload/v1744178015/b8pbl60kjocx61cyizto.png",
+                        },
+                    ]
                 },
                 new Service
                 {

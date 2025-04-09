@@ -1,6 +1,5 @@
 using BEAUTIFY_COMMAND.DOMAIN.Entities;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-
 using Microsoft.EntityFrameworkCore;
 
 namespace BEAUTIFY_COMMAND.PERSISTENCE.Configurations
@@ -22,6 +21,8 @@ namespace BEAUTIFY_COMMAND.PERSISTENCE.Configurations
                     TaxCode = "12345678901",
                     BusinessLicenseUrl = "https://storage.googleapis.com/licenses/business-license-1.pdf",
                     OperatingLicenseUrl = "https://storage.googleapis.com/licenses/operating-license-1.pdf",
+                    ProfilePictureUrl =
+                        "https://res.cloudinary.com/dmiueqpah/image/upload/v1744138052/1-1711946463238508154235_eakppa.jpg",
                     Status = 1,
                     TotalBranches = 2,
                     IsParent = true,
@@ -111,6 +112,7 @@ namespace BEAUTIFY_COMMAND.PERSISTENCE.Configurations
                     TaxCode = "23456789013",
                     BusinessLicenseUrl = "https://storage.googleapis.com/licenses/business-license-2-1.pdf",
                     OperatingLicenseUrl = "https://storage.googleapis.com/licenses/operating-license-2-1.pdf",
+                    ProfilePictureUrl = "https://res.cloudinary.com/dvadlh7ah/image/upload/v1744178257/ty7jok5ooenrha5aydid.jpg",
                     Status = 1,
                     TotalBranches = 0,
                     IsParent = false,
@@ -128,6 +130,7 @@ namespace BEAUTIFY_COMMAND.PERSISTENCE.Configurations
                     TaxCode = "23456789014",
                     BusinessLicenseUrl = "https://storage.googleapis.com/licenses/business-license-2-2.pdf",
                     OperatingLicenseUrl = "https://storage.googleapis.com/licenses/operating-license-2-2.pdf",
+                    ProfilePictureUrl ="https://res.cloudinary.com/dmiueqpah/image/upload/v1744138051/hinh-AA-Clinic-lgo-moi-1-1_smg56o.jpg",
                     Status = 1,
                     TotalBranches = 0,
                     IsParent = false,
