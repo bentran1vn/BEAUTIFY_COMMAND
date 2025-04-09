@@ -3352,14 +3352,14 @@ internal sealed class OutboxMessageConfiguration : IEntityTypeConfiguration<Outb
                 })
         };
         
-        var outBoxList = new List<OutboxMessage>();
-        
-        outBoxList.AddRange(outBoxCreateServices);
-        
-        outBoxList.AddRange(outBoxCreateProcedures);
-        
-        outBoxList.Add(outBoxCreateDoctorServices);
-
-        builder.HasData(outBoxList);
+        // var outBoxList = new List<OutboxMessage>();
+        //
+        // outBoxList.AddRange(outBoxCreateServices);
+        //
+        // outBoxList.AddRange(outBoxCreateProcedures);
+        //
+        // outBoxList.Add(outBoxCreateDoctorServices);
+        //
+        // builder.HasData(outBoxList);
     }
 }

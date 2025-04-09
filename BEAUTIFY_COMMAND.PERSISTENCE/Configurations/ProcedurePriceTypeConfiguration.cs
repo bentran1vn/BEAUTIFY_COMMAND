@@ -1554,7 +1554,7 @@ namespace BEAUTIFY_COMMAND.PERSISTENCE.Configurations
                 }
             };
 
-            builder.HasData(procedurePriceTypes);
+            // builder.HasData(procedurePriceTypes);
         }
     }
 }

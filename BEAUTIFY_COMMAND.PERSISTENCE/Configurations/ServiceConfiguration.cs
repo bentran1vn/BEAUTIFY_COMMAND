@@ -192,7 +192,7 @@ namespace BEAUTIFY_COMMAND.PERSISTENCE.Configurations
                 }
             };
             
-            builder.HasData(services);
+            // builder.HasData(services);
         }
     }
 }

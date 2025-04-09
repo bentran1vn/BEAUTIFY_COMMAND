@@ -240,7 +240,7 @@ namespace BEAUTIFY_COMMAND.PERSISTENCE.Configurations
                 }
             };
             
-            builder.HasData(clinicServices);
+            // builder.HasData(clinicServices);
         }
     }
 }
