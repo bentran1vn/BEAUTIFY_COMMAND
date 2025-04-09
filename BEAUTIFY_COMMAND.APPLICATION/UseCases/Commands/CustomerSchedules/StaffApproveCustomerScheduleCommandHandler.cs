@@ -10,7 +10,7 @@ internal sealed class StaffApproveCustomerScheduleCommandHandler(
         CancellationToken cancellationToken)
     {
         var customerSchedule = await customerScheduleRepositoryBase.FindSingleAsync(
-            x => x.Id == request.CustomerScheduleId && x.Status == Constant.OrderStatus.ORDER_PENDING,
+            x => x.Id == request.CustomerScheduleId && x.Status == Constant.OrderStatus.ORDER_WAITING_APPROVAL,
             cancellationToken);
 
         if (customerSchedule == null)
