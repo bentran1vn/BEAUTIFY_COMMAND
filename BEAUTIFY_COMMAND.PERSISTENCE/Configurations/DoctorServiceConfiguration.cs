@@ -203,7 +203,7 @@ public class DoctorServiceConfiguration: IEntityTypeConfiguration<DoctorService>
             }
         };
         
-        builder.HasData(doctorServices);
+        // builder.HasData(doctorServices);
         
     }
 }

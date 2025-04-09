@@ -691,7 +691,7 @@ namespace BEAUTIFY_COMMAND.PERSISTENCE.Configurations
                 }
             };
 
-            builder.HasData(procedures);
+            // builder.HasData(procedures);
 
             builder.HasKey(p => p.Id);
 
