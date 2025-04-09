@@ -131,7 +131,7 @@ internal sealed class
 
             decimal? discountPrice = 0;
             var total = list.Sum(x => x.Price);
-            //todo check valid live stream id
+            
             if (request.LiveStreamRoomId != null)
             {
                 var livestreamRoom = await livestreamRoomRepositoryBase.FindSingleAsync(

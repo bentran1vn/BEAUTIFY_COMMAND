@@ -7,69 +7,61 @@ internal sealed class DoctorSetWorkingServiceCommandHandler(
     IRepositoryBase<DoctorService, Guid> doctorServiceRepository)
     : ICommandHandler<CONTRACT.Services.DoctorServices.Commands.DoctorSetWorkingServiceCommand>
 {
-    public async Task<Result> Handle(CONTRACT.Services.DoctorServices.Commands.DoctorSetWorkingServiceCommand request,
-        CancellationToken cancellationToken)
+    public async Task<Result> Handle(CONTRACT.Services.DoctorServices.Commands.DoctorSetWorkingServiceCommand request, CancellationToken cancellationToken)
     {
-        var doctor = await staffRepository.FindByIdAsync(request.DoctorId, cancellationToken);
-        if (doctor is null) throw new UserException.UserNotFoundException(request.DoctorId);
-
-        if (doctor.Role?.Name != Constant.Role.DOCTOR) return Result.Failure(new Error("403", "User is not a doctor"));
-
-        var existingServices = serviceRepository.FindAll(x => request.ServiceIds.Contains(x.Id)).ToList();
-        var existingServiceIds = existingServices.Select(x => x.Id).ToHashSet();
-        var missingServiceIds = request.ServiceIds.Except(existingServiceIds).ToList();
-        if (missingServiceIds.Count != 0)
-        {
-            var missingServicesMessage = $"Services not found: {string.Join(", ", missingServiceIds)}";
-            return Result.Failure(new Error("404", missingServicesMessage));
+        var doctors = await Task.WhenAll(request.DoctorId.Select(id => staffRepository.FindByIdAsync(id, cancellationToken)));
+        if (doctors.Any(d => d is null)) {
+            var missingDoctorId = request.DoctorId.First(id => doctors[Array.IndexOf(request.DoctorId.ToArray(), id)] is null);
+            return Result.Failure(new Error("404", $"Doctor not found with ID: {missingDoctorId}"));
         }
-        
-        
-
+        if (doctors.Any(d => d?.Role?.Name != Constant.Role.DOCTOR))
+            return Result.Failure(new Error("403", $"User {request.DoctorId.First(id => doctors[Array.IndexOf(request.DoctorId.ToArray(), id)]?.Role?.Name != Constant.Role.DOCTOR)} is not a doctor"));
+        var service = await serviceRepository.FindByIdAsync(request.ServiceIds, cancellationToken);
+        if (service is null) return Result.Failure(new Error("404", $"Service not found: {request.ServiceIds}"));
         var existingDoctorServices = doctorServiceRepository
-            .FindAll(ds => ds.DoctorId == request.DoctorId && request.ServiceIds.Contains(ds.ServiceId))
-            .Include(ds => ds.Service)
+            .FindAll(ds => request.DoctorId.Contains(ds.DoctorId) && ds.ServiceId == request.ServiceIds)
+            .Include(ds => ds.Doctor)
             .ToList();
 
-        var existingDoctorServiceIds = existingDoctorServices.Select(ds => ds.ServiceId).ToHashSet();
-        var existingServiceNames =
-            existingDoctorServices.Select(ds => ds.Service?.Name).Where(name => name != null).ToList();
-
-        if (existingServiceNames.Count > 0)
+        if (existingDoctorServices.Count > 0)
         {
-            var duplicateServicesMessage =
-                $"Doctor already has these services: {string.Join(", ", existingServiceNames)}";
-            return Result.Failure(new Error("409", duplicateServicesMessage));
+            var names = existingDoctorServices
+                .Where(ds => ds.Doctor != null)
+                .Select(ds => $"{ds.Doctor.FirstName} {ds.Doctor.LastName}")
+                .ToList();
+            return Result.Failure(new Error("409", $"These doctors already have this service: {string.Join(", ", names)}"));
         }
 
-        var newDoctorServices = request.ServiceIds
-            .Where(serviceId => !existingDoctorServiceIds.Contains(serviceId))
-            .Select(serviceId => new DoctorService
+        var newDoctorServices = request.DoctorId
+            .Select(doctorId => new DoctorService
             {
                 Id = Guid.NewGuid(),
-                DoctorId = request.DoctorId,
-                Doctor = doctor,
-                ServiceId = serviceId
-            })
-            .ToList();
-
+                DoctorId = doctorId,
+                Doctor = doctors.First(d => d?.Id == doctorId),
+                ServiceId = request.ServiceIds
+            }).ToList();
         if (newDoctorServices.Count == 0) return Result.Success();
-        var doctorService = newDoctorServices.Select(x => new EntityEvent.DoctorServiceEntity
+
+        var doctorServiceEntities = newDoctorServices.Select(x => new EntityEvent.DoctorServiceEntity
         {
             Id = x.Id,
             ServiceId = x.ServiceId,
             Doctor = new EntityEvent.UserEntity
             {
                 Id = x.Doctor.Id,
-                FullName = x.Doctor.FirstName + " " + x.Doctor.LastName,
+                FullName = $"{x.Doctor.FirstName} {x.Doctor.LastName}",
                 Email = x.Doctor.Email,
                 PhoneNumber = x.Doctor.PhoneNumber,
                 ProfilePictureUrl = x.Doctor.ProfilePicture
             }
         }).ToList();
-        newDoctorServices.FirstOrDefault().RaiseDoctorServiceCreatedEvent(doctorService);
+
+        if (newDoctorServices.Any())
+        {
+            newDoctorServices.First().RaiseDoctorServiceCreatedEvent(doctorServiceEntities);
+        }
         doctorServiceRepository.AddRange(newDoctorServices);
 
-        return Result.Success();
+        return Result.Success("Services assigned to doctors successfully");
     }
 }
