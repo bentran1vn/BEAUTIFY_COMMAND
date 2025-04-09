@@ -1,5 +1,6 @@
 using System.Reflection;
 using BEAUTIFY_COMMAND.INFRASTRUCTURE.BackgroundJobs;
+using BEAUTIFY_COMMAND.INFRASTRUCTURE.Locking;
 using BEAUTIFY_PACKAGES.BEAUTIFY_PACKAGES.APPLICATION.Abstractions;
 using BEAUTIFY_PACKAGES.BEAUTIFY_PACKAGES.CONTRACT.JsonConverters;
 using BEAUTIFY_PACKAGES.BEAUTIFY_PACKAGES.INFRASTRUCTURE.Authentication;
@@ -17,6 +18,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using Quartz;
+using StackExchange.Redis;
 
 namespace BEAUTIFY_COMMAND.INFRASTRUCTURE.DependencyInjection.Extensions;
 public static class ServiceCollectionExtensions
@@ -42,11 +44,19 @@ public static class ServiceCollectionExtensions
     // Configure Redis
     public static void AddRedisInfrastructure(this IServiceCollection services, IConfiguration configuration)
     {
+        var connectionString = configuration.GetConnectionString("Redis");
+
         services.AddStackExchangeRedisCache(redisOptions =>
         {
-            var connectionString = configuration.GetConnectionString("Redis");
             redisOptions.Configuration = connectionString;
         });
+
+        // Register Redis ConnectionMultiplexer as singleton
+        services.AddSingleton<IConnectionMultiplexer>(sp =>
+            ConnectionMultiplexer.Connect(connectionString ?? "localhost"));
+
+        // Register the distributed lock service
+        services.AddSingleton<IDistributedLockService, RedisDistributedLockService>();
     }
 
     // Configure for masstransit with rabbitMQ

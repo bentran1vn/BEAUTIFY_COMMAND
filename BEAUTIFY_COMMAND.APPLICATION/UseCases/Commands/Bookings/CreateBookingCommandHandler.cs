@@ -1,4 +1,6 @@
 ﻿using System.Globalization;
+using BEAUTIFY_COMMAND.INFRASTRUCTURE.Locking;
+using Microsoft.Extensions.Logging;
 
 namespace BEAUTIFY_COMMAND.APPLICATION.UseCases.Commands.Bookings;
 internal sealed class
@@ -16,7 +18,9 @@ internal sealed class
         IRepositoryBase<CustomerSchedule, Guid> customerScheduleRepositoryBase,
         IMailService mailService,
         IRepositoryBase<Promotion, Guid> promotionRepositoryBase,
-        IRepositoryBase<LivestreamRoom, Guid> livestreamRoomRepositoryBase)
+        IRepositoryBase<LivestreamRoom, Guid> livestreamRoomRepositoryBase,
+        IDistributedLockService distributedLockService,
+        ILogger<CreateBookingCommandHandler> logger)
     : ICommandHandler<CONTRACT.Services.Bookings.Commands.CreateBookingCommand>
 {
     public async Task<Result> Handle(CONTRACT.Services.Bookings.Commands.CreateBookingCommand request,
@@ -60,160 +64,200 @@ internal sealed class
 
         #endregion
 
-        var query = procedurePriceTypeRepositoryBase.FindAll(x => !x.IsDeleted)
-            .Select(x => new
-            {
-                x.Id,
-                x.Price,
-                x.IsDefault,
-                x.Duration,
-                ProcedureServiceId = x.Procedure.ServiceId,
-                x.Procedure.StepIndex,
-                DiscountPrice = x.Procedure.Service.DiscountPrice ?? 0,
-                x.Procedure
-            });
+        // Create a unique lock key based on doctor, date, and time
+        var lockKey = $"booking:{request.DoctorId}:{request.BookingDate}:{request.StartTime}";
 
-        // Join with a subquery to get min prices per StepIndex
-        query = request.IsDefault
-            ? query.Where(x => x.Procedure.ServiceId == service.Id && x.IsDefault)
-            : query.Where(x => request.ProcedurePriceTypeIds.Contains(x.Id));
-
-        var list = await query.ToListAsync(cancellationToken);
-
-        if (list.Count == 0)
-            return Result.Failure(new Error("404", "No valid procedures found."));
-
-        var serviceIds = list.Select(x => x.ProcedureServiceId).Distinct().ToList();
-
-        var stepIndexes = list.Select(x => x.Procedure.StepIndex).ToList();
-        if (serviceIds.Count > 1 || stepIndexes.Count != stepIndexes.Distinct().Count())
+        try
         {
-            return Result.Failure(new Error("400", "Conflicting procedures: Multiple services or overlapping steps."));
-        }
-
-        var maxStepIndex = stepIndexes.Max();
-        var expectedSteps = Enumerable.Range(1, maxStepIndex).ToList();
-        if (!stepIndexes.OrderBy(x => x).SequenceEqual(expectedSteps))
-        {
-            return Result.Failure(new Error("400", "Step indexes are not in a valid sequence or steps are missing."));
-        }
-
-        #region livestream
-
-        decimal? discountPrice = 0;
-        var total = list.Sum(x => x.Price);
-        //todo check valid live stream id
-        if (request.LiveStreamRoomId != null)
-        {
-            var livestreamRoom = await livestreamRoomRepositoryBase.FindSingleAsync(
-                x => x.Id == request.LiveStreamRoomId && x.Status == "live" && x.Date == null, cancellationToken);
-            if (livestreamRoom == null)
-                return Result.Failure(new Error("404", "Livestream room not found or not available"));
-            var discount = await promotionRepositoryBase.FindSingleAsync(
-                x => x.ServiceId == request.ServiceId && x.IsActivated &&
-                     x.LivestreamRoomId == request.LiveStreamRoomId,
+            // Try to acquire a distributed lock with a 30-second expiry and 10-second wait time
+            using var lockHandle = await distributedLockService.AcquireLockAsync(
+                lockKey,
+                TimeSpan.FromSeconds(30), // Lock expiry time
+                TimeSpan.FromSeconds(10), // Wait time
                 cancellationToken);
 
-            if (discount != null)
+            logger.LogInformation("Acquired lock for booking: {LockKey}", lockKey);
+
+            // Check again if the time slot is still available (double-check after acquiring the lock)
+            var workingSchedule = await
+                workingScheduleRepositoryBase.FindAll(x =>
+                    x.Date == request.BookingDate && x.DoctorClinicId == userClinic.Id &&
+                    x.StartTime == request.StartTime).ToListAsync(cancellationToken);
+
+            if (workingSchedule.Count != 0)
+                return Result.Failure(new Error("400", "Doctor is busy at this time !"));
+
+            var query = procedurePriceTypeRepositoryBase.FindAll(x => !x.IsDeleted)
+                .Select(x => new
+                {
+                    x.Id,
+                    x.Price,
+                    x.IsDefault,
+                    x.Duration,
+                    ProcedureServiceId = x.Procedure.ServiceId,
+                    x.Procedure.StepIndex,
+                    DiscountPrice = x.Procedure.Service.DiscountPrice ?? 0,
+                    x.Procedure
+                });
+
+            // Join with a subquery to get min prices per StepIndex
+            query = request.IsDefault
+                ? query.Where(x => x.Procedure.ServiceId == service.Id && x.IsDefault)
+                : query.Where(x => request.ProcedurePriceTypeIds.Contains(x.Id));
+
+            var list = await query.ToListAsync(cancellationToken);
+
+            if (list.Count == 0)
+                return Result.Failure(new Error("404", "No valid procedures found."));
+
+            var serviceIds = list.Select(x => x.ProcedureServiceId).Distinct().ToList();
+
+            var stepIndexes = list.Select(x => x.Procedure.StepIndex).ToList();
+            if (serviceIds.Count > 1 || stepIndexes.Count != stepIndexes.Distinct().Count())
             {
-                discountPrice = total * (decimal)discount.DiscountPercent;
+                return Result.Failure(new Error("400",
+                    "Conflicting procedures: Multiple services or overlapping steps."));
             }
-            else
+
+            var maxStepIndex = stepIndexes.Max();
+            var expectedSteps = Enumerable.Range(1, maxStepIndex).ToList();
+            if (!stepIndexes.OrderBy(x => x).SequenceEqual(expectedSteps))
             {
-                discountPrice = service.DiscountPrice;
+                return Result.Failure(
+                    new Error("400", "Step indexes are not in a valid sequence or steps are missing."));
             }
-        }
 
-        #endregion livestream
+            #region livestream
 
-        var order = new Order
-        {
-            Id = Guid.NewGuid(),
-            CustomerId = user.Id,
-            ServiceId = list.First().ProcedureServiceId,
-            Status = Constant.OrderStatus.ORDER_PENDING,
-            Discount = discountPrice,
-            TotalAmount = total,
-            FinalAmount = total - discountPrice,
-            LivestreamRoomId = request.LiveStreamRoomId
-        };
-        var orderDetails = list.Select(x => new OrderDetail
-        {
-            Id = Guid.NewGuid(),
-            OrderId = order.Id,
-            ProcedurePriceTypeId = x.Id,
-            Price = x.Price
-        }).ToList();
-        var durationOfProcedures =
-            list.Where(x => x.StepIndex == 1).Select(x => x.Duration).FirstOrDefault() / 60.0 + 0.5;
-        var initialProcedure = list.Where(x => x.StepIndex == 1).Select(x => x.Id).FirstOrDefault();
-        var procedure = await procedurePriceTypeRepositoryBase.FindByIdAsync(initialProcedure, cancellationToken);
+            decimal? discountPrice = 0;
+            var total = list.Sum(x => x.Price);
+            //todo check valid live stream id
+            if (request.LiveStreamRoomId != null)
+            {
+                var livestreamRoom = await livestreamRoomRepositoryBase.FindSingleAsync(
+                    x => x.Id == request.LiveStreamRoomId && x.Status == "live" && x.Date == null, cancellationToken);
+                if (livestreamRoom == null)
+                    return Result.Failure(new Error("404", "Livestream room not found or not available"));
+                var discount = await promotionRepositoryBase.FindSingleAsync(
+                    x => x.ServiceId == request.ServiceId && x.IsActivated &&
+                         x.LivestreamRoomId == request.LiveStreamRoomId,
+                    cancellationToken);
 
-        var customerSchedule = new CustomerSchedule
-        {
-            Id = Guid.NewGuid(),
-            CustomerId = currentUserService.UserId!.Value,
-            DoctorId = userClinic.Id,
-            ServiceId = request.ServiceId,
-            OrderId = order.Id,
-            StartTime = request.StartTime,
-            EndTime = request.StartTime.Add(TimeSpan.FromHours(durationOfProcedures)),
-            Date = request.BookingDate,
-            ProcedurePriceTypeId = initialProcedure,
-            ProcedurePriceType = procedure,
-            Status = Constant.OrderStatus.ORDER_PENDING,
-        };
-        var doctorSchedule = new WorkingSchedule
-        {
-            Id = Guid.NewGuid(),
-            CustomerScheduleId = customerSchedule.Id,
-            DoctorClinicId = userClinic.Id,
-            StartTime = request.StartTime,
-            EndTime = request.StartTime.Add(TimeSpan.FromHours(durationOfProcedures)),
-            Date = request.BookingDate,
-        };
+                if (discount != null)
+                {
+                    discountPrice = total * (decimal)discount.DiscountPercent;
+                }
+                else
+                {
+                    discountPrice = service.DiscountPrice;
+                }
+            }
 
-        orderRepositoryBase.Add(order);
-        orderDetailRepositoryBase.AddRange(orderDetails);
-        workingScheduleRepositoryBase.Add(doctorSchedule);
-        customerScheduleRepositoryBase.Add(customerSchedule);
-        doctorSchedule.WorkingScheduleCreate(doctor.Id, clinic.Id, doctor.FirstName + " " + doctor.LastName,
-            [doctorSchedule], customerSchedule);
-        customerSchedule.Create(customerSchedule);
-        await mailService.SendMail(new MailContent
-        {
-            To = user.Email,
-            Subject = "Booking Confirmation",
-            Body = @"
+            #endregion livestream
+
+            var order = new Order
+            {
+                Id = Guid.NewGuid(),
+                CustomerId = user.Id,
+                ServiceId = list.First().ProcedureServiceId,
+                Status = Constant.OrderStatus.ORDER_PENDING,
+                Discount = discountPrice,
+                TotalAmount = total,
+                FinalAmount = total - discountPrice,
+                LivestreamRoomId = request.LiveStreamRoomId
+            };
+            var orderDetails = list.Select(x => new OrderDetail
+            {
+                Id = Guid.NewGuid(),
+                OrderId = order.Id,
+                ProcedurePriceTypeId = x.Id,
+                Price = x.Price
+            }).ToList();
+            var durationOfProcedures =
+                list.Where(x => x.StepIndex == 1).Select(x => x.Duration).FirstOrDefault() / 60.0 + 0.5;
+            var initialProcedure = list.Where(x => x.StepIndex == 1).Select(x => x.Id).FirstOrDefault();
+            var procedure = await procedurePriceTypeRepositoryBase.FindByIdAsync(initialProcedure, cancellationToken);
+
+            var customerSchedule = new CustomerSchedule
+            {
+                Id = Guid.NewGuid(),
+                CustomerId = currentUserService.UserId!.Value,
+                DoctorId = userClinic.Id,
+                ServiceId = request.ServiceId,
+                OrderId = order.Id,
+                StartTime = request.StartTime,
+                EndTime = request.StartTime.Add(TimeSpan.FromHours(durationOfProcedures)),
+                Date = request.BookingDate,
+                ProcedurePriceTypeId = initialProcedure,
+                ProcedurePriceType = procedure,
+                Status = Constant.OrderStatus.ORDER_PENDING,
+            };
+            var doctorSchedule = new WorkingSchedule
+            {
+                Id = Guid.NewGuid(),
+                CustomerScheduleId = customerSchedule.Id,
+                DoctorClinicId = userClinic.Id,
+                StartTime = request.StartTime,
+                EndTime = request.StartTime.Add(TimeSpan.FromHours(durationOfProcedures)),
+                Date = request.BookingDate,
+            };
+
+            orderRepositoryBase.Add(order);
+            orderDetailRepositoryBase.AddRange(orderDetails);
+            workingScheduleRepositoryBase.Add(doctorSchedule);
+            customerScheduleRepositoryBase.Add(customerSchedule);
+            doctorSchedule.WorkingScheduleCreate(doctor.Id, clinic.Id, doctor.FirstName + " " + doctor.LastName,
+                [doctorSchedule], customerSchedule);
+            customerSchedule.Create(customerSchedule);
+            await mailService.SendMail(new MailContent
+            {
+                To = user.Email,
+                Subject = "Booking Confirmation",
+                Body = @"
     <html>
     <body style='font-family: Arial, sans-serif; color: #333; line-height: 1.6;'>
         <p>Dear " + user.FirstName + " " + user.LastName + @",</p>
-        
+
         <p>Your booking has been successfully created. Here are the details:</p>
-        
+
         <ul style=""list-style-type: none; padding: 0;"">
             <li><strong>Booking ID:</strong> " + order.Id + @"</li>
             <li><strong>Booking Date:</strong> " +
-                   request.BookingDate.ToString("dd/MM/yyyy", CultureInfo.InvariantCulture) + @"</li>
+                       request.BookingDate.ToString("dd/MM/yyyy", CultureInfo.InvariantCulture) + @"</li>
             <li><strong>Start Time:</strong> " + request.StartTime.ToString(@"hh\:mm") + @"</li>
 <li><strong>End Time:</strong> " + (customerSchedule.EndTime?.ToString(@"hh\:mm") ?? "N/A") + @"</li>
             <li><strong>Service:</strong> " + service.Name + @"</li>
             <li><strong>Doctor:</strong> " + doctor.FirstName + " " + doctor.LastName + @"</li>
             <li><strong>Address:</strong> " + clinic.Address + @"</li>
         </ul>
-        
+
         <p>Thank you for choosing our service!</p>
-        
+
         <p>When arrived at the clinic, please provide this email or provide to the staff with your full name and phone number.</p>
-        
+
         <p>Best regards,</p>
         <p><strong>" + clinic.Name + @" Clinic</strong></p>
     </body>
     </html>
 "
-        });
+            });
 
 
-        return Result.Success();
+            logger.LogInformation("Booking created successfully for doctor {DoctorId} at {Date} {Time}",
+                request.DoctorId, request.BookingDate, request.StartTime);
+
+            return Result.Success("Booking Created Successfully !");
+        }
+        catch (TimeoutException ex)
+        {
+            logger.LogWarning(ex, "Failed to acquire lock for booking: {LockKey}", lockKey);
+            return Result.Failure(new Error("409",
+                "The booking time slot is currently being processed by another request. Please try again."));
+        }
+        catch (Exception ex)
+        {
+            logger.LogError(ex, "Error occurred while processing booking: {LockKey}", lockKey);
+            throw;
+        }
     }
 }

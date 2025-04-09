@@ -18,6 +18,7 @@
     <ItemGroup>
         <ProjectReference Include="..\BEAUTIFY_COMMAND.CONTRACT\BEAUTIFY_COMMAND.CONTRACT.csproj"/>
         <ProjectReference Include="..\BEAUTIFY_COMMAND.PERSISTENCE\BEAUTIFY_COMMAND.PERSISTENCE.csproj"/>
+        <ProjectReference Include="..\BEAUTIFY_COMMAND.INFRASTRUCTURE\BEAUTIFY_COMMAND.INFRASTRUCTURE.csproj"/>
     </ItemGroup>
 
     <ItemGroup>
