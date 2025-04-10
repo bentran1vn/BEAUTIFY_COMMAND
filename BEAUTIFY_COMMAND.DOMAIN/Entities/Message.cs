@@ -8,7 +8,7 @@ public class Message : AggregateRoot<Guid>, IAuditableEntity
     public Guid SenderId { get; set; }
     //public virtual User? Sender { get; set; }
 
-    public bool IsStaff { get; set; } = false;
+    public bool IsClinic { get; set; } = false;
     [MaxLength(200)] public required string Content { get; set; }
     public bool IsRead { get; set; } = false;
     public Guid? LivestreamRoomId { get; set; }
