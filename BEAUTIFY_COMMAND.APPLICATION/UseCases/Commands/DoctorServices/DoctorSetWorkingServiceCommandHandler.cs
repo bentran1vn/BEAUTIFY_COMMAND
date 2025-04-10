@@ -9,7 +9,9 @@ internal sealed class DoctorSetWorkingServiceCommandHandler(
 {
     public async Task<Result> Handle(CONTRACT.Services.DoctorServices.Commands.DoctorSetWorkingServiceCommand request, CancellationToken cancellationToken)
     {
-        var doctors = await staffRepository.FindAll(x => request.DoctorId.Contains(x.Id)).ToListAsync(cancellationToken);
+        var doctors = await staffRepository.FindAll(x => request.DoctorId.Contains(x.Id))
+            .Include(x => x.Role)
+            .ToListAsync(cancellationToken);
         
         if (doctors.Count != request.DoctorId.Count) {
             return Result.Failure(new Error("404", $"Doctor not found"));
@@ -40,7 +42,6 @@ internal sealed class DoctorSetWorkingServiceCommandHandler(
             {
                 Id = Guid.NewGuid(),
                 DoctorId = doctorId,
-                Doctor = doctors.First(d => d?.Id == doctorId),
                 ServiceId = request.ServiceIds
             }).ToList();
 

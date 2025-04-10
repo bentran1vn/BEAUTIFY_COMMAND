@@ -31,6 +31,11 @@ public class
 
         if (parentClinic == null || parentClinic.IsDeleted || parentClinic.ParentId != null || parentClinic.IsParent == false)
             return Result.Failure(new Error("404", "Clinic Parent not found "));
+
+        if (!parentClinic.IsActivated)
+        {
+            return Result.Failure(new Error("404", "Clinic Parent is not activated"));
+        }
         
         List<ServiceMedia> serviceMediaList = new List<ServiceMedia>();
 
