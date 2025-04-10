@@ -3,7 +3,8 @@ internal sealed class ClinicDeleteAccountOfEmployeeCommandHandler(
     IRepositoryBase<Staff, Guid> staffRepository,
     IRepositoryBase<Clinic, Guid> clinicRepository,
     IRepositoryBase<UserClinic, Guid> userClinicRepository,
-    IRepositoryBase<WorkingSchedule, Guid> workingScheduleRepository)
+    IRepositoryBase<WorkingSchedule, Guid> workingScheduleRepository,
+    IRepositoryBase<DoctorService, Guid> doctorServiceRepository)
     : ICommandHandler<CONTRACT.Services.Clinics.Commands.ClinicDeleteAccountOfEmployeeCommand>
 {
     public async Task<Result> Handle(CONTRACT.Services.Clinics.Commands.ClinicDeleteAccountOfEmployeeCommand request,
@@ -50,6 +51,17 @@ internal sealed class ClinicDeleteAccountOfEmployeeCommandHandler(
 
         staffRepository.Remove(user);
         userClinicRepository.Remove(userClinic);
+
+        //todo
+        var doctorService = await doctorServiceRepository.FindAll(x =>
+                x.DoctorId == request.UserId && x.Service.ClinicServices.FirstOrDefault().ClinicId == request.ClinicId)
+            .ToListAsync(cancellationToken);
+        if (doctorService.Count != 0)
+        {
+            doctorServiceRepository.RemoveMultiple(doctorService);
+        }
+
+        userClinic.RaiseDoctorFromClinicDeletedEvent(user.Id);
         return Result.Success();
     }
 }
