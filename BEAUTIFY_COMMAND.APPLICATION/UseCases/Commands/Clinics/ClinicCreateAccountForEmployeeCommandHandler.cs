@@ -4,6 +4,7 @@ namespace BEAUTIFY_COMMAND.APPLICATION.UseCases.Commands.Clinics;
 internal sealed class ClinicCreateAccountForEmployeeCommandHandler(
     IRepositoryBase<Staff, Guid> staffRepository,
     IRepositoryBase<User, Guid> userRepository,
+    IRepositoryBase<UserClinic, Guid> userClinicRepository,
     IPasswordHasherService passwordHasherService,
     IMailService mailService,
     IRepositoryBase<Role, Guid> roleRepository,
@@ -69,6 +70,15 @@ internal sealed class ClinicCreateAccountForEmployeeCommandHandler(
         };
 
         staffRepository.Add(user);
+        
+        var userClinic = new UserClinic
+        {
+            Id = Guid.NewGuid(),
+            ClinicId = request.ClinicId,
+            UserId = userId
+        };
+        
+        userClinicRepository.Add(userClinic);
 
         // Send email with the new account details
         await mailService.SendMail(new MailContent
