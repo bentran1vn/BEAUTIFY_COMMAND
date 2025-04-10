@@ -42,22 +42,29 @@ internal sealed class DoctorSetWorkingServiceCommandHandler(
             {
                 Id = Guid.NewGuid(),
                 DoctorId = doctorId,
-                Doctor = doctors.FirstOrDefault(d => d.Id == doctorId),
                 ServiceId = request.ServiceIds
             }).ToList();
 
-        var doctorServiceEntities = newDoctorServices.Select(x => new EntityEvent.DoctorServiceEntity
+        var doctorServiceEntities = newDoctorServices.Select(x =>
         {
-            Id = x.Id,
-            ServiceId = x.ServiceId,
-            Doctor = new EntityEvent.UserEntity
+            var doctor = doctors.FirstOrDefault(d => d.Id == x.DoctorId);
+            if (doctor == null)
             {
-                Id = x.Doctor.Id,
-                FullName = $"{x.Doctor.FirstName} {x.Doctor.LastName}",
-                Email = x.Doctor.Email,
-                PhoneNumber = x.Doctor.PhoneNumber,
-                ProfilePictureUrl = x.Doctor.ProfilePicture
+                return null;
             }
+            return new EntityEvent.DoctorServiceEntity
+            {
+                Id = x.Id,
+                ServiceId = x.ServiceId,
+                Doctor = new EntityEvent.UserEntity
+                {
+                    Id = doctor.Id,
+                    FullName = $"{doctor.FirstName} {doctor.LastName}",
+                    Email = doctor.Email,
+                    PhoneNumber = doctor.PhoneNumber ?? "",
+                    ProfilePictureUrl = doctor.ProfilePicture ?? ""
+                }
+            };
         }).ToList();
 
         if (newDoctorServices.Count == 0)
