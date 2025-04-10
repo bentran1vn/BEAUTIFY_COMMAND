@@ -12,6 +12,12 @@ public class ClinicApplyCommandValidators : AbstractValidator<Commands.ClinicApp
             .NotEmpty()
             .EmailAddress().WithMessage("Invalid email format");
 
+        //validate tax code is number only and can only accept hyphen
+        RuleFor(x => x.TaxCode)
+            .NotEmpty()
+            .Matches(@"^[0-9-]+$").WithMessage("Tax code must be a number only");
+
+
         /*RuleFor(x => x.PhoneNumber)
             .NotEmpty()
             .Matches(@"^\+?[1-9]\d{1,14}$").WithMessage("Invalid phone number format");*/
