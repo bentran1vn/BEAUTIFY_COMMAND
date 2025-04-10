@@ -42,6 +42,7 @@ internal sealed class DoctorSetWorkingServiceCommandHandler(
             {
                 Id = Guid.NewGuid(),
                 DoctorId = doctorId,
+                Doctor = doctors.FirstOrDefault(d => d.Id == doctorId),
                 ServiceId = request.ServiceIds
             }).ToList();
 
