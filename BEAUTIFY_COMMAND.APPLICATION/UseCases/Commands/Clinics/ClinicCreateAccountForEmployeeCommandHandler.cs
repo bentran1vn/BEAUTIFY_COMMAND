@@ -71,14 +71,14 @@ internal sealed class ClinicCreateAccountForEmployeeCommandHandler(
 
         staffRepository.Add(user);
         
-        var userClinic = new UserClinic
-        {
-            Id = Guid.NewGuid(),
-            ClinicId = request.ClinicId,
-            UserId = userId
-        };
+        // var userClinic = new UserClinic
+        // {
+        //     Id = Guid.NewGuid(),
+        //     ClinicId = request.ClinicId,
+        //     UserId = userId
+        // };
         
-        userClinicRepository.Add(userClinic);
+        // userClinicRepository.Add(userClinic);
 
         // Send email with the new account details
         await mailService.SendMail(new MailContent
