@@ -129,7 +129,12 @@ public class ClinicApi : ApiEndpoint, ICarterModule
     private static async Task<IResult> ClinicCreateAccountForEmployee(ISender sender, [FromRoute] Guid id,
         [FromForm] Commands.ClinicCreateAccountForEmployeeCommand command)
     {
-        var result = await sender.Send(command with { ClinicId = id });
+        if (id != command.ClinicId)
+        {
+            throw new Exception("Id not matching");
+        }
+        
+        var result = await sender.Send(command);
         return result.IsFailure ? HandlerFailure(result) : Results.Ok(result);
     }
 
