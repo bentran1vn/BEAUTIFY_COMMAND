@@ -11,49 +11,61 @@ public class ClinicApplyCommandHandler(
     {
         var vietnamTimeZone = TimeZoneInfo.FindSystemTimeZoneById("SE Asia Standard Time");
 
-        var isExist = await clinicRepository
-            .FindSingleAsync(
-                x => x.Email == request.Email || x.TaxCode == request.TaxCode
-                                              || x.PhoneNumber == request.PhoneNumber, cancellationToken,
-                x => x.ClinicOnBoardingRequests!);
+        // Get all clinics that match any of the fields in a single query
+        var existingClinics = await clinicRepository
+            .FindAll(x => (x.Email == request.Email || x.TaxCode == request.TaxCode || x.PhoneNumber == request.PhoneNumber) && !x.IsDeleted)
+            .ToListAsync(cancellationToken);
 
+        // Check if any field already exists
+        if (existingClinics.Any())
+        {
+            var duplicateFields = new List<string>();
+            if (existingClinics.Any(x => x.Email == request.Email)) duplicateFields.Add("Email");
+            if (existingClinics.Any(x => x.TaxCode == request.TaxCode)) duplicateFields.Add("Tax Code");
+            if (existingClinics.Any(x => x.PhoneNumber == request.PhoneNumber)) duplicateFields.Add("Phone Number");
+
+            return Result.Failure(new Error("400", $"The following information already exists: {string.Join(", ", duplicateFields)}"));
+        }
+
+        // If we need the clinic with all its related data for further processing
+        // Since we've already checked that no clinic exists with any of the fields,
+        // this will return null, but we'll keep it for code clarity
+        var isExist = await clinicRepository
+            .FindAll(x => (x.Email == request.Email && x.TaxCode == request.TaxCode && x.PhoneNumber == request.PhoneNumber) && !x.IsDeleted,
+                x => x.ClinicOnBoardingRequests!)
+            .AsTracking()
+            .FirstOrDefaultAsync(cancellationToken);
+
+        // Since we've already checked for duplicates above, if isExist is not null here,
+        // it means all three fields match (email, tax code, and phone number)
         if (isExist != null)
         {
-            if (isExist.TaxCode == request.TaxCode && isExist.PhoneNumber == request.PhoneNumber &&
-                isExist.Email == request.Email)
+            switch (isExist.Status)
             {
-                switch (isExist.Status)
-                {
-                    // Re-Apply
-                    case 1:
-                        return Result.Failure(new Error("400", "Clinics already apply successfully !"));
-                    case 0:
-                        return Result.Failure(new Error("400", "Clinics Request is handling !"));
-                    case 3:
-                        return Result.Failure(new Error("400", "Clinics is banned !"));
-                }
-
-                if (isExist.ClinicOnBoardingRequests == null || isExist.ClinicOnBoardingRequests!.Count == 0)
-                    return Result.Failure(new Error("404", "ClinicOnBoardingRequests Not Exist"));
-
-                isExist.TotalApply += 1;
-
-                // Check Send Date
-                var clinicOnBoardingRequest = new ClinicOnBoardingRequest
-                {
-                    Id = Guid.NewGuid(),
-                    ClinicId = isExist.Id,
-                    Status = 0,
-                    SendMailDate = TimeZoneInfo.ConvertTime(DateTimeOffset.UtcNow, vietnamTimeZone)
-                };
-
-                clinicOnBoardingRequestRepository.Add(clinicOnBoardingRequest);
+                // Re-Apply
+                case 1:
+                    return Result.Failure(new Error("400", "Clinics already apply successfully !"));
+                case 0:
+                    return Result.Failure(new Error("400", "Clinics Request is handling !"));
+                case 3:
+                    return Result.Failure(new Error("400", "Clinics is banned !"));
             }
-            else
+
+            if (isExist.ClinicOnBoardingRequests == null || isExist.ClinicOnBoardingRequests!.Count == 0)
+                return Result.Failure(new Error("404", "ClinicOnBoardingRequests Not Exist"));
+
+            isExist.TotalApply += 1;
+
+            // Check Send Date
+            var clinicOnBoardingRequest = new ClinicOnBoardingRequest
             {
-                // Already Information Taken
-                return Result.Failure(new Error("400", "Information Already Exist"));
-            }
+                Id = Guid.NewGuid(),
+                ClinicId = isExist.Id,
+                Status = 0,
+                SendMailDate = TimeZoneInfo.ConvertTime(DateTimeOffset.UtcNow, vietnamTimeZone)
+            };
+
+            clinicOnBoardingRequestRepository.Add(clinicOnBoardingRequest);
         }
         else
         {

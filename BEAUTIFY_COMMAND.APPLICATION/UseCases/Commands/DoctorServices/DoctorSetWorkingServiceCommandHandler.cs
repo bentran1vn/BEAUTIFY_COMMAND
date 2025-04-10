@@ -43,7 +43,6 @@ internal sealed class DoctorSetWorkingServiceCommandHandler(
                 Doctor = doctors.First(d => d?.Id == doctorId),
                 ServiceId = request.ServiceIds
             }).ToList();
-        if (newDoctorServices.Count == 0) return Result.Success();
 
         var doctorServiceEntities = newDoctorServices.Select(x => new EntityEvent.DoctorServiceEntity
         {
@@ -59,10 +58,12 @@ internal sealed class DoctorSetWorkingServiceCommandHandler(
             }
         }).ToList();
 
-        if (newDoctorServices.Any())
+        if (newDoctorServices.Count == 0)
         {
-            newDoctorServices.First().RaiseDoctorServiceCreatedEvent(doctorServiceEntities);
+            return Result.Success("No new doctor-service relationships to create");
         }
+
+        newDoctorServices.First().RaiseDoctorServiceCreatedEvent(doctorServiceEntities);
         doctorServiceRepository.AddRange(newDoctorServices);
 
         return Result.Success("Services assigned to doctors successfully");
