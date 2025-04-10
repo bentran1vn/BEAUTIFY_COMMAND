@@ -90,7 +90,7 @@ app.UseMiddleware<ExceptionHandlingMiddleware>();
 app.UseSwaggerAPI(); // => After MapCarter => Show Version
 
 app.UseCors("CorsPolicy");
-app.MapHub<PaymentHub>("/paymentHub");
+app.MapHub<PaymentHub>("api/PaymentHub");
 
 // app.UseHttpsRedirection();
 
