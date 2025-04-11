@@ -37,13 +37,13 @@ namespace BEAUTIFY_COMMAND.PERSISTENCE.Configurations
                 {
                     Id = new Guid("b2e0cbc8-1f29-45a1-b0d6-1f67d83c0a7d"),
                     ClinicId = new Guid("c0b7058f-8e72-4dee-8742-0df6206d1843"), // Beauty Center Sài Gòn - Chi nhánh Quận 1
-                    UserId = new Guid("d2b2d4b8-c22c-4fcb-96c4-85ccfa378b32") // Ngô Thị Mạnh
+                    UserId = new Guid("d2b2d4b8-c22c-4fcb-96c4-85ccfa378b32") // ĐỖ Thanh SƠn Quận 1
                 },
                 new UserClinic()
                 {
                     Id = new Guid("7f0c57c5-632a-4241-8425-95e8d1c5bd5a"),
                     ClinicId = new Guid("6e7e4870-d28d-4a2d-9d0f-9e29f2930fc5"), // Beauty Center Sài Gòn - Chi nhánh Quận 3
-                    UserId = new Guid("b02a28f3-f1a7-4fd7-bcb1-53be587be9f9") // Trần Thị Thảo
+                    UserId = new Guid("d2b2d4b8-c22c-4fcb-96c4-85ccfa378b33") // ĐỖ Thanh SƠn Quận 3
                 },
 
                 // Staff for Hanoi Beauty Spa (managed by Hoàng Quang Duy)
@@ -95,7 +95,7 @@ namespace BEAUTIFY_COMMAND.PERSISTENCE.Configurations
                 {
                     Id = new Guid("08c9d0e1-f2a3-4b4c-5d6e-7f8a9b0c1d2e"),
                     ClinicId = new Guid("6e7e4870-d28d-4a2d-9d0f-9e29f2930fc5"),
-                    UserId = new Guid("da2d6a80-75cc-4757-8ed3-e0b508ffb080") // Trịnh Thượng Lâm
+                    UserId = new Guid("a2b21279-5bbd-40c3-8981-6821c7f6b2ea") // Trịnh Thượng Lâm
                 },
                 new UserClinic()
                 {

@@ -49,11 +49,16 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
         builder.Entity<Procedure>().Property(x => x.Description).HasColumnType("text");
 
         builder.Entity<Staff>().HasQueryFilter(x => !x.IsDeleted);
+        builder.Entity<DoctorCertificate>().HasQueryFilter(x => !x.IsDeleted); // Add matching filter for DoctorCertificate
+        builder.Entity<UserClinic>().HasQueryFilter(x => !x.IsDeleted); // Add matching filter for UserClinic
+        builder.Entity<CustomerSchedule>().HasQueryFilter(x => !x.IsDeleted); // Add matching filter for CustomerSchedule
         builder.Entity<ClinicOnBoardingRequest>().HasQueryFilter(x => !x.IsDeleted);
         builder.Entity<ClinicVoucher>().HasQueryFilter(x => !x.IsDeleted);
         builder.Entity<ClinicService>().HasQueryFilter(x => !x.IsDeleted);
         builder.Entity<SystemTransaction>().HasQueryFilter(x => !x.IsDeleted);
         builder.Entity<Promotion>().HasQueryFilter(x => !x.IsDeleted);
         builder.Entity<DoctorService>().HasQueryFilter(x => !x.IsDeleted);
+        builder.Entity<LiveStreamDetail>().HasQueryFilter(x => !x.IsDeleted); // Add filter for LiveStreamDetail
+        builder.Entity<Feedback>().HasQueryFilter(x => !x.IsDeleted); // Add filter for Feedback
     }
 }

@@ -52,7 +52,7 @@ internal sealed class ClinicDeleteAccountOfEmployeeCommandHandler(
         staffRepository.Remove(user);
         userClinicRepository.Remove(userClinic);
 
-        //todo
+        
         var doctorService = await doctorServiceRepository.FindAll(x =>
                 x.DoctorId == request.UserId && x.Service.ClinicServices.FirstOrDefault().ClinicId == request.ClinicId)
             .ToListAsync(cancellationToken);
