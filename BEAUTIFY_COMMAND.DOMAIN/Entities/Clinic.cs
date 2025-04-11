@@ -5,7 +5,7 @@ public class Clinic : AggregateRoot<Guid>, IAuditableEntity
 {
     [MaxLength(100)] public required string Name { get; set; }
     [MaxLength(100)] public required string Email { get; set; }
-    [MaxLength(15)] public required string PhoneNumber { get; set; }
+    [MaxLength(15, ErrorMessage = "Phone Number must be 10 digits")] public required string PhoneNumber { get; set; }
     [MaxLength(100)] public string? City { get; set; }
     [MaxLength(100)] public string? District { get; set; }
     [MaxLength(100)] public string? Ward { get; set; }
