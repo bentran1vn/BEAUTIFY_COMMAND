@@ -1,4 +1,4 @@
-﻿namespace BEAUTIFY_COMMAND.APPLICATION.UseCases.Commands.Clinics;
+﻿﻿﻿namespace BEAUTIFY_COMMAND.APPLICATION.UseCases.Commands.Clinics;
 internal sealed class ClinicDeleteAccountOfEmployeeCommandHandler(
     IRepositoryBase<Staff, Guid> staffRepository,
     IRepositoryBase<Clinic, Guid> clinicRepository,
@@ -14,12 +14,11 @@ internal sealed class ClinicDeleteAccountOfEmployeeCommandHandler(
                    throw new UserException.UserNotFoundException(request.UserId);
         if (user?.Role?.Name == Constant.Role.CLINIC_ADMIN) throw new UnauthorizedAccessException();
 
-        var clinic = await clinicRepository.FindByIdAsync(request.ClinicId, cancellationToken) ??
-                     throw new ClinicException.ClinicNotFoundException(request.ClinicId);
-        if (user?.UserClinics.FirstOrDefault().ClinicId != clinic.Id) throw new UnauthorizedAccessException();
+        // Get the user's clinic directly from their UserClinics record
+        var userClinic = user.UserClinics?.FirstOrDefault() ??
+                        throw new UserClinicException.UserClinicNotFoundException();
 
         // Check if the user has any future working schedules
-        var userClinic = user.UserClinics?.FirstOrDefault();
         if (userClinic != null)
         {
             // Get current date in Vietnam timezone
@@ -52,9 +51,9 @@ internal sealed class ClinicDeleteAccountOfEmployeeCommandHandler(
         staffRepository.Remove(user);
         userClinicRepository.Remove(userClinic);
 
-        
+
         var doctorService = await doctorServiceRepository.FindAll(x =>
-                x.DoctorId == request.UserId && x.Service.ClinicServices.FirstOrDefault().ClinicId == request.ClinicId)
+                x.DoctorId == request.UserId && x.Service.ClinicServices.FirstOrDefault().ClinicId == userClinic.ClinicId)
             .ToListAsync(cancellationToken);
         if (doctorService.Count != 0)
         {
