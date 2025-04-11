@@ -27,7 +27,13 @@ public class TriggerFromHookCommandHandler(
                 if (tran.TransactionDate > DateTimeOffset.Now)
                     return Result.Failure(new Error("400", "Transaction Date invalid"));
 
+                // Update transaction status to 1 (completed)
+                // The background job will look for transactions with status 1 and SubscriptionPackageId not null
+                // to send confirmation emails
                 tran.Status = 1;
+
+                // Log the successful subscription purchase
+                Console.WriteLine($"Subscription purchase successful for clinic {tran.ClinicId}, package {tran.SubscriptionPackageId}");
 
                 await hubContext.Clients.Group(tran.Id.ToString())
                     .SendAsync("ReceivePaymentStatus", true, cancellationToken);

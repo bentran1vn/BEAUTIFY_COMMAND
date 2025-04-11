@@ -14,6 +14,7 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
     public virtual DbSet<SurveyAnswer> SurveyAnswers { get; set; }
     public virtual DbSet<SurveyResponse> SurveyResponses { get; set; }
     public virtual DbSet<ClassificationRule> ClassificationRules { get; set; }
+    public virtual DbSet<CustomerScheduleReminder> CustomerScheduleReminders { get; set; }
 
     private static void SetSoftDeleteFilter<T>(ModelBuilder modelBuilder) where T : Entity<T>
     {
@@ -60,5 +61,6 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
         builder.Entity<DoctorService>().HasQueryFilter(x => !x.IsDeleted);
         builder.Entity<LiveStreamDetail>().HasQueryFilter(x => !x.IsDeleted); // Add filter for LiveStreamDetail
         builder.Entity<Feedback>().HasQueryFilter(x => !x.IsDeleted); // Add filter for Feedback
+        builder.Entity<CustomerScheduleReminder>().HasQueryFilter(x => !x.IsDeleted); // Add filter for CustomerScheduleReminder
     }
 }

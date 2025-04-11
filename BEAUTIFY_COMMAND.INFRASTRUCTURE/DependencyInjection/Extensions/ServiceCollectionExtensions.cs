@@ -134,17 +134,35 @@ public static class ServiceCollectionExtensions
     {
         services.AddQuartz(configure =>
         {
-            var jobKey = new JobKey(nameof(ProcessOutboxMessagesJob));
-
+            // Process outbox messages job
+            var outboxJobKey = new JobKey(nameof(ProcessOutboxMessagesJob));
             configure
-                .AddJob<ProcessOutboxMessagesJob>(jobKey)
+                .AddJob<ProcessOutboxMessagesJob>(outboxJobKey)
                 .AddTrigger(
                     trigger =>
-                        trigger.ForJob(jobKey)
+                        trigger.ForJob(outboxJobKey)
                             .WithSimpleSchedule(
                                 schedule =>
                                     schedule.WithInterval(TimeSpan.FromMicroseconds(100))
                                         .RepeatForever()));
+
+            // Customer schedule reminder job - runs every hour to handle all reminder types
+            var reminderJobKey = new JobKey(nameof(CustomerScheduleReminderJob));
+            configure
+                .AddJob<CustomerScheduleReminderJob>(reminderJobKey)
+                .AddTrigger(
+                    trigger =>
+                        trigger.ForJob(reminderJobKey)
+                            .WithCronSchedule("0 0 * * * ?", x => x.InTimeZone(TimeZoneInfo.FindSystemTimeZoneById("SE Asia Standard Time"))));
+
+            // Subscription purchase email job - runs every 5 minutes to send confirmation emails
+            var subscriptionEmailJobKey = new JobKey(nameof(SubscriptionPurchaseEmailJob));
+            configure
+                .AddJob<SubscriptionPurchaseEmailJob>(subscriptionEmailJobKey)
+                .AddTrigger(
+                    trigger =>
+                        trigger.ForJob(subscriptionEmailJobKey)
+                            .WithCronSchedule("0 */5 * * * ?", x => x.InTimeZone(TimeZoneInfo.FindSystemTimeZoneById("SE Asia Standard Time"))));
 
             configure.UseMicrosoftDependencyInjectionJobFactory();
         });

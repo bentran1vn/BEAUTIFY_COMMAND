@@ -16,5 +16,9 @@
         <PackageVersion Update="BEAUTIFY_PACKAGES.SHARE" Version="1.5.8"/>
     </ItemGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\BEAUTIFY_COMMAND.DOMAIN\BEAUTIFY_COMMAND.DOMAIN.csproj" />
+    </ItemGroup>
+
 
 </Project>
