@@ -146,13 +146,13 @@ public static class ServiceCollectionExtensions
                                     schedule.WithInterval(TimeSpan.FromMicroseconds(100))
                                         .RepeatForever()));
 
-            // Customer schedule reminder job - runs every hour to handle all reminder types
-            var reminderJobKey = new JobKey(nameof(CustomerScheduleReminderJob));
+            // Unified appointment notification job - runs every hour to handle all notification types
+            var appointmentNotificationJobKey = new JobKey(nameof(AppointmentNotificationJob));
             configure
-                .AddJob<CustomerScheduleReminderJob>(reminderJobKey)
+                .AddJob<AppointmentNotificationJob>(appointmentNotificationJobKey)
                 .AddTrigger(
                     trigger =>
-                        trigger.ForJob(reminderJobKey)
+                        trigger.ForJob(appointmentNotificationJobKey)
                             .WithCronSchedule("0 0 * * * ?", x => x.InTimeZone(TimeZoneInfo.FindSystemTimeZoneById("SE Asia Standard Time"))));
 
             // Subscription purchase email job - runs every 5 minutes to send confirmation emails
