@@ -11,7 +11,7 @@ using Quartz;
 namespace BEAUTIFY_COMMAND.INFRASTRUCTURE.BackgroundJobs;
 
 [DisallowConcurrentExecution]
-public class SubscriptionPurchaseEmailJob(
+public class  SubscriptionPurchaseEmailJob(
     ApplicationDbContext dbContext,
     IMailService mailService,
     IRepositoryBase<SystemTransaction, Guid> systemTransactionRepository,
@@ -29,7 +29,7 @@ public class SubscriptionPurchaseEmailJob(
             var pendingTransactions = await dbContext.Set<SystemTransaction>()
                 .Include(t => t.Clinic)
                 .Include(t => t.SubscriptionPackage)
-                .Where(t => t.Status == 1 && 
+                .Where(t => t.Status == 1 &&
                            t.SubscriptionPackageId != null &&
                            !t.Clinic.IsDeleted &&
                            !t.SubscriptionPackage.IsDeleted)
@@ -61,6 +61,7 @@ public class SubscriptionPurchaseEmailJob(
                     // In a real system, you might want to add a dedicated field for this
                     transaction.Status = 2; // 2 = Completed and email sent
                     systemTransactionRepository.Update(transaction);
+                    await dbContext.SaveChangesAsync(context.CancellationToken); // Save changes to the database
 
                     logger.LogInformation("Sent subscription purchase confirmation email for transaction {transactionId} to {email}",
                         transaction.Id, transaction.Clinic.Email);

@@ -105,7 +105,13 @@ public class CustomerScheduleReminderJob(
             logger.LogInformation("Looking for schedules on {date} between {startTime} and {endTime} for 2-hour reminders",
                 currentDate, twoHoursLater, threeHoursLater);
 
-            // Find schedules that start between 2 and 3 hours from now
+            // Get IDs of schedules that already have 2-hour reminders
+            var schedulesWithReminders = await dbContext.Set<CustomerScheduleReminder>()
+                .Where(r => r.ReminderType == CustomerScheduleReminder.ReminderTypes.TwoHour)
+                .Select(r => r.CustomerScheduleId)
+                .ToListAsync(cancellationToken);
+
+            // Find schedules that start between 2 and 3 hours from now and don't already have reminders
             var upcomingSchedules = await dbContext.Set<CustomerSchedule>()
                 .Include(cs => cs.Customer)
                 .Include(cs => cs.Service)
@@ -116,14 +122,16 @@ public class CustomerScheduleReminderJob(
                              cs.StartTime >= twoHoursLater &&
                              cs.StartTime <= threeHoursLater &&
                              (cs.Status == Constant.OrderStatus.ORDER_PENDING ||
-                              cs.Status == Constant.OrderStatus.ORDER_WAITING_APPROVAL))
+                              cs.Status == Constant.OrderStatus.ORDER_WAITING_APPROVAL) &&
+                             !schedulesWithReminders.Contains(cs.Id) &&
+                             cs.Customer.Email != null) // Only include schedules with valid customer emails
                 .ToListAsync(cancellationToken);
 
-            logger.LogInformation("Found {count} upcoming schedules for 2-hour reminders", upcomingSchedules.Count);
+            logger.LogInformation("Found {count} upcoming schedules that need 2-hour reminders", upcomingSchedules.Count);
 
             foreach (var schedule in upcomingSchedules)
             {
-                await SendReminderIfNeeded(schedule, CustomerScheduleReminder.ReminderTypes.TwoHour, "2 giờ", cancellationToken);
+                await SendReminderEmail(schedule, CustomerScheduleReminder.ReminderTypes.TwoHour, "2 giờ", cancellationToken);
             }
         }
         catch (Exception ex)
@@ -134,7 +142,13 @@ public class CustomerScheduleReminderJob(
 
     private async Task ProcessRemindersForDate(DateOnly targetDate, string reminderType, string reminderTimeText, CancellationToken cancellationToken)
     {
-        // Query upcoming schedules for the target date
+        // Get IDs of schedules that already have reminders of this type
+        var schedulesWithReminders = await dbContext.Set<CustomerScheduleReminder>()
+            .Where(r => r.ReminderType == reminderType)
+            .Select(r => r.CustomerScheduleId)
+            .ToListAsync(cancellationToken);
+
+        // Query upcoming schedules for the target date that don't already have reminders
         var upcomingSchedules = await dbContext.Set<CustomerSchedule>()
             .Include(cs => cs.Customer)
             .Include(cs => cs.Service)
@@ -143,38 +157,22 @@ public class CustomerScheduleReminderJob(
             .Include(cs => cs.Doctor.Clinic)
             .Where(cs => cs.Date == targetDate &&
                          (cs.Status == Constant.OrderStatus.ORDER_PENDING ||
-                          cs.Status == Constant.OrderStatus.ORDER_WAITING_APPROVAL))
+                          cs.Status == Constant.OrderStatus.ORDER_WAITING_APPROVAL) &&
+                         !schedulesWithReminders.Contains(cs.Id) &&
+                         cs.Customer.Email != null) // Only include schedules with valid customer emails
             .ToListAsync(cancellationToken);
 
-        logger.LogInformation("Found {count} upcoming schedules for {reminderType} reminders",
+        logger.LogInformation("Found {count} upcoming schedules that need {reminderType} reminders",
             upcomingSchedules.Count, reminderType);
 
         foreach (var schedule in upcomingSchedules)
         {
-            await SendReminderIfNeeded(schedule, reminderType, reminderTimeText, cancellationToken);
+            await SendReminderEmail(schedule, reminderType, reminderTimeText, cancellationToken);
         }
     }
 
-    private async Task SendReminderIfNeeded(CustomerSchedule schedule, string reminderType, string reminderTimeText, CancellationToken cancellationToken)
+    private async Task SendReminderEmail(CustomerSchedule schedule, string reminderType, string reminderTimeText, CancellationToken cancellationToken)
     {
-        if (schedule.Customer?.Email == null)
-        {
-            logger.LogWarning("Customer email is null for schedule {scheduleId}", schedule.Id);
-            return;
-        }
-
-        // Check if this reminder has already been sent
-        var reminderExists = await reminderRepository.FindSingleAsync(
-            r => r.CustomerScheduleId == schedule.Id && r.ReminderType == reminderType,
-            cancellationToken);
-
-        if (reminderExists != null)
-        {
-            logger.LogInformation("{reminderType} reminder already sent for schedule {scheduleId}",
-                reminderType, schedule.Id);
-            return;
-        }
-
         try
         {
             // Use the template to create the email content
@@ -193,6 +191,7 @@ public class CustomerScheduleReminderJob(
             };
 
             reminderRepository.Add(reminder);
+            await dbContext.SaveChangesAsync(cancellationToken); // Save changes to the database
 
             logger.LogInformation("Sent {reminderType} reminder email for schedule {scheduleId} to {email}",
                 reminderType, schedule.Id, schedule.Customer.Email);
