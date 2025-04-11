@@ -17,7 +17,7 @@ public class ClinicApplyCommandHandler(
             .ToListAsync(cancellationToken);
 
         // Check if any field already exists
-        if (existingClinics.Any())
+        if (existingClinics.Count != 0)
         {
             var duplicateFields = new List<string>();
             if (existingClinics.Any(x => x.Email == request.Email)) duplicateFields.Add("Email");
