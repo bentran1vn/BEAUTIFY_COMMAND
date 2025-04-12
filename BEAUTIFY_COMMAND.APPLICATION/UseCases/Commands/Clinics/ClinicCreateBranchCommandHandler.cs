@@ -16,9 +16,9 @@ internal sealed class
     {
         var parentClinic = await clinicRepository.FindByIdAsync(currentUserService.ClinicId.Value, cancellationToken) ??
                            throw new ClinicException.ClinicNotFoundException(currentUserService.ClinicId.Value);
-        var systemTrans = await systemTransactionRepository.FindSingleAsync(
-            x => x.ClinicId == parentClinic.Id && x.Status == 2,
-            cancellationToken);
+        var systemTrans = await systemTransactionRepository.FindAll(
+                x => x.ClinicId == parentClinic.Id && x.Status == 2).OrderByDescending(x => x.TransactionDate)
+            .FirstOrDefaultAsync(cancellationToken);
         if (systemTrans == null)
         {
             return Result.Failure(new Error("400", "You have not paid the system fee"));
