@@ -14,7 +14,8 @@ public class CreateBookingCommandValidator : AbstractValidator<Commands.CreateBo
             .WithMessage("Start time is required")
             .Must((command, startTime) =>
             {
-                var now = DateTime.Now.TimeOfDay;
+                var now = TimeZoneInfo.ConvertTime(DateTime.Now,
+                    TimeZoneInfo.FindSystemTimeZoneById("SE Asia Standard Time")).TimeOfDay;
                 if (command.BookingDate == DateOnly.FromDateTime(DateTime.Today))
                 {
                     return startTime > now.Add(TimeSpan.FromMinutes(120));
