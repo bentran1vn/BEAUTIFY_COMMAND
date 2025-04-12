@@ -71,7 +71,8 @@ internal sealed class ChangeClinicActivateStatusCommandHandler(
         clinicRepositoryBase.Update(clinic);
 
         TriggerOutbox triggerOutbox =
-            TriggerOutbox.RaiseActivatedActionEvent(clinic.Id, clinic.IsActivated, clinic.IsParent ?? true);
+            TriggerOutbox.RaiseActivatedActionEvent(clinic.Id, clinic.IsActivated, clinic.IsParent ?? true,
+                clinic.IsParent == true  ? clinic.Id : (Guid)clinic.ParentId!);
 
         triggerOutboxRepositoryBase.Add(triggerOutbox);
 

@@ -10,7 +10,7 @@ public class TriggerOutbox : AggregateRoot<Guid>, IAuditableEntity
     public DateTimeOffset CreatedOnUtc { get; set; }
     public DateTimeOffset? ModifiedOnUtc { get; set; }
 
-    public static TriggerOutbox RaiseActivatedActionEvent(Guid clinicId, bool isActive, bool isParent)
+    public static TriggerOutbox RaiseActivatedActionEvent(Guid clinicId, bool isActive, bool isParent, Guid parentId)
     {   
         var triggerOutbox = new TriggerOutbox
         {
@@ -18,7 +18,7 @@ public class TriggerOutbox : AggregateRoot<Guid>, IAuditableEntity
         };
         
         triggerOutbox.RaiseDomainEvent(new ClinicDomainEvent.ClinicBranchActivatedAction(Guid.NewGuid(),
-            new ClinicEvent.InActivatedClinic(clinicId, isActive, isParent)));
+            new ClinicEvent.InActivatedClinic(clinicId, isActive, isParent, parentId)));
         
         return triggerOutbox;
     }
