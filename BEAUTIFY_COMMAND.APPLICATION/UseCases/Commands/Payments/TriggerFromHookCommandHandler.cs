@@ -15,7 +15,8 @@ public class TriggerFromHookCommandHandler(
         {
             case 0:
             {
-                var tran = await systemTransactionRepository.FindByIdAsync(request.Id, cancellationToken);
+                var tran = await systemTransactionRepository.FindByIdAsync(request.Id, cancellationToken,
+                    x => x.SubscriptionPackage);
 
                 if (tran == null || tran.IsDeleted) return Result.Failure(new Error("404", "Transaction not found"));
 
@@ -23,6 +24,8 @@ public class TriggerFromHookCommandHandler(
 
                 if (tran.Amount != request.TransferAmount)
                     return Result.Failure(new Error("422", "Transaction Amount invalid"));
+                if (request.TransferAmount != tran.SubscriptionPackage.Price)
+                    return Result.Failure(new Error("422", "Giá gói đăng ký đã thay đổi"));
 
                 if (tran.TransactionDate > DateTimeOffset.Now)
                     return Result.Failure(new Error("400", "Transaction Date invalid"));
@@ -33,7 +36,8 @@ public class TriggerFromHookCommandHandler(
                 tran.Status = 1;
 
                 // Log the successful subscription purchase
-                Console.WriteLine($"Subscription purchase successful for clinic {tran.ClinicId}, package {tran.SubscriptionPackageId}");
+                Console.WriteLine(
+                    $"Subscription purchase successful for clinic {tran.ClinicId}, package {tran.SubscriptionPackageId}");
 
                 await hubContext.Clients.Group(tran.Id.ToString())
                     .SendAsync("ReceivePaymentStatus", true, cancellationToken);
