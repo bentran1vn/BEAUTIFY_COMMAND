@@ -16,6 +16,7 @@ public class LivestreamRoom : AggregateRoot<Guid>, IAuditableEntity
     public Guid? ClinicId { get; set; }
     public virtual Clinic Clinic { get; set; }
     // Remove the LiveStreamDetailId property to avoid conflicts
+    public Guid? LiveStreamDetailId { get; set; }
     public virtual LiveStreamDetail? LiveStreamDetail { get; set; }
     public virtual ICollection<Promotion>? Promotions { get; set; }
 

@@ -2,12 +2,26 @@ using BEAUTIFY_PACKAGES.BEAUTIFY_PACKAGES.DOMAIN.EntityEvents;
 using ProceduresDomainEvent = BEAUTIFY_PACKAGES.BEAUTIFY_PACKAGES.CONTRACT.Services.Procedures.DomainEvents;
 using ServicePromotionDomainEvent = BEAUTIFY_PACKAGES.BEAUTIFY_PACKAGES.CONTRACT.Services.ServicePromotion.DomainEvents;
 using ClinicServicesDomainEvent = BEAUTIFY_PACKAGES.BEAUTIFY_PACKAGES.CONTRACT.Services.ClinicServices.DomainEvents;
+using ClinicDomainEvent = BEAUTIFY_PACKAGES.BEAUTIFY_PACKAGES.CONTRACT.Services.Clinic.DomainEvents;
 
 namespace BEAUTIFY_COMMAND.DOMAIN.Entities;
 public class TriggerOutbox : AggregateRoot<Guid>, IAuditableEntity
 {
     public DateTimeOffset CreatedOnUtc { get; set; }
     public DateTimeOffset? ModifiedOnUtc { get; set; }
+
+    public static TriggerOutbox RaiseActivatedActionEvent(Guid clinicId, bool isActive, bool isParent)
+    {   
+        var triggerOutbox = new TriggerOutbox
+        {
+            Id = Guid.NewGuid()
+        };
+        
+        triggerOutbox.RaiseDomainEvent(new ClinicDomainEvent.ClinicBranchActivatedAction(Guid.NewGuid(),
+            new ClinicEvent.InActivatedClinic(clinicId, isActive, isParent)));
+        
+        return triggerOutbox;
+    }
 
     public static TriggerOutbox RaiseCreateServiceProcedureEvent(
         Guid procedureId, Guid serviceId, string name, string description,
@@ -149,7 +163,6 @@ public class TriggerOutbox : AggregateRoot<Guid>, IAuditableEntity
 
         return triggerOutbox;
     }
-
     
     public static TriggerOutbox RaiseCreateClinicServiceEvent(
         Guid id, string name, string description,
