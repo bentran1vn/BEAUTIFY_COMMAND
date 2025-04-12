@@ -1,6 +1,7 @@
 ﻿namespace BEAUTIFY_COMMAND.APPLICATION.UseCases.Commands.Clinics;
 internal sealed class ChangeClinicActivateStatusCommandHandler(
-    IRepositoryBase<Clinic, Guid> clinicRepositoryBase
+    IRepositoryBase<Clinic, Guid> clinicRepositoryBase,
+    IRepositoryBase<TriggerOutbox, Guid> triggerOutboxRepositoryBase
 )
     : ICommandHandler<CONTRACT.Services.Clinics.Commands.ChangeClinicActivateStatusCommand>
 {
@@ -68,6 +69,11 @@ internal sealed class ChangeClinicActivateStatusCommandHandler(
 
         // ✅ Minimize database calls
         clinicRepositoryBase.Update(clinic);
+
+        TriggerOutbox triggerOutbox =
+            TriggerOutbox.RaiseActivatedActionEvent(clinic.Id, clinic.IsActivated, clinic.IsParent ?? true);
+
+        triggerOutboxRepositoryBase.Add(triggerOutbox);
 
         return Result.Success();
     }
