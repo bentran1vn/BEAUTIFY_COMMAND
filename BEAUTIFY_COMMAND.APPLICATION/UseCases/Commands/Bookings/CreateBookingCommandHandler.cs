@@ -19,8 +19,8 @@ internal sealed class
         IMailService mailService,
         IRepositoryBase<Promotion, Guid> promotionRepositoryBase,
         IRepositoryBase<LivestreamRoom, Guid> livestreamRoomRepositoryBase,
-        IDistributedLockService distributedLockService,
-        ILogger<CreateBookingCommandHandler> logger)
+        IDistributedLockService distributedLockService
+    )
     : ICommandHandler<CONTRACT.Services.Bookings.Commands.CreateBookingCommand>
 {
     public async Task<Result> Handle(CONTRACT.Services.Bookings.Commands.CreateBookingCommand request,
@@ -76,7 +76,6 @@ internal sealed class
                 TimeSpan.FromSeconds(10), // Wait time
                 cancellationToken);
 
-            logger.LogInformation("Acquired lock for booking: {LockKey}", lockKey);
 
             // Check again if the time slot is still available (double-check after acquiring the lock)
             var workingSchedule = await
@@ -131,7 +130,7 @@ internal sealed class
 
             decimal? discountPrice = 0;
             var total = list.Sum(x => x.Price);
-            
+
             if (request.LiveStreamRoomId != null)
             {
                 var livestreamRoom = await livestreamRoomRepositoryBase.FindSingleAsync(
@@ -243,21 +242,12 @@ internal sealed class
             });
 
 
-            logger.LogInformation("Booking created successfully for doctor {DoctorId} at {Date} {Time}",
-                request.DoctorId, request.BookingDate, request.StartTime);
-
             return Result.Success("Booking Created Successfully !");
         }
         catch (TimeoutException ex)
         {
-            logger.LogWarning(ex, "Failed to acquire lock for booking: {LockKey}", lockKey);
             return Result.Failure(new Error("409",
                 "The booking time slot is currently being processed by another request. Please try again."));
-        }
-        catch (Exception ex)
-        {
-            logger.LogError(ex, "Error occurred while processing booking: {LockKey}", lockKey);
-            throw;
         }
     }
 }

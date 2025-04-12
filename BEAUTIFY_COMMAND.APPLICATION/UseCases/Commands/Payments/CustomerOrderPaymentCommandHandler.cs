@@ -1,7 +1,7 @@
 ﻿namespace BEAUTIFY_COMMAND.APPLICATION.UseCases.Commands.Payments;
 internal sealed class CustomerOrderPaymentCommandHandler(
     IRepositoryBase<Order, Guid> orderRepositoryBase,
-    IRepositoryBase<SystemTransaction, Guid> systemTransactionRepositoryBase)
+    IRepositoryBase<ClinicTransaction, Guid> clinicTransactionRepositoryBase)
     : ICommandHandler<CONTRACT.Services.Payments.Commands.CustomerOrderPaymentCommand>
 {
     public async Task<Result> Handle(CONTRACT.Services.Payments.Commands.CustomerOrderPaymentCommand request,
@@ -16,14 +16,24 @@ internal sealed class CustomerOrderPaymentCommandHandler(
         var vietnamTimeZone = TimeZoneInfo.FindSystemTimeZoneById("SE Asia Standard Time");
         var transactionDate = TimeZoneInfo.ConvertTime(DateTimeOffset.UtcNow, vietnamTimeZone);
         var id = Guid.NewGuid();
-        systemTransactionRepositoryBase.Add(new SystemTransaction
+        /* systemTransactionRepositoryBase.Add(new SystemTransaction
+         {
+             Id = id,
+             ClinicId = order.Service.ClinicServices.FirstOrDefault().ClinicId,
+             OrderId = order.Id,
+             SubscriptionPackageId = null,
+             Status = 0,
+             Amount = order.FinalAmount.Value,
+             TransactionDate = transactionDate,
+             PaymentMethod = request.PaymentMethod,
+         });*/
+        clinicTransactionRepositoryBase.Add(new ClinicTransaction
         {
             Id = id,
-            ClinicId = order.Service.ClinicServices.FirstOrDefault().ClinicId,
+            ClinicId = order.Service!.ClinicServices!.FirstOrDefault()!.ClinicId,
             OrderId = order.Id,
-            SubscriptionPackageId = null,
-            Status = 0,
-            Amount = order.FinalAmount.Value,
+            Status = Constant.OrderStatus.ORDER_PENDING,
+            Amount = order.FinalAmount!.Value,
             TransactionDate = transactionDate,
             PaymentMethod = request.PaymentMethod,
         });
