@@ -25,7 +25,12 @@ public class TriggerFromHookCommandHandler(
                 if (tran.Amount != request.TransferAmount)
                     return Result.Failure(new Error("422", "Transaction Amount invalid"));
                 if (request.TransferAmount != tran.SubscriptionPackage.Price)
-                    return Result.Failure(new Error("422", "Giá gói đăng ký đã thay đổi"));
+                {
+                    await hubContext.Clients.Group(tran.Id.ToString())
+                        .SendAsync("SubscriptionPriceChanged", false, cancellationToken);
+                    break;
+                }
+
 
                 if (tran.TransactionDate > DateTimeOffset.Now)
                     return Result.Failure(new Error("400", "Transaction Date invalid"));
@@ -35,9 +40,6 @@ public class TriggerFromHookCommandHandler(
                 // to send confirmation emails
                 tran.Status = 1;
 
-                // Log the successful subscription purchase
-                Console.WriteLine(
-                    $"Subscription purchase successful for clinic {tran.ClinicId}, package {tran.SubscriptionPackageId}");
 
                 await hubContext.Clients.Group(tran.Id.ToString())
                     .SendAsync("ReceivePaymentStatus", true, cancellationToken);
