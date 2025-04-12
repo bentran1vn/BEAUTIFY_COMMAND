@@ -1,33 +1,26 @@
 namespace BEAUTIFY_COMMAND.APPLICATION.UseCases.Commands.Payments;
 public class
-    SubscriptionOrderCommandHandler : ICommandHandler<CONTRACT.Services.Payments.Commands.SubscriptionOrderCommand>
-{
-    private readonly IRepositoryBase<Clinic, Guid> _clinicRepository;
-    private readonly IRepositoryBase<SubscriptionPackage, Guid> _subscriptionPackageRepository;
-    private readonly IRepositoryBase<SystemTransaction, Guid> _systemTransactionRepository;
-
-    public SubscriptionOrderCommandHandler(IRepositoryBase<Clinic, Guid> clinicRepository,
+    SubscriptionOrderCommandHandler(
+        IRepositoryBase<Clinic, Guid> clinicRepository,
         IRepositoryBase<SubscriptionPackage, Guid> subscriptionPackageRepository,
         IRepositoryBase<SystemTransaction, Guid> systemTransactionRepository)
-    {
-        _clinicRepository = clinicRepository;
-        _subscriptionPackageRepository = subscriptionPackageRepository;
-        _systemTransactionRepository = systemTransactionRepository;
-    }
-
+    : ICommandHandler<CONTRACT.Services.Payments.Commands.SubscriptionOrderCommand>
+{
     public async Task<Result> Handle(CONTRACT.Services.Payments.Commands.SubscriptionOrderCommand request,
         CancellationToken cancellationToken)
     {
-        var clinic = await _clinicRepository.FindByIdAsync(request.ClinicId, cancellationToken);
+        var clinic = await clinicRepository.FindByIdAsync(request.ClinicId, cancellationToken);
 
         if (clinic == null) return Result.Failure(new Error("404", "Clinic not found"));
 
         if (clinic.IsDeleted || !clinic.IsActivated || clinic.Status != 1)
             return Result.Failure(new Error("404", "Clinic is not activated"));
 
-        var sub = await _subscriptionPackageRepository.FindByIdAsync(request.SubscriptionId, cancellationToken);
+        var sub = await subscriptionPackageRepository.FindByIdAsync(request.SubscriptionId, cancellationToken);
 
         if (sub == null || sub.IsDeleted) return Result.Failure(new Error("404", "Subscription package not found"));
+        if (sub.Price != request.CurrentAmount)
+            return Result.Failure(new Error("404", "Giá gói đăng ký đã thay đổi"));
 
         var vietnamTimeZone = TimeZoneInfo.FindSystemTimeZoneById("SE Asia Standard Time");
 
@@ -42,7 +35,7 @@ public class
             PaymentMethod = "SePay"
         };
 
-        _systemTransactionRepository.Add(trans);
+        systemTransactionRepository.Add(trans);
 
         var qrUrl =
             $"https://qr.sepay.vn/img?bank=MBBank&acc=0901928382&template=&amount={(int)sub.Price}&des=BeautifySub{trans.Id}";

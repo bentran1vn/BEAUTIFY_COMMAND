@@ -27,7 +27,7 @@ public static class Commands
 
     public record CustomerOrderPaymentCommand(Guid OrderId, string PaymentMethod, decimal Amount) : ICommand;
 
-    public record SubscriptionOrderCommand(Guid SubscriptionId, Guid ClinicId) : ICommand;
+    public record SubscriptionOrderCommand(Guid SubscriptionId, Guid ClinicId, decimal CurrentAmount) : ICommand;
 
-    public record SubscriptionOrderBody(Guid SubscriptionId);
+    public record SubscriptionOrderBody(Guid SubscriptionId,decimal CurrentAmount);
 }

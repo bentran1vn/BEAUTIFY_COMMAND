@@ -52,7 +52,8 @@ public class PaymentApi : ApiEndpoint, ICarterModule
         var result = await sender.Send(
             new Commands.SubscriptionOrderCommand(
                 command.SubscriptionId,
-                new Guid(clinicId)));
+                new Guid(clinicId),
+                command.CurrentAmount));
 
         return result.IsFailure ? HandlerFailure(result) : Results.Ok(result);
     }
