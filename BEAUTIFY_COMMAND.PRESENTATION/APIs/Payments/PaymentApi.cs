@@ -1,4 +1,5 @@
 using BEAUTIFY_COMMAND.CONTRACT.Services.Payments;
+using BEAUTIFY_PACKAGES.BEAUTIFY_PACKAGES.DOMAIN.Constrants;
 
 namespace BEAUTIFY_COMMAND.PRESENTATION.APIs.Payments;
 public class PaymentApi : ApiEndpoint, ICarterModule
@@ -67,6 +68,14 @@ public class PaymentApi : ApiEndpoint, ICarterModule
         string paymentMethod)
     {
         var result = await sender.Send(new Commands.CustomerOrderPaymentCommand(id, paymentMethod, amount));
+        return result.IsFailure ? HandlerFailure(result) : Results.Ok(result);
+    }
+    
+    private static async Task<IResult> CustomerTopUpWallet(
+        ISender sender,
+        [FromBody] CONTRACT.Services.Wallets.Commands.CustomerTopUpWalletCommand command)
+    {
+        var result = await sender.Send(command);
         return result.IsFailure ? HandlerFailure(result) : Results.Ok(result);
     }
 }
