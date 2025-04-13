@@ -14,6 +14,7 @@ public class Order : AggregateRoot<Guid>, IAuditableEntity
     public virtual LivestreamRoom? LivestreamRoom { get; set; }
     public Guid? ServiceId { get; set; }
     public Guid? ClinicId { get; set; }
+
     public virtual Service? Service { get; set; }
     
     [MaxLength(50)] public string? Status { get; set; }
