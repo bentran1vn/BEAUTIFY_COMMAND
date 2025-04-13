@@ -12,6 +12,7 @@ public class Order : AggregateRoot<Guid>, IAuditableEntity
     public DateOnly OrderDate { get; set; } = DateOnly.FromDateTime(DateTime.UtcNow);
     public Guid? LivestreamRoomId { get; set; }
     public Guid? ServiceId { get; set; }
+    public Guid ClinicId { get; set; }
     public virtual Service? Service { get; set; }
 
     [MaxLength(50)] public string? Status { get; set; }
