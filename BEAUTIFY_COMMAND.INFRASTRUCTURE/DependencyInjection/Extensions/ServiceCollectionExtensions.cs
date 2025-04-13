@@ -46,10 +46,7 @@ public static class ServiceCollectionExtensions
     {
         var connectionString = configuration.GetConnectionString("Redis");
 
-        services.AddStackExchangeRedisCache(redisOptions =>
-        {
-            redisOptions.Configuration = connectionString;
-        });
+        services.AddStackExchangeRedisCache(redisOptions => { redisOptions.Configuration = connectionString; });
 
         // Register Redis ConnectionMultiplexer as singleton
         services.AddSingleton<IConnectionMultiplexer>(sp =>
@@ -153,7 +150,8 @@ public static class ServiceCollectionExtensions
                 .AddTrigger(
                     trigger =>
                         trigger.ForJob(appointmentNotificationJobKey)
-                            .WithCronSchedule("0 0 * * * ?", x => x.InTimeZone(TimeZoneInfo.FindSystemTimeZoneById("SE Asia Standard Time"))));
+                            .WithCronSchedule("0 0 * * * ?",
+                                x => x.InTimeZone(TimeZoneInfo.FindSystemTimeZoneById("SE Asia Standard Time"))));
 
             // Subscription purchase email job - runs every 5 minutes to send confirmation emails
             var subscriptionEmailJobKey = new JobKey(nameof(SubscriptionPurchaseEmailJob));
@@ -162,7 +160,18 @@ public static class ServiceCollectionExtensions
                 .AddTrigger(
                     trigger =>
                         trigger.ForJob(subscriptionEmailJobKey)
-                            .WithCronSchedule("0 */5 * * * ?", x => x.InTimeZone(TimeZoneInfo.FindSystemTimeZoneById("SE Asia Standard Time"))));
+                            .WithCronSchedule("0 */5 * * * ?",
+                                x => x.InTimeZone(TimeZoneInfo.FindSystemTimeZoneById("SE Asia Standard Time"))));
+
+            // Subscription expiry reminder job - runs every day at 9 AM
+            var subscriptionExpiryReminderJobKey = new JobKey(nameof(SubscriptionExpiryReminderJob));
+            configure
+                .AddJob<SubscriptionExpiryReminderJob>(subscriptionExpiryReminderJobKey)
+                .AddTrigger(
+                    trigger =>
+                        trigger.ForJob(subscriptionExpiryReminderJobKey)
+                            .WithCronSchedule("0 0 9 * * ?",
+                                x => x.InTimeZone(TimeZoneInfo.FindSystemTimeZoneById("SE Asia Standard Time"))));
 
             configure.UseMicrosoftDependencyInjectionJobFactory();
         });

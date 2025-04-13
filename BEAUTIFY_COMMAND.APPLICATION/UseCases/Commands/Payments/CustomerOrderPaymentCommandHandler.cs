@@ -16,17 +16,6 @@ internal sealed class CustomerOrderPaymentCommandHandler(
         var vietnamTimeZone = TimeZoneInfo.FindSystemTimeZoneById("SE Asia Standard Time");
         var transactionDate = TimeZoneInfo.ConvertTime(DateTimeOffset.UtcNow, vietnamTimeZone);
         var id = Guid.NewGuid();
-        /* systemTransactionRepositoryBase.Add(new SystemTransaction
-         {
-             Id = id,
-             ClinicId = order.Service.ClinicServices.FirstOrDefault().ClinicId,
-             OrderId = order.Id,
-             SubscriptionPackageId = null,
-             Status = 0,
-             Amount = order.FinalAmount.Value,
-             TransactionDate = transactionDate,
-             PaymentMethod = request.PaymentMethod,
-         });*/
         clinicTransactionRepositoryBase.Add(new ClinicTransaction
         {
             Id = id,

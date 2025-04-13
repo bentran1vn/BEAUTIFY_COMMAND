@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace BEAUTIFY_COMMAND.DOMAIN.Entities;
 public class User : AggregateRoot<Guid>, IAuditableEntity
@@ -13,6 +14,7 @@ public class User : AggregateRoot<Guid>, IAuditableEntity
     [MaxLength(255)] public required string Password { get; set; }
 
     [MaxLength(50)] public required int Status { get; set; }
+
     // 0 Pending 1 Approve 2 Reject 3 Banned
     public string? FullName => $"{FirstName} {LastName}".Trim();
     public DateOnly? DateOfBirth { get; set; }
@@ -35,8 +37,9 @@ public class User : AggregateRoot<Guid>, IAuditableEntity
 
     [MaxLength(250)] public string? RefreshToken { get; set; }
 
-
+    [Column(TypeName = "decimal(18,2)")] public decimal Balance { get; set; }
     public virtual ICollection<UserConversation>? UserConversations { get; set; }
+    public virtual ICollection<WalletTransaction>? Transactions { get; init; } = [];
     public virtual ICollection<CustomerSchedule>? CustomerSchedules { get; set; }
     public virtual ICollection<Order>? Orders { get; set; }
     public DateTimeOffset CreatedOnUtc { get; set; }

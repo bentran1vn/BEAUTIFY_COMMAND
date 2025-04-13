@@ -5,6 +5,7 @@ namespace BEAUTIFY_COMMAND.APPLICATION.UseCases.Commands.Payments;
 public class TriggerFromHookCommandHandler(
     IRepositoryBase<SystemTransaction, Guid> systemTransactionRepository,
     IRepositoryBase<ClinicTransaction, Guid> clinicTransactionRepository,
+    IRepositoryBase<WalletTransaction, Guid> walletTransactionRepository,
     IHubContext<PaymentHub> hubContext,
     IRepositoryBase<Order, Guid> orderRepository)
     : ICommandHandler<CONTRACT.Services.Payments.Commands.TriggerFromHookCommand>
@@ -72,6 +73,26 @@ public class TriggerFromHookCommandHandler(
                     return Result.Failure(new Error("422", "Order Amount invalid"));
 
                 order.Status = Constant.OrderStatus.ORDER_COMPLETED;
+                await hubContext.Clients.Group(tran.Id.ToString())
+                    .SendAsync("ReceivePaymentStatus", true, cancellationToken);
+                break;
+            }
+            case 2:
+            {
+                var tran = await walletTransactionRepository.FindByIdAsync(request.Id, cancellationToken);
+
+                if (tran == null || tran.IsDeleted) return Result.Failure(new Error("404", "Transaction not found"));
+
+                if (tran.Status != Constant.WalletConstants.TransactionStatus.PENDING)
+                    return Result.Failure(new Error("400", "Transaction already handler"));
+
+                if (tran.Amount != request.TransferAmount)
+                    return Result.Failure(new Error("422", "Transaction Amount invalid"));
+
+                if (tran.TransactionDate > DateTimeOffset.Now)
+                    return Result.Failure(new Error("400", "Transaction Date invalid"));
+
+                tran.Status = Constant.WalletConstants.TransactionStatus.COMPLETED;
                 await hubContext.Clients.Group(tran.Id.ToString())
                     .SendAsync("ReceivePaymentStatus", true, cancellationToken);
                 break;
