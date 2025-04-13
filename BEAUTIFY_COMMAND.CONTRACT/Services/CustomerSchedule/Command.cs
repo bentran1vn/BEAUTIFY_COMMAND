@@ -36,9 +36,7 @@ public static class Command
         DateOnly Date,
         TimeSpan StartTime
     ) : ICommand;
-
     
-    //todo 
     public record StaffApproveCustomerScheduleCommand(
         Guid CustomerScheduleId,
         string Status

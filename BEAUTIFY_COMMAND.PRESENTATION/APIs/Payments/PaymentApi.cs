@@ -17,9 +17,12 @@ public class PaymentApi : ApiEndpoint, ICarterModule
         gr1.MapPost("subscription", CreateSubscriptionOrder)
             .WithName("Subscription Payments")
             .WithSummary("Subscription Payments.").RequireAuthorization();
-        
-        gr1.MapPost("order/{id:guid}/{amount:decimal}/{paymentMethod}/", CustomerOrderPayment)
-            .RequireAuthorization();;
+        gr1.MapPost("order/{id:guid}/{amount:decimal}/{paymentMethod}/", CustomerOrderPayment);
+
+        gr1.MapPost("wallets/top-ups", CustomerTopUpWallet)
+            .RequireAuthorization(Constant.Role.CUSTOMER)
+            .WithName("Top Up Wallet")
+            .WithSummary("Top Up Wallet.");
     }
 
     private static async Task<IResult> TriggerFromHook(ISender sender,
@@ -60,11 +63,10 @@ public class PaymentApi : ApiEndpoint, ICarterModule
         return result.IsFailure ? HandlerFailure(result) : Results.Ok(result);
     }
 
-    private static async Task<IResult> CustomerOrderPayment(ISender sender, HttpContext httpContext , Guid id, decimal amount,
+    private static async Task<IResult> CustomerOrderPayment(ISender sender, Guid id, decimal amount,
         string paymentMethod)
     {
-        var clinicId = httpContext.User.FindFirst(c => c.Type == "ClinicId")?.Value!;
-        var result = await sender.Send(new Commands.CustomerOrderPaymentCommand(id, new Guid(clinicId), paymentMethod, amount));
+        var result = await sender.Send(new Commands.CustomerOrderPaymentCommand(id, paymentMethod, amount));
         return result.IsFailure ? HandlerFailure(result) : Results.Ok(result);
     }
 }
