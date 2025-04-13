@@ -3,14 +3,18 @@ public class UpdateClinicCommandValidators : AbstractValidator<Commands.UpdateCl
 {
     public UpdateClinicCommandValidators()
     {
-        RuleFor(x => x.ClinicId)
-            .NotNull().NotEmpty();
-
         RuleFor(x => x.Name)
-            .MinimumLength(5)
-            .MaximumLength(30)
-            .When(x => !string.IsNullOrEmpty(x.Name))
-            .WithMessage("Clinic Name must be between 5 and 30 characters long.");
-        
+            .NotEmpty()
+            .MinimumLength(5).WithMessage("Clinic Name must be at least 2 word long")
+            .MaximumLength(30).WithMessage("Clinic Name must exceed 30 characters");
+
+        RuleFor(x => x.PhoneNumber)
+            .NotEmpty()
+            .Matches(@"^0[0-9]{9}$").WithMessage("Invalid phone number format");
+    }
+
+    private bool BeAValidDate(string date)
+    {
+        return DateTime.TryParse(date, out _);
     }
 }
