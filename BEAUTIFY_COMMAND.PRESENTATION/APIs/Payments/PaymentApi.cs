@@ -71,7 +71,7 @@ public class PaymentApi : ApiEndpoint, ICarterModule
         var result = await sender.Send(new Commands.CustomerOrderPaymentCommand(id, paymentMethod, amount));
         return result.IsFailure ? HandlerFailure(result) : Results.Ok(result);
     }
-
+    
     private static async Task<IResult> CustomerTopUpWallet(
         ISender sender,
         [FromBody] CONTRACT.Services.Wallets.Commands.CustomerTopUpWalletCommand command)
