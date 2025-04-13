@@ -1,11 +1,15 @@
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace BEAUTIFY_COMMAND.DOMAIN.Entities;
 public class Clinic : AggregateRoot<Guid>, IAuditableEntity
 {
     [MaxLength(100)] public required string Name { get; set; }
     [MaxLength(100)] public required string Email { get; set; }
-    [MaxLength(15, ErrorMessage = "Phone Number must be 10 digits")] public required string PhoneNumber { get; set; }
+
+    [MaxLength(15, ErrorMessage = "Phone Number must be 10 digits")]
+    public required string PhoneNumber { get; set; }
+
     [MaxLength(100)] public string? City { get; set; }
     [MaxLength(100)] public string? District { get; set; }
     [MaxLength(100)] public string? Ward { get; set; }
@@ -29,6 +33,7 @@ public class Clinic : AggregateRoot<Guid>, IAuditableEntity
 
     [MaxLength(255)] public string? BankName { get; set; }
     [MaxLength(100)] public string? BankAccountNumber { get; set; }
+    [Column(TypeName = "decimal(18,2)")] public decimal Balance { get; set; }
     public Guid? ParentId { get; set; }
     public virtual Clinic? Parent { get; set; }
     [MaxLength(250)] public string? Note { get; set; }
@@ -42,6 +47,7 @@ public class Clinic : AggregateRoot<Guid>, IAuditableEntity
     public virtual ICollection<LivestreamRoom>? LivestreamRooms { get; set; }
     public virtual ICollection<UserConversation>? UserConversations { get; set; }
     public virtual ICollection<ClinicVoucher>? ClinicVouchers { get; set; }
+    public virtual ICollection<WalletTransaction>? Transactions { get; init; } = [];
     public DateTimeOffset CreatedOnUtc { get; set; }
     public DateTimeOffset? ModifiedOnUtc { get; set; }
 }
