@@ -18,6 +18,10 @@ public class PaymentApi : ApiEndpoint, ICarterModule
             .WithName("Subscription Payments")
             .WithSummary("Subscription Payments.").RequireAuthorization();
         gr1.MapPost("order/{id:guid}/{amount:decimal}/{paymentMethod}/", CustomerOrderPayment);
+
+        gr1.MapPost("wallets/top-ups", CustomerTopUpWallet)
+            .WithName("Top Up Wallet")
+            .WithSummary("Top Up Wallet.");
     }
 
     private static async Task<IResult> TriggerFromHook(ISender sender,
@@ -34,6 +38,7 @@ public class PaymentApi : ApiEndpoint, ICarterModule
 
         request.Type = type switch
         {
+            "WALLET" => 2,
             "ORDER" => 1,
             "SUB" => 0,
             _ => request.Type
@@ -62,6 +67,14 @@ public class PaymentApi : ApiEndpoint, ICarterModule
         string paymentMethod)
     {
         var result = await sender.Send(new Commands.CustomerOrderPaymentCommand(id, paymentMethod, amount));
+        return result.IsFailure ? HandlerFailure(result) : Results.Ok(result);
+    }
+
+    private static async Task<IResult> CustomerTopUpWallet(
+        ISender sender,
+        [FromBody] CONTRACT.Services.Wallets.Commands.CustomerTopUpWalletCommand command)
+    {
+        var result = await sender.Send(command);
         return result.IsFailure ? HandlerFailure(result) : Results.Ok(result);
     }
 }

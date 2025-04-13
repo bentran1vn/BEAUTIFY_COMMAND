@@ -3,7 +3,11 @@ using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore.Storage;
 
 namespace BEAUTIFY_COMMAND.APPLICATION.Hub;
-public class PaymentHub(IRepositoryBase<SystemTransaction, Guid> repositoryBase, ApplicationDbContext dbContext)
+public class PaymentHub(
+    IRepositoryBase<SystemTransaction, Guid> repositoryBase,
+    ApplicationDbContext dbContext,
+    IRepositoryBase<WalletTransaction, Guid> walletTransactionRepository
+)
     : Microsoft.AspNetCore.SignalR.Hub
 {
     public async Task JoinPaymentSession(string transactionId)
@@ -24,6 +28,18 @@ public class PaymentHub(IRepositoryBase<SystemTransaction, Guid> repositoryBase,
         {
             trans.Status = 2;
             repositoryBase.Update(trans);
+        }
+
+        await dbContext.SaveChangesAsync();
+    }
+
+    public async Task TopUpCustomerWalletSession(Guid walletTransactionId)
+    {
+        var wallet = await walletTransactionRepository.FindByIdAsync(walletTransactionId);
+        if (wallet != null)
+        {
+            wallet.User.Balance += wallet.Amount;
+            walletTransactionRepository.Update(wallet);
         }
 
         await dbContext.SaveChangesAsync();
