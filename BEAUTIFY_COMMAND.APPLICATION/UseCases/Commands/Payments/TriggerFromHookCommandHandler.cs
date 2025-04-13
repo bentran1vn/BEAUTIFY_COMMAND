@@ -79,7 +79,7 @@ public class TriggerFromHookCommandHandler(
             }
             case 2:
             {
-                var tran = await walletTransactionRepository.FindByIdAsync(request.Id, cancellationToken);
+                var tran = await walletTransactionRepository.FindByIdAsync(request.Id, cancellationToken, x => x.User);
 
                 if (tran == null || tran.IsDeleted) return Result.Failure(new Error("404", "Transaction not found"));
 
@@ -93,6 +93,7 @@ public class TriggerFromHookCommandHandler(
                     return Result.Failure(new Error("400", "Transaction Date invalid"));
 
                 tran.Status = Constant.WalletConstants.TransactionStatus.COMPLETED;
+                tran.User!.Balance += tran.Amount;
                 await hubContext.Clients.Group(tran.Id.ToString())
                     .SendAsync("ReceivePaymentStatus", true, cancellationToken);
                 break;
