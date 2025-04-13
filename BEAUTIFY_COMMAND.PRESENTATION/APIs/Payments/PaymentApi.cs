@@ -1,4 +1,5 @@
 using BEAUTIFY_COMMAND.CONTRACT.Services.Payments;
+using BEAUTIFY_PACKAGES.BEAUTIFY_PACKAGES.DOMAIN.Constrants;
 
 namespace BEAUTIFY_COMMAND.PRESENTATION.APIs.Payments;
 public class PaymentApi : ApiEndpoint, ICarterModule
@@ -20,6 +21,7 @@ public class PaymentApi : ApiEndpoint, ICarterModule
         gr1.MapPost("order/{id:guid}/{amount:decimal}/{paymentMethod}/", CustomerOrderPayment);
 
         gr1.MapPost("wallets/top-ups", CustomerTopUpWallet)
+            .RequireAuthorization(Constant.Role.CUSTOMER)
             .WithName("Top Up Wallet")
             .WithSummary("Top Up Wallet.");
     }

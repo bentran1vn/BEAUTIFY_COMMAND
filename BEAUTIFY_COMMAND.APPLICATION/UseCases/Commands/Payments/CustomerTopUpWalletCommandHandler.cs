@@ -26,7 +26,7 @@ internal sealed class
 
         walletTransactionRepositoryBase.Add(walletTransaction);
         var qrUrl =
-            $"https://qr.sepay.vn/img?bank=MBBank&acc=0901928382&template=&amount={(int)walletTransaction.Amount}&des=BeautifySubWallet{walletTransaction.Id}";
+            $"https://qr.sepay.vn/img?bank=MBBank&acc=0901928382&template=&amount={(int)walletTransaction.Amount}&des=BeautifyWallet{walletTransaction.Id}";
         var result = new
         {
             TransactionId = walletTransaction.Id,
