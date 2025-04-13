@@ -1,4 +1,4 @@
-﻿namespace BEAUTIFY_COMMAND.CONTRACT.Services.Bookings.Validators;
+namespace BEAUTIFY_COMMAND.CONTRACT.Services.Bookings.Validators;
 public class CreateBookingCommandValidator : AbstractValidator<Commands.CreateBookingCommand>
 {
     public CreateBookingCommandValidator()
@@ -27,13 +27,13 @@ public class CreateBookingCommandValidator : AbstractValidator<Commands.CreateBo
             .Must(startTime => startTime >= TimeSpan.FromHours(8) && startTime <= TimeSpan.FromHours(21))
             .WithMessage("Booking time must be between 8AM and 9PM");
 
-        RuleFor(x => x)
+        /*RuleFor(x => x)
             .Must(command =>
             {
                 var bookingDateTime = command.BookingDate.ToDateTime(TimeOnly.FromTimeSpan(command.StartTime));
                 return bookingDateTime.DayOfWeek != DayOfWeek.Sunday;
             })
             .WithMessage("Bookings are not allowed on Sundays")
-            .OverridePropertyName("BookingDate");
+            .OverridePropertyName("BookingDate");*/
     }
 }
