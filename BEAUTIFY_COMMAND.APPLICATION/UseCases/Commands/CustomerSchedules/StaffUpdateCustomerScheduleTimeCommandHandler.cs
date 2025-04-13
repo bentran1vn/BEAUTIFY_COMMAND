@@ -43,7 +43,7 @@ internal sealed class StaffUpdateCustomerScheduleTimeCommandHandler(
 
         customerScheduleRepositoryBase.Update(nextCustomerSchedule);
         nextCustomerSchedule.CustomerScheduleUpdateDateAndTime(nextCustomerSchedule);
-
+        //todo set schedule for doctor
         mailService.SendMail(new MailContent
         {
             To = nextCustomerSchedule.Customer.Email,
