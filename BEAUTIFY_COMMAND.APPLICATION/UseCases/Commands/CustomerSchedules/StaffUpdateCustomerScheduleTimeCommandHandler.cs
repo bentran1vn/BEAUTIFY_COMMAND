@@ -3,6 +3,7 @@
 namespace BEAUTIFY_COMMAND.APPLICATION.UseCases.Commands.CustomerSchedules;
 internal sealed class StaffUpdateCustomerScheduleTimeCommandHandler(
     IRepositoryBase<CustomerSchedule, Guid> customerScheduleRepositoryBase,
+    IRepositoryBase<WorkingSchedule, Guid> workingScheduleRepositoryBase,
     IMailService mailService) : ICommandHandler<
     Command.StaffUpdateCustomerScheduleTimeCommand>
 {
@@ -30,7 +31,13 @@ internal sealed class StaffUpdateCustomerScheduleTimeCommandHandler(
 
         if (nextCustomerSchedule.Status == Constant.OrderStatus.ORDER_COMPLETED)
             return Result.Failure(new Error("400", "Next Customer Schedule Already Completed !"));
+        var workingSchedule = await
+            workingScheduleRepositoryBase.FindAll(x =>
+                x.Date == request.Date && x.DoctorClinicId == customerSchedule.DoctorId &&
+                x.StartTime == request.StartTime).ToListAsync(cancellationToken);
 
+        if (workingSchedule.Count != 0)
+            return Result.Failure(new Error("400", "Doctor is busy at this time !"));
         nextCustomerSchedule.Date = request.Date;
         nextCustomerSchedule.StartTime = request.StartTime;
         var endTime =
@@ -44,12 +51,25 @@ internal sealed class StaffUpdateCustomerScheduleTimeCommandHandler(
         customerScheduleRepositoryBase.Update(nextCustomerSchedule);
         nextCustomerSchedule.CustomerScheduleUpdateDateAndTime(nextCustomerSchedule);
         //todo set schedule for doctor
+        var doctorSchedule = new WorkingSchedule
+        {
+            Id = Guid.NewGuid(),
+            CustomerScheduleId = customerSchedule.Id,
+            DoctorClinicId = customerSchedule.DoctorId,
+            StartTime = request.StartTime,
+            EndTime = endTime,
+            Date = customerSchedule.Date.Value,
+        };
+        workingScheduleRepositoryBase.Add(doctorSchedule);
+        doctorSchedule.WorkingScheduleCreate(customerSchedule.Doctor.UserId, customerSchedule.Doctor.ClinicId,
+            customerSchedule.Doctor.User.FirstName + " " + customerSchedule.Doctor.User.LastName,
+            [doctorSchedule], customerSchedule);
         mailService.SendMail(new MailContent
         {
             To = nextCustomerSchedule.Customer.Email,
             Subject = "Yêu cầu lịch hẹn của quý khách vừa được cập nhập",
             Body =
-                $"Lịch của quý khách hàng {nextCustomerSchedule.Customer.FullName} đã được cập nhật ngày {nextCustomerSchedule.Date} vào lúc {nextCustomerSchedule.StartTime.ToString()} và sẽ được thẫm mỹ viện duyệt trong 24h "
+                $"Lịch của quý khách hàng {nextCustomerSchedule.Customer.FullName} đã được cập nhật ngày {nextCustomerSchedule.Date} vào lúc {nextCustomerSchedule.StartTime.ToString()}"
         });
         return Result.Success();
     }
