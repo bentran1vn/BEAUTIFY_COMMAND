@@ -14,6 +14,8 @@ internal sealed class
         if (user == null)
             return Result.Failure(new Error("404", "User Not Found"));
 
+        var currentDateTime = TimeZoneInfo.ConvertTime(DateTime.UtcNow,
+            TimeZoneInfo.FindSystemTimeZoneById("SE Asia Standard Time"));
         var walletTransaction = new WalletTransaction
         {
             Id = Guid.NewGuid(),
@@ -21,7 +23,7 @@ internal sealed class
             Amount = request.Amount,
             TransactionType = Constant.WalletConstants.TransactionType.DEPOSIT,
             Status = Constant.WalletConstants.TransactionStatus.PENDING,
-            TransactionDate = DateTimeOffset.UtcNow
+            TransactionDate = currentDateTime
         };
 
         walletTransactionRepositoryBase.Add(walletTransaction);

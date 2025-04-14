@@ -46,7 +46,7 @@ public static partial class QrContentParser
         return (parseResult.TransactionType, GuidParser(parseResult.TransactionId));
     }
 
-    [GeneratedRegex("beautify(order|sub|wallet)([a-f0-9]{32})")]
+    [GeneratedRegex("beautify(order|sub|wallet|WITHDRAWAL)([a-f0-9]{32})")]
     private static partial Regex MyRegex();
 }
 
