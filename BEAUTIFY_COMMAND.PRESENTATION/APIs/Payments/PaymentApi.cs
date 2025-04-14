@@ -21,8 +21,8 @@ public class PaymentApi : ApiEndpoint, ICarterModule
             .RequireAuthorization();
         
         gr1.MapPost("subscription/over", CreateSubscriptionOverOrder)
-            .WithName("Subscription Payments")
-            .WithSummary("Subscription Payments.")
+            .WithName("Subscription Over Payments")
+            .WithSummary("Subscription Over Payments.")
             .RequireAuthorization();
         
         gr1.MapPost("order/{id:guid}/{amount:decimal}/{paymentMethod}/", CustomerOrderPayment)
