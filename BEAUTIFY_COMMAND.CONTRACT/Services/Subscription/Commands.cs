@@ -8,6 +8,8 @@ public static class Commands
         int Duration,
         int LimitBranches,
         int LimitLiveStream,
+        decimal PriceMoreBranch,
+        decimal PriceMoreLivestream,
         int EnhancedView) : ICommand;
 
     public record UpdateSubscriptionCommand(
@@ -19,6 +21,8 @@ public static class Commands
         bool IsActivated,
         int LimitBranch,
         int LimitLiveStream,
+        decimal PriceMoreBranch,
+        decimal PriceMoreLivestream,
         int EnhancedViewer)
         : ICommand;
 

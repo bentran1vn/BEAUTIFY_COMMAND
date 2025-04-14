@@ -7,7 +7,8 @@ public class TriggerFromHookCommandHandler(
     IRepositoryBase<ClinicTransaction, Guid> clinicTransactionRepository,
     IRepositoryBase<WalletTransaction, Guid> walletTransactionRepository,
     IHubContext<PaymentHub> hubContext,
-    IRepositoryBase<Order, Guid> orderRepository)
+    IRepositoryBase<Order, Guid> orderRepository,
+    IRepositoryBase<Clinic, Guid> clinicRepository)
     : ICommandHandler<CONTRACT.Services.Payments.Commands.TriggerFromHookCommand>
 {
     public async Task<Result> Handle(CONTRACT.Services.Payments.Commands.TriggerFromHookCommand request,
@@ -24,6 +25,8 @@ public class TriggerFromHookCommandHandler(
                 await HandleWalletTransaction(request, cancellationToken),
             3 => // Withdrawal transaction
                 await HandleWithdrawalTransaction(request, cancellationToken),
+            4 => // Withdrawal transaction
+                await HandleOverTransaction(request, cancellationToken),
             _ => Result.Failure(new Error("400", "Invalid transaction type"))
         };
     }
@@ -36,7 +39,7 @@ public class TriggerFromHookCommandHandler(
         var transaction = await systemTransactionRepository.FindByIdAsync(
             request.Id,
             cancellationToken,
-            x => x.SubscriptionPackage);
+            x => x.SubscriptionPackage, x => x.Clinic);
 
         // Validate transaction exists
         if (transaction == null || transaction.IsDeleted)
@@ -66,7 +69,13 @@ public class TriggerFromHookCommandHandler(
         // The background job will look for transactions with status 1 and SubscriptionPackageId not null
         // to send confirmation emails
         transaction.Status = 1;
+        
+        if (transaction.Clinic == null)
+            return Result.Failure(new Error("404", "Clinic not found for this transaction"));
 
+        transaction.Clinic.AdditionBranches += transaction.SubscriptionPackage.LimitBranch;
+        transaction.Clinic.AdditionLivestreams += transaction.SubscriptionPackage.LimitLiveStream;
+        
         // Notify clients about successful payment
         await hubContext.Clients.Group(transaction.Id.ToString())
             .SendAsync("ReceivePaymentStatus", true, cancellationToken);
@@ -216,5 +225,54 @@ public class TriggerFromHookCommandHandler(
             .SendAsync("ReceivePaymentStatus", true, cancellationToken);
 
         return Result.Success("Withdrawal transaction processed successfully.");
+    }
+
+    private async Task<Result> HandleOverTransaction(CONTRACT.Services.Payments.Commands.TriggerFromHookCommand request,
+        CancellationToken cancellationToken)
+    {
+        // Fetch withdrawal transaction
+        var transaction = await systemTransactionRepository.FindByIdAsync(request.Id, cancellationToken,
+            x => x.Clinic, x => x.SubscriptionPackage);
+        
+        // Validate transaction exists
+        if (transaction == null || transaction.IsDeleted) 
+            return Result.Failure(new Error("404", "Transaction not found"));
+        
+        // Validate transaction status
+        if (transaction.Status != 0) 
+            return Result.Failure(new Error("400", "Transaction already handled"));
+
+        // Validate transaction amount
+        if (transaction.Amount != request.TransferAmount)
+            return Result.Failure(new Error("422", "Transaction Amount invalid"));
+
+        // Validate subscription package price
+        if (request.TransferAmount != transaction.SubscriptionPackage.Price)
+        {
+            await hubContext.Clients.Group(transaction.Id.ToString())
+                .SendAsync("SubscriptionPriceChanged", false, cancellationToken);
+            return Result.Success("Subscription price changed notification sent.");
+        }
+
+        // Validate transaction date
+        if (transaction.TransactionDate > DateTimeOffset.Now)
+            return Result.Failure(new Error("400", "Transaction Date invalid"));
+        
+        transaction.Status = 1;
+        
+        if (transaction.Clinic == null)
+            return Result.Failure(new Error("404", "Clinic not found for this transaction"));
+        
+        if(transaction.AdditionBranches != null)
+            transaction.Clinic.AdditionBranches += (int)transaction.AdditionBranches;
+        
+        if(transaction.AdditionLivestreams != null)
+            transaction.Clinic.AdditionLivestreams += (int)transaction.AdditionLivestreams;
+        
+        // Notify clients about successful payment
+        await hubContext.Clients.Group(transaction.Id.ToString())
+            .SendAsync("ReceivePaymentStatus", true, cancellationToken);
+            
+        return Result.Success("Subscription transaction processed successfully.");
     }
 }

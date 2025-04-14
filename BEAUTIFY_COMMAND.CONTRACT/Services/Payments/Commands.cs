@@ -29,5 +29,11 @@ public static class Commands
 
     public record SubscriptionOrderCommand(Guid SubscriptionId, Guid ClinicId, decimal CurrentAmount) : ICommand;
 
-    public record SubscriptionOrderBody(Guid SubscriptionId,decimal CurrentAmount);
+    public record SubscriptionOrderBody(Guid SubscriptionId, decimal CurrentAmount);
+    
+    public record SubscriptionOverOrderBody(Guid SubscriptionId,
+        decimal CurrentAmount, int AdditionBranch, int AdditionLiveStream);
+    
+    public record SubscriptionOverOrderCommand(Guid SubscriptionId, Guid ClinicId,
+        decimal CurrentAmount, int AdditionBranch, int AdditionLiveStream): ICommand;
 }
