@@ -42,7 +42,7 @@ internal sealed class ProcessWithdrawalRequestCommandHandler(
 
 
             var qrUrl =
-                $"https://qr.sepay.vn/img?bank=MBBank&acc=0901928382&template=&amount={(int)walletTransaction.Amount}&des=BeautifyWITHDRAWAL{walletTransaction.Id}";
+                $"https://qr.sepay.vn/img?bank=MBBank&acc=0901928382&template=&amount={(int)walletTransaction.Amount}&des=Beautifywithdrawal{walletTransaction.Id}";
 
             var result = new
             {

@@ -21,9 +21,6 @@ public static partial class QrContentParser
         // Convert content to lowercase first
         var lowercaseContent = content.ToLower();
 
-        // Pattern now uses lowercase 'antree' since we've converted the content
-        const string pattern = @"beautify(order|sub)([a-f0-9]{32})";
-
         var match = MyRegex().Match(lowercaseContent);
 
         if (!match.Success) throw new FormatException("Could not find valid Antree transaction in content");
@@ -46,7 +43,7 @@ public static partial class QrContentParser
         return (parseResult.TransactionType, GuidParser(parseResult.TransactionId));
     }
 
-    [GeneratedRegex("beautify(order|sub|wallet|WITHDRAWAL)([a-f0-9]{32})")]
+    [GeneratedRegex("beautify(order|sub|wallet|withdrawal)([a-f0-9]{32})")]
     private static partial Regex MyRegex();
 }
 
