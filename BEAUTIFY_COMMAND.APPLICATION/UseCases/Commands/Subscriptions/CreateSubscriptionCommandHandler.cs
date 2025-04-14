@@ -27,6 +27,8 @@ internal sealed class CreateSubscriptionCommandHandler(IRepositoryBase<Subscript
             LimitBranch = request.LimitBranches,
             LimitLiveStream = request.LimitLiveStream,
             EnhancedViewer = request.EnhancedView,
+            PriceMoreBranch = request.PriceMoreBranch,
+            PriceMoreLivestream = request.PriceMoreLivestream,
             IsActivated = false
         };
 

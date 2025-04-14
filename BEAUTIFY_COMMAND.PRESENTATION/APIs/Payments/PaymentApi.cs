@@ -17,8 +17,18 @@ public class PaymentApi : ApiEndpoint, ICarterModule
 
         gr1.MapPost("subscription", CreateSubscriptionOrder)
             .WithName("Subscription Payments")
-            .WithSummary("Subscription Payments.").RequireAuthorization();
-        gr1.MapPost("order/{id:guid}/{amount:decimal}/{paymentMethod}/", CustomerOrderPayment);
+            .WithSummary("Subscription Payments.")
+            .RequireAuthorization();
+        
+        gr1.MapPost("subscription/over", CreateSubscriptionOverOrder)
+            .WithName("Subscription Payments")
+            .WithSummary("Subscription Payments.")
+            .RequireAuthorization();
+        
+        gr1.MapPost("order/{id:guid}/{amount:decimal}/{paymentMethod}/", CustomerOrderPayment)
+            .WithName("Customer Order Payments")
+            .WithSummary("Customer Order Payments.")
+            .RequireAuthorization();;
 
         gr1.MapPost("wallets/top-ups", CustomerTopUpWallet)
             .RequireAuthorization(Constant.Role.CUSTOMER)
@@ -40,6 +50,7 @@ public class PaymentApi : ApiEndpoint, ICarterModule
 
         request.Type = type switch
         {
+            "OVER" => 4,
             "WITHDRAWAL" => 3,
             "WALLET" => 2,
             "ORDER" => 1,
@@ -62,6 +73,22 @@ public class PaymentApi : ApiEndpoint, ICarterModule
                 command.SubscriptionId,
                 new Guid(clinicId),
                 command.CurrentAmount));
+
+        return result.IsFailure ? HandlerFailure(result) : Results.Ok(result);
+    }
+    
+    private static async Task<IResult> CreateSubscriptionOverOrder(
+        ISender sender, HttpContext context,
+        [FromBody] Commands.SubscriptionOverOrderBody command)
+    {
+        var clinicId = context.User.FindFirst(c => c.Type == "ClinicId")?.Value!;
+
+        var result = await sender.Send(new Commands.SubscriptionOverOrderCommand(
+            command.SubscriptionId,
+            new Guid(clinicId),
+            command.CurrentAmount,
+            command.AdditionBranch,
+            command.AdditionLiveStream));
 
         return result.IsFailure ? HandlerFailure(result) : Results.Ok(result);
     }
