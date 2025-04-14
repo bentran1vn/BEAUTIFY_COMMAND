@@ -20,7 +20,8 @@ public class Clinic : AggregateRoot<Guid>, IAuditableEntity
     [MaxLength(250)] public required string BusinessLicenseUrl { get; set; }
     [MaxLength(250)] public required string OperatingLicenseUrl { get; set; }
     public DateTimeOffset? OperatingLicenseExpiryDate { get; set; }
-
+    public int AdditionBranches { get; set; } = 0;
+    public int AdditionLivestreams { get; set; } = 0;
     public int Status { get; set; } = 0;
 
     // 0 Pending, 1 Approve, 2 Reject, 3 Banned
@@ -33,7 +34,7 @@ public class Clinic : AggregateRoot<Guid>, IAuditableEntity
 
     [MaxLength(255)] public string? BankName { get; set; }
     [MaxLength(100)] public string? BankAccountNumber { get; set; }
-    [Column(TypeName = "decimal(18,2)")] public decimal Balance { get; set; }
+        [Column(TypeName = "decimal(18,2)")] public decimal Balance { get; set; }
     public Guid? ParentId { get; set; }
     public virtual Clinic? Parent { get; set; }
     [MaxLength(250)] public string? Note { get; set; }

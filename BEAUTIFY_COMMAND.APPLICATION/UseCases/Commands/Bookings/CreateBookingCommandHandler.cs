@@ -138,6 +138,7 @@ internal sealed class
                     cancellationToken);
                 if (livestreamRoom == null)
                     return Result.Failure(new Error("404", "Livestream room not found or not available"));
+
                 var discount = await promotionRepositoryBase.FindSingleAsync(
                     x => x.ServiceId == request.ServiceId && x.IsActivated &&
                          x.LivestreamRoomId == request.LiveStreamRoomId,
@@ -145,13 +146,18 @@ internal sealed class
 
                 if (discount != null)
                 {
-                    discountPrice = total * (decimal)discount.DiscountPercent;
+                    // Calculate the discounted price, not the discount amount
+                    discountPrice = total * (1 - (decimal)discount.DiscountPercent);
                 }
                 else
                 {
+                    // If using service.DiscountPrice, make sure this is the final price after discount
+                    // not the discount amount
                     discountPrice = service.DiscountPrice;
                 }
             }
+
+// Now discountPrice contains the final price after discount
 
             #endregion livestream
 
