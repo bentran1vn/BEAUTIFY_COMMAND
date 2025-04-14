@@ -5,11 +5,15 @@ public static class Commands
         decimal Amount) : ICommand;
 
     public record CreateWithdrawalRequestCommand(
-        
         decimal Amount,
         string Description) : ICommand;
 
     public record ProcessWithdrawalRequestCommand(
+        Guid WalletTransactionId,
+        bool IsApproved,
+        string? RejectionReason = null) : ICommand;
+
+    public record SystemAdminProcessWithdrawalRequestCommand(
         Guid WalletTransactionId,
         bool IsApproved,
         string? RejectionReason = null) : ICommand;

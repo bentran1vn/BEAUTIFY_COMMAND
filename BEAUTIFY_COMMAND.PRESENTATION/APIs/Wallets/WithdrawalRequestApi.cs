@@ -26,10 +26,14 @@ public class WithdrawalRequestApi : ApiEndpoint, ICarterModule
              .WithName("Get Withdrawal Request By Id")
              .WithSummary("Get a specific withdrawal request by its ID");*/
 
-        gr1.MapPost("{id:guid}/process", ProcessWithdrawalRequest)
+        gr1.MapPatch("{id:guid}", ProcessWithdrawalRequest)
             .RequireAuthorization(Constant.Role.CLINIC_ADMIN)
-            .WithName("Process Withdrawal Request")
+            .WithName("Update Withdrawal Request")
             .WithSummary("Approve or reject a withdrawal request");
+        gr1.MapPatch("{id:guid}/system", SystemAdminProcessWithdrawalRequest)
+            .RequireAuthorization(Constant.Role.SYSTEM_ADMIN)
+            .WithName("System Admin Update Withdrawal Request")
+            .WithSummary("Approve or reject a withdrawal request by system admin");
     }
 
     private static async Task<IResult> CreateWithdrawalRequest(
@@ -40,6 +44,17 @@ public class WithdrawalRequestApi : ApiEndpoint, ICarterModule
         return result.IsFailure ? HandlerFailure(result) : Results.Ok(result);
     }
 
+    private static async Task<IResult> SystemAdminProcessWithdrawalRequest(
+        ISender sender,
+        Guid id,
+        [FromBody] ProcessWithdrawalRequestBody body)
+    {
+        var command = new Commands.ProcessWithdrawalRequestCommand(
+            id, body.IsApproved, body.RejectionReason);
+
+        var result = await sender.Send(command);
+        return result.IsFailure ? HandlerFailure(result) : Results.Ok(result);
+    }
 
     private static async Task<IResult> ProcessWithdrawalRequest(
         ISender sender,

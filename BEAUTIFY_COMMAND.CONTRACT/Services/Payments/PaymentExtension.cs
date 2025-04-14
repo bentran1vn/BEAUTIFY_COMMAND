@@ -49,6 +49,6 @@ public static partial class QrContentParser
 
 public class QrParseResult
 {
-    public string TransactionType { get; set; }
-    public string TransactionId { get; set; }
+    public string TransactionType { get; init; }
+    public string TransactionId { get; init; }
 }

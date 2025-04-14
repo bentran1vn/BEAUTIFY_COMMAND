@@ -1,3 +1,5 @@
+using BEAUTIFY_COMMAND.DOMAIN;
+
 namespace BEAUTIFY_COMMAND.APPLICATION.UseCases.Commands.Wallets;
 internal sealed class CreateWithdrawalRequestCommandHandler(
     IRepositoryBase<Clinic, Guid> clinicRepository,
@@ -9,35 +11,35 @@ internal sealed class CreateWithdrawalRequestCommandHandler(
         CancellationToken cancellationToken)
     {
         // Get the child clinic
-        var childClinic = await clinicRepository.FindByIdAsync(currentUserService.ClinicId.Value, cancellationToken);
+        var childClinic = await clinicRepository.FindByIdAsync(currentUserService.ClinicId!.Value, cancellationToken);
         if (childClinic == null)
         {
-            return Result.Failure(new Error("404", "Child clinic not found"));
+            return Result.Failure(new Error("404", ErrorMessages.Clinic.ClinicNotFound));
         }
 
         // Verify the child clinic has a parent
         if (childClinic.ParentId == null)
         {
-            return Result.Failure(new Error("400", "This clinic does not have a parent clinic"));
+            return Result.Failure(new Error("400", ErrorMessages.Clinic.ClinicIsNotABranch));
         }
 
         // Get the parent clinic
         var parentClinic = await clinicRepository.FindByIdAsync(childClinic.ParentId.Value, cancellationToken);
         if (parentClinic == null)
         {
-            return Result.Failure(new Error("404", "Parent clinic not found"));
+            return Result.Failure(new Error("404", ErrorMessages.Clinic.ParentClinicNotFound));
         }
 
         // Verify the amount is valid
         if (request.Amount < 2000)
         {
-            return Result.Failure(new Error("400", "Amount must be greater than 2000"));
+            return Result.Failure(new Error("400", ErrorMessages.Clinic.AmountMustBeGreaterThan2000));
         }
 
         // Verify the child clinic has sufficient balance
         if (childClinic.Balance < request.Amount)
         {
-            return Result.Failure(new Error("400", "Insufficient funds"));
+            return Result.Failure(new Error("400", ErrorMessages.Clinic.InsufficientFunds));
         }
 
         var walletTransaction = new WalletTransaction
@@ -48,7 +50,7 @@ internal sealed class CreateWithdrawalRequestCommandHandler(
             TransactionType = Constant.WalletConstants.TransactionType.WITHDRAWAL,
             Status = Constant.WalletConstants.TransactionStatus.PENDING,
             IsMakeBySystem = false,
-            Description = request.Description,
+            Description = request.Description
         };
 
 
