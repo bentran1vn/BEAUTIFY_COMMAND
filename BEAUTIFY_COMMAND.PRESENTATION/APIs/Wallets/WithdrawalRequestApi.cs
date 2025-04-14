@@ -49,7 +49,7 @@ public class WithdrawalRequestApi : ApiEndpoint, ICarterModule
         Guid id,
         [FromBody] ProcessWithdrawalRequestBody body)
     {
-        var command = new Commands.ProcessWithdrawalRequestCommand(
+        var command = new Commands.SystemAdminProcessWithdrawalRequestCommand(
             id, body.IsApproved, body.RejectionReason);
 
         var result = await sender.Send(command);
