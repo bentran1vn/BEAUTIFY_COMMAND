@@ -134,7 +134,8 @@ internal sealed class
             if (request.LiveStreamRoomId != null)
             {
                 var livestreamRoom = await livestreamRoomRepositoryBase.FindSingleAsync(
-                    x => x.Id == request.LiveStreamRoomId && x.Status == "live" && x.Date == null, cancellationToken);
+                    x => x.Id == request.LiveStreamRoomId && x.Status == "live" && x.EndDate == null,
+                    cancellationToken);
                 if (livestreamRoom == null)
                     return Result.Failure(new Error("404", "Livestream room not found or not available"));
                 var discount = await promotionRepositoryBase.FindSingleAsync(
