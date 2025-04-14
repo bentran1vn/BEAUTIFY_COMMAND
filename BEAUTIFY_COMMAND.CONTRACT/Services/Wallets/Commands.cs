@@ -23,11 +23,9 @@ public static class Commands
         decimal Amount,
         string Description) : ICommand;
 
-    public record GetWalletBalanceCommand(
-        Guid? UserId,
-        Guid? ClinicId) : ICommand;
-
-    public record GetWalletTransactionsCommand(
-        Guid? UserId,
-        Guid? ClinicId) : ICommand;
+    public record CustomerWithdrawFromWalletCommand(
+        decimal Amount,
+        string BankName,
+        string BankAccountNumber,
+        string AccountHolderName) : ICommand;
 }

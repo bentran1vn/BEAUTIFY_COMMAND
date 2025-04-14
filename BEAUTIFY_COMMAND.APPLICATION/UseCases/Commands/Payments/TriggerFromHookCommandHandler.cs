@@ -34,22 +34,22 @@ public class TriggerFromHookCommandHandler(
     {
         // Fetch transaction with subscription package
         var transaction = await systemTransactionRepository.FindByIdAsync(
-            request.Id, 
+            request.Id,
             cancellationToken,
             x => x.SubscriptionPackage);
 
         // Validate transaction exists
-        if (transaction == null || transaction.IsDeleted) 
+        if (transaction == null || transaction.IsDeleted)
             return Result.Failure(new Error("404", "Transaction not found"));
 
         // Validate transaction status
-        if (transaction.Status != 0) 
+        if (transaction.Status != 0)
             return Result.Failure(new Error("400", "Transaction already handled"));
 
         // Validate transaction amount
         if (transaction.Amount != request.TransferAmount)
             return Result.Failure(new Error("422", "Transaction Amount invalid"));
-            
+
         // Validate subscription package price
         if (request.TransferAmount != transaction.SubscriptionPackage.Price)
         {
@@ -70,7 +70,7 @@ public class TriggerFromHookCommandHandler(
         // Notify clients about successful payment
         await hubContext.Clients.Group(transaction.Id.ToString())
             .SendAsync("ReceivePaymentStatus", true, cancellationToken);
-            
+
         return Result.Success("Subscription transaction processed successfully.");
     }
 
@@ -82,7 +82,7 @@ public class TriggerFromHookCommandHandler(
         var transaction = await clinicTransactionRepository.FindByIdAsync(request.Id, cancellationToken);
 
         // Validate transaction exists
-        if (transaction == null || transaction.IsDeleted) 
+        if (transaction == null || transaction.IsDeleted)
             return Result.Failure(new Error("404", "Transaction not found"));
 
         // Validate transaction status
@@ -99,14 +99,14 @@ public class TriggerFromHookCommandHandler(
 
         // Update transaction status to completed
         transaction.Status = Constant.OrderStatus.ORDER_COMPLETED;
-        
+
         // Validate and update associated order
         if (!transaction.OrderId.HasValue)
             return Result.Failure(new Error("400", "Transaction has no associated order"));
-            
+
         var order = await orderRepository.FindByIdAsync(transaction.OrderId.Value, cancellationToken);
-        
-        if (order == null || order.IsDeleted) 
+
+        if (order == null || order.IsDeleted)
             return Result.Failure(new Error("404", "Order not found"));
 
         if (order.Status == Constant.OrderStatus.ORDER_COMPLETED)
@@ -117,11 +117,11 @@ public class TriggerFromHookCommandHandler(
 
         // Update order status to completed
         order.Status = Constant.OrderStatus.ORDER_COMPLETED;
-        
+
         // Notify clients about successful payment
         await hubContext.Clients.Group(transaction.Id.ToString())
             .SendAsync("ReceivePaymentStatus", true, cancellationToken);
-            
+
         return Result.Success("Clinic transaction processed successfully.");
     }
 
@@ -131,12 +131,12 @@ public class TriggerFromHookCommandHandler(
     {
         // Fetch wallet transaction with user
         var transaction = await walletTransactionRepository.FindByIdAsync(
-            request.Id, 
-            cancellationToken, 
+            request.Id,
+            cancellationToken,
             x => x.User);
 
         // Validate transaction exists
-        if (transaction == null || transaction.IsDeleted) 
+        if (transaction == null || transaction.IsDeleted)
             return Result.Failure(new Error("404", "Transaction not found"));
 
         // Validate transaction status
@@ -153,18 +153,18 @@ public class TriggerFromHookCommandHandler(
 
         // Update transaction status to completed
         transaction.Status = Constant.WalletConstants.TransactionStatus.COMPLETED;
-        
+
         // Ensure user exists
         if (transaction.User == null)
             return Result.Failure(new Error("404", "User not found for this transaction"));
-            
+
         // Update user balance
         transaction.User.Balance += transaction.Amount;
-        
+
         // Notify clients about successful payment
         await hubContext.Clients.Group(transaction.Id.ToString())
             .SendAsync("ReceivePaymentStatus", true, cancellationToken);
-            
+
         return Result.Success("Wallet transaction processed successfully.");
     }
 
@@ -172,11 +172,15 @@ public class TriggerFromHookCommandHandler(
         CONTRACT.Services.Payments.Commands.TriggerFromHookCommand request,
         CancellationToken cancellationToken)
     {
-        // Fetch withdrawal transaction
-        var transaction = await walletTransactionRepository.FindByIdAsync(request.Id, cancellationToken);
-        
+        // Fetch withdrawal transaction with related entities
+        var transaction = await walletTransactionRepository.FindByIdAsync(
+            request.Id,
+            cancellationToken,
+            x => x.User,
+            x => x.Clinic);
+
         // Validate transaction exists
-        if (transaction == null || transaction.IsDeleted) 
+        if (transaction == null || transaction.IsDeleted)
             return Result.Failure(new Error("404", "Transaction not found"));
 
         // Validate transaction status
@@ -189,18 +193,28 @@ public class TriggerFromHookCommandHandler(
 
         // Update transaction status to completed
         transaction.Status = Constant.WalletConstants.TransactionStatus.COMPLETED;
-        
-        // Ensure clinic exists
-        if (transaction.Clinic == null)
-            return Result.Failure(new Error("404", "Clinic not found for this transaction"));
-            
-        // Update clinic balance
-        transaction.Clinic.Balance -= transaction.Amount;
-        
+
+        // Handle clinic withdrawal
+        if (transaction.Clinic != null)
+        {
+            // Update clinic balance
+            transaction.Clinic.Balance -= transaction.Amount;
+        }
+        // Handle user withdrawal
+        else if (transaction.User != null)
+        {
+            // Update user balance
+            transaction.User.Balance -= transaction.Amount;
+        }
+        else
+        {
+            return Result.Failure(new Error("404", "Neither user nor clinic found for this transaction"));
+        }
+
         // Notify clients about successful payment
         await hubContext.Clients.Group(transaction.Id.ToString())
             .SendAsync("ReceivePaymentStatus", true, cancellationToken);
-            
+
         return Result.Success("Withdrawal transaction processed successfully.");
     }
 }

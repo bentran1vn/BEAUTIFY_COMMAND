@@ -16,15 +16,6 @@ public class WithdrawalRequestApi : ApiEndpoint, ICarterModule
             .WithName("Create Withdrawal Request")
             .WithSummary("Create a withdrawal request from a child clinic to its parent clinic");
 
-        /* gr1.MapGet("", GetWithdrawalRequests)
-             .RequireAuthorization(RoleNames.ClinicManager)
-             .WithName("Get Withdrawal Requests")
-             .WithSummary("Get withdrawal requests for a clinic");
-
-         gr1.MapGet("{id:guid}", GetWithdrawalRequestById)
-             .RequireAuthorization(RoleNames.ClinicManager)
-             .WithName("Get Withdrawal Request By Id")
-             .WithSummary("Get a specific withdrawal request by its ID");*/
 
         gr1.MapPatch("{id:guid}", ProcessWithdrawalRequest)
             .RequireAuthorization(Constant.Role.CLINIC_ADMIN)
@@ -34,11 +25,23 @@ public class WithdrawalRequestApi : ApiEndpoint, ICarterModule
             .RequireAuthorization(Constant.Role.SYSTEM_ADMIN)
             .WithName("System Admin Update Withdrawal Request")
             .WithSummary("Approve or reject a withdrawal request by system admin");
+        gr1.MapPost("/customer-withdrawals", CustomerWithdrawFromWallet)
+            .RequireAuthorization(Constant.Role.CUSTOMER)
+            .WithName("Customer Withdraw From Wallet")
+            .WithSummary("Withdraw money from wallet to bank account.");
     }
 
     private static async Task<IResult> CreateWithdrawalRequest(
         ISender sender,
         [FromBody] Commands.CreateWithdrawalRequestCommand command)
+    {
+        var result = await sender.Send(command);
+        return result.IsFailure ? HandlerFailure(result) : Results.Ok(result);
+    }
+
+    private static async Task<IResult> CustomerWithdrawFromWallet(
+        ISender sender,
+        [FromBody] Commands.CustomerWithdrawFromWalletCommand command)
     {
         var result = await sender.Send(command);
         return result.IsFailure ? HandlerFailure(result) : Results.Ok(result);
