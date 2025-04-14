@@ -27,10 +27,10 @@ public class Clinic : AggregateRoot<Guid>, IAuditableEntity
     public int TotalApply { get; set; } = 0;
     [MaxLength(250)] public string? ProfilePictureUrl { get; set; }
     public int? TotalBranches { get; set; } = 0;
-
     public bool IsActivated { get; set; } = false;
     public bool? IsParent { get; set; } = false;
-
+    public int AdditionBranches { get; set; } = 0;
+    public int AdditionLivestreams { get; set; } = 0;
     [MaxLength(255)] public string? BankName { get; set; }
     [MaxLength(100)] public string? BankAccountNumber { get; set; }
     [Column(TypeName = "decimal(18,2)")] public decimal Balance { get; set; }

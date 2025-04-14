@@ -16,24 +16,25 @@ internal sealed class
     {
         var parentClinic = await clinicRepository.FindByIdAsync(currentUserService.ClinicId.Value, cancellationToken) ??
                            throw new ClinicException.ClinicNotFoundException(currentUserService.ClinicId.Value);
-        var systemTrans = await systemTransactionRepository.FindAll(
-                x => x.ClinicId == parentClinic.Id && x.Status == 2).OrderByDescending(x => x.TransactionDate)
-            .FirstOrDefaultAsync(cancellationToken);
-        if (systemTrans == null)
-        {
-            return Result.Failure(new Error("400", "You have not paid the system fee"));
-        }
+        
+        // var systemTrans = await systemTransactionRepository.FindAll(
+        //         x => x.ClinicId == parentClinic.Id && x.Status == 2).OrderByDescending(x => x.TransactionDate)
+        //     .FirstOrDefaultAsync(cancellationToken);
+        //
+        // if (systemTrans == null)
+        // {
+        //     return Result.Failure(new Error("400", "You have not paid the system fee"));
+        // }
 
-        if (parentClinic.TotalBranches >= systemTrans.SubscriptionPackage!.LimitBranch)
+        if (parentClinic.TotalBranches >= parentClinic.AdditionBranches)
         {
             return Result.Failure(new Error("403", "You have reached the maximum number of branches"));
         }
 
 
         var role = await roleRepository.FindSingleAsync(x => x.Name == "Clinic Staff", cancellationToken);
-        var OUrl = await mediaService.UploadImageAsync(request.OperatingLicense);
-
-
+        var oUrl = await mediaService.UploadImageAsync(request.OperatingLicense);
+        
         var clinic = new Clinic
         {
             Id = Guid.NewGuid(),
@@ -47,7 +48,7 @@ internal sealed class
             PhoneNumber = request.PhoneNumber,
             TaxCode = parentClinic.TaxCode,
             BusinessLicenseUrl = parentClinic.BusinessLicenseUrl,
-            OperatingLicenseUrl = OUrl,
+            OperatingLicenseUrl = oUrl,
             OperatingLicenseExpiryDate = request.OperatingLicenseExpiryDate,
             Status = 1,
             BankName = request.BankName,
@@ -56,8 +57,8 @@ internal sealed class
         };
         if (request.ProfilePictureUrl != null)
         {
-            var PUrl = await mediaService.UploadImageAsync(request.ProfilePictureUrl);
-            clinic.ProfilePictureUrl = PUrl;
+            var pUrl = await mediaService.UploadImageAsync(request.ProfilePictureUrl);
+            clinic.ProfilePictureUrl = pUrl;
         }
 
         parentClinic.TotalBranches++;

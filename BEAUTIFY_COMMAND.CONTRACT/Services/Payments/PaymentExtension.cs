@@ -23,7 +23,7 @@ public static partial class QrContentParser
 
         var match = MyRegex().Match(lowercaseContent);
 
-        if (!match.Success) throw new FormatException("Could not find valid Antree transaction in content");
+        if (!match.Success) throw new FormatException("Could not find valid Beautify transaction in content");
 
         return new QrParseResult
         {
@@ -43,7 +43,7 @@ public static partial class QrContentParser
         return (parseResult.TransactionType, GuidParser(parseResult.TransactionId));
     }
 
-    [GeneratedRegex("beautify(order|sub|wallet|withdrawal)([a-f0-9]{32})")]
+    [GeneratedRegex("beautify(order|sub|wallet|withdrawal|over)([a-f0-9]{32})")]
     private static partial Regex MyRegex();
 }
 
