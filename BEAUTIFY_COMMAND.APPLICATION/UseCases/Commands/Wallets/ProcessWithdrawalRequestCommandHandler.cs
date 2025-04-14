@@ -1,6 +1,3 @@
-using BEAUTIFY_COMMAND.CONTRACT.Services.Wallets;
-using BEAUTIFY_COMMAND.DOMAIN.Constants;
-
 namespace BEAUTIFY_COMMAND.APPLICATION.UseCases.Commands.Wallets;
 internal sealed class ProcessWithdrawalRequestCommandHandler(
     IRepositoryBase<Clinic, Guid> clinicRepository,

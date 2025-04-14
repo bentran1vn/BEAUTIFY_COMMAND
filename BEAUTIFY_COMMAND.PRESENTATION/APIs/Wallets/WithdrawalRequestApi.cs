@@ -40,27 +40,6 @@ public class WithdrawalRequestApi : ApiEndpoint, ICarterModule
         return result.IsFailure ? HandlerFailure(result) : Results.Ok(result);
     }
 
-    private static async Task<IResult> GetWithdrawalRequests(
-        ISender sender,
-        [FromQuery] Guid? childClinicId,
-        [FromQuery] Guid? parentClinicId,
-        [FromQuery] int? status)
-    {
-        var query = new WithdrawalRequestQueries.GetWithdrawalRequestsQuery(
-            childClinicId, parentClinicId, status);
-
-        var result = await sender.Send(query);
-        return result.IsFailure ? HandlerFailure(result) : Results.Ok(result);
-    }
-
-    private static async Task<IResult> GetWithdrawalRequestById(
-        ISender sender,
-        Guid id)
-    {
-        var query = new WithdrawalRequestQueries.GetWithdrawalRequestByIdQuery(id);
-        var result = await sender.Send(query);
-        return result.IsFailure ? HandlerFailure(result) : Results.Ok(result);
-    }
 
     private static async Task<IResult> ProcessWithdrawalRequest(
         ISender sender,
