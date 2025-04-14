@@ -29,7 +29,7 @@ internal sealed class CreateWithdrawalRequestCommandHandler(
         }
 
         // Verify the amount is valid
-        if (request.Amount <= 2000)
+        if (request.Amount < 2000)
         {
             return Result.Failure(new Error("400", "Amount must be greater than 2000"));
         }
