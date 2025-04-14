@@ -35,7 +35,7 @@ internal sealed class ProcessWithdrawalRequestCommandHandler(
             }
 
             // Update the withdrawal request
-            walletTransaction.Status = Constant.WalletConstants.TransactionStatus.COMPLETED;
+
             var VietNamTimeZone = TimeZoneInfo.FindSystemTimeZoneById("SE Asia Standard Time");
 
             walletTransaction.TransactionDate = TimeZoneInfo.ConvertTime(DateTime.UtcNow, VietNamTimeZone);
@@ -50,7 +50,7 @@ internal sealed class ProcessWithdrawalRequestCommandHandler(
                 BankNumber = "100879223979",
                 BankGateway = "VietinBank",
                 walletTransaction.Amount,
-                OrderDescription = $"Beautify-{walletTransaction.Id}",
+                OrderDescription = $"BeautifyWITHDRAWAL-{walletTransaction.Id}",
                 QrUrl = qrUrl
             };
             return Result.Success(result);
