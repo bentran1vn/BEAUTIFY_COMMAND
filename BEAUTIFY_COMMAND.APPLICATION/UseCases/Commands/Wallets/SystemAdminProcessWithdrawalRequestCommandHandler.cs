@@ -1,6 +1,9 @@
 ﻿using BEAUTIFY_COMMAND.DOMAIN;
 
 namespace BEAUTIFY_COMMAND.APPLICATION.UseCases.Commands.Wallets;
+/// <summary>
+/// Handler for system administrators to process withdrawal requests
+/// </summary>
 internal sealed class SystemAdminProcessWithdrawalRequestCommandHandler(
     IRepositoryBase<WalletTransaction, Guid> walletTransactionRepository,
     IRepositoryBase<Clinic, Guid> clinicRepository)
@@ -10,55 +13,89 @@ internal sealed class SystemAdminProcessWithdrawalRequestCommandHandler(
         CONTRACT.Services.Wallets.Commands.SystemAdminProcessWithdrawalRequestCommand request,
         CancellationToken cancellationToken)
     {
-        var walletTransaction =
-            await walletTransactionRepository.FindByIdAsync(request.WalletTransactionId, cancellationToken);
-        if (walletTransaction == null)
-            return Result.Failure(new Error("404", ErrorMessages.Wallet.WalletNotFound));
-
-        var childClinic = await clinicRepository.FindByIdAsync(walletTransaction.ClinicId.Value, cancellationToken);
-        if (childClinic == null)
+        // Get and validate the transaction
+        var (transaction, clinic) = await GetAndValidateTransaction(request.WalletTransactionId, cancellationToken);
+        if (transaction == null || clinic == null)
         {
-            return Result.Failure(new Error("404", ErrorMessages.Clinic.ClinicNotFound));
+            return Result.Failure(new Error("404", ErrorMessages.Wallet.WalletNotFound));
         }
 
-        // Verify the wallet transaction is pending
-        if (walletTransaction.Status != Constant.WalletConstants.TransactionStatus.WAITING_APPROVAL)
+        // Verify the wallet transaction is in the correct state
+        if (transaction.Status != Constant.WalletConstants.TransactionStatus.WAITING_APPROVAL)
         {
             return Result.Failure(new Error("400", ErrorMessages.Wallet.InvalidTransactionStatus));
         }
 
         // Process the request based on approval status
-        if (request.IsApproved)
+        return request.IsApproved
+            ? await ApproveWithdrawal(transaction, clinic, cancellationToken)
+            : RejectWithdrawal(transaction);
+    }
+
+    /// <summary>
+    /// Gets and validates the transaction and associated clinic
+    /// </summary>
+    private async Task<(WalletTransaction? Transaction, Clinic? Clinic)> GetAndValidateTransaction(
+        Guid transactionId,
+        CancellationToken cancellationToken)
+    {
+        var transaction = await walletTransactionRepository.FindByIdAsync(transactionId, cancellationToken);
+        if (transaction is not { ClinicId: not null })
         {
-            // Update the withdrawal request
-            if (childClinic.Balance < walletTransaction.Amount)
-            {
-                return Result.Failure(new Error("400", ErrorMessages.Clinic.InsufficientFunds));
-            }
-
-            var VietNamTimeZone = TimeZoneInfo.FindSystemTimeZoneById("SE Asia Standard Time");
-
-            walletTransaction.TransactionDate = TimeZoneInfo.ConvertTime(DateTime.UtcNow, VietNamTimeZone);
-
-
-            var qrUrl =
-                $"https://qr.sepay.vn/img?bank=MBBank&acc=0901928382&template=&amount={(int)walletTransaction.Amount}&des=Beautifywithdrawal{walletTransaction.Id}";
-
-            var result = new
-            {
-                TransactionId = walletTransaction.Id,
-                BankNumber = "100879223979",
-                BankGateway = "VietinBank",
-                walletTransaction.Amount,
-                OrderDescription = $"BeautifyWITHDRAWAL-{walletTransaction.Id}",
-                QrUrl = qrUrl
-            };
-            return Result.Success(result);
+            return (null, null);
         }
 
-        // Reject the withdrawal request
-        walletTransaction.Status = Constant.WalletConstants.TransactionStatus.REJECTED_BY_SYSTEM;
-        walletTransactionRepository.Update(walletTransaction);
+        var clinic = await clinicRepository.FindByIdAsync(transaction.ClinicId.Value, cancellationToken);
+        return clinic == null ? (transaction, null) : (transaction, clinic);
+    }
+
+    /// <summary>
+    /// Approves the withdrawal request and generates payment information
+    /// </summary>
+    private async Task<Result> ApproveWithdrawal(
+        WalletTransaction transaction,
+        Clinic clinic,
+        CancellationToken cancellationToken)
+    {
+        // Verify sufficient funds
+        if (clinic.Balance < transaction.Amount)
+        {
+            return Result.Failure(new Error("400", ErrorMessages.Clinic.InsufficientFunds));
+        }
+
+        // Update transaction with Vietnam timezone
+        var vietnamTimeZone = TimeZoneInfo.FindSystemTimeZoneById("SE Asia Standard Time");
+        transaction.TransactionDate = TimeZoneInfo.ConvertTime(DateTime.UtcNow, vietnamTimeZone);
+        transaction.Status = Constant.WalletConstants.TransactionStatus.WAITING_FOR_PAYMENT;
+        transaction.ModifiedOnUtc = DateTimeOffset.UtcNow;
+
+        // Save changes
+        walletTransactionRepository.Update(transaction);
+
+        // Generate payment information
+        var qrUrl =
+            $"https://qr.sepay.vn/img?bank=MBBank&acc=0901928382&template=&amount={(int)transaction.Amount}&des=Beautifywithdrawal{transaction.Id}";
+        var result = new
+        {
+            TransactionId = transaction.Id,
+            BankNumber = "100879223979",
+            BankGateway = "VietinBank",
+            transaction.Amount,
+            OrderDescription = $"BeautifyWITHDRAWAL-{transaction.Id}",
+            QrUrl = qrUrl
+        };
+
+        return Result.Success(result);
+    }
+
+    /// <summary>
+    /// Rejects the withdrawal request
+    /// </summary>
+    private Result RejectWithdrawal(WalletTransaction transaction)
+    {
+        transaction.Status = Constant.WalletConstants.TransactionStatus.REJECTED_BY_SYSTEM;
+        walletTransactionRepository.Update(transaction);
+
         return Result.Success();
     }
 }

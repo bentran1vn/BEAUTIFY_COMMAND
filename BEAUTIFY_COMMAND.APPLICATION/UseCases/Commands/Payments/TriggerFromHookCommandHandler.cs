@@ -13,127 +13,194 @@ public class TriggerFromHookCommandHandler(
     public async Task<Result> Handle(CONTRACT.Services.Payments.Commands.TriggerFromHookCommand request,
         CancellationToken cancellationToken)
     {
-        switch (request.Type)
+        // Process different transaction types based on the request Type
+        return request.Type switch
         {
-            case 0:
-            {
-                #region Subscription
+            0 => // Subscription transaction
+                await HandleSubscriptionTransaction(request, cancellationToken),
+            1 => // Clinic transaction
+                await HandleClinicTransaction(request, cancellationToken),
+            2 => // Wallet transaction
+                await HandleWalletTransaction(request, cancellationToken),
+            3 => // Withdrawal transaction
+                await HandleWithdrawalTransaction(request, cancellationToken),
+            _ => Result.Failure(new Error("400", "Invalid transaction type"))
+        };
+    }
 
-                var tran = await systemTransactionRepository.FindByIdAsync(request.Id, cancellationToken,
-                    x => x.SubscriptionPackage);
+    private async Task<Result> HandleSubscriptionTransaction(
+        CONTRACT.Services.Payments.Commands.TriggerFromHookCommand request,
+        CancellationToken cancellationToken)
+    {
+        // Fetch transaction with subscription package
+        var transaction = await systemTransactionRepository.FindByIdAsync(
+            request.Id, 
+            cancellationToken,
+            x => x.SubscriptionPackage);
 
-                if (tran == null || tran.IsDeleted) return Result.Failure(new Error("404", "Transaction not found"));
+        // Validate transaction exists
+        if (transaction == null || transaction.IsDeleted) 
+            return Result.Failure(new Error("404", "Transaction not found"));
 
-                if (tran.Status != 0) return Result.Failure(new Error("400", "Transaction already handler"));
+        // Validate transaction status
+        if (transaction.Status != 0) 
+            return Result.Failure(new Error("400", "Transaction already handled"));
 
-                if (tran.Amount != request.TransferAmount)
-                    return Result.Failure(new Error("422", "Transaction Amount invalid"));
-                if (request.TransferAmount != tran.SubscriptionPackage.Price)
-                {
-                    await hubContext.Clients.Group(tran.Id.ToString())
-                        .SendAsync("SubscriptionPriceChanged", false, cancellationToken);
-                    break;
-                }
-
-
-                if (tran.TransactionDate > DateTimeOffset.Now)
-                    return Result.Failure(new Error("400", "Transaction Date invalid"));
-
-                // Update transaction status to 1 (completed)
-                // The background job will look for transactions with status 1 and SubscriptionPackageId not null
-                // to send confirmation emails
-                tran.Status = 1;
-
-
-                await hubContext.Clients.Group(tran.Id.ToString())
-                    .SendAsync("ReceivePaymentStatus", true, cancellationToken);
-                break;
-
-                #endregion
-            }
-            case 1:
-            {
-                #region Clinic
-
-                var tran = await clinicTransactionRepository.FindByIdAsync(request.Id, cancellationToken);
-
-                if (tran == null || tran.IsDeleted) return Result.Failure(new Error("404", "Transaction not found"));
-
-                if (tran.Status != Constant.OrderStatus.ORDER_PENDING)
-                    return Result.Failure(new Error("400", "Transaction already handler"));
-
-                if (tran.Amount != request.TransferAmount)
-                    return Result.Failure(new Error("422", "Transaction Amount invalid"));
-
-                if (tran.TransactionDate > DateTimeOffset.Now)
-                    return Result.Failure(new Error("400", "Transaction Date invalid"));
-
-                tran.Status = Constant.OrderStatus.ORDER_COMPLETED;
-                var order = await orderRepository.FindByIdAsync(tran.OrderId.Value, cancellationToken);
-                if (order == null || order.IsDeleted) return Result.Failure(new Error("404", "Order not found"));
-
-                if (order.Status == Constant.OrderStatus.ORDER_COMPLETED)
-                    return Result.Failure(new Error("400", "Order already completed"));
-
-                if (order.FinalAmount != request.TransferAmount)
-                    return Result.Failure(new Error("422", "Order Amount invalid"));
-
-                order.Status = Constant.OrderStatus.ORDER_COMPLETED;
-                await hubContext.Clients.Group(tran.Id.ToString())
-                    .SendAsync("ReceivePaymentStatus", true, cancellationToken);
-                break;
-
-                #endregion
-            }
-            case 2:
-            {
-                #region Wallet
-
-                var tran = await walletTransactionRepository.FindByIdAsync(request.Id, cancellationToken, x => x.User);
-
-                if (tran == null || tran.IsDeleted) return Result.Failure(new Error("404", "Transaction not found"));
-
-                if (tran.Status != Constant.WalletConstants.TransactionStatus.PENDING)
-                    return Result.Failure(new Error("400", "Transaction already handler"));
-
-                if (tran.Amount != request.TransferAmount)
-                    return Result.Failure(new Error("422", "Transaction Amount invalid"));
-
-                if (tran.TransactionDate.Date != DateTimeOffset.Now.Date)
-                    return Result.Failure(new Error("400", "Transaction Date invalid"));
-
-                tran.Status = Constant.WalletConstants.TransactionStatus.COMPLETED;
-                tran.User!.Balance += tran.Amount;
-                await hubContext.Clients.Group(tran.Id.ToString())
-                    .SendAsync("ReceivePaymentStatus", true, cancellationToken);
-                break;
-
-                #endregion
-            }
-            case 3:
-            {
-                #region WITHDRAWAL
-
-                var tran = await walletTransactionRepository.FindByIdAsync(request.Id, cancellationToken);
-                if (tran == null || tran.IsDeleted) return Result.Failure(new Error("404", "Transaction not found"));
-
-                if (tran.Status != Constant.WalletConstants.TransactionStatus.WAITING_APPROVAL)
-                    return Result.Failure(new Error("400", "Transaction already handler"));
-
-                if (tran.Amount != request.TransferAmount)
-                    return Result.Failure(new Error("422", "Transaction Amount invalid"));
-
-
-                tran.Status = Constant.WalletConstants.TransactionStatus.COMPLETED;
-                tran.Clinic.Balance -= tran.Amount;
-                await hubContext.Clients.Group(tran.Id.ToString())
-                    .SendAsync("ReceivePaymentStatus", true, cancellationToken);
-                break;
-
-                #endregion
-            }
+        // Validate transaction amount
+        if (transaction.Amount != request.TransferAmount)
+            return Result.Failure(new Error("422", "Transaction Amount invalid"));
+            
+        // Validate subscription package price
+        if (request.TransferAmount != transaction.SubscriptionPackage.Price)
+        {
+            await hubContext.Clients.Group(transaction.Id.ToString())
+                .SendAsync("SubscriptionPriceChanged", false, cancellationToken);
+            return Result.Success("Subscription price changed notification sent.");
         }
 
-        return Result.Success("Handler successfully triggered.");
+        // Validate transaction date
+        if (transaction.TransactionDate > DateTimeOffset.Now)
+            return Result.Failure(new Error("400", "Transaction Date invalid"));
+
+        // Update transaction status to completed (1)
+        // The background job will look for transactions with status 1 and SubscriptionPackageId not null
+        // to send confirmation emails
+        transaction.Status = 1;
+
+        // Notify clients about successful payment
+        await hubContext.Clients.Group(transaction.Id.ToString())
+            .SendAsync("ReceivePaymentStatus", true, cancellationToken);
+            
+        return Result.Success("Subscription transaction processed successfully.");
+    }
+
+    private async Task<Result> HandleClinicTransaction(
+        CONTRACT.Services.Payments.Commands.TriggerFromHookCommand request,
+        CancellationToken cancellationToken)
+    {
+        // Fetch clinic transaction
+        var transaction = await clinicTransactionRepository.FindByIdAsync(request.Id, cancellationToken);
+
+        // Validate transaction exists
+        if (transaction == null || transaction.IsDeleted) 
+            return Result.Failure(new Error("404", "Transaction not found"));
+
+        // Validate transaction status
+        if (transaction.Status != Constant.OrderStatus.ORDER_PENDING)
+            return Result.Failure(new Error("400", "Transaction already handled"));
+
+        // Validate transaction amount
+        if (transaction.Amount != request.TransferAmount)
+            return Result.Failure(new Error("422", "Transaction Amount invalid"));
+
+        // Validate transaction date
+        if (transaction.TransactionDate > DateTimeOffset.Now)
+            return Result.Failure(new Error("400", "Transaction Date invalid"));
+
+        // Update transaction status to completed
+        transaction.Status = Constant.OrderStatus.ORDER_COMPLETED;
+        
+        // Validate and update associated order
+        if (!transaction.OrderId.HasValue)
+            return Result.Failure(new Error("400", "Transaction has no associated order"));
+            
+        var order = await orderRepository.FindByIdAsync(transaction.OrderId.Value, cancellationToken);
+        
+        if (order == null || order.IsDeleted) 
+            return Result.Failure(new Error("404", "Order not found"));
+
+        if (order.Status == Constant.OrderStatus.ORDER_COMPLETED)
+            return Result.Failure(new Error("400", "Order already completed"));
+
+        if (order.FinalAmount != request.TransferAmount)
+            return Result.Failure(new Error("422", "Order Amount invalid"));
+
+        // Update order status to completed
+        order.Status = Constant.OrderStatus.ORDER_COMPLETED;
+        
+        // Notify clients about successful payment
+        await hubContext.Clients.Group(transaction.Id.ToString())
+            .SendAsync("ReceivePaymentStatus", true, cancellationToken);
+            
+        return Result.Success("Clinic transaction processed successfully.");
+    }
+
+    private async Task<Result> HandleWalletTransaction(
+        CONTRACT.Services.Payments.Commands.TriggerFromHookCommand request,
+        CancellationToken cancellationToken)
+    {
+        // Fetch wallet transaction with user
+        var transaction = await walletTransactionRepository.FindByIdAsync(
+            request.Id, 
+            cancellationToken, 
+            x => x.User);
+
+        // Validate transaction exists
+        if (transaction == null || transaction.IsDeleted) 
+            return Result.Failure(new Error("404", "Transaction not found"));
+
+        // Validate transaction status
+        if (transaction.Status != Constant.WalletConstants.TransactionStatus.PENDING)
+            return Result.Failure(new Error("400", "Transaction already handled"));
+
+        // Validate transaction amount
+        if (transaction.Amount != request.TransferAmount)
+            return Result.Failure(new Error("422", "Transaction Amount invalid"));
+
+        // Validate transaction date (must be today)
+        if (transaction.TransactionDate.Date != DateTimeOffset.Now.Date)
+            return Result.Failure(new Error("400", "Transaction Date invalid"));
+
+        // Update transaction status to completed
+        transaction.Status = Constant.WalletConstants.TransactionStatus.COMPLETED;
+        
+        // Ensure user exists
+        if (transaction.User == null)
+            return Result.Failure(new Error("404", "User not found for this transaction"));
+            
+        // Update user balance
+        transaction.User.Balance += transaction.Amount;
+        
+        // Notify clients about successful payment
+        await hubContext.Clients.Group(transaction.Id.ToString())
+            .SendAsync("ReceivePaymentStatus", true, cancellationToken);
+            
+        return Result.Success("Wallet transaction processed successfully.");
+    }
+
+    private async Task<Result> HandleWithdrawalTransaction(
+        CONTRACT.Services.Payments.Commands.TriggerFromHookCommand request,
+        CancellationToken cancellationToken)
+    {
+        // Fetch withdrawal transaction
+        var transaction = await walletTransactionRepository.FindByIdAsync(request.Id, cancellationToken);
+        
+        // Validate transaction exists
+        if (transaction == null || transaction.IsDeleted) 
+            return Result.Failure(new Error("404", "Transaction not found"));
+
+        // Validate transaction status
+        if (transaction.Status != Constant.WalletConstants.TransactionStatus.WAITING_FOR_PAYMENT)
+            return Result.Failure(new Error("400", "Transaction already handled"));
+
+        // Validate transaction amount
+        if (transaction.Amount != request.TransferAmount)
+            return Result.Failure(new Error("422", "Transaction Amount invalid"));
+
+        // Update transaction status to completed
+        transaction.Status = Constant.WalletConstants.TransactionStatus.COMPLETED;
+        
+        // Ensure clinic exists
+        if (transaction.Clinic == null)
+            return Result.Failure(new Error("404", "Clinic not found for this transaction"));
+            
+        // Update clinic balance
+        transaction.Clinic.Balance -= transaction.Amount;
+        
+        // Notify clients about successful payment
+        await hubContext.Clients.Group(transaction.Id.ToString())
+            .SendAsync("ReceivePaymentStatus", true, cancellationToken);
+            
+        return Result.Success("Withdrawal transaction processed successfully.");
     }
 }
