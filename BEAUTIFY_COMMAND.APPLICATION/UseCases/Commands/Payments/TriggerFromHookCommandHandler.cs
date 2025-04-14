@@ -99,7 +99,7 @@ public class TriggerFromHookCommandHandler(
                 if (tran.Amount != request.TransferAmount)
                     return Result.Failure(new Error("422", "Transaction Amount invalid"));
 
-                if (tran.TransactionDate > DateTimeOffset.Now)
+                if (tran.TransactionDate.Date != DateTimeOffset.Now.Date)
                     return Result.Failure(new Error("400", "Transaction Date invalid"));
 
                 tran.Status = Constant.WalletConstants.TransactionStatus.COMPLETED;
@@ -123,7 +123,7 @@ public class TriggerFromHookCommandHandler(
                 if (tran.Amount != request.TransferAmount)
                     return Result.Failure(new Error("422", "Transaction Amount invalid"));
 
-               
+
                 tran.Status = Constant.WalletConstants.TransactionStatus.COMPLETED;
                 tran.Clinic.Balance -= tran.Amount;
                 await hubContext.Clients.Group(tran.Id.ToString())
