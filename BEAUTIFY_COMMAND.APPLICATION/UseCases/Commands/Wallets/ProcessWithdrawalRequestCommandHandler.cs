@@ -42,6 +42,7 @@ internal sealed class ProcessWithdrawalRequestCommandHandler(
             /* */
             walletTransaction.Status = Constant.WalletConstants.TransactionStatus.WAITING_APPROVAL;
             walletTransactionRepository.Update(walletTransaction);
+            return Result.Success();
         }
 
         walletTransaction.Status = Constant.WalletConstants.TransactionStatus.REJECTED;
