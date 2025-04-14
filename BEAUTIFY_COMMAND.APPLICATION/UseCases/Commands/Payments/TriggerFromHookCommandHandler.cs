@@ -17,6 +17,8 @@ public class TriggerFromHookCommandHandler(
         {
             case 0:
             {
+                #region Subscription
+
                 var tran = await systemTransactionRepository.FindByIdAsync(request.Id, cancellationToken,
                     x => x.SubscriptionPackage);
 
@@ -46,9 +48,13 @@ public class TriggerFromHookCommandHandler(
                 await hubContext.Clients.Group(tran.Id.ToString())
                     .SendAsync("ReceivePaymentStatus", true, cancellationToken);
                 break;
+
+                #endregion
             }
             case 1:
             {
+                #region Clinic
+
                 var tran = await clinicTransactionRepository.FindByIdAsync(request.Id, cancellationToken);
 
                 if (tran == null || tran.IsDeleted) return Result.Failure(new Error("404", "Transaction not found"));
@@ -76,9 +82,13 @@ public class TriggerFromHookCommandHandler(
                 await hubContext.Clients.Group(tran.Id.ToString())
                     .SendAsync("ReceivePaymentStatus", true, cancellationToken);
                 break;
+
+                #endregion
             }
             case 2:
             {
+                #region Wallet
+
                 var tran = await walletTransactionRepository.FindByIdAsync(request.Id, cancellationToken, x => x.User);
 
                 if (tran == null || tran.IsDeleted) return Result.Failure(new Error("404", "Transaction not found"));
@@ -97,6 +107,31 @@ public class TriggerFromHookCommandHandler(
                 await hubContext.Clients.Group(tran.Id.ToString())
                     .SendAsync("ReceivePaymentStatus", true, cancellationToken);
                 break;
+
+                #endregion
+            }
+            case 3:
+            {
+                #region WITHDRAWAL
+
+                var tran = await walletTransactionRepository.FindByIdAsync(request.Id, cancellationToken);
+                if (tran == null || tran.IsDeleted) return Result.Failure(new Error("404", "Transaction not found"));
+
+                if (tran.Status != Constant.WalletConstants.TransactionStatus.PENDING)
+                    return Result.Failure(new Error("400", "Transaction already handler"));
+
+                if (tran.Amount != request.TransferAmount)
+                    return Result.Failure(new Error("422", "Transaction Amount invalid"));
+
+                if (tran.TransactionDate > DateTimeOffset.Now)
+                    return Result.Failure(new Error("400", "Transaction Date invalid"));
+                tran.Status = Constant.WalletConstants.TransactionStatus.COMPLETED;
+                tran.Clinic.Balance -= tran.Amount;
+                await hubContext.Clients.Group(tran.Id.ToString())
+                    .SendAsync("ReceivePaymentStatus", true, cancellationToken);
+                break;
+
+                #endregion
             }
         }
 

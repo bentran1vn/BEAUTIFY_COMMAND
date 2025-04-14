@@ -40,6 +40,7 @@ public class PaymentApi : ApiEndpoint, ICarterModule
 
         request.Type = type switch
         {
+            "WITHDRAWAL" => 3,
             "WALLET" => 2,
             "ORDER" => 1,
             "SUB" => 0,
