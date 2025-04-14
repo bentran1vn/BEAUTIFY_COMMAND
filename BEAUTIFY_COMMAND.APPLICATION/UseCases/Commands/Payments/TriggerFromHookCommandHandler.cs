@@ -117,7 +117,7 @@ public class TriggerFromHookCommandHandler(
                 var tran = await walletTransactionRepository.FindByIdAsync(request.Id, cancellationToken);
                 if (tran == null || tran.IsDeleted) return Result.Failure(new Error("404", "Transaction not found"));
 
-                if (tran.Status != Constant.WalletConstants.TransactionStatus.PENDING)
+                if (tran.Status != Constant.WalletConstants.TransactionStatus.WAITING_APPROVAL)
                     return Result.Failure(new Error("400", "Transaction already handler"));
 
                 if (tran.Amount != request.TransferAmount)
