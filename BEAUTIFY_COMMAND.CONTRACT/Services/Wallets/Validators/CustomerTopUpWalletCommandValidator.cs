@@ -6,7 +6,7 @@ internal sealed class CustomerTopUpWalletCommandValidator : AbstractValidator<Co
         RuleFor(x => x.Amount)
             .NotEmpty()
             .WithMessage("Amount is required.")
-            .GreaterThan(2000)
+            .GreaterThan(1999)
             .WithMessage("Amount must be greater than 2000.");
     }
 }
