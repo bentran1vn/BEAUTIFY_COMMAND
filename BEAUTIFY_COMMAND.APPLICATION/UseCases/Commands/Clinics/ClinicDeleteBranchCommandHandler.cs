@@ -13,6 +13,7 @@ public class ClinicDeleteBranchCommandHandler(IRepositoryBase<Clinic, Guid> clin
         var parentClinic = await clinicRepository.FindByIdAsync(clinic.ParentId.Value, cancellationToken) ??
                            throw new ClinicException.ClinicNotFoundException(clinic.ParentId.Value);
         parentClinic.TotalBranches--;
+        parentClinic.AdditionBranches--;
         clinicRepository.Remove(clinic);
         clinicRepository.Update(parentClinic);
         return Result.Success();

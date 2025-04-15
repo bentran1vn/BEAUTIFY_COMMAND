@@ -25,6 +25,7 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
     protected override void OnModelCreating(ModelBuilder builder)
     {
         builder.ApplyConfigurationsFromAssembly(AssemblyReference.Assembly);
+        
         builder.Entity<CustomerSchedule>()
             .HasOne(cs => cs.Customer)
             .WithMany(u => u.CustomerSchedules)
@@ -32,10 +33,19 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
             .OnDelete(DeleteBehavior.NoAction); // Prevent cascade delete
 
         builder.Entity<Clinic>().HasQueryFilter(x => !x.IsDeleted);
+        
         builder.Entity<Category>()
             .HasQueryFilter(x => !x.IsDeleted);
+        
         builder.Entity<SubscriptionPackage>()
             .HasQueryFilter(x => !x.IsDeleted);
+        
+        builder.Entity<LivestreamRoom>()
+            .HasOne(lr => lr.LiveStreamDetail)
+            .WithOne()  // Assuming one-to-one relationship, adjust if it's one-to-many
+            .HasForeignKey<LivestreamRoom>(lr => lr.LiveStreamDetailId)
+            .OnDelete(DeleteBehavior.Restrict);  // Adjust delete behavior as needed
+        
         foreach (var entityType in builder.Model.GetEntityTypes())
         {
             if (entityType.ClrType.BaseType is not { IsGenericType: true } ||
@@ -49,6 +59,7 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
 
         builder.Entity<Service>().Property(x => x.Description).HasColumnType("text");
         builder.Entity<Procedure>().Property(x => x.Description).HasColumnType("text");
+        builder.Entity<LivestreamRoom>().Property(x => x.Image).HasColumnType("text");
 
         builder.Entity<Staff>().HasQueryFilter(x => !x.IsDeleted);
         builder.Entity<DoctorCertificate>().HasQueryFilter(x => !x.IsDeleted); // Add matching filter for DoctorCertificate

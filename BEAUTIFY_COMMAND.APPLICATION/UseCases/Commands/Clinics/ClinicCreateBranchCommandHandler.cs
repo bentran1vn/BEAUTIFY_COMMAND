@@ -14,7 +14,7 @@ internal sealed class
     public async Task<Result> Handle(CONTRACT.Services.Clinics.Commands.ClinicCreateBranchCommand request,
         CancellationToken cancellationToken)
     {
-        var parentClinic = await clinicRepository.FindByIdAsync(currentUserService.ClinicId.Value, cancellationToken) ??
+        var parentClinic = await clinicRepository.FindByIdAsync(currentUserService.ClinicId!.Value, cancellationToken) ??
                            throw new ClinicException.ClinicNotFoundException(currentUserService.ClinicId.Value);
         
         // var systemTrans = await systemTransactionRepository.FindAll(
@@ -83,8 +83,12 @@ internal sealed class
             ClinicId = clinic.Id,
             UserId = branchAccount.Id
         });
+        
+        parentClinic.AdditionBranches -= 1;
+        
         clinicRepository.Add(clinic);
         staffRepository.Add(branchAccount);
+        
         return Result.Success();
     }
 }

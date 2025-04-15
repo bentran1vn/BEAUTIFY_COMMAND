@@ -25,7 +25,7 @@ public class TriggerFromHookCommandHandler(
                 await HandleWalletTransaction(request, cancellationToken),
             3 => // Withdrawal transaction
                 await HandleWithdrawalTransaction(request, cancellationToken),
-            4 => // Withdrawal transaction
+            4 => // Over transaction
                 await HandleOverTransaction(request, cancellationToken),
             _ => Result.Failure(new Error("400", "Invalid transaction type"))
         };
@@ -233,8 +233,10 @@ public class TriggerFromHookCommandHandler(
             return Result.Failure(new Error("422", "Transaction Amount invalid"));
 
         // Validate subscription package price
-        if (request.TransferAmount != transaction.SubscriptionPackage.Price)
+        if (request.TransferAmount != transaction.SubscriptionPackage.PriceMoreBranch * transaction.AdditionBranches +
+            transaction.SubscriptionPackage.PriceMoreLivestream * transaction.AdditionLivestreams)
         {
+            // Notify clients about price change
             await hubContext.Clients.Group(transaction.Id.ToString())
                 .SendAsync("SubscriptionPriceChanged", false, cancellationToken);
             return Result.Success("Subscription price changed notification sent.");
