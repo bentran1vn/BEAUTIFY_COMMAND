@@ -16,12 +16,8 @@ internal sealed class CreateWithdrawalRequestCommandHandler(
         CancellationToken cancellationToken)
     {
         // Validate clinic exists and user has permission
-        var clinicId = currentUserService.ClinicId;
-        if (!clinicId.HasValue)
-        {
-            return Result.Failure(new Error("403",
-                "You must be associated with a clinic to create a withdrawal request"));
-        }
+        var clinicId = request.ClinicId ?? currentUserService.ClinicId;
+
 
         // Get the child clinic with a single database call
         var childClinic = await clinicRepository.FindByIdAsync(clinicId.Value, cancellationToken);

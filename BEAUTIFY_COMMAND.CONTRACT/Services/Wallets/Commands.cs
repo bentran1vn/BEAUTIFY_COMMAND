@@ -6,7 +6,8 @@ public static class Commands
 
     public record CreateWithdrawalRequestCommand(
         decimal Amount,
-        string Description) : ICommand;
+        string Description,
+        Guid? ClinicId = null) : ICommand;
 
     public record ProcessWithdrawalRequestCommand(
         Guid WalletTransactionId,
