@@ -62,7 +62,10 @@ public static class JwtExtensions
             .AddPolicy(Constant.Role.DOCTOR, policy => policy.RequireRole(Constant.Role.DOCTOR))
             .AddPolicy(Constant.Role.CUSTOMER, policy => policy.RequireRole(Constant.Role.CUSTOMER))
             .AddPolicy(Constant.Role.SYSTEM_ADMIN, policy => policy.RequireRole(Constant.Role.SYSTEM_ADMIN))
-            .AddPolicy(Constant.Role.SYSTEM_STAFF, policy => policy.RequireRole(Constant.Role.SYSTEM_STAFF));
+            .AddPolicy(Constant.Role.SYSTEM_STAFF, policy => policy.RequireRole(Constant.Role.SYSTEM_STAFF))
+            .AddPolicy(Constant.Policy.POLICY_CLINIC_ADMIN_AND_CLINIC_STAFF,
+                policy => policy.RequireRole(Constant.Role.CLINIC_ADMIN, Constant.Role.CLINIC_STAFF));
+
         // services.AddScoped<CustomJwtBearerEvents>();
     }
 }
