@@ -14,7 +14,8 @@ public class Order : AggregateRoot<Guid>, IAuditableEntity
     public virtual LivestreamRoom? LivestreamRoom { get; set; }
     public Guid? ServiceId { get; set; }
     public virtual Service? Service { get; set; }
-
+    public Guid? OrderFeedbackId { get; set; }
+    public virtual OrderFeedback? OrderFeedback { get; set; }
     [MaxLength(50)] public string? Status { get; set; }
     public virtual ICollection<OrderDetail>? OrderDetails { get; set; } = [];
     public DateTimeOffset CreatedOnUtc { get; set; }
