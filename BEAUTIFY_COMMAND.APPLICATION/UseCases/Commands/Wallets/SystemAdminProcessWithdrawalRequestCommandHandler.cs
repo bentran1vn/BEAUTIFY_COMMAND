@@ -1,4 +1,4 @@
-﻿using BEAUTIFY_COMMAND.DOMAIN;
+using BEAUTIFY_COMMAND.DOMAIN;
 
 namespace BEAUTIFY_COMMAND.APPLICATION.UseCases.Commands.Wallets;
 /// <summary>
@@ -28,8 +28,8 @@ internal sealed class SystemAdminProcessWithdrawalRequestCommandHandler(
 
         // Process the request based on approval status
         return request.IsApproved
-            ? await ApproveWithdrawal(transaction, clinic, cancellationToken)
-            : RejectWithdrawal(transaction);
+            ? await ApproveWithdrawal(transaction, clinic)
+            : await RejectWithdrawal(transaction, clinic);
     }
 
     /// <summary>
@@ -54,8 +54,7 @@ internal sealed class SystemAdminProcessWithdrawalRequestCommandHandler(
     /// </summary>
     private async Task<Result> ApproveWithdrawal(
         WalletTransaction transaction,
-        Clinic clinic,
-        CancellationToken cancellationToken)
+        Clinic clinic)
     {
         // Verify sufficient funds
         if (clinic.Balance < transaction.Amount)
@@ -91,10 +90,16 @@ internal sealed class SystemAdminProcessWithdrawalRequestCommandHandler(
     /// <summary>
     /// Rejects the withdrawal request
     /// </summary>
-    private Result RejectWithdrawal(WalletTransaction transaction)
+    private async Task<Result> RejectWithdrawal(
+        WalletTransaction transaction,
+        Clinic clinic)
     {
         transaction.Status = Constant.WalletConstants.TransactionStatus.REJECTED_BY_SYSTEM;
         walletTransactionRepository.Update(transaction);
+
+        // Add the amount back to the clinic's balance if rejected by system admin
+        clinic.Balance += transaction.Amount;
+        clinicRepository.Update(clinic);
 
         return Result.Success();
     }

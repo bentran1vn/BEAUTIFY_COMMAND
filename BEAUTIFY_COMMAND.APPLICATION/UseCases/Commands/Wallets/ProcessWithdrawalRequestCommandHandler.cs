@@ -1,7 +1,6 @@
 using BEAUTIFY_COMMAND.DOMAIN;
 
 namespace BEAUTIFY_COMMAND.APPLICATION.UseCases.Commands.Wallets;
-
 /// <summary>
 /// Handler for processing withdrawal requests by clinic managers
 /// </summary>
@@ -14,7 +13,8 @@ internal sealed class ProcessWithdrawalRequestCommandHandler(
         CancellationToken cancellationToken)
     {
         // Get and validate the transaction
-        var walletTransaction = await walletTransactionRepository.FindByIdAsync(request.WalletTransactionId, cancellationToken);
+        var walletTransaction =
+            await walletTransactionRepository.FindByIdAsync(request.WalletTransactionId, cancellationToken);
         if (walletTransaction == null)
         {
             return Result.Failure(new Error("404", ErrorMessages.Wallet.WalletNotFound));
@@ -34,13 +34,15 @@ internal sealed class ProcessWithdrawalRequestCommandHandler(
         }
 
         // Process the request based on approval status
-        return await ProcessWithdrawalRequest(request.IsApproved, walletTransaction, childClinic.Value, request.RejectionReason, cancellationToken);
+        return await ProcessWithdrawalRequest(request.IsApproved, walletTransaction, childClinic.Value,
+            request.RejectionReason, cancellationToken);
     }
 
     /// <summary>
     /// Gets and validates the child clinic associated with the transaction
     /// </summary>
-    private async Task<Result<Clinic>> GetAndValidateChildClinic(WalletTransaction transaction, CancellationToken cancellationToken)
+    private async Task<Result<Clinic>> GetAndValidateChildClinic(WalletTransaction transaction,
+        CancellationToken cancellationToken)
     {
         if (!transaction.ClinicId.HasValue)
         {
@@ -53,15 +55,17 @@ internal sealed class ProcessWithdrawalRequestCommandHandler(
             return Result.Failure<Clinic>(new Error("404", ErrorMessages.Clinic.ClinicNotFound));
         }
 
-        return childClinic.ParentId == null ? Result.Failure<Clinic>(new Error("400", ErrorMessages.Clinic.ClinicIsNotABranch)) : Result.Success(childClinic);
+        return childClinic.ParentId == null
+            ? Result.Failure<Clinic>(new Error("400", ErrorMessages.Clinic.ClinicIsNotABranch))
+            : Result.Success(childClinic);
     }
 
     /// <summary>
     /// Processes the withdrawal request based on approval status
     /// </summary>
     private async Task<Result> ProcessWithdrawalRequest(
-        bool isApproved, 
-        WalletTransaction transaction, 
+        bool isApproved,
+        WalletTransaction transaction,
         Clinic childClinic,
         string? rejectionReason,
         CancellationToken cancellationToken)
@@ -81,11 +85,14 @@ internal sealed class ProcessWithdrawalRequestCommandHandler(
         {
             // Update the transaction as rejected
             transaction.Status = Constant.WalletConstants.TransactionStatus.REJECTED;
-            transaction.Description = !string.IsNullOrEmpty(rejectionReason) 
+            transaction.Description = !string.IsNullOrEmpty(rejectionReason)
                 ? $"{transaction.Description} - Rejected: {rejectionReason}"
                 : $"{transaction.Description} - Rejected";
+
+            // Add the amount back to the clinic's balance if rejected
+            childClinic.Balance += transaction.Amount;
+            clinicRepository.Update(childClinic);
         }
-        
 
         walletTransactionRepository.Update(transaction);
         return Result.Success();

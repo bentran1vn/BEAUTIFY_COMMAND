@@ -34,8 +34,12 @@ internal sealed class CreateWithdrawalRequestCommandHandler(
         }
 
         // Create and save the transaction in a single operation
-        var walletTransaction = CreateWalletTransaction(clinicId.Value, request.Amount, request.Description);
+        var walletTransaction = CreateWalletTransaction(clinicId, request.Amount, request.Description);
         walletTransactionRepository.Add(walletTransaction);
+
+        // Subtract the amount from the clinic's balance when creating the withdrawal request
+        childClinic.Balance -= request.Amount;
+        clinicRepository.Update(childClinic);
 
         return Result.Success();
     }
@@ -66,7 +70,7 @@ internal sealed class CreateWithdrawalRequestCommandHandler(
     /// <summary>
     /// Creates a new wallet transaction for the withdrawal request
     /// </summary>
-    private static WalletTransaction CreateWalletTransaction(Guid clinicId, decimal amount, string description)
+    private static WalletTransaction CreateWalletTransaction(Guid? clinicId, decimal amount, string description)
     {
         return new WalletTransaction
         {
@@ -74,7 +78,9 @@ internal sealed class CreateWithdrawalRequestCommandHandler(
             ClinicId = clinicId,
             Amount = amount,
             TransactionType = Constant.WalletConstants.TransactionType.WITHDRAWAL,
-            Status = Constant.WalletConstants.TransactionStatus.PENDING,
+            Status = clinicId != null
+                ? Constant.WalletConstants.TransactionStatus.PENDING
+                : Constant.WalletConstants.TransactionStatus.WAITING_APPROVAL,
             IsMakeBySystem = false,
             Description = description,
             CreatedOnUtc = DateTimeOffset.UtcNow
