@@ -1,6 +1,6 @@
 namespace BEAUTIFY_COMMAND.APPLICATION.UseCases.Commands.Feedbacks;
 
-public class CreateFeedbackCommandHandler : ICommandHandler<CONTRACT.Services.Feedbacks.Commands.CreateFeedbackCommand>
+public class UpdateFeedbackCommandHandler: ICommandHandler<CONTRACT.Services.Feedbacks.Commands.UpdateFeedbackCommand>
 {
     private readonly IRepositoryBase<Feedback, Guid> _scheduleFeedbackRepository;
     private readonly IRepositoryBase<OrderFeedback, Guid> _orderFeedbackRepository;
@@ -10,7 +10,7 @@ public class CreateFeedbackCommandHandler : ICommandHandler<CONTRACT.Services.Fe
     private readonly IRepositoryBase<TriggerOutbox, Guid> _triggerOutboxRepository;
     private readonly IMediaService _mediaService;
 
-    public CreateFeedbackCommandHandler(IRepositoryBase<Feedback, Guid> scheduleFeedbackRepository, IRepositoryBase<OrderFeedback, Guid> orderFeedbackRepository, IRepositoryBase<Order, Guid> orderRepository, IRepositoryBase<CustomerSchedule, Guid> customerScheduleRepository, IRepositoryBase<Staff, Guid> staffRepository, IRepositoryBase<TriggerOutbox, Guid> triggerOutboxRepository, IMediaService mediaService)
+    public UpdateFeedbackCommandHandler(IRepositoryBase<Feedback, Guid> scheduleFeedbackRepository, IRepositoryBase<OrderFeedback, Guid> orderFeedbackRepository, IRepositoryBase<Order, Guid> orderRepository, IRepositoryBase<CustomerSchedule, Guid> customerScheduleRepository, IRepositoryBase<Staff, Guid> staffRepository, IRepositoryBase<TriggerOutbox, Guid> triggerOutboxRepository, IMediaService mediaService)
     {
         _scheduleFeedbackRepository = scheduleFeedbackRepository;
         _orderFeedbackRepository = orderFeedbackRepository;
@@ -21,27 +21,27 @@ public class CreateFeedbackCommandHandler : ICommandHandler<CONTRACT.Services.Fe
         _mediaService = mediaService;
     }
 
-    public async Task<Result> Handle(CONTRACT.Services.Feedbacks.Commands.CreateFeedbackCommand request, CancellationToken cancellationToken)
+    public async Task<Result> Handle(CONTRACT.Services.Feedbacks.Commands.UpdateFeedbackCommand request, CancellationToken cancellationToken)
     {
-        var order = await _orderRepository
-            .FindAll(x => x.Id.Equals(request.OrderId) && !x.IsDeleted)
-            .Include(x => x.Customer)
+        var feedback = await _orderFeedbackRepository
+            .FindAll(x => x.Id.Equals(request.FeedbackId) && !x.IsDeleted)
             .FirstOrDefaultAsync(cancellationToken);
 
-        if (order is null)
-        {
-            return Result.Failure(new Error("404", "Order not found"));
-        }
+        var order = await _orderRepository
+            .FindSingleAsync(x => x.OrderFeedbackId.Equals(request.FeedbackId) && !x.IsDeleted, cancellationToken);
 
-        if (order.Status != Constant.OrderStatus.ORDER_COMPLETED)
+        if (feedback is null)
         {
-            return Result.Failure(new Error("404", "Order not found"));
+            return Result.Failure(new Error("404", "Feedback not found"));
         }
         
+        var scheduleIds = request.ScheduleFeedbacks.Select(x => x.CustomerScheduleId).ToList();
+        
         var customerSchedule = await _customerScheduleRepository
-                .FindAll(x => x.OrderId.Equals(request.OrderId))
-                .Include(x => x.Doctor)
-                .ToListAsync(cancellationToken);
+            .FindAll(x => scheduleIds.Contains(x.Id))
+            .Include(x => x.Doctor)
+            .Include(x => x.Feedback)
+            .ToListAsync(cancellationToken);
         
         if (customerSchedule == null || !customerSchedule.Any())
         {
@@ -58,7 +58,6 @@ public class CreateFeedbackCommandHandler : ICommandHandler<CONTRACT.Services.Fe
             return Result.Failure(new Error("500", "Missing schedule feedback"));
         }
         
-        // Track both ratings and counts in a single dictionary
         Dictionary<Guid, (int Sum, int Count)> doctorRatings = new Dictionary<Guid, (int, int)>();
 
         var feedbacks = request.ScheduleFeedbacks.Select(x =>
@@ -87,13 +86,20 @@ public class CreateFeedbackCommandHandler : ICommandHandler<CONTRACT.Services.Fe
             };
         }).ToList();
         
+        var removeFeedbacks = customerSchedule.Select(x => x.Feedback).ToList();
+        
+        if (removeFeedbacks.Any())
+        {
+            _scheduleFeedbackRepository.RemoveMultiple(removeFeedbacks!);
+        }
+        
         _scheduleFeedbackRepository.AddRange(feedbacks);
         
         Dictionary<Guid, int> normalizedRatings = doctorRatings.ToDictionary(
             pair => pair.Key,
             pair => Math.Clamp((int)Math.Round((double)pair.Value.Sum / pair.Value.Count), 1, 5)
         );
-
+        
         var staff = await _staffRepository.FindAll(
             x => !x.IsDeleted && 
                  x.Role.Name == Constant.Role.DOCTOR && 
@@ -110,38 +116,39 @@ public class CreateFeedbackCommandHandler : ICommandHandler<CONTRACT.Services.Fe
         {
             if (normalizedRatings.TryGetValue(staffMember.Id, out var rating))
             {
-                staffMember.Rating = (staffMember.Rating + rating) / 2;
+                var doctorRating = staffMember.Rating;
+                var oldRating = customerSchedule
+                    .Where(x => x.DoctorId.Equals(staffMember.Id))
+                    .Select(x => x.Feedback.Rating)
+                    .FirstOrDefault();
+                
+                var defaultRating = 2 * doctorRating - oldRating;
+                
+                staffMember.Rating = (defaultRating + rating) / 2;
             }
         }
         
         _staffRepository.AddRange(staff);
-
+        
         var servicesCoverImageTasks = request.Images.Select(_mediaService.UploadImageAsync);
 
         var coverImageUrls = await Task.WhenAll(servicesCoverImageTasks);
 
-        var orderFeedback = new OrderFeedback()
-        {
-            Id = Guid.NewGuid(),
-            Content = request.Content,
-            Rating = request.Rating,
-            OrderId = request.OrderId
-        };
+        feedback.Rating = request.Rating;
+        feedback.Content = request.Content;
         
-        _orderFeedbackRepository.Add(orderFeedback);
+        _orderFeedbackRepository.Update(feedback);
         
-        var trigger = TriggerOutbox.CreateFeedbackEvent(
-            orderFeedback.Id,
-            order.Id,
-            coverImageUrls,
-            orderFeedback.Content,
-            orderFeedback.Rating,
-            order.Customer!,
-            orderFeedback.CreatedOnUtc
+        var vietnamTimeZone = TimeZoneInfo.FindSystemTimeZoneById("SE Asia Standard Time");
+        
+        var trigger = TriggerOutbox.UpdateFeedbackEvent(
+            request.FeedbackId, (Guid)order.ServiceId,
+            coverImageUrls, request.Content, request.Rating,
+            TimeZoneInfo.ConvertTime(DateTimeOffset.UtcNow, vietnamTimeZone)
         );
         
         _triggerOutboxRepository.Add(trigger);
-
-        return Result.Success("Feedback successfully !");
+        
+        return Result.Success("Update Feedback successfully !");
     }
 }

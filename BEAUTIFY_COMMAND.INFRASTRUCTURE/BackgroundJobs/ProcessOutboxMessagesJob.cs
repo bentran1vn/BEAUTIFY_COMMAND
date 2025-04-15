@@ -55,6 +55,26 @@ public class ProcessOutboxMessagesJob(ApplicationDbContext dbContext, IPublishEn
                     //             });
                     //     await _publishEndpoint.Publish(postgreMigrate, context.CancellationToken);
                     //     break;
+                    case nameof(FeedbackDomainEvent.ViewActionFeedback):
+                        var ViewActionFeedback =
+                            JsonConvert.DeserializeObject<FeedbackDomainEvent.ViewActionFeedback>(
+                                outboxMessage.Content,
+                                new JsonSerializerSettings
+                                {
+                                    TypeNameHandling = TypeNameHandling.All
+                                });
+                        await publishEndpoint.Publish(ViewActionFeedback, context.CancellationToken);
+                        break;
+                    case nameof(FeedbackDomainEvent.UpdateFeedback):
+                        var UpdateFeedback =
+                            JsonConvert.DeserializeObject<FeedbackDomainEvent.UpdateFeedback>(
+                                outboxMessage.Content,
+                                new JsonSerializerSettings
+                                {
+                                    TypeNameHandling = TypeNameHandling.All
+                                });
+                        await publishEndpoint.Publish(UpdateFeedback, context.CancellationToken);
+                        break;
                     case nameof(FeedbackDomainEvent.CreateFeedback):
                         var CreateFeedback =
                             JsonConvert.DeserializeObject<FeedbackDomainEvent.CreateFeedback>(

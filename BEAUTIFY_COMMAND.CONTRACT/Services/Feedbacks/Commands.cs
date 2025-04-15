@@ -13,5 +13,20 @@ public class Commands
         public List<ScheduleFeedback> ScheduleFeedbacks { get; set; } 
     }
     
+    public class UpdateFeedbackCommand: ICommand
+    {
+        public Guid FeedbackId { get; set; }
+        public IFormFileCollection? Images { get; set; }
+        public string Content { get; set; }
+        public int Rating { get; set; }
+        public List<ScheduleFeedback> ScheduleFeedbacks { get; set; } 
+    }
+    
+    public class ViewFeedbackCommand: ICommand
+    {
+        public Guid FeedbackId { get; set; }
+        public bool IsDisplay { get; set; }
+    }
+    
     public record ScheduleFeedback(Guid CustomerScheduleId, int Rating, string? Content);
 }

@@ -11,7 +11,9 @@ public class FeedbackApi: ApiEndpoint, ICarterModule
         var gr1 = app.NewVersionedApi("Feedbacks")
             .MapGroup(BaseUrl).HasApiVersion(1);
 
-        gr1.MapPost("", CreateFeedback);
+        gr1.MapPost("", CreateFeedback).RequireAuthorization();
+        gr1.MapPut("", UpdatedFeedback).RequireAuthorization();
+        gr1.MapPost("Display", DisplayFeedback).RequireAuthorization();
     }
     
     private static async Task<IResult> CreateFeedback(ISender sender,
@@ -21,5 +23,17 @@ public class FeedbackApi: ApiEndpoint, ICarterModule
         return result.IsFailure ? HandlerFailure(result) : Results.Ok(result);
     }
     
+    private static async Task<IResult> UpdatedFeedback(ISender sender,
+        [FromForm] Commands.UpdateFeedbackCommand command)
+    {
+        var result = await sender.Send(command);
+        return result.IsFailure ? HandlerFailure(result) : Results.Ok(result);
+    }
     
+    private static async Task<IResult> DisplayFeedback(ISender sender,
+        [FromBody] Commands.ViewFeedbackCommand command)
+    {
+        var result = await sender.Send(command);
+        return result.IsFailure ? HandlerFailure(result) : Results.Ok(result);
+    }
 }
