@@ -204,13 +204,8 @@ public class TriggerFromHookCommandHandler(
         transaction.Status = Constant.WalletConstants.TransactionStatus.COMPLETED;
 
         // Handle clinic withdrawal
-        if (transaction.Clinic != null)
-        {
-            // Update clinic balance
-            transaction.Clinic.Balance -= transaction.Amount;
-        }
         // Handle user withdrawal
-        else if (transaction.User != null)
+         if (transaction.User != null)
         {
             // Update user balance
             transaction.User.Balance -= transaction.Amount;
