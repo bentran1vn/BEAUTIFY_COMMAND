@@ -12,7 +12,7 @@ public class WithdrawalRequestApi : ApiEndpoint, ICarterModule
             .MapGroup(BaseUrl).HasApiVersion(1);
 
         gr1.MapPost(string.Empty, CreateWithdrawalRequest)
-            .RequireAuthorization(Constant.Role.CLINIC_STAFF)
+            .RequireAuthorization(Constant.Policy.POLICY_CLINIC_ADMIN_AND_CLINIC_STAFF)
             .WithName("Create Withdrawal Request")
             .WithSummary("Create a withdrawal request from a child clinic to its parent clinic");
 
