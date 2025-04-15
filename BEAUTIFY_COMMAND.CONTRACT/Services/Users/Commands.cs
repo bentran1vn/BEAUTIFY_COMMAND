@@ -1,9 +1,9 @@
 using Microsoft.AspNetCore.Http;
 
-namespace BEAUTIFY_COMMAND.CONTRACT.Services.Customers;
+namespace BEAUTIFY_COMMAND.CONTRACT.Services.Users;
 public static class Commands
 {
-    public record UpdateCustomerCommand(
+    public record UpdateUserProfileCommand(
         string? FirstName,
         string? LastName,
         string? PhoneNumber,

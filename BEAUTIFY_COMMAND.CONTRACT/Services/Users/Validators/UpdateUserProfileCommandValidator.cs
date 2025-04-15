@@ -1,7 +1,7 @@
-namespace BEAUTIFY_COMMAND.CONTRACT.Services.Customers.Validators;
-public class UpdateCustomerCommandValidator : AbstractValidator<Commands.UpdateCustomerCommand>
+namespace BEAUTIFY_COMMAND.CONTRACT.Services.Users.Validators;
+public class UpdateUserProfileCommandValidator : AbstractValidator<Commands.UpdateUserProfileCommand>
 {
-    public UpdateCustomerCommandValidator()
+    public UpdateUserProfileCommandValidator()
     {
         RuleFor(x => x.FirstName)
             .MaximumLength(50).WithMessage("First name must not exceed 50 characters");
@@ -11,7 +11,8 @@ public class UpdateCustomerCommandValidator : AbstractValidator<Commands.UpdateC
 
         RuleFor(x => x.PhoneNumber)
             .MaximumLength(14).WithMessage("Phone number must not exceed 14 characters")
-            .Matches(@"^[0-9]*$").WithMessage("Phone number must contain only digits");
+            .Matches(@"^[0-9]*$").When(x => !string.IsNullOrEmpty(x.PhoneNumber))
+            .WithMessage("Phone number must contain only digits");
 
         RuleFor(x => x.City)
             .MaximumLength(100).WithMessage("City must not exceed 100 characters");
