@@ -3,6 +3,7 @@ using ProceduresDomainEvent = BEAUTIFY_PACKAGES.BEAUTIFY_PACKAGES.CONTRACT.Servi
 using ServicePromotionDomainEvent = BEAUTIFY_PACKAGES.BEAUTIFY_PACKAGES.CONTRACT.Services.ServicePromotion.DomainEvents;
 using ClinicServicesDomainEvent = BEAUTIFY_PACKAGES.BEAUTIFY_PACKAGES.CONTRACT.Services.ClinicServices.DomainEvents;
 using ClinicDomainEvent = BEAUTIFY_PACKAGES.BEAUTIFY_PACKAGES.CONTRACT.Services.Clinic.DomainEvents;
+using FeedbackDomainEvent = BEAUTIFY_PACKAGES.BEAUTIFY_PACKAGES.CONTRACT.Services.Feedback.DomainEvents;
 
 namespace BEAUTIFY_COMMAND.DOMAIN.Entities;
 public class TriggerOutbox : AggregateRoot<Guid>, IAuditableEntity
@@ -238,6 +239,41 @@ public class TriggerOutbox : AggregateRoot<Guid>, IAuditableEntity
             new ClinicServiceEvent.DeleteClinicService(
                 id
             )));
+
+        return triggerOutbox;
+    }
+
+    public static TriggerOutbox CreateFeedbackEvent(
+        Guid feedbackId, Guid serviceId, ICollection<string> images,
+        string content, int rating, User user, DateTimeOffset createdAt
+    )
+    {
+        var triggerOutbox = new TriggerOutbox
+        {
+            Id = Guid.NewGuid()
+        };
+
+        triggerOutbox.RaiseDomainEvent(new FeedbackDomainEvent.CreateFeedback(
+            Guid.NewGuid(),
+            new FeedbackEvent.CreateFeedback
+            {
+                FeedbackId = feedbackId,
+                ServiceId = serviceId,
+                Images = images,
+                Content = content,
+                Rating = rating,
+                User = new FeedbackEvent.User
+                {
+                    Id = user.Id,
+                    Avatar = user.ProfilePicture ?? "",
+                    PhoneNumber = user.PhoneNumber,
+                    FullName = user.FullName,
+                    FirstName = user.FirstName,
+                    LastName = user.LastName,
+                    Address = user.Address
+                },
+                CreatedAt = createdAt 
+            }));
 
         return triggerOutbox;
     }

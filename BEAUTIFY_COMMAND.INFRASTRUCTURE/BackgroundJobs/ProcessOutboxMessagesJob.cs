@@ -12,6 +12,7 @@ using ProcedureDomainEvent = BEAUTIFY_PACKAGES.BEAUTIFY_PACKAGES.CONTRACT.Servic
 using WorkingScheduleDomainEvent = BEAUTIFY_PACKAGES.BEAUTIFY_PACKAGES.CONTRACT.Services.WorkingSchedules.DomainEvents;
 using ServicePromotionDomainEvent = BEAUTIFY_PACKAGES.BEAUTIFY_PACKAGES.CONTRACT.Services.ServicePromotion.DomainEvents;
 using ClinicDomainEvent = BEAUTIFY_PACKAGES.BEAUTIFY_PACKAGES.CONTRACT.Services.Clinic.DomainEvents;
+using FeedbackDomainEvent = BEAUTIFY_PACKAGES.BEAUTIFY_PACKAGES.CONTRACT.Services.Feedback.DomainEvents;
 
 namespace BEAUTIFY_COMMAND.INFRASTRUCTURE.BackgroundJobs;
 [DisallowConcurrentExecution]
@@ -54,6 +55,16 @@ public class ProcessOutboxMessagesJob(ApplicationDbContext dbContext, IPublishEn
                     //             });
                     //     await _publishEndpoint.Publish(postgreMigrate, context.CancellationToken);
                     //     break;
+                    case nameof(FeedbackDomainEvent.CreateFeedback):
+                        var CreateFeedback =
+                            JsonConvert.DeserializeObject<FeedbackDomainEvent.CreateFeedback>(
+                                outboxMessage.Content,
+                                new JsonSerializerSettings
+                                {
+                                    TypeNameHandling = TypeNameHandling.All
+                                });
+                        await publishEndpoint.Publish(CreateFeedback, context.CancellationToken);
+                        break;
                     case nameof(ClinicDomainEvent.ClinicBranchActivatedAction):
                         var clinicBranchActivatedAction =
                             JsonConvert.DeserializeObject<ClinicDomainEvent.ClinicBranchActivatedAction>(

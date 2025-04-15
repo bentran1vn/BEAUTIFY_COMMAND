@@ -7,12 +7,11 @@ public class Staff : AggregateRoot<Guid>,IAuditableEntity
     [MaxLength(100)]
     [Required]
     public required string Email { get; init; }
-
     [MaxLength(50)] public required string FirstName { get; set; }
     [MaxLength(50)] public required string LastName { get; set; }
     [MaxLength(255)] public required string Password { get; set; }
-
     [MaxLength(50)] public required int Status { get; set; }
+    public int Rating { get; set; } = 4;
 
     // 0 Pending 1 Approve 2 Reject 3 Banned
     public DateOnly? DateOfBirth { get; set; }

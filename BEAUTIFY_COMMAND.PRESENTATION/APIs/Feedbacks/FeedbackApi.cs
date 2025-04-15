@@ -15,9 +15,11 @@ public class FeedbackApi: ApiEndpoint, ICarterModule
     }
     
     private static async Task<IResult> CreateFeedback(ISender sender,
-        [FromBody] Commands.CreateFeedbackCommand command)
+        [FromForm] Commands.CreateFeedbackCommand command)
     {
         var result = await sender.Send(command);
         return result.IsFailure ? HandlerFailure(result) : Results.Ok(result);
     }
+    
+    
 }
