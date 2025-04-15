@@ -1,6 +1,6 @@
 ﻿using System.Globalization;
+using BEAUTIFY_COMMAND.DOMAIN;
 using BEAUTIFY_COMMAND.INFRASTRUCTURE.Locking;
-using Microsoft.Extensions.Logging;
 
 namespace BEAUTIFY_COMMAND.APPLICATION.UseCases.Commands.Bookings;
 internal sealed class
@@ -19,7 +19,8 @@ internal sealed class
         IMailService mailService,
         IRepositoryBase<Promotion, Guid> promotionRepositoryBase,
         IRepositoryBase<LivestreamRoom, Guid> livestreamRoomRepositoryBase,
-        IDistributedLockService distributedLockService
+        IDistributedLockService distributedLockService,
+        IRepositoryBase<WalletTransaction, Guid> walletTransactionRepositoryBase
     )
     : ICommandHandler<CONTRACT.Services.Bookings.Commands.CreateBookingCommand>
 {
@@ -208,6 +209,34 @@ internal sealed class
                 Date = request.BookingDate,
             };
 
+            // Calculate deposit amount (20% of the final amount)
+            var depositAmount = Math.Round((order.FinalAmount ?? 0) * 0.2m, 2);
+
+            // Check if user has sufficient balance for deposit
+            if (user.Balance < depositAmount)
+            {
+                return Result.Failure(new Error("400", ErrorMessages.Wallet.InsufficientBalance +
+                                                       $" You need at least {depositAmount} in your wallet for the deposit."));
+            }
+
+            // Process the deposit directly instead of using the command bus
+            // Create the wallet transaction for the deposit
+            var depositTransaction = CreateDepositTransaction(
+                user.Id,
+                order.Id,
+                request.ServiceId,
+                depositAmount,
+                $"Deposit for booking {order.Id} - {service.Name}"
+            );
+
+            // Deduct the deposit amount from the user's balance
+            user.Balance -= depositAmount;
+            userRepositoryBase.Update(user);
+
+            // Save the transaction
+            walletTransactionRepositoryBase.Add(depositTransaction);
+
+            // Save all entities
             orderRepositoryBase.Add(order);
             orderDetailRepositoryBase.AddRange(orderDetails);
             workingScheduleRepositoryBase.Add(doctorSchedule);
@@ -215,6 +244,10 @@ internal sealed class
             doctorSchedule.WorkingScheduleCreate(doctor.Id, clinic.Id, doctor.FirstName + " " + doctor.LastName,
                 [doctorSchedule], customerSchedule);
             customerSchedule.Create(customerSchedule);
+
+            // Get the transaction ID from the deposit result
+
+
             await mailService.SendMail(new MailContent
             {
                 To = user.Email,
@@ -235,7 +268,11 @@ internal sealed class
             <li><strong>Service:</strong> " + service.Name + @"</li>
             <li><strong>Doctor:</strong> " + doctor.FirstName + " " + doctor.LastName + @"</li>
             <li><strong>Address:</strong> " + clinic.Address + @"</li>
+            <li><strong>Deposit Amount:</strong> " + depositAmount + @"</li>
         </ul>
+
+        <p>A deposit of " + depositAmount +
+                       @" has been deducted from your wallet balance. This deposit will be refunded after your first meeting.</p>
 
         <p>Thank you for choosing our service!</p>
 
@@ -249,12 +286,41 @@ internal sealed class
             });
 
 
-            return Result.Success("Booking Created Successfully !");
+            return Result.Success();
         }
         catch (TimeoutException ex)
         {
             return Result.Failure(new Error("409",
                 "The booking time slot is currently being processed by another request. Please try again."));
         }
+    }
+
+    /// <summary>
+    /// Creates a new wallet transaction for the service booking deposit
+    /// </summary>
+    private static WalletTransaction CreateDepositTransaction(
+        Guid userId,
+        Guid orderId,
+        Guid serviceId,
+        decimal amount,
+        string description)
+    {
+        // Get current time in Vietnam timezone
+        var vietnamTimeZone = TimeZoneInfo.FindSystemTimeZoneById("SE Asia Standard Time");
+        var currentDateTime = TimeZoneInfo.ConvertTime(DateTime.UtcNow, vietnamTimeZone);
+
+        return new WalletTransaction
+        {
+            Id = Guid.NewGuid(),
+            UserId = userId,
+            Amount = amount,
+            TransactionType = Constant.WalletConstants.TransactionType.SERVICE_DEPOSIT,
+            Status = Constant.WalletConstants.TransactionStatus.COMPLETED,
+            IsMakeBySystem = true,
+            Description = description,
+            TransactionDate = currentDateTime,
+            CreatedOnUtc = DateTimeOffset.UtcNow,
+            OrderId = orderId
+        };
     }
 }

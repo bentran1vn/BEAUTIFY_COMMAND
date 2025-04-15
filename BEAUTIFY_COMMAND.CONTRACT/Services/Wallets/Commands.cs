@@ -29,4 +29,17 @@ public static class Commands
         string BankName,
         string BankAccountNumber,
         string AccountHolderName) : ICommand;
+
+    public record ProcessServiceBookingDepositCommand(
+        Guid CustomerId,
+        Guid ServiceId,
+        Guid OrderId,
+        decimal DepositAmount,
+        string Description) : ICommand;
+
+    public record RefundServiceBookingDepositCommand(
+        Guid CustomerId,
+        Guid OrderId,
+        Guid WalletTransactionId,
+        string Description) : ICommand;
 }
