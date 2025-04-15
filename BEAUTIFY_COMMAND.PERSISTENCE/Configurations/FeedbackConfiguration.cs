@@ -10,9 +10,9 @@ namespace BEAUTIFY_COMMAND.PERSISTENCE.Configurations
         {
             // Configure the relationship with OrderDetail
             builder
-                .HasOne<OrderDetail>()
+                .HasOne<CustomerSchedule>()
                 .WithOne(od => od.Feedback)
-                .HasForeignKey<Feedback>(f => f.OrderDetailId)
+                .HasForeignKey<Feedback>(f => f.CustomerScheduleId)
                 .OnDelete(DeleteBehavior.Cascade);
         }
     }
