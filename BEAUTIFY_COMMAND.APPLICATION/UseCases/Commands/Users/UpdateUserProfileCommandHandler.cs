@@ -11,27 +11,16 @@ internal sealed class UpdateUserProfileCommandHandler(
     {
         // Get current user ID from the token
         var userId = currentUserService.UserId;
-        if (userId == null)
-            return Result.Failure(new Error("401", "Unauthorized"));
-
         // Get user role from the token
         var userRole = currentUserService.Role;
-        if (userRole == null)
-            return Result.Failure(new Error("401", "User role not found"));
-
-        // Handle based on user role
-        if (userRole == Constant.Role.CUSTOMER)
+        return userRole switch
         {
-            return await UpdateCustomerProfile(userId.Value, request, cancellationToken);
-        }
-        else if (userRole == Constant.Role.DOCTOR)
-        {
-            return await UpdateDoctorProfile(userId.Value, request, cancellationToken);
-        }
-        else
-        {
-            return Result.Failure(new Error("403", "Only customers and doctors can update their profile using this endpoint"));
-        }
+            // Handle based on user role
+            Constant.Role.CUSTOMER => await UpdateCustomerProfile(userId.Value, request, cancellationToken),
+            Constant.Role.DOCTOR => await UpdateDoctorProfile(userId.Value, request, cancellationToken),
+            _ => Result.Failure(new Error("403",
+                "Only customers and doctors can update their profile using this endpoint"))
+        };
     }
 
     private async Task<Result> UpdateCustomerProfile(Guid userId, CONTRACT.Services.Users.Commands.UpdateUserProfileCommand request, CancellationToken cancellationToken)
