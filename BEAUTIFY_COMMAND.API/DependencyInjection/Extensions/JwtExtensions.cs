@@ -60,7 +60,9 @@ public static class JwtExtensions
             .AddPolicy(Constant.Policy.POLICY_CLINIC_ADMIN_AND_CLINIC_STAFF,
                 policy => policy.RequireRole(Constant.Role.CLINIC_ADMIN, Constant.Role.CLINIC_STAFF))
             .AddPolicy(Constant.Policy.POLICY_DOCTOR_AND_CUSTOMER,
-                policy => policy.RequireRole(Constant.Role.CUSTOMER, Constant.Role.DOCTOR));
+                policy => policy.RequireRole(Constant.Role.CUSTOMER, Constant.Role.DOCTOR))
+            .AddPolicy("Clinic Admin and Staff",
+                policy => policy.RequireRole(Constant.Role.CLINIC_ADMIN, Constant.Role.SYSTEM_STAFF));
 
         // services.AddScoped<CustomJwtBearerEvents>();
     }

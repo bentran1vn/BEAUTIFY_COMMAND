@@ -85,7 +85,7 @@ public class ClinicApi : ApiEndpoint, ICarterModule
 
         gr1.MapPatch("{id:guid}/status", ClinicUpdateStatus)
             .DisableAntiforgery()
-            .RequireAuthorization(Constant.Role.CLINIC_ADMIN);
+            .RequireAuthorization("Clinic Admin and Staff");
 
         gr1.MapPatch("{id:guid}/staff/doctor", StaffChangeDoctorWorkingClinic)
             .DisableAntiforgery()
@@ -133,7 +133,7 @@ public class ClinicApi : ApiEndpoint, ICarterModule
         {
             throw new Exception("Id not matching");
         }
-        
+
         var result = await sender.Send(command);
         return result.IsFailure ? HandlerFailure(result) : Results.Ok(result);
     }
