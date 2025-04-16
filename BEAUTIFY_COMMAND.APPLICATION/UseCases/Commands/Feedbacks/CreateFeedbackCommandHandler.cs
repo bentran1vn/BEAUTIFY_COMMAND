@@ -73,7 +73,6 @@ public class CreateFeedbackCommandHandler : ICommandHandler<CONTRACT.Services.Fe
             return Result.Failure(new Error("500", "Already Feedback"));
         }
         
-        // Track both ratings and counts in a single dictionary
         Dictionary<Guid, (int Sum, int Count)> doctorRatings = new();
 
         var feedbacks = request.ScheduleFeedbacks.Select(x =>
@@ -82,7 +81,7 @@ public class CreateFeedbackCommandHandler : ICommandHandler<CONTRACT.Services.Fe
             
             if (schedule != null)
             {
-                if (doctorRatings.TryGetValue(schedule.DoctorId, out var current))
+                if (doctorRatings.TryGetValue(schedule.Doctor!.User.Id, out var current))
                 {
                     doctorRatings[schedule.Doctor!.User.Id] = (current.Sum + x.Rating, current.Count + 1);
                 }
