@@ -34,9 +34,10 @@ public static class Command
     public record StaffUpdateCustomerScheduleTimeCommand(
         Guid CustomerScheduleId,
         DateOnly Date,
+        bool IsNext,
         TimeSpan StartTime
     ) : ICommand;
-    
+
     public record StaffApproveCustomerScheduleCommand(
         Guid CustomerScheduleId,
         string Status
