@@ -69,7 +69,7 @@ internal sealed class SystemAdminProcessWithdrawalRequestCommandHandler(
         transaction.ModifiedOnUtc = DateTimeOffset.UtcNow;
 
         // Save changes
-        walletTransactionRepository.Update(transaction);
+
 
         // Generate payment information
         var qrUrl =
@@ -83,7 +83,8 @@ internal sealed class SystemAdminProcessWithdrawalRequestCommandHandler(
             OrderDescription = $"BeautifyWITHDRAWAL-{transaction.Id}",
             QrUrl = qrUrl
         };
-
+        transaction.NewestQrUrl = qrUrl;
+        walletTransactionRepository.Update(transaction);
         return Result.Success(result);
     }
 

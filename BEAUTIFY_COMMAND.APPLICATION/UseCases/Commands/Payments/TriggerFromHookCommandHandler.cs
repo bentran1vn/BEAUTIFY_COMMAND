@@ -210,10 +210,7 @@ public class TriggerFromHookCommandHandler(
             // Update user balance
             transaction.User.Balance -= transaction.Amount;
         }
-        else
-        {
-            return Result.Failure(new Error("404", "Neither user nor clinic found for this transaction"));
-        }
+      
 
         // Notify clients about successful payment
         await hubContext.Clients.Group(transaction.Id.ToString())

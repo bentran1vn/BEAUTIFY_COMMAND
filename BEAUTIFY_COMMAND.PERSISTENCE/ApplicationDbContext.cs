@@ -24,6 +24,13 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
+        // In your ApplicationDbContext.OnModelCreating method
+        builder.Entity<Order>()
+            .HasOne(o => o.OrderFeedback)
+            .WithMany() // or .WithMany(of => of.Orders) if there's a collection
+            .HasForeignKey(o => o.OrderFeedbackId)
+            .IsRequired(false);
+        
         builder.ApplyConfigurationsFromAssembly(AssemblyReference.Assembly);
         builder.Entity<CustomerSchedule>()
             .HasOne(cs => cs.Customer)
@@ -51,9 +58,11 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
         builder.Entity<Procedure>().Property(x => x.Description).HasColumnType("text");
 
         builder.Entity<Staff>().HasQueryFilter(x => !x.IsDeleted);
-        builder.Entity<DoctorCertificate>().HasQueryFilter(x => !x.IsDeleted); // Add matching filter for DoctorCertificate
+        builder.Entity<DoctorCertificate>()
+            .HasQueryFilter(x => !x.IsDeleted); // Add matching filter for DoctorCertificate
         builder.Entity<UserClinic>().HasQueryFilter(x => !x.IsDeleted); // Add matching filter for UserClinic
-        builder.Entity<CustomerSchedule>().HasQueryFilter(x => !x.IsDeleted); // Add matching filter for CustomerSchedule
+        builder.Entity<CustomerSchedule>()
+            .HasQueryFilter(x => !x.IsDeleted); // Add matching filter for CustomerSchedule
         builder.Entity<ClinicOnBoardingRequest>().HasQueryFilter(x => !x.IsDeleted);
         builder.Entity<ClinicVoucher>().HasQueryFilter(x => !x.IsDeleted);
         builder.Entity<ClinicService>().HasQueryFilter(x => !x.IsDeleted);
@@ -68,12 +77,6 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
             .HasOne(lr => lr.LiveStreamDetail)
             .WithOne()  // Assuming one-to-one relationship, adjust if it's one-to-many
             .HasForeignKey<LivestreamRoom>(lr => lr.LiveStreamDetailId)
-            .OnDelete(DeleteBehavior.Restrict);  // Adjust delete behavior as needed
-        
-        builder.Entity<Order>()
-            .HasOne(lr => lr.OrderFeedback)
-            .WithOne()  // Assuming one-to-one relationship, adjust if it's one-to-many
-            .HasForeignKey<Order>(lr => lr.OrderFeedbackId)
             .OnDelete(DeleteBehavior.Restrict);  // Adjust delete behavior as needed
     }
 }
