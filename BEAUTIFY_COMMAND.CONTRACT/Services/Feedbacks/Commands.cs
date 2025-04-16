@@ -28,6 +28,15 @@ public class Commands
         public string ScheduleFeedbacks { get; set; } 
     }
     
+    public class UpdateFeedbackBody
+    {
+        public Guid FeedbackId { get; set; }
+        public IFormFileCollection? Images { get; set; }
+        public string Content { get; set; }
+        public int Rating { get; set; }
+        public string ScheduleFeedbacks { get; set; }  
+    }
+    
     public class UpdateFeedbackCommand: ICommand
     {
         public Guid FeedbackId { get; set; }

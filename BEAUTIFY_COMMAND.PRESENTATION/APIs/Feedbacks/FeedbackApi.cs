@@ -14,8 +14,11 @@ public class FeedbackApi: ApiEndpoint, ICarterModule
             .MapGroup(BaseUrl).HasApiVersion(1);
 
         gr1.MapPost("", CreateFeedback)
-            .DisableAntiforgery();
-        gr1.MapPut("", UpdatedFeedback).RequireAuthorization();
+            .DisableAntiforgery()
+            .RequireAuthorization();
+        gr1.MapPut("", UpdatedFeedback)
+            .DisableAntiforgery()
+            .RequireAuthorization();
         gr1.MapPost("Display", DisplayFeedback).RequireAuthorization();
     }
     
@@ -44,9 +47,26 @@ public class FeedbackApi: ApiEndpoint, ICarterModule
     }
     
     private static async Task<IResult> UpdatedFeedback(ISender sender,
-        [FromForm] Commands.UpdateFeedbackCommand command)
+        [FromForm] Commands.UpdateFeedbackBody command)
     {
-        var result = await sender.Send(command);
+        var listSchedule = command.ScheduleFeedbacks;
+        List<Commands.ScheduleFeedback>? schedules = JsonConvert.DeserializeObject<List<Commands.ScheduleFeedback>>(listSchedule);
+
+        if (schedules == null || !schedules.Any())
+        {
+            throw new Exception("Empty schedule feedbacks");
+        }
+        
+        var updateCommand = new Commands.UpdateFeedbackCommand()
+        {
+            FeedbackId = command.FeedbackId,
+            Images = command.Images,
+            Content = command.Content,
+            Rating = command.Rating,
+            ScheduleFeedbacks = schedules
+        };
+        
+        var result = await sender.Send(updateCommand);
         return result.IsFailure ? HandlerFailure(result) : Results.Ok(result);
     }
     

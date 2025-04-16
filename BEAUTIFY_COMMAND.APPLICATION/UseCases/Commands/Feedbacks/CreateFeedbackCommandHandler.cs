@@ -58,6 +58,20 @@ public class CreateFeedbackCommandHandler : ICommandHandler<CONTRACT.Services.Fe
         {
             return Result.Failure(new Error("500", "Missing schedule feedback"));
         }
+
+        var scheList = request.ScheduleFeedbacks.Select(x => x.CustomerScheduleId);
+        
+        var feedbackCheck = await _scheduleFeedbackRepository
+            .FindAll(x => scheList.Contains(x.CustomerScheduleId))
+            .ToListAsync(cancellationToken);
+        
+        var feedbackOrder = await _orderFeedbackRepository.FindAll(x => x.OrderId.Equals(request.OrderId))
+            .FirstOrDefaultAsync(cancellationToken);
+
+        if (feedbackCheck.Count == request.ScheduleFeedbacks.Count || feedbackOrder != null)
+        {
+            return Result.Failure(new Error("500", "Already Feedback"));
+        }
         
         // Track both ratings and counts in a single dictionary
         Dictionary<Guid, (int Sum, int Count)> doctorRatings = new();
@@ -132,7 +146,7 @@ public class CreateFeedbackCommandHandler : ICommandHandler<CONTRACT.Services.Fe
         
         var trigger = TriggerOutbox.CreateFeedbackEvent(
             orderFeedback.Id,
-            order.Id,
+            (Guid)order.ServiceId,
             coverImageUrls,
             orderFeedback.Content,
             orderFeedback.Rating,
