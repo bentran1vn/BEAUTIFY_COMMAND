@@ -277,4 +277,50 @@ public class TriggerOutbox : AggregateRoot<Guid>, IAuditableEntity
 
         return triggerOutbox;
     }
+    
+    public static TriggerOutbox UpdateFeedbackEvent(
+        Guid feedbackId, Guid serviceId, ICollection<string> images,
+        string content, int rating, DateTimeOffset updateAt
+    )
+    {
+        var triggerOutbox = new TriggerOutbox
+        {
+            Id = Guid.NewGuid()
+        };
+
+        triggerOutbox.RaiseDomainEvent(new FeedbackDomainEvent.UpdateFeedback(
+            Guid.NewGuid(),
+            new FeedbackEvent.UpdateFeedback()
+            {
+                FeedbackId = feedbackId,
+                ServiceId = serviceId,
+                Images = images,
+                Content = content,
+                Rating = rating,
+                UpdateAt = updateAt 
+            }));
+
+        return triggerOutbox;
+    }
+    
+    public static TriggerOutbox DisplayFeedbackEvent(
+        Guid feedbackId, Guid serviceId, bool isView
+    )
+    {
+        var triggerOutbox = new TriggerOutbox
+        {
+            Id = Guid.NewGuid()
+        };
+
+        triggerOutbox.RaiseDomainEvent(new FeedbackDomainEvent.ViewActionFeedback(
+            Guid.NewGuid(),
+            new FeedbackEvent.ViewActionFeedback()
+            {
+                FeedbackId = feedbackId,
+                ServiceId = serviceId,
+                IsView = isView
+            }));
+
+        return triggerOutbox;
+    }
 }
