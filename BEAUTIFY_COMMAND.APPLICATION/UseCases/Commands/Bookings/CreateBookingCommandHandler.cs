@@ -162,6 +162,15 @@ internal sealed class
 
             #endregion livestream
 
+            var depositAmount = Math.Round((total - discountPrice ?? 0) * 0.2m, 2);
+
+            // Check if user has sufficient balance for deposit
+            if (user.Balance < depositAmount)
+            {
+                return Result.Failure(new Error("400", ErrorMessages.Wallet.InsufficientBalance +
+                                                       $" You need at least {depositAmount} in your wallet for the deposit."));
+            }
+
             var order = new Order
             {
                 Id = Guid.NewGuid(),
@@ -170,7 +179,7 @@ internal sealed class
                 Status = Constant.OrderStatus.ORDER_PENDING,
                 Discount = discountPrice,
                 TotalAmount = total,
-                FinalAmount = total - discountPrice,
+                FinalAmount = total - discountPrice - depositAmount,
                 LivestreamRoomId = request.LiveStreamRoomId
             };
             var orderDetails = list.Select(x => new OrderDetail
@@ -210,14 +219,7 @@ internal sealed class
             };
 
             // Calculate deposit amount (20% of the final amount)
-            var depositAmount = Math.Round((order.FinalAmount ?? 0) * 0.2m, 2);
 
-            // Check if user has sufficient balance for deposit
-            if (user.Balance < depositAmount)
-            {
-                return Result.Failure(new Error("400", ErrorMessages.Wallet.InsufficientBalance +
-                                                       $" You need at least {depositAmount} in your wallet for the deposit."));
-            }
 
             // Process the deposit directly instead of using the command bus
             // Create the wallet transaction for the deposit
