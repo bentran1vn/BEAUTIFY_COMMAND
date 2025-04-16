@@ -4,6 +4,12 @@ namespace BEAUTIFY_COMMAND.CONTRACT.Services.Feedbacks;
 
 public class Commands
 {
+    public class ScheduleFeedback
+    {
+        public Guid CustomerScheduleId { get; set; }
+        public int Rating { get; set; }
+        public string? Content { get; set; }
+    };
     public class CreateFeedbackCommand: ICommand
     {
         public Guid OrderId { get; set; }
@@ -11,6 +17,15 @@ public class Commands
         public string Content { get; set; }
         public int Rating { get; set; }
         public List<ScheduleFeedback> ScheduleFeedbacks { get; set; } 
+    }
+    
+    public class CreateFeedbackBody: ICommand
+    {
+        public Guid OrderId { get; set; }
+        public IFormFileCollection Images { get; set; }
+        public string Content { get; set; }
+        public int Rating { get; set; }
+        public string ScheduleFeedbacks { get; set; } 
     }
     
     public class UpdateFeedbackCommand: ICommand
@@ -28,5 +43,5 @@ public class Commands
         public bool IsDisplay { get; set; }
     }
     
-    public record ScheduleFeedback(Guid CustomerScheduleId, int Rating, string? Content);
+    
 }
