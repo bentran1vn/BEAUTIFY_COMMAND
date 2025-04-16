@@ -43,10 +43,10 @@ public class UpdateFeedbackCommandHandler: ICommandHandler<CONTRACT.Services.Fee
             .Include(x => x.Feedback)
             .ToListAsync(cancellationToken);
         
-        if (customerSchedule == null || !customerSchedule.Any())
-        {
-            return Result.Failure(new Error("404", "Customer schedule not found"));
-        }
+        // if (customerSchedule == null || !customerSchedule.Any())
+        // {
+        //     return Result.Failure(new Error("404", "Customer schedule not found"));
+        // }
         
         if(customerSchedule.Any(x => x.Status != Constant.OrderStatus.ORDER_COMPLETED))
         {
