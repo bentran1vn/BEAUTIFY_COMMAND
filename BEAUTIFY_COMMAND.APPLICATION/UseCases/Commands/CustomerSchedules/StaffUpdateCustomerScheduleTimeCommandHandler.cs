@@ -13,9 +13,11 @@ internal sealed class StaffUpdateCustomerScheduleTimeCommandHandler(
         var customerSchedule =
             await customerScheduleRepositoryBase.FindSingleAsync(x => x.Id == request.CustomerScheduleId,
                 cancellationToken);
+
         if (customerSchedule is null)
             return Result.Failure(new Error("404", "Customer Schedule Not Found !"));
-
+        if (customerSchedule.Status == Constant.OrderStatus.ORDER_COMPLETED)
+            return Result.Failure(new Error("400", "Customer Schedule Already Completed !"));
         if (request.IsNext)
         {
             var nextCustomerSchedule = await customerScheduleRepositoryBase.FindSingleAsync(
