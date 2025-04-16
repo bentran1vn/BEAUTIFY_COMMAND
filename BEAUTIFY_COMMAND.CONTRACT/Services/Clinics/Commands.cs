@@ -1,3 +1,4 @@
+using System.ComponentModel.DataAnnotations;
 using BEAUTIFY_PACKAGES.BEAUTIFY_PACKAGES.DOMAIN.Constrants;
 using Microsoft.AspNetCore.Http;
 
@@ -110,24 +111,22 @@ public static class Commands
     #endregion
 
     #region ClinicCreateBranchCommand
-    
 
-public class ClinicCreateBranchCommand : ICommand
-{
-    public string Name { get; set; }
-    public string Email { get; set; }
-    public string PhoneNumber { get; set; }
-    public string City { get; set; }
-    public string District { get; set; }
-    public string Ward { get; set; }
-    public string Address { get; set; }
-    public string BankName { get; set; }
-    public string BankAccountNumber { get; set; }
-    public IFormFile OperatingLicense { get; set; }
-    public DateTimeOffset OperatingLicenseExpiryDate { get; set; }
-    public IFormFile? ProfilePictureUrl { get; set; }
-}
-
+    public class ClinicCreateBranchCommand : ICommand
+    {
+        public string Name { get; set; }
+        public string Email { get; set; }
+        public string PhoneNumber { get; set; }
+        public string City { get; set; }
+        public string District { get; set; }
+        public string Ward { get; set; }
+        public string Address { get; set; }
+        public string BankName { get; set; }
+        public string BankAccountNumber { get; set; }
+        public IFormFile OperatingLicense { get; set; }
+        public DateTimeOffset OperatingLicenseExpiryDate { get; set; }
+        public IFormFile? ProfilePictureUrl { get; set; }
+    }
 
     #endregion
 
@@ -137,7 +136,10 @@ public class ClinicCreateBranchCommand : ICommand
     {
         public Guid BranchId { get; set; }
         public string Name { get; set; }
+
+        [MaxLength(15, ErrorMessage = "Phone Number must be 10 digits")]
         public string PhoneNumber { get; set; }
+
         public string City { get; set; }
         public string District { get; set; }
         public string Ward { get; set; }
