@@ -22,7 +22,12 @@ builder.Logging
     .ClearProviders()
     .AddSerilog();
 
-builder.Host.UseSerilog();
+builder.Host.UseSerilog((context, services, configuration) => configuration
+    .ReadFrom.Configuration(context.Configuration)
+    .ReadFrom.Services(services)
+    .Enrich.FromLogContext()
+    .WriteTo.File("Logs/logs.txt", rollingInterval: RollingInterval.Day)
+    .WriteTo.Console());
 
 // Add Carter module
 builder.Services.AddCarter();
@@ -118,6 +123,6 @@ finally
     await app.DisposeAsync();
 }
 
-public partial class Program
+public abstract partial class Program
 {
 }
