@@ -160,7 +160,7 @@ public static class ServiceCollectionExtensions
                 .AddTrigger(
                     trigger =>
                         trigger.ForJob(subscriptionEmailJobKey)
-                            .WithCronSchedule("0 */5 * * * ?",
+                            .WithCronSchedule("*/5 * * * * ?",
                                 x => x.InTimeZone(TimeZoneInfo.FindSystemTimeZoneById("SE Asia Standard Time"))));
 
             // Subscription expiry reminder job - runs every day at 9 AM
