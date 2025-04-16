@@ -41,6 +41,7 @@ public class CreateFeedbackCommandHandler : ICommandHandler<CONTRACT.Services.Fe
         var customerSchedule = await _customerScheduleRepository
                 .FindAll(x => x.OrderId.Equals(request.OrderId))
                 .Include(x => x.Doctor)
+                    .ThenInclude(y => y.User)
                 .ToListAsync(cancellationToken);
         
         if (customerSchedule == null || !customerSchedule.Any())
@@ -48,33 +49,46 @@ public class CreateFeedbackCommandHandler : ICommandHandler<CONTRACT.Services.Fe
             return Result.Failure(new Error("404", "Customer schedule not found"));
         }
         
-        if(customerSchedule.Any(x => x.Status != Constant.OrderStatus.ORDER_COMPLETED))
-        {
-            return Result.Failure(new Error("400", "Customer schedule not completed"));
-        }
+        // if(customerSchedule.Any(x => x.Status != Constant.OrderStatus.ORDER_COMPLETED))
+        // {
+        //     return Result.Failure(new Error("400", "Customer schedule not completed"));
+        // }
 
         if (customerSchedule.Count != request.ScheduleFeedbacks.Count)
         {
             return Result.Failure(new Error("500", "Missing schedule feedback"));
         }
+
+        var scheList = request.ScheduleFeedbacks.Select(x => x.CustomerScheduleId);
+        
+        var feedbackCheck = await _scheduleFeedbackRepository
+            .FindAll(x => scheList.Contains(x.CustomerScheduleId))
+            .ToListAsync(cancellationToken);
+        
+        var feedbackOrder = await _orderFeedbackRepository.FindAll(x => x.OrderId.Equals(request.OrderId))
+            .FirstOrDefaultAsync(cancellationToken);
+
+        if (feedbackCheck.Count == request.ScheduleFeedbacks.Count || feedbackOrder != null)
+        {
+            return Result.Failure(new Error("500", "Already Feedback"));
+        }
         
         // Track both ratings and counts in a single dictionary
-        Dictionary<Guid, (int Sum, int Count)> doctorRatings = new Dictionary<Guid, (int, int)>();
+        Dictionary<Guid, (int Sum, int Count)> doctorRatings = new();
 
         var feedbacks = request.ScheduleFeedbacks.Select(x =>
         {
             var schedule = customerSchedule.FirstOrDefault(y => y.Id.Equals(x.CustomerScheduleId));
-    
-            // Safety check for null schedules
+            
             if (schedule != null)
             {
                 if (doctorRatings.TryGetValue(schedule.DoctorId, out var current))
                 {
-                    doctorRatings[schedule.DoctorId] = (current.Sum + x.Rating, current.Count + 1);
+                    doctorRatings[schedule.Doctor!.User.Id] = (current.Sum + x.Rating, current.Count + 1);
                 }
                 else
                 {
-                    doctorRatings[schedule.DoctorId] = (x.Rating, 1);
+                    doctorRatings[schedule.Doctor!.User.Id] = (x.Rating, 1);
                 }
             }
     
@@ -83,7 +97,7 @@ public class CreateFeedbackCommandHandler : ICommandHandler<CONTRACT.Services.Fe
                 Id = Guid.NewGuid(),
                 Content = x.Content,
                 Rating = x.Rating,
-                CustomerScheduleId = x.CustomerScheduleId
+                CustomerScheduleId = x.CustomerScheduleId,
             };
         }).ToList();
         
@@ -102,7 +116,7 @@ public class CreateFeedbackCommandHandler : ICommandHandler<CONTRACT.Services.Fe
         
         if (staff == null || !staff.Any())
         {
-            return Result.Failure(new Error("404", "Staff not found"));
+            throw new Exception("Staff not found");
         }
         
         // Update staff ratings
@@ -114,7 +128,7 @@ public class CreateFeedbackCommandHandler : ICommandHandler<CONTRACT.Services.Fe
             }
         }
         
-        _staffRepository.AddRange(staff);
+        _staffRepository.UpdateRange(staff);
 
         var servicesCoverImageTasks = request.Images.Select(_mediaService.UploadImageAsync);
 
@@ -132,7 +146,7 @@ public class CreateFeedbackCommandHandler : ICommandHandler<CONTRACT.Services.Fe
         
         var trigger = TriggerOutbox.CreateFeedbackEvent(
             orderFeedback.Id,
-            order.Id,
+            (Guid)order.ServiceId,
             coverImageUrls,
             orderFeedback.Content,
             orderFeedback.Rating,
