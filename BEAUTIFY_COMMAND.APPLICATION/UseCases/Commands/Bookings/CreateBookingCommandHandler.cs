@@ -1,4 +1,4 @@
-﻿using System.Globalization;
+﻿using BEAUTIFY_COMMAND.CONTRACT.MailTemplates;
 using BEAUTIFY_COMMAND.DOMAIN;
 using BEAUTIFY_COMMAND.INFRASTRUCTURE.Locking;
 
@@ -158,7 +158,7 @@ internal sealed class
                 }
             }
 
-// Now discountPrice contains the final price after discount
+            // Now discountPrice contains the final price after discount
 
             #endregion livestream
 
@@ -218,15 +218,11 @@ internal sealed class
                 Date = request.BookingDate,
             };
 
-            // Calculate deposit amount (20% of the final amount)
-
-
             // Process the deposit directly instead of using the command bus
             // Create the wallet transaction for the deposit
             var depositTransaction = CreateDepositTransaction(
                 user.Id,
                 order.Id,
-                request.ServiceId,
                 depositAmount,
                 $"Deposit for booking {order.Id} - {service.Name}"
             );
@@ -247,46 +243,20 @@ internal sealed class
                 [doctorSchedule], customerSchedule);
             customerSchedule.Create(customerSchedule);
 
-            // Get the transaction ID from the deposit result
-
-
-            await mailService.SendMail(new MailContent
-            {
-                To = user.Email,
-                Subject = "Booking Confirmation",
-                Body = @"
-    <html>
-    <body style='font-family: Arial, sans-serif; color: #333; line-height: 1.6;'>
-        <p>Dear " + user.FirstName + " " + user.LastName + @",</p>
-
-        <p>Your booking has been successfully created. Here are the details:</p>
-
-        <ul style=""list-style-type: none; padding: 0;"">
-            <li><strong>Booking ID:</strong> " + order.Id + @"</li>
-            <li><strong>Booking Date:</strong> " +
-                       request.BookingDate.ToString("dd/MM/yyyy", CultureInfo.InvariantCulture) + @"</li>
-            <li><strong>Start Time:</strong> " + request.StartTime.ToString(@"hh\:mm") + @"</li>
-<li><strong>End Time:</strong> " + (customerSchedule.EndTime?.ToString(@"hh\:mm") ?? "N/A") + @"</li>
-            <li><strong>Service:</strong> " + service.Name + @"</li>
-            <li><strong>Doctor:</strong> " + doctor.FirstName + " " + doctor.LastName + @"</li>
-            <li><strong>Address:</strong> " + clinic.Address + @"</li>
-            <li><strong>Deposit Amount:</strong> " + depositAmount + @"</li>
-        </ul>
-
-        <p>A deposit of " + depositAmount +
-                       @" has been deducted from your wallet balance. This deposit will be refunded after your first meeting.</p>
-
-        <p>Thank you for choosing our service!</p>
-
-        <p>When arrived at the clinic, please provide this email or provide to the staff with your full name and phone number.</p>
-
-        <p>Best regards,</p>
-        <p><strong>" + clinic.Name + @" Clinic</strong></p>
-    </body>
-    </html>
-"
-            });
-
+            // Send booking confirmation email using the template
+            await mailService.SendMail(
+                BookingEmailTemplate.GetBookingConfirmationTemplate(
+                    user,
+                    order,
+                    customerSchedule,
+                    doctor,
+                    clinic,
+                    service,
+                    depositAmount,
+                    request.BookingDate,
+                    request.StartTime
+                )
+            );
 
             return Result.Success();
         }
@@ -303,7 +273,6 @@ internal sealed class
     private static WalletTransaction CreateDepositTransaction(
         Guid userId,
         Guid orderId,
-        Guid serviceId,
         decimal amount,
         string description)
     {
