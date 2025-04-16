@@ -25,7 +25,7 @@ public class PaymentHub(
         var trans = await repositoryBase.FindByIdAsync(transactionId);
         if (trans != null)
         {
-            trans.Status = 2;
+            trans.Status = 3;
             repositoryBase.Update(trans);
         }
 
