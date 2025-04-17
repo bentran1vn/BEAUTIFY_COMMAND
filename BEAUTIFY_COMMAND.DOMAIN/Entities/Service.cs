@@ -12,10 +12,8 @@ public class Service : AggregateRoot<Guid>, IAuditableEntity
     public Guid? CategoryId { get; set; }
     public virtual Category? Category { get; set; }
     [Column(TypeName = "decimal(18,2)")] public decimal? DiscountPrice { get; set; }
-
-    public required double DepositPercent { get; set; }
-
-    public required bool IsRefundable { get; set; }
+    public  double DepositPercent { get; set; }
+    public  bool IsRefundable { get; set; }
     public virtual ICollection<ClinicService>? ClinicServices { get; set; }
     public virtual ICollection<ServiceMedia>? ServiceMedias { get; set; }
     public virtual ICollection<Promotion>? Promotions { get; set; }
