@@ -171,14 +171,15 @@ internal sealed class
                 }
             }
 
+            var deposit = service.DepositPercent;
             // Now discountPrice contains the final price after discount
-            var depositAmount = Math.Round((total - discountPrice ?? 0) * 0.2m, 2);
+            var depositAmount = Math.Round((total - discountPrice ?? 0) * (decimal)deposit / 100, 2);
 
             // Check if user has sufficient balance for deposit
             if (user.Balance < depositAmount)
             {
                 return Result.Failure(new Error("400", ErrorMessages.Wallet.InsufficientBalance +
-                                                       $" You need at least {depositAmount} in your wallet for the deposit."));
+                                                       $" Bạn cần tối thiểu {depositAmount} trong ví dùng để đặt cọc."));
             }
 
             #endregion
@@ -287,7 +288,7 @@ internal sealed class
 
             #endregion
 
-            return Result.Success();
+            return Result.Success(order.Id);
 
             #endregion
         }

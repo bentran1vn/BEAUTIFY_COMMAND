@@ -21,7 +21,7 @@ public class WorkingSchedule : AggregateRoot<Guid>, IAuditableEntity
         List<WorkingSchedule> workingSchedule, CustomerSchedule? customerSchedule)
     {
         //map from workingSchedule to WorkingScheduleEntities
-        var workingScheduleEntities = workingSchedule.Select(x => new EntityEvent.WorkingScheduleEntity()
+        var workingScheduleEntities = workingSchedule.Select(x => new EntityEvent.WorkingScheduleEntity
         {
             Id = x.Id,
             DoctorId = DoctorId,

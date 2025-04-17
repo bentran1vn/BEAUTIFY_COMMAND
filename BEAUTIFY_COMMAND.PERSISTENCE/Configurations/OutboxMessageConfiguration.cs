@@ -5,10 +5,10 @@ using BEAUTIFY_PACKAGES.BEAUTIFY_PACKAGES.CONTRACT.Services.DoctorServices;
 using BEAUTIFY_PACKAGES.BEAUTIFY_PACKAGES.DOMAIN.EntityEvents;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using MongoDB.Driver.Linq;
 using Newtonsoft.Json;
 using ClinicServicesDomainEvent = BEAUTIFY_PACKAGES.BEAUTIFY_PACKAGES.CONTRACT.Services.ClinicServices.DomainEvents;
 using ProceduresDomainEvent = BEAUTIFY_PACKAGES.BEAUTIFY_PACKAGES.CONTRACT.Services.Procedures.DomainEvents;
+
 namespace BEAUTIFY_COMMAND.PERSISTENCE.Configurations;
 internal sealed class OutboxMessageConfiguration : IEntityTypeConfiguration<OutboxMessage>
 {
@@ -17,7 +17,7 @@ internal sealed class OutboxMessageConfiguration : IEntityTypeConfiguration<Outb
         builder.ToTable(TableNames.OutboxMessages);
 
         builder.HasKey(x => x.Id);
-        
+
         var idPhauThuatVungMat = Guid.Parse("11111111-1111-1111-1111-111111111111");
         var idPhauThuatVungNguc = Guid.Parse("22222222-2222-2222-2222-222222222222");
         var idPhauThuatVungBung = Guid.Parse("33333333-3333-3333-3333-333333333333");
@@ -40,7 +40,7 @@ internal sealed class OutboxMessageConfiguration : IEntityTypeConfiguration<Outb
 
         var idHutMoBung = Guid.Parse("19191919-1919-1919-1919-191919191919");
         var idCangDaBung = Guid.Parse("20202020-2020-2020-2020-202020202020");
-        
+
         var categories = new List<Category>()
         {
             new Category
@@ -166,7 +166,8 @@ internal sealed class OutboxMessageConfiguration : IEntityTypeConfiguration<Outb
                 Description = "Loại bỏ mỡ thừa ở vùng mặt như má, cằm",
                 IsParent = false,
                 ParentId = idPhauThuatVungMat
-            }, new Category
+            },
+            new Category
             {
                 Id = idNangNguc,
                 Name = "Nâng Ngực (Breast Augmentation)",
@@ -232,7 +233,8 @@ internal sealed class OutboxMessageConfiguration : IEntityTypeConfiguration<Outb
             {
                 Id = idBCSG_Service1,
                 Name = "Nâng Mũi Cấu Trúc S-Line Premium",
-                Description = "Thiết kế đường nét mũi S-Line chuẩn Hàn Quốc, sử dụng sụn tự thân kết hợp với sụn nhân tạo cao cấp, tạo dáng mũi thanh tú tự nhiên, phù hợp với từng khuôn mặt.",
+                Description =
+                    "Thiết kế đường nét mũi S-Line chuẩn Hàn Quốc, sử dụng sụn tự thân kết hợp với sụn nhân tạo cao cấp, tạo dáng mũi thanh tú tự nhiên, phù hợp với từng khuôn mặt.",
                 MaxPrice = 45000000,
                 MinPrice = 30000000,
                 CategoryId = idNangMui,
@@ -243,7 +245,8 @@ internal sealed class OutboxMessageConfiguration : IEntityTypeConfiguration<Outb
             {
                 Id = idBCSG_Service2,
                 Name = "Cắt Mí Mắt Plasma Luxury",
-                Description = "Công nghệ cắt mí mắt không chạm với plasma, đem lại đôi mắt to tròn, rõ mí, giảm thiểu thời gian hồi phục với công nghệ hiện đại.",
+                Description =
+                    "Công nghệ cắt mí mắt không chạm với plasma, đem lại đôi mắt to tròn, rõ mí, giảm thiểu thời gian hồi phục với công nghệ hiện đại.",
                 MaxPrice = 18000000,
                 MinPrice = 12000000,
                 CategoryId = idCatMiMat,
@@ -254,7 +257,8 @@ internal sealed class OutboxMessageConfiguration : IEntityTypeConfiguration<Outb
             {
                 Id = idBCSG_Service3,
                 Name = "Nâng Ngực Túi Độn Mentor",
-                Description = "Sử dụng túi độn Mentor được FDA Hoa Kỳ chứng nhận, đảm bảo an toàn và độ bền cao, nâng ngực tạo dáng tự nhiên với kỹ thuật nội soi.",
+                Description =
+                    "Sử dụng túi độn Mentor được FDA Hoa Kỳ chứng nhận, đảm bảo an toàn và độ bền cao, nâng ngực tạo dáng tự nhiên với kỹ thuật nội soi.",
                 MaxPrice = 85000000,
                 MinPrice = 65000000,
                 CategoryId = idNangNguc,
@@ -265,7 +269,8 @@ internal sealed class OutboxMessageConfiguration : IEntityTypeConfiguration<Outb
             {
                 Id = idBCSG_Service4,
                 Name = "Độn Cằm V-Line Hàn Quốc",
-                Description = "Tạo cằm V-Line thanh thoát với phương pháp độn cằm kết hợp định hình theo công nghệ Hàn Quốc, phù hợp với từng khuôn mặt Á Đông.",
+                Description =
+                    "Tạo cằm V-Line thanh thoát với phương pháp độn cằm kết hợp định hình theo công nghệ Hàn Quốc, phù hợp với từng khuôn mặt Á Đông.",
                 MaxPrice = 32000000,
                 MinPrice = 25000000,
                 CategoryId = idDonCam,
@@ -276,7 +281,8 @@ internal sealed class OutboxMessageConfiguration : IEntityTypeConfiguration<Outb
             {
                 Id = idBCSG_Service5,
                 Name = "Hút Mỡ Bụng VASER Lipo",
-                Description = "Công nghệ hút mỡ siêu âm VASER Lipo hiện đại, loại bỏ mỡ thừa vùng bụng một cách chọn lọc, giảm thiểu tác động đến các mô liên kết, đem lại vùng bụng thon gọn tự nhiên.",
+                Description =
+                    "Công nghệ hút mỡ siêu âm VASER Lipo hiện đại, loại bỏ mỡ thừa vùng bụng một cách chọn lọc, giảm thiểu tác động đến các mô liên kết, đem lại vùng bụng thon gọn tự nhiên.",
                 MaxPrice = 50000000,
                 MinPrice = 35000000,
                 CategoryId = idHutMoBung,
@@ -289,7 +295,8 @@ internal sealed class OutboxMessageConfiguration : IEntityTypeConfiguration<Outb
             {
                 Id = idHBS_Service1,
                 Name = "Nâng Mũi Bio-Silicon Elite",
-                Description = "Nâng mũi với công nghệ sử dụng Bio-Silicon cao cấp kết hợp sụn tự thân, tạo dáng mũi cao thanh tú phù hợp khuôn mặt Á Đông.",
+                Description =
+                    "Nâng mũi với công nghệ sử dụng Bio-Silicon cao cấp kết hợp sụn tự thân, tạo dáng mũi cao thanh tú phù hợp khuôn mặt Á Đông.",
                 MaxPrice = 50000000,
                 MinPrice = 35000000,
                 CategoryId = idNangMui,
@@ -300,7 +307,8 @@ internal sealed class OutboxMessageConfiguration : IEntityTypeConfiguration<Outb
             {
                 Id = idHBS_Service2,
                 Name = "Cắt Mí Mắt Hàn Quốc Không Sẹo",
-                Description = "Kỹ thuật cắt mí mắt công nghệ Hàn Quốc, tạo đường mí tự nhiên, không để lại sẹo, thời gian hồi phục nhanh.",
+                Description =
+                    "Kỹ thuật cắt mí mắt công nghệ Hàn Quốc, tạo đường mí tự nhiên, không để lại sẹo, thời gian hồi phục nhanh.",
                 MaxPrice = 20000000,
                 MinPrice = 15000000,
                 CategoryId = idCatMiMat,
@@ -311,7 +319,8 @@ internal sealed class OutboxMessageConfiguration : IEntityTypeConfiguration<Outb
             {
                 Id = idHBS_Service3,
                 Name = "Nâng Cung Mày Siêu Âm Hifu",
-                Description = "Công nghệ nâng cung mày không phẫu thuật bằng siêu âm tập trung Hifu, đem lại hiệu quả nâng cung mày tự nhiên.",
+                Description =
+                    "Công nghệ nâng cung mày không phẫu thuật bằng siêu âm tập trung Hifu, đem lại hiệu quả nâng cung mày tự nhiên.",
                 MaxPrice = 15000000,
                 MinPrice = 8000000,
                 CategoryId = idNangCungMay,
@@ -322,7 +331,8 @@ internal sealed class OutboxMessageConfiguration : IEntityTypeConfiguration<Outb
             {
                 Id = idHBS_Service4,
                 Name = "Thu Nhỏ Ngực Vertical Short-Scar",
-                Description = "Thu nhỏ ngực với kỹ thuật sẹo ngắn đứng, giảm thiểu sẹo, bảo tồn chức năng và nhạy cảm của núm vú.",
+                Description =
+                    "Thu nhỏ ngực với kỹ thuật sẹo ngắn đứng, giảm thiểu sẹo, bảo tồn chức năng và nhạy cảm của núm vú.",
                 MaxPrice = 70000000,
                 MinPrice = 50000000,
                 CategoryId = idThuNhoNguc,
@@ -333,7 +343,8 @@ internal sealed class OutboxMessageConfiguration : IEntityTypeConfiguration<Outb
             {
                 Id = idHBS_Service5,
                 Name = "Hút Mỡ Mặt Precision",
-                Description = "Kỹ thuật hút mỡ mặt chính xác từng vùng, tạo đường nét gương mặt thanh tú, thon gọn tự nhiên.",
+                Description =
+                    "Kỹ thuật hút mỡ mặt chính xác từng vùng, tạo đường nét gương mặt thanh tú, thon gọn tự nhiên.",
                 MaxPrice = 28000000,
                 MinPrice = 18000000,
                 CategoryId = idHutMoMat,
@@ -346,7 +357,8 @@ internal sealed class OutboxMessageConfiguration : IEntityTypeConfiguration<Outb
             {
                 Id = idSCDN_Service1,
                 Name = "Nâng Mũi Cấu Trúc Hybrid",
-                Description = "Kết hợp sụn tự thân với vật liệu nhân tạo cao cấp để tạo dáng mũi cân đối, tự nhiên, phù hợp với khuôn mặt người Việt.",
+                Description =
+                    "Kết hợp sụn tự thân với vật liệu nhân tạo cao cấp để tạo dáng mũi cân đối, tự nhiên, phù hợp với khuôn mặt người Việt.",
                 MaxPrice = 55000000,
                 MinPrice = 40000000,
                 CategoryId = idNangMui,
@@ -357,7 +369,8 @@ internal sealed class OutboxMessageConfiguration : IEntityTypeConfiguration<Outb
             {
                 Id = idSCDN_Service2,
                 Name = "Nâng Ngực Nội Soi Ergonomix",
-                Description = "Sử dụng túi ngực Ergonomix thế hệ mới với kỹ thuật nội soi, tạo dáng ngực tự nhiên, mềm mại và vững chắc.",
+                Description =
+                    "Sử dụng túi ngực Ergonomix thế hệ mới với kỹ thuật nội soi, tạo dáng ngực tự nhiên, mềm mại và vững chắc.",
                 MaxPrice = 90000000,
                 MinPrice = 70000000,
                 CategoryId = idNangNguc,
@@ -368,7 +381,8 @@ internal sealed class OutboxMessageConfiguration : IEntityTypeConfiguration<Outb
             {
                 Id = idSCDN_Service3,
                 Name = "Hút Mỡ Bụng 3D Hi-Definition",
-                Description = "Công nghệ hút mỡ bụng 3D tạo hình cơ bụng rõ nét, không chỉ loại bỏ mỡ thừa mà còn định hình cơ bụng 6 múi cho nam giới.",
+                Description =
+                    "Công nghệ hút mỡ bụng 3D tạo hình cơ bụng rõ nét, không chỉ loại bỏ mỡ thừa mà còn định hình cơ bụng 6 múi cho nam giới.",
                 MaxPrice = 65000000,
                 MinPrice = 45000000,
                 CategoryId = idHutMoBung,
@@ -379,7 +393,8 @@ internal sealed class OutboxMessageConfiguration : IEntityTypeConfiguration<Outb
             {
                 Id = idSCDN_Service4,
                 Name = "Cắt Mí Mắt Plasma Tech",
-                Description = "Công nghệ cắt mí mắt bằng plasma tiên tiến, tạo đường mí sắc nét, đều đẹp, giảm thiểu đau đớn và thời gian hồi phục.",
+                Description =
+                    "Công nghệ cắt mí mắt bằng plasma tiên tiến, tạo đường mí sắc nét, đều đẹp, giảm thiểu đau đớn và thời gian hồi phục.",
                 MaxPrice = 22000000,
                 MinPrice = 15000000,
                 CategoryId = idCatMiMat,
@@ -390,7 +405,8 @@ internal sealed class OutboxMessageConfiguration : IEntityTypeConfiguration<Outb
             {
                 Id = idSCDN_Service5,
                 Name = "Độn Cằm 3D Crystal",
-                Description = "Sử dụng công nghệ 3D Crystal để độn cằm, tạo đường nét cằm sắc sảo, cân đối với khuôn mặt, bền vững theo thời gian.",
+                Description =
+                    "Sử dụng công nghệ 3D Crystal để độn cằm, tạo đường nét cằm sắc sảo, cân đối với khuôn mặt, bền vững theo thời gian.",
                 MaxPrice = 35000000,
                 MinPrice = 25000000,
                 CategoryId = idDonCam,
@@ -398,7 +414,7 @@ internal sealed class OutboxMessageConfiguration : IEntityTypeConfiguration<Outb
                 IsRefundable = false,
             }
         };
-        
+
         var clinics = new List<Clinic>
         {
             // Main Clinics (3) - one for each Clinic Admin
@@ -594,7 +610,7 @@ internal sealed class OutboxMessageConfiguration : IEntityTypeConfiguration<Outb
         // Sub Clinics for Skin Care Đà Nẵng
         var idSCDN_HC = Guid.Parse("3c8b8f3d-2f3f-4b17-9b46-0517c0183a50"); // Skin Care Đà Nẵng - Chi nhánh Hải Châu
         var idSCDN_ST = Guid.Parse("6ed1aefc-863e-4f2e-9c24-83eec7c0181c"); // Skin Care Đà Nẵng - Chi nhánh Sơn Trà
-        
+
         var clinicServices = new List<ClinicService>()
         {
             // Beauty Center Sài Gòn Services at Chi nhánh Quận 1
@@ -789,7 +805,7 @@ internal sealed class OutboxMessageConfiguration : IEntityTypeConfiguration<Outb
                 ClinicId = idSCDN_ST,
             }
         };
-        
+
         // Beauty Center Sài Gòn Service 1 - Nâng Mũi Cấu Trúc S-Line Premium
         var idBCSG_S1_P1 = Guid.Parse("a1d3d799-1001-4a2f-b6b5-3d05b7e1f2a3");
         var idBCSG_S1_P2 = Guid.Parse("a1d3d799-1002-4a2f-b6b5-3d05b7e1f2a3");
@@ -886,7 +902,7 @@ internal sealed class OutboxMessageConfiguration : IEntityTypeConfiguration<Outb
         var idSCDN_S5_P2 = Guid.Parse("c5d3d799-1002-4a2f-b6b5-3d05b7e1f2a3");
         var idSCDN_S5_P3 = Guid.Parse("c5d3d799-1003-4a2f-b6b5-3d05b7e1f2a3");
         var idSCDN_S5_P4 = Guid.Parse("c5d3d799-1004-4a2f-b6b5-3d05b7e1f2a3");
-    
+
         var procedures = new List<Procedure>()
         {
             // Beauty Center Sài Gòn Service 1 - Nâng Mũi Cấu Trúc S-Line Premium
@@ -902,7 +918,8 @@ internal sealed class OutboxMessageConfiguration : IEntityTypeConfiguration<Outb
             {
                 Id = idBCSG_S1_P2,
                 Name = "Kiểm tra sức khỏe và chuẩn bị tiền phẫu",
-                Description = "Thăm khám, kiểm tra tổng quát, chụp X-quang, xét nghiệm máu và đánh giá tính khả thi của phẫu thuật.",
+                Description =
+                    "Thăm khám, kiểm tra tổng quát, chụp X-quang, xét nghiệm máu và đánh giá tính khả thi của phẫu thuật.",
                 StepIndex = 2,
                 ServiceId = idBCSG_Service1,
             },
@@ -910,7 +927,8 @@ internal sealed class OutboxMessageConfiguration : IEntityTypeConfiguration<Outb
             {
                 Id = idBCSG_S1_P3,
                 Name = "Phẫu thuật nâng mũi cấu trúc S-Line",
-                Description = "Thực hiện phẫu thuật với kỹ thuật cấu trúc S-Line, sử dụng sụn tự thân kết hợp sụn nhân tạo cao cấp.",
+                Description =
+                    "Thực hiện phẫu thuật với kỹ thuật cấu trúc S-Line, sử dụng sụn tự thân kết hợp sụn nhân tạo cao cấp.",
                 StepIndex = 3,
                 ServiceId = idBCSG_Service1,
             },
@@ -918,7 +936,8 @@ internal sealed class OutboxMessageConfiguration : IEntityTypeConfiguration<Outb
             {
                 Id = idBCSG_S1_P4,
                 Name = "Theo dõi hậu phẫu 24h",
-                Description = "Theo dõi tình trạng hậu phẫu 24h tại phòng hồi sức với sự chăm sóc của đội ngũ y tá chuyên nghiệp.",
+                Description =
+                    "Theo dõi tình trạng hậu phẫu 24h tại phòng hồi sức với sự chăm sóc của đội ngũ y tá chuyên nghiệp.",
                 StepIndex = 4,
                 ServiceId = idBCSG_Service1,
             },
@@ -926,7 +945,8 @@ internal sealed class OutboxMessageConfiguration : IEntityTypeConfiguration<Outb
             {
                 Id = idBCSG_S1_P5,
                 Name = "Chăm sóc và tái khám sau phẫu thuật",
-                Description = "Lịch tái khám định kỳ, hướng dẫn chăm sóc hậu phẫu và can thiệp kịp thời nếu có biến chứng.",
+                Description =
+                    "Lịch tái khám định kỳ, hướng dẫn chăm sóc hậu phẫu và can thiệp kịp thời nếu có biến chứng.",
                 StepIndex = 5,
                 ServiceId = idBCSG_Service1,
             },
@@ -936,7 +956,8 @@ internal sealed class OutboxMessageConfiguration : IEntityTypeConfiguration<Outb
             {
                 Id = idBCSG_S2_P1,
                 Name = "Tư vấn và thiết kế mí mắt",
-                Description = "Bác sĩ phân tích đặc điểm mắt và khuôn mặt, thiết kế đường mí phù hợp với từng khách hàng.",
+                Description =
+                    "Bác sĩ phân tích đặc điểm mắt và khuôn mặt, thiết kế đường mí phù hợp với từng khách hàng.",
                 StepIndex = 1,
                 ServiceId = idBCSG_Service2,
             },
@@ -944,7 +965,8 @@ internal sealed class OutboxMessageConfiguration : IEntityTypeConfiguration<Outb
             {
                 Id = idBCSG_S2_P2,
                 Name = "Kiểm tra trước phẫu thuật",
-                Description = "Kiểm tra sức khỏe tổng quát, thực hiện các xét nghiệm cần thiết để đảm bảo an toàn cho khách hàng.",
+                Description =
+                    "Kiểm tra sức khỏe tổng quát, thực hiện các xét nghiệm cần thiết để đảm bảo an toàn cho khách hàng.",
                 StepIndex = 2,
                 ServiceId = idBCSG_Service2,
             },
@@ -952,7 +974,8 @@ internal sealed class OutboxMessageConfiguration : IEntityTypeConfiguration<Outb
             {
                 Id = idBCSG_S2_P3,
                 Name = "Phẫu thuật cắt mí bằng công nghệ Plasma",
-                Description = "Thực hiện phẫu thuật với công nghệ Plasma không chạm, tạo đường mí tự nhiên, giảm thiểu chảy máu và đau đớn.",
+                Description =
+                    "Thực hiện phẫu thuật với công nghệ Plasma không chạm, tạo đường mí tự nhiên, giảm thiểu chảy máu và đau đớn.",
                 StepIndex = 3,
                 ServiceId = idBCSG_Service2,
             },
@@ -970,7 +993,8 @@ internal sealed class OutboxMessageConfiguration : IEntityTypeConfiguration<Outb
             {
                 Id = idBCSG_S3_P1,
                 Name = "Tư vấn và lựa chọn kích thước túi ngực",
-                Description = "Bác sĩ phân tích cấu trúc cơ thể, tư vấn và giúp khách hàng lựa chọn kích thước túi ngực phù hợp.",
+                Description =
+                    "Bác sĩ phân tích cấu trúc cơ thể, tư vấn và giúp khách hàng lựa chọn kích thước túi ngực phù hợp.",
                 StepIndex = 1,
                 ServiceId = idBCSG_Service3,
             },
@@ -978,7 +1002,8 @@ internal sealed class OutboxMessageConfiguration : IEntityTypeConfiguration<Outb
             {
                 Id = idBCSG_S3_P2,
                 Name = "Kiểm tra sức khỏe và chuẩn bị tiền phẫu",
-                Description = "Thăm khám, kiểm tra tổng quát, chụp X-quang ngực, xét nghiệm máu và đánh giá tính khả thi của phẫu thuật.",
+                Description =
+                    "Thăm khám, kiểm tra tổng quát, chụp X-quang ngực, xét nghiệm máu và đánh giá tính khả thi của phẫu thuật.",
                 StepIndex = 2,
                 ServiceId = idBCSG_Service3,
             },
@@ -986,7 +1011,8 @@ internal sealed class OutboxMessageConfiguration : IEntityTypeConfiguration<Outb
             {
                 Id = idBCSG_S3_P3,
                 Name = "Phẫu thuật nâng ngực nội soi với túi Mentor",
-                Description = "Thực hiện phẫu thuật nâng ngực bằng kỹ thuật nội soi, đặt túi độn Mentor được FDA Hoa Kỳ chứng nhận.",
+                Description =
+                    "Thực hiện phẫu thuật nâng ngực bằng kỹ thuật nội soi, đặt túi độn Mentor được FDA Hoa Kỳ chứng nhận.",
                 StepIndex = 3,
                 ServiceId = idBCSG_Service3,
             },
@@ -994,7 +1020,8 @@ internal sealed class OutboxMessageConfiguration : IEntityTypeConfiguration<Outb
             {
                 Id = idBCSG_S3_P4,
                 Name = "Theo dõi hậu phẫu 48h",
-                Description = "Theo dõi tình trạng hậu phẫu 48h tại phòng hồi sức với sự chăm sóc của đội ngũ y tá chuyên nghiệp.",
+                Description =
+                    "Theo dõi tình trạng hậu phẫu 48h tại phòng hồi sức với sự chăm sóc của đội ngũ y tá chuyên nghiệp.",
                 StepIndex = 4,
                 ServiceId = idBCSG_Service3,
             },
@@ -1002,7 +1029,8 @@ internal sealed class OutboxMessageConfiguration : IEntityTypeConfiguration<Outb
             {
                 Id = idBCSG_S3_P5,
                 Name = "Chăm sóc và tái khám sau phẫu thuật",
-                Description = "Lịch tái khám định kỳ, hướng dẫn chăm sóc hậu phẫu và theo dõi quá trình hồi phục dài hạn.",
+                Description =
+                    "Lịch tái khám định kỳ, hướng dẫn chăm sóc hậu phẫu và theo dõi quá trình hồi phục dài hạn.",
                 StepIndex = 5,
                 ServiceId = idBCSG_Service3,
             },
@@ -1012,7 +1040,8 @@ internal sealed class OutboxMessageConfiguration : IEntityTypeConfiguration<Outb
             {
                 Id = idBCSG_S4_P1,
                 Name = "Tư vấn và thiết kế đường cằm V-Line",
-                Description = "Bác sĩ phân tích cấu trúc khuôn mặt, thiết kế đường cằm V-Line phù hợp với từng khách hàng.",
+                Description =
+                    "Bác sĩ phân tích cấu trúc khuôn mặt, thiết kế đường cằm V-Line phù hợp với từng khách hàng.",
                 StepIndex = 1,
                 ServiceId = idBCSG_Service4,
             },
@@ -1020,7 +1049,8 @@ internal sealed class OutboxMessageConfiguration : IEntityTypeConfiguration<Outb
             {
                 Id = idBCSG_S4_P2,
                 Name = "Kiểm tra sức khỏe và chuẩn bị tiền phẫu",
-                Description = "Thăm khám, kiểm tra tổng quát, chụp X-quang hàm mặt, xét nghiệm máu và đánh giá tính khả thi của phẫu thuật.",
+                Description =
+                    "Thăm khám, kiểm tra tổng quát, chụp X-quang hàm mặt, xét nghiệm máu và đánh giá tính khả thi của phẫu thuật.",
                 StepIndex = 2,
                 ServiceId = idBCSG_Service4,
             },
@@ -1028,7 +1058,8 @@ internal sealed class OutboxMessageConfiguration : IEntityTypeConfiguration<Outb
             {
                 Id = idBCSG_S4_P3,
                 Name = "Phẫu thuật độn cằm V-Line",
-                Description = "Thực hiện phẫu thuật với kỹ thuật V-Line của Hàn Quốc, tạo đường cằm thanh thoát, cân đối với khuôn mặt.",
+                Description =
+                    "Thực hiện phẫu thuật với kỹ thuật V-Line của Hàn Quốc, tạo đường cằm thanh thoát, cân đối với khuôn mặt.",
                 StepIndex = 3,
                 ServiceId = idBCSG_Service4,
             },
@@ -1046,7 +1077,8 @@ internal sealed class OutboxMessageConfiguration : IEntityTypeConfiguration<Outb
             {
                 Id = idBCSG_S5_P1,
                 Name = "Tư vấn và đánh giá vùng mỡ bụng",
-                Description = "Bác sĩ đánh giá tình trạng mỡ bụng, vẽ và đánh dấu vùng cần hút mỡ phù hợp với từng khách hàng.",
+                Description =
+                    "Bác sĩ đánh giá tình trạng mỡ bụng, vẽ và đánh dấu vùng cần hút mỡ phù hợp với từng khách hàng.",
                 StepIndex = 1,
                 ServiceId = idBCSG_Service5,
             },
@@ -1054,7 +1086,8 @@ internal sealed class OutboxMessageConfiguration : IEntityTypeConfiguration<Outb
             {
                 Id = idBCSG_S5_P2,
                 Name = "Kiểm tra sức khỏe và chuẩn bị tiền phẫu",
-                Description = "Thăm khám, kiểm tra tổng quát, xét nghiệm máu, đo chỉ số BMI và đánh giá tính khả thi của phẫu thuật.",
+                Description =
+                    "Thăm khám, kiểm tra tổng quát, xét nghiệm máu, đo chỉ số BMI và đánh giá tính khả thi của phẫu thuật.",
                 StepIndex = 2,
                 ServiceId = idBCSG_Service5,
             },
@@ -1062,7 +1095,8 @@ internal sealed class OutboxMessageConfiguration : IEntityTypeConfiguration<Outb
             {
                 Id = idBCSG_S5_P3,
                 Name = "Phẫu thuật hút mỡ bụng bằng công nghệ VASER Lipo",
-                Description = "Thực hiện phẫu thuật hút mỡ siêu âm VASER Lipo, loại bỏ mỡ thừa vùng bụng một cách chọn lọc.",
+                Description =
+                    "Thực hiện phẫu thuật hút mỡ siêu âm VASER Lipo, loại bỏ mỡ thừa vùng bụng một cách chọn lọc.",
                 StepIndex = 3,
                 ServiceId = idBCSG_Service5,
             },
@@ -1070,7 +1104,8 @@ internal sealed class OutboxMessageConfiguration : IEntityTypeConfiguration<Outb
             {
                 Id = idBCSG_S5_P4,
                 Name = "Massage định hình sau phẫu thuật",
-                Description = "Thực hiện liệu trình massage định hình vùng bụng sau hút mỡ, giúp làm săn chắc da và đều màu.",
+                Description =
+                    "Thực hiện liệu trình massage định hình vùng bụng sau hút mỡ, giúp làm săn chắc da và đều màu.",
                 StepIndex = 4,
                 ServiceId = idBCSG_Service5,
             },
@@ -1104,7 +1139,8 @@ internal sealed class OutboxMessageConfiguration : IEntityTypeConfiguration<Outb
             {
                 Id = idHBS_S1_P3,
                 Name = "Phẫu thuật nâng mũi với Bio-Silicon Elite",
-                Description = "Thực hiện phẫu thuật với vật liệu Bio-Silicon cao cấp, kết hợp sụn tự thân để tạo dáng mũi tự nhiên.",
+                Description =
+                    "Thực hiện phẫu thuật với vật liệu Bio-Silicon cao cấp, kết hợp sụn tự thân để tạo dáng mũi tự nhiên.",
                 StepIndex = 3,
                 ServiceId = idHBS_Service1,
             },
@@ -1122,7 +1158,8 @@ internal sealed class OutboxMessageConfiguration : IEntityTypeConfiguration<Outb
             {
                 Id = idHBS_S2_P1,
                 Name = "Tư vấn và thiết kế đường mí",
-                Description = "Bác sĩ phân tích đặc điểm mắt và khuôn mặt, thiết kế đường mí phù hợp theo công nghệ Hàn Quốc.",
+                Description =
+                    "Bác sĩ phân tích đặc điểm mắt và khuôn mặt, thiết kế đường mí phù hợp theo công nghệ Hàn Quốc.",
                 StepIndex = 1,
                 ServiceId = idHBS_Service2,
             },
@@ -1130,7 +1167,8 @@ internal sealed class OutboxMessageConfiguration : IEntityTypeConfiguration<Outb
             {
                 Id = idHBS_S2_P2,
                 Name = "Kiểm tra trước phẫu thuật",
-                Description = "Kiểm tra sức khỏe tổng quát, thực hiện các xét nghiệm cần thiết để đảm bảo an toàn cho khách hàng.",
+                Description =
+                    "Kiểm tra sức khỏe tổng quát, thực hiện các xét nghiệm cần thiết để đảm bảo an toàn cho khách hàng.",
                 StepIndex = 2,
                 ServiceId = idHBS_Service2,
             },
@@ -1138,7 +1176,8 @@ internal sealed class OutboxMessageConfiguration : IEntityTypeConfiguration<Outb
             {
                 Id = idHBS_S2_P3,
                 Name = "Phẫu thuật cắt mí với kỹ thuật không sẹo",
-                Description = "Thực hiện phẫu thuật với kỹ thuật Hàn Quốc tiên tiến, đảm bảo không để lại sẹo, tạo đường mí tự nhiên.",
+                Description =
+                    "Thực hiện phẫu thuật với kỹ thuật Hàn Quốc tiên tiến, đảm bảo không để lại sẹo, tạo đường mí tự nhiên.",
                 StepIndex = 3,
                 ServiceId = idHBS_Service2,
             },
@@ -1156,7 +1195,8 @@ internal sealed class OutboxMessageConfiguration : IEntityTypeConfiguration<Outb
             {
                 Id = idHBS_S3_P1,
                 Name = "Tư vấn và đánh giá cung mày",
-                Description = "Bác sĩ phân tích đặc điểm cung mày và khuôn mặt, tư vấn phương pháp nâng cung mày phù hợp.",
+                Description =
+                    "Bác sĩ phân tích đặc điểm cung mày và khuôn mặt, tư vấn phương pháp nâng cung mày phù hợp.",
                 StepIndex = 1,
                 ServiceId = idHBS_Service3,
             },
@@ -1164,7 +1204,7 @@ internal sealed class OutboxMessageConfiguration : IEntityTypeConfiguration<Outb
             {
                 Id = idHBS_S3_P2,
                 Name = "Kiểm tra và chuẩn bị trước điều trị",
-                                    Description = "Kiểm tra sức khỏe tổng quát, vệ sinh vùng điều trị và chuẩn bị các thiết bị Hifu.",
+                Description = "Kiểm tra sức khỏe tổng quát, vệ sinh vùng điều trị và chuẩn bị các thiết bị Hifu.",
                 StepIndex = 2,
                 ServiceId = idHBS_Service3,
             },
@@ -1172,7 +1212,8 @@ internal sealed class OutboxMessageConfiguration : IEntityTypeConfiguration<Outb
             {
                 Id = idHBS_S3_P3,
                 Name = "Điều trị nâng cung mày bằng siêu âm Hifu",
-                Description = "Sử dụng công nghệ siêu âm Hifu tác động vào tầng SMAS, kích thích tăng sinh collagen, nâng cơ mày.",
+                Description =
+                    "Sử dụng công nghệ siêu âm Hifu tác động vào tầng SMAS, kích thích tăng sinh collagen, nâng cơ mày.",
                 StepIndex = 3,
                 ServiceId = idHBS_Service3,
             },
@@ -1190,7 +1231,8 @@ internal sealed class OutboxMessageConfiguration : IEntityTypeConfiguration<Outb
             {
                 Id = idHBS_S4_P1,
                 Name = "Tư vấn và đánh giá tình trạng ngực",
-                Description = "Bác sĩ phân tích kích thước, hình dáng ngực hiện tại và tư vấn kích thước, hình dáng mong muốn.",
+                Description =
+                    "Bác sĩ phân tích kích thước, hình dáng ngực hiện tại và tư vấn kích thước, hình dáng mong muốn.",
                 StepIndex = 1,
                 ServiceId = idHBS_Service4,
             },
@@ -1198,7 +1240,8 @@ internal sealed class OutboxMessageConfiguration : IEntityTypeConfiguration<Outb
             {
                 Id = idHBS_S4_P2,
                 Name = "Kiểm tra sức khỏe và chuẩn bị tiền phẫu",
-                Description = "Thăm khám, kiểm tra tổng quát, chụp X-quang ngực, xét nghiệm máu và đánh giá tính khả thi của phẫu thuật.",
+                Description =
+                    "Thăm khám, kiểm tra tổng quát, chụp X-quang ngực, xét nghiệm máu và đánh giá tính khả thi của phẫu thuật.",
                 StepIndex = 2,
                 ServiceId = idHBS_Service4,
             },
@@ -1206,7 +1249,8 @@ internal sealed class OutboxMessageConfiguration : IEntityTypeConfiguration<Outb
             {
                 Id = idHBS_S4_P3,
                 Name = "Phẫu thuật thu nhỏ ngực Vertical Short-Scar",
-                Description = "Thực hiện phẫu thuật với kỹ thuật Vertical Short-Scar giúp thu nhỏ ngực và tạo hình dáng tự nhiên với sẹo tối thiểu.",
+                Description =
+                    "Thực hiện phẫu thuật với kỹ thuật Vertical Short-Scar giúp thu nhỏ ngực và tạo hình dáng tự nhiên với sẹo tối thiểu.",
                 StepIndex = 3,
                 ServiceId = idHBS_Service4,
             },
@@ -1214,7 +1258,8 @@ internal sealed class OutboxMessageConfiguration : IEntityTypeConfiguration<Outb
             {
                 Id = idHBS_S4_P4,
                 Name = "Theo dõi hậu phẫu 48h",
-                Description = "Theo dõi tình trạng hậu phẫu 48h tại phòng hồi sức với sự chăm sóc của đội ngũ y tá chuyên nghiệp.",
+                Description =
+                    "Theo dõi tình trạng hậu phẫu 48h tại phòng hồi sức với sự chăm sóc của đội ngũ y tá chuyên nghiệp.",
                 StepIndex = 4,
                 ServiceId = idHBS_Service4,
             },
@@ -1222,7 +1267,8 @@ internal sealed class OutboxMessageConfiguration : IEntityTypeConfiguration<Outb
             {
                 Id = idHBS_S4_P5,
                 Name = "Chăm sóc và tái khám sau phẫu thuật",
-                Description = "Lịch tái khám định kỳ, hướng dẫn chăm sóc hậu phẫu và theo dõi quá trình hồi phục dài hạn.",
+                Description =
+                    "Lịch tái khám định kỳ, hướng dẫn chăm sóc hậu phẫu và theo dõi quá trình hồi phục dài hạn.",
                 StepIndex = 5,
                 ServiceId = idHBS_Service4,
             },
@@ -1232,7 +1278,8 @@ internal sealed class OutboxMessageConfiguration : IEntityTypeConfiguration<Outb
             {
                 Id = idHBS_S5_P1,
                 Name = "Tư vấn và đánh giá vùng mỡ mặt",
-                Description = "Bác sĩ đánh giá tình trạng mỡ mặt, vẽ và đánh dấu vùng cần hút mỡ phù hợp với từng khách hàng.",
+                Description =
+                    "Bác sĩ đánh giá tình trạng mỡ mặt, vẽ và đánh dấu vùng cần hút mỡ phù hợp với từng khách hàng.",
                 StepIndex = 1,
                 ServiceId = idHBS_Service5,
             },
@@ -1248,7 +1295,8 @@ internal sealed class OutboxMessageConfiguration : IEntityTypeConfiguration<Outb
             {
                 Id = idHBS_S5_P3,
                 Name = "Phẫu thuật hút mỡ mặt Precision",
-                Description = "Thực hiện phẫu thuật hút mỡ mặt với kỹ thuật Precision, loại bỏ mỡ thừa và tạo đường nét khuôn mặt thanh tú.",
+                Description =
+                    "Thực hiện phẫu thuật hút mỡ mặt với kỹ thuật Precision, loại bỏ mỡ thừa và tạo đường nét khuôn mặt thanh tú.",
                 StepIndex = 3,
                 ServiceId = idHBS_Service5,
             },
@@ -1282,7 +1330,8 @@ internal sealed class OutboxMessageConfiguration : IEntityTypeConfiguration<Outb
             {
                 Id = idSCDN_S1_P3,
                 Name = "Phẫu thuật nâng mũi cấu trúc Hybrid",
-                Description = "Thực hiện phẫu thuật với kỹ thuật Hybrid kết hợp sụn tự thân và vật liệu y khoa cao cấp.",
+                Description =
+                    "Thực hiện phẫu thuật với kỹ thuật Hybrid kết hợp sụn tự thân và vật liệu y khoa cao cấp.",
                 StepIndex = 3,
                 ServiceId = idSCDN_Service1,
             },
@@ -1290,7 +1339,8 @@ internal sealed class OutboxMessageConfiguration : IEntityTypeConfiguration<Outb
             {
                 Id = idSCDN_S1_P4,
                 Name = "Theo dõi hậu phẫu 24h",
-                Description = "Theo dõi tình trạng hậu phẫu 24h tại phòng hồi sức với sự chăm sóc của đội ngũ y tá chuyên nghiệp.",
+                Description =
+                    "Theo dõi tình trạng hậu phẫu 24h tại phòng hồi sức với sự chăm sóc của đội ngũ y tá chuyên nghiệp.",
                 StepIndex = 4,
                 ServiceId = idSCDN_Service1,
             },
@@ -1308,7 +1358,8 @@ internal sealed class OutboxMessageConfiguration : IEntityTypeConfiguration<Outb
             {
                 Id = idSCDN_S2_P1,
                 Name = "Tư vấn và lựa chọn kích thước túi ngực",
-                Description = "Bác sĩ phân tích cấu trúc cơ thể, tư vấn và giúp khách hàng lựa chọn kích thước túi ngực Ergonomix phù hợp.",
+                Description =
+                    "Bác sĩ phân tích cấu trúc cơ thể, tư vấn và giúp khách hàng lựa chọn kích thước túi ngực Ergonomix phù hợp.",
                 StepIndex = 1,
                 ServiceId = idSCDN_Service2,
             },
@@ -1316,7 +1367,8 @@ internal sealed class OutboxMessageConfiguration : IEntityTypeConfiguration<Outb
             {
                 Id = idSCDN_S2_P2,
                 Name = "Kiểm tra sức khỏe và chuẩn bị tiền phẫu",
-                Description = "Thăm khám, kiểm tra tổng quát, chụp X-quang ngực, xét nghiệm máu và đánh giá tính khả thi của phẫu thuật.",
+                Description =
+                    "Thăm khám, kiểm tra tổng quát, chụp X-quang ngực, xét nghiệm máu và đánh giá tính khả thi của phẫu thuật.",
                 StepIndex = 2,
                 ServiceId = idSCDN_Service2,
             },
@@ -1324,7 +1376,8 @@ internal sealed class OutboxMessageConfiguration : IEntityTypeConfiguration<Outb
             {
                 Id = idSCDN_S2_P3,
                 Name = "Phẫu thuật nâng ngực nội soi với túi Ergonomix",
-                Description = "Thực hiện phẫu thuật nâng ngực bằng kỹ thuật nội soi với túi Ergonomix có hình giọt nước tự nhiên.",
+                Description =
+                    "Thực hiện phẫu thuật nâng ngực bằng kỹ thuật nội soi với túi Ergonomix có hình giọt nước tự nhiên.",
                 StepIndex = 3,
                 ServiceId = idSCDN_Service2,
             },
@@ -1332,7 +1385,8 @@ internal sealed class OutboxMessageConfiguration : IEntityTypeConfiguration<Outb
             {
                 Id = idSCDN_S2_P4,
                 Name = "Theo dõi hậu phẫu 48h",
-                Description = "Theo dõi tình trạng hậu phẫu 48h tại phòng hồi sức với sự chăm sóc của đội ngũ y tá chuyên nghiệp.",
+                Description =
+                    "Theo dõi tình trạng hậu phẫu 48h tại phòng hồi sức với sự chăm sóc của đội ngũ y tá chuyên nghiệp.",
                 StepIndex = 4,
                 ServiceId = idSCDN_Service2,
             },
@@ -1340,7 +1394,8 @@ internal sealed class OutboxMessageConfiguration : IEntityTypeConfiguration<Outb
             {
                 Id = idSCDN_S2_P5,
                 Name = "Chăm sóc và tái khám sau phẫu thuật",
-                Description = "Lịch tái khám định kỳ, hướng dẫn chăm sóc hậu phẫu và theo dõi quá trình hồi phục dài hạn.",
+                Description =
+                    "Lịch tái khám định kỳ, hướng dẫn chăm sóc hậu phẫu và theo dõi quá trình hồi phục dài hạn.",
                 StepIndex = 5,
                 ServiceId = idSCDN_Service2,
             },
@@ -1350,7 +1405,8 @@ internal sealed class OutboxMessageConfiguration : IEntityTypeConfiguration<Outb
             {
                 Id = idSCDN_S3_P1,
                 Name = "Tư vấn và đánh giá vùng mỡ bụng",
-                Description = "Bác sĩ đánh giá tình trạng mỡ bụng, vẽ và đánh dấu vùng cần hút mỡ phù hợp với từng khách hàng.",
+                Description =
+                    "Bác sĩ đánh giá tình trạng mỡ bụng, vẽ và đánh dấu vùng cần hút mỡ phù hợp với từng khách hàng.",
                 StepIndex = 1,
                 ServiceId = idSCDN_Service3,
             },
@@ -1358,7 +1414,8 @@ internal sealed class OutboxMessageConfiguration : IEntityTypeConfiguration<Outb
             {
                 Id = idSCDN_S3_P2,
                 Name = "Kiểm tra sức khỏe và chuẩn bị tiền phẫu",
-                Description = "Thăm khám, kiểm tra tổng quát, xét nghiệm máu, đo chỉ số BMI và đánh giá tính khả thi của phẫu thuật.",
+                Description =
+                    "Thăm khám, kiểm tra tổng quát, xét nghiệm máu, đo chỉ số BMI và đánh giá tính khả thi của phẫu thuật.",
                 StepIndex = 2,
                 ServiceId = idSCDN_Service3,
             },
@@ -1366,7 +1423,8 @@ internal sealed class OutboxMessageConfiguration : IEntityTypeConfiguration<Outb
             {
                 Id = idSCDN_S3_P3,
                 Name = "Phẫu thuật hút mỡ bụng 3D Hi-Definition",
-                Description = "Thực hiện phẫu thuật hút mỡ bụng với công nghệ 3D Hi-Definition, tạo đường nét cơ bụng rõ ràng.",
+                Description =
+                    "Thực hiện phẫu thuật hút mỡ bụng với công nghệ 3D Hi-Definition, tạo đường nét cơ bụng rõ ràng.",
                 StepIndex = 3,
                 ServiceId = idSCDN_Service3,
             },
@@ -1374,7 +1432,8 @@ internal sealed class OutboxMessageConfiguration : IEntityTypeConfiguration<Outb
             {
                 Id = idSCDN_S3_P4,
                 Name = "Massage định hình sau phẫu thuật",
-                Description = "Thực hiện liệu trình massage định hình vùng bụng sau hút mỡ, giúp làm săn chắc da và đều màu.",
+                Description =
+                    "Thực hiện liệu trình massage định hình vùng bụng sau hút mỡ, giúp làm săn chắc da và đều màu.",
                 StepIndex = 4,
                 ServiceId = idSCDN_Service3,
             },
@@ -1392,7 +1451,8 @@ internal sealed class OutboxMessageConfiguration : IEntityTypeConfiguration<Outb
             {
                 Id = idSCDN_S4_P1,
                 Name = "Tư vấn và thiết kế đường mí",
-                Description = "Bác sĩ phân tích đặc điểm mắt và khuôn mặt, thiết kế đường mí phù hợp với từng khách hàng.",
+                Description =
+                    "Bác sĩ phân tích đặc điểm mắt và khuôn mặt, thiết kế đường mí phù hợp với từng khách hàng.",
                 StepIndex = 1,
                 ServiceId = idSCDN_Service4,
             },
@@ -1400,7 +1460,8 @@ internal sealed class OutboxMessageConfiguration : IEntityTypeConfiguration<Outb
             {
                 Id = idSCDN_S4_P2,
                 Name = "Kiểm tra trước phẫu thuật",
-                Description = "Kiểm tra sức khỏe tổng quát, thực hiện các xét nghiệm cần thiết để đảm bảo an toàn cho khách hàng.",
+                Description =
+                    "Kiểm tra sức khỏe tổng quát, thực hiện các xét nghiệm cần thiết để đảm bảo an toàn cho khách hàng.",
                 StepIndex = 2,
                 ServiceId = idSCDN_Service4,
             },
@@ -1408,7 +1469,8 @@ internal sealed class OutboxMessageConfiguration : IEntityTypeConfiguration<Outb
             {
                 Id = idSCDN_S4_P3,
                 Name = "Phẫu thuật cắt mí với công nghệ Plasma Tech",
-                Description = "Thực hiện phẫu thuật với công nghệ Plasma Tech hiện đại, tạo đường mí tự nhiên, giảm thiểu đau đớn và thời gian hồi phục.",
+                Description =
+                    "Thực hiện phẫu thuật với công nghệ Plasma Tech hiện đại, tạo đường mí tự nhiên, giảm thiểu đau đớn và thời gian hồi phục.",
                 StepIndex = 3,
                 ServiceId = idSCDN_Service4,
             },
@@ -1434,7 +1496,8 @@ internal sealed class OutboxMessageConfiguration : IEntityTypeConfiguration<Outb
             {
                 Id = idSCDN_S5_P2,
                 Name = "Kiểm tra sức khỏe và chuẩn bị tiền phẫu",
-                Description = "Thăm khám, kiểm tra tổng quát, chụp X-quang hàm mặt, xét nghiệm máu và đánh giá tính khả thi của phẫu thuật.",
+                Description =
+                    "Thăm khám, kiểm tra tổng quát, chụp X-quang hàm mặt, xét nghiệm máu và đánh giá tính khả thi của phẫu thuật.",
                 StepIndex = 2,
                 ServiceId = idSCDN_Service5,
             },
@@ -1442,7 +1505,8 @@ internal sealed class OutboxMessageConfiguration : IEntityTypeConfiguration<Outb
             {
                 Id = idSCDN_S5_P3,
                 Name = "Phẫu thuật độn cằm với vật liệu 3D Crystal",
-                Description = "Thực hiện phẫu thuật độn cằm với vật liệu 3D Crystal cao cấp, tạo dáng cằm tự nhiên và cân đối.",
+                Description =
+                    "Thực hiện phẫu thuật độn cằm với vật liệu 3D Crystal cao cấp, tạo dáng cằm tự nhiên và cân đối.",
                 StepIndex = 3,
                 ServiceId = idSCDN_Service5,
             },
@@ -1455,7 +1519,7 @@ internal sealed class OutboxMessageConfiguration : IEntityTypeConfiguration<Outb
                 ServiceId = idSCDN_Service5,
             }
         };
-        
+
         var procedurePriceTypes = new List<ProcedurePriceType>()
         {
             // Beauty Center Sài Gòn Service 1 - Nâng Mũi Cấu Trúc S-Line Premium - Procedure 1
@@ -1971,7 +2035,7 @@ internal sealed class OutboxMessageConfiguration : IEntityTypeConfiguration<Outb
                 IsDefault = false,
                 ProcedureId = idBCSG_S5_P5
             },
-            
+
             // Hanoi Beauty Spa Service 1 - Nâng Mũi Bio-Silicon Elite - Procedure 1
             new ProcedurePriceType
             {
@@ -2355,7 +2419,7 @@ internal sealed class OutboxMessageConfiguration : IEntityTypeConfiguration<Outb
                 ProcedureId = idHBS_S4_P5,
                 Duration = 60,
             },
-            
+
             // Hanoi Beauty Spa Service 5 - Hút Mỡ Mặt Precision
             // Procedure 1 - Tư vấn và đánh giá vùng mỡ mặt
             new ProcedurePriceType
@@ -2902,7 +2966,7 @@ internal sealed class OutboxMessageConfiguration : IEntityTypeConfiguration<Outb
                 ProcedureId = idSCDN_S5_P4
             }
         };
-        
+
         var doctorServices = new List<DoctorService>()
         {
             // Beauty Center Sài Gòn - Chi nhánh Quận 1
@@ -3097,131 +3161,131 @@ internal sealed class OutboxMessageConfiguration : IEntityTypeConfiguration<Outb
                 ServiceId = Guid.Parse("c5d3d799-3f62-4a2f-b6b5-3d05b7e1f2a3"), // SCDN Service 5
             }
         };
-        
+
         var staff = new List<Staff>
+        {
+            // Doctors (12) - Each staff manages 2 doctors (total 12 doctors for 6 staff)
+            new()
             {
-                // Doctors (12) - Each staff manages 2 doctors (total 12 doctors for 6 staff)
-                new ()
-                {
-                    Id = new Guid("ab23d158-44e2-44d4-b679-d7c568993702"),
-                    Email = "lethithanhdoan@gmail.com",
-                    FirstName = "Lê Thị Thanh",
-                    LastName = "Đoan",
-                    Password = "QFUsZBROui+rvdxQ0JkaJg==:6z/WlleDL/PeFU/GLZ3ZHy50E8GTUNzv0mRqB77oE8w=",
-                    Status = 1,
-                    RoleId = new Guid("b549752a-f156-4894-90ad-ab3994fd071d")
-                },
-                new ()
-                {
-                    Id = new Guid("a2b21279-5bbd-40c3-8981-6821c7f6b2ea"),
-                    Email = "phamminhhoang@gmail.com",
-                    FirstName = "Phạm Minh",
-                    LastName = "Hoàng",
-                    Password = "QFUsZBROui+rvdxQ0JkaJg==:6z/WlleDL/PeFU/GLZ3ZHy50E8GTUNzv0mRqB77oE8w=",
-                    Status = 1,
-                    RoleId = new Guid("b549752a-f156-4894-90ad-ab3994fd071d")
-                },
-                new ()
-                {
-                    Id = new Guid("da2d6a80-75cc-4757-8ed3-e0b508ffb080"),
-                    Email = "trinhthuonglam@gmail.com",
-                    FirstName = "Trịnh Thượng",
-                    LastName = "Lâm",
-                    Password = "QFUsZBROui+rvdxQ0JkaJg==:6z/WlleDL/PeFU/GLZ3ZHy50E8GTUNzv0mRqB77oE8w=",
-                    Status = 1,
-                    RoleId = new Guid("b549752a-f156-4894-90ad-ab3994fd071d")
-                },
-                new ()
-                {
-                    Id = new Guid("8b0f0b23-f07f-453d-b8bc-1acb26d03d87"),
-                    Email = "doanthanhtien@gmail.com",
-                    FirstName = "Đoàn Thanh",
-                    LastName = "Tiến",
-                    Password = "QFUsZBROui+rvdxQ0JkaJg==:6z/WlleDL/PeFU/GLZ3ZHy50E8GTUNzv0mRqB77oE8w=",
-                    Status = 1,
-                    RoleId = new Guid("b549752a-f156-4894-90ad-ab3994fd071d")
-                },
-                new ()
-                {
-                    Id = new Guid("79f207d4-dbbf-488d-848d-fc74a7fdbb29"),
-                    Email = "phanvankhoa@gmail.com",
-                    FirstName = "Phan Văn",
-                    LastName = "Khoa",
-                    Password = "QFUsZBROui+rvdxQ0JkaJg==:6z/WlleDL/PeFU/GLZ3ZHy50E8GTUNzv0mRqB77oE8w=",
-                    Status = 1,
-                    RoleId = new Guid("b549752a-f156-4894-90ad-ab3994fd071d")
-                },
-                new ()
-                {
-                    Id = new Guid("32e8cfbb-d8b4-4768-8695-81b6b7e63c63"),
-                    Email = "hoangminhtrang@gmail.com",
-                    FirstName = "Hoàng Minh",
-                    LastName = "Trang",
-                    Password = "QFUsZBROui+rvdxQ0JkaJg==:6z/WlleDL/PeFU/GLZ3ZHy50E8GTUNzv0mRqB77oE8w=",
-                    Status = 1,
-                    RoleId = new Guid("b549752a-f156-4894-90ad-ab3994fd071d")
-                },
-                new ()
-                {
-                    Id = new Guid("c21fa13a-b2f6-4eba-8b77-d2c57854bc5f"),
-                    Email = "tranthanhlong@gmail.com",
-                    FirstName = "Trần Thanh",
-                    LastName = "Long",
-                    Password = "QFUsZBROui+rvdxQ0JkaJg==:6z/WlleDL/PeFU/GLZ3ZHy50E8GTUNzv0mRqB77oE8w=",
-                    Status = 1,
-                    RoleId = new Guid("b549752a-f156-4894-90ad-ab3994fd071d")
-                },
-                new ()
-                {
-                    Id = new Guid("bd3c9480-7bca-43d7-94ed-58cea8b32733"),
-                    Email = "nguyenngocmaihuong@gmail.com",
-                    FirstName = "Nguyễn Ngọc Mai",
-                    LastName = "Hương",
-                    Password = "QFUsZBROui+rvdxQ0JkaJg==:6z/WlleDL/PeFU/GLZ3ZHy50E8GTUNzv0mRqB77oE8w=",
-                    Status = 1,
-                    RoleId = new Guid("b549752a-f156-4894-90ad-ab3994fd071d")
-                },
-                new ()
-                {
-                    Id = new Guid("5e9bd8dd-fb53-4f74-bf59-b3aedb96aa7c"),
-                    Email = "voanhquan@gmail.com",
-                    FirstName = "Võ Anh",
-                    LastName = "Quân",
-                    Password = "QFUsZBROui+rvdxQ0JkaJg==:6z/WlleDL/PeFU/GLZ3ZHy50E8GTUNzv0mRqB77oE8w=",
-                    Status = 1,
-                    RoleId = new Guid("b549752a-f156-4894-90ad-ab3994fd071d")
-                },
-                new ()
-                {
-                    Id = new Guid("71ddc3c7-a3a0-4e6b-bd1d-f03d5deedbfa"),
-                    Email = "lethikimhoa@gmail.com",
-                    FirstName = "Lê Thị Kim",
-                    LastName = "Hoa",
-                    Password = "QFUsZBROui+rvdxQ0JkaJg==:6z/WlleDL/PeFU/GLZ3ZHy50E8GTUNzv0mRqB77oE8w=",
-                    Status = 1,
-                    RoleId = new Guid("b549752a-f156-4894-90ad-ab3994fd071d")
-                },
-                new ()
-                {
-                    Id = new Guid("e8e3f18b-9179-48a6-94bb-1e5320fb8f30"),
-                    Email = "phamtuanminh@gmail.com",
-                    FirstName = "Phạm Tuấn",
-                    LastName = "Minh",
-                    Password = "QFUsZBROui+rvdxQ0JkaJg==:6z/WlleDL/PeFU/GLZ3ZHy50E8GTUNzv0mRqB77oE8w=",
-                    Status = 1,
-                    RoleId = new Guid("b549752a-f156-4894-90ad-ab3994fd071d")
-                },
-                new ()
-                {
-                    Id = new Guid("f76d8ab1-c9eb-4e29-a9f1-5302b543c283"),
-                    Email = "nguyenminhhieu@gmail.com",
-                    FirstName = "Nguyễn Minh",
-                    LastName = "Hiếu",
-                    Password = "QFUsZBROui+rvdxQ0JkaJg==:6z/WlleDL/PeFU/GLZ3ZHy50E8GTUNzv0mRqB77oE8w=",
-                    Status = 1,
-                    RoleId = new Guid("b549752a-f156-4894-90ad-ab3994fd071d")
-                }
-            };
+                Id = new Guid("ab23d158-44e2-44d4-b679-d7c568993702"),
+                Email = "lethithanhdoan@gmail.com",
+                FirstName = "Lê Thị Thanh",
+                LastName = "Đoan",
+                Password = "QFUsZBROui+rvdxQ0JkaJg==:6z/WlleDL/PeFU/GLZ3ZHy50E8GTUNzv0mRqB77oE8w=",
+                Status = 1,
+                RoleId = new Guid("b549752a-f156-4894-90ad-ab3994fd071d")
+            },
+            new()
+            {
+                Id = new Guid("a2b21279-5bbd-40c3-8981-6821c7f6b2ea"),
+                Email = "phamminhhoang@gmail.com",
+                FirstName = "Phạm Minh",
+                LastName = "Hoàng",
+                Password = "QFUsZBROui+rvdxQ0JkaJg==:6z/WlleDL/PeFU/GLZ3ZHy50E8GTUNzv0mRqB77oE8w=",
+                Status = 1,
+                RoleId = new Guid("b549752a-f156-4894-90ad-ab3994fd071d")
+            },
+            new()
+            {
+                Id = new Guid("da2d6a80-75cc-4757-8ed3-e0b508ffb080"),
+                Email = "trinhthuonglam@gmail.com",
+                FirstName = "Trịnh Thượng",
+                LastName = "Lâm",
+                Password = "QFUsZBROui+rvdxQ0JkaJg==:6z/WlleDL/PeFU/GLZ3ZHy50E8GTUNzv0mRqB77oE8w=",
+                Status = 1,
+                RoleId = new Guid("b549752a-f156-4894-90ad-ab3994fd071d")
+            },
+            new()
+            {
+                Id = new Guid("8b0f0b23-f07f-453d-b8bc-1acb26d03d87"),
+                Email = "doanthanhtien@gmail.com",
+                FirstName = "Đoàn Thanh",
+                LastName = "Tiến",
+                Password = "QFUsZBROui+rvdxQ0JkaJg==:6z/WlleDL/PeFU/GLZ3ZHy50E8GTUNzv0mRqB77oE8w=",
+                Status = 1,
+                RoleId = new Guid("b549752a-f156-4894-90ad-ab3994fd071d")
+            },
+            new()
+            {
+                Id = new Guid("79f207d4-dbbf-488d-848d-fc74a7fdbb29"),
+                Email = "phanvankhoa@gmail.com",
+                FirstName = "Phan Văn",
+                LastName = "Khoa",
+                Password = "QFUsZBROui+rvdxQ0JkaJg==:6z/WlleDL/PeFU/GLZ3ZHy50E8GTUNzv0mRqB77oE8w=",
+                Status = 1,
+                RoleId = new Guid("b549752a-f156-4894-90ad-ab3994fd071d")
+            },
+            new()
+            {
+                Id = new Guid("32e8cfbb-d8b4-4768-8695-81b6b7e63c63"),
+                Email = "hoangminhtrang@gmail.com",
+                FirstName = "Hoàng Minh",
+                LastName = "Trang",
+                Password = "QFUsZBROui+rvdxQ0JkaJg==:6z/WlleDL/PeFU/GLZ3ZHy50E8GTUNzv0mRqB77oE8w=",
+                Status = 1,
+                RoleId = new Guid("b549752a-f156-4894-90ad-ab3994fd071d")
+            },
+            new()
+            {
+                Id = new Guid("c21fa13a-b2f6-4eba-8b77-d2c57854bc5f"),
+                Email = "tranthanhlong@gmail.com",
+                FirstName = "Trần Thanh",
+                LastName = "Long",
+                Password = "QFUsZBROui+rvdxQ0JkaJg==:6z/WlleDL/PeFU/GLZ3ZHy50E8GTUNzv0mRqB77oE8w=",
+                Status = 1,
+                RoleId = new Guid("b549752a-f156-4894-90ad-ab3994fd071d")
+            },
+            new()
+            {
+                Id = new Guid("bd3c9480-7bca-43d7-94ed-58cea8b32733"),
+                Email = "nguyenngocmaihuong@gmail.com",
+                FirstName = "Nguyễn Ngọc Mai",
+                LastName = "Hương",
+                Password = "QFUsZBROui+rvdxQ0JkaJg==:6z/WlleDL/PeFU/GLZ3ZHy50E8GTUNzv0mRqB77oE8w=",
+                Status = 1,
+                RoleId = new Guid("b549752a-f156-4894-90ad-ab3994fd071d")
+            },
+            new()
+            {
+                Id = new Guid("5e9bd8dd-fb53-4f74-bf59-b3aedb96aa7c"),
+                Email = "voanhquan@gmail.com",
+                FirstName = "Võ Anh",
+                LastName = "Quân",
+                Password = "QFUsZBROui+rvdxQ0JkaJg==:6z/WlleDL/PeFU/GLZ3ZHy50E8GTUNzv0mRqB77oE8w=",
+                Status = 1,
+                RoleId = new Guid("b549752a-f156-4894-90ad-ab3994fd071d")
+            },
+            new()
+            {
+                Id = new Guid("71ddc3c7-a3a0-4e6b-bd1d-f03d5deedbfa"),
+                Email = "lethikimhoa@gmail.com",
+                FirstName = "Lê Thị Kim",
+                LastName = "Hoa",
+                Password = "QFUsZBROui+rvdxQ0JkaJg==:6z/WlleDL/PeFU/GLZ3ZHy50E8GTUNzv0mRqB77oE8w=",
+                Status = 1,
+                RoleId = new Guid("b549752a-f156-4894-90ad-ab3994fd071d")
+            },
+            new()
+            {
+                Id = new Guid("e8e3f18b-9179-48a6-94bb-1e5320fb8f30"),
+                Email = "phamtuanminh@gmail.com",
+                FirstName = "Phạm Tuấn",
+                LastName = "Minh",
+                Password = "QFUsZBROui+rvdxQ0JkaJg==:6z/WlleDL/PeFU/GLZ3ZHy50E8GTUNzv0mRqB77oE8w=",
+                Status = 1,
+                RoleId = new Guid("b549752a-f156-4894-90ad-ab3994fd071d")
+            },
+            new()
+            {
+                Id = new Guid("f76d8ab1-c9eb-4e29-a9f1-5302b543c283"),
+                Email = "nguyenminhhieu@gmail.com",
+                FirstName = "Nguyễn Minh",
+                LastName = "Hiếu",
+                Password = "QFUsZBROui+rvdxQ0JkaJg==:6z/WlleDL/PeFU/GLZ3ZHy50E8GTUNzv0mRqB77oE8w=",
+                Status = 1,
+                RoleId = new Guid("b549752a-f156-4894-90ad-ab3994fd071d")
+            }
+        };
 
         var branding = new List<Clinic>
         {
@@ -3284,27 +3348,29 @@ internal sealed class OutboxMessageConfiguration : IEntityTypeConfiguration<Outb
                 BankAccountNumber = "3456789012345"
             }
         };
-        
+
         var clinicDictionary = new Dictionary<Guid, Guid>
         {
-            { Guid.Parse("c0b7058f-8e72-4dee-8742-0df6206d1843"), Guid.Parse("78705cfa-7097-408f-93e2-70950fc886a3") }, // Child -> Parent
+            {
+                Guid.Parse("c0b7058f-8e72-4dee-8742-0df6206d1843"), Guid.Parse("78705cfa-7097-408f-93e2-70950fc886a3")
+            }, // Child -> Parent
             { Guid.Parse("6e7e4870-d28d-4a2d-9d0f-9e29f2930fc5"), Guid.Parse("78705cfa-7097-408f-93e2-70950fc886a3") },
             { Guid.Parse("f3e6a7ca-28f9-4c7b-a190-c065cecf7be3"), Guid.Parse("a96d68d9-3f28-48f3-add5-a74a6b882e93") },
             { Guid.Parse("c96de07e-32d7-41d5-b417-060cd95ee7ff"), Guid.Parse("a96d68d9-3f28-48f3-add5-a74a6b882e93") },
             { Guid.Parse("3c8b8f3d-2f3f-4b17-9b46-0517c0183a50"), Guid.Parse("e5a759cd-af8d-4a1c-8c05-43cc2c95e067") },
             { Guid.Parse("6ed1aefc-863e-4f2e-9c24-83eec7c0181c"), Guid.Parse("e5a759cd-af8d-4a1c-8c05-43cc2c95e067") }
         };
-        
+
         var createServiceEvents = services.Select(se =>
         {
             var clinicOfServices = clinicServices.Where(cs => cs.ServiceId.Equals(se.Id));
-            
+
             var parentId = clinicDictionary
                 .FirstOrDefault(x => x.Key.Equals(clinicOfServices.FirstOrDefault()!.ClinicId)).Value;
-            
+
             var brand = branding
                 .FirstOrDefault(x => x.Id.Equals(parentId))!;
-            
+
             return new ClinicServicesDomainEvent.ClinicServiceCreated(
                 Guid.NewGuid(),
                 new ClinicServiceEvent.CreateClinicService(
@@ -3332,7 +3398,7 @@ internal sealed class OutboxMessageConfiguration : IEntityTypeConfiguration<Outb
                         }).ToList()
                 ));
         }).ToList();
-        
+
         var createProcedureEvents = procedures.Select(pro => new ProceduresDomainEvent.ProcedureCreated(
             Guid.NewGuid(),
             new ProcedureEvent.CreateProcedure(
@@ -3342,8 +3408,8 @@ internal sealed class OutboxMessageConfiguration : IEntityTypeConfiguration<Outb
                         x.Id, x.Name, x.Price, x.Duration, x.IsDefault
                     )).ToList()
             ))).ToList();
-        
-        
+
+
         var doctorServiceEventEntity = doctorServices
             .Select(x =>
             {
@@ -3364,11 +3430,11 @@ internal sealed class OutboxMessageConfiguration : IEntityTypeConfiguration<Outb
             }).ToList();
 
         var doctorServiceEvent = new DomainEvents.DoctorServiceCreated(Guid.NewGuid(), doctorServiceEventEntity);
-        
+
         var outBoxCreateServices = createServiceEvents.Select(domainEvent => new OutboxMessage
             {
                 Id = Guid.NewGuid(),
-                OccurredOnUtc = DateTime.UtcNow,
+                //OccurredOnUtc = DateTime.UtcNow,
                 Type = domainEvent.GetType().Name,
                 Content = JsonConvert.SerializeObject(
                     domainEvent,
@@ -3378,11 +3444,11 @@ internal sealed class OutboxMessageConfiguration : IEntityTypeConfiguration<Outb
                     })
             })
             .ToList();
-        
+
         var outBoxCreateProcedures = createProcedureEvents.Select(domainEvent => new OutboxMessage
             {
                 Id = Guid.NewGuid(),
-                OccurredOnUtc = DateTime.UtcNow,
+                //OccurredOnUtc = DateTime.UtcNow,
                 Type = domainEvent.GetType().Name,
                 Content = JsonConvert.SerializeObject(
                     domainEvent,
@@ -3396,7 +3462,7 @@ internal sealed class OutboxMessageConfiguration : IEntityTypeConfiguration<Outb
         var outBoxCreateDoctorServices = new OutboxMessage
         {
             Id = Guid.NewGuid(),
-            OccurredOnUtc = DateTime.UtcNow,
+            //OccurredOnUtc = DateTime.UtcNow,
             Type = doctorServiceEvent.GetType().Name,
             Content = JsonConvert.SerializeObject(
                 doctorServiceEvent,
@@ -3405,7 +3471,7 @@ internal sealed class OutboxMessageConfiguration : IEntityTypeConfiguration<Outb
                     TypeNameHandling = TypeNameHandling.All
                 })
         };
-        
+
         // var outBoxList = new List<OutboxMessage>();
         //
         // outBoxList.AddRange(outBoxCreateServices);
