@@ -236,6 +236,8 @@ internal sealed class OutboxMessageConfiguration : IEntityTypeConfiguration<Outb
                 MaxPrice = 45000000,
                 MinPrice = 30000000,
                 CategoryId = idNangMui,
+                DepositPercent = 0,
+                IsRefundable = false,
             },
             new Service
             {
@@ -245,6 +247,8 @@ internal sealed class OutboxMessageConfiguration : IEntityTypeConfiguration<Outb
                 MaxPrice = 18000000,
                 MinPrice = 12000000,
                 CategoryId = idCatMiMat,
+                DepositPercent = 0,
+                IsRefundable = false,
             },
             new Service
             {
@@ -254,6 +258,8 @@ internal sealed class OutboxMessageConfiguration : IEntityTypeConfiguration<Outb
                 MaxPrice = 85000000,
                 MinPrice = 65000000,
                 CategoryId = idNangNguc,
+                DepositPercent = 0,
+                IsRefundable = false,
             },
             new Service
             {
@@ -263,6 +269,8 @@ internal sealed class OutboxMessageConfiguration : IEntityTypeConfiguration<Outb
                 MaxPrice = 32000000,
                 MinPrice = 25000000,
                 CategoryId = idDonCam,
+                DepositPercent = 0,
+                IsRefundable = false,
             },
             new Service
             {
@@ -272,6 +280,8 @@ internal sealed class OutboxMessageConfiguration : IEntityTypeConfiguration<Outb
                 MaxPrice = 50000000,
                 MinPrice = 35000000,
                 CategoryId = idHutMoBung,
+                DepositPercent = 0,
+                IsRefundable = false,
             },
 
             // Hanoi Beauty Spa Services (5 services)
@@ -283,6 +293,8 @@ internal sealed class OutboxMessageConfiguration : IEntityTypeConfiguration<Outb
                 MaxPrice = 50000000,
                 MinPrice = 35000000,
                 CategoryId = idNangMui,
+                DepositPercent = 0,
+                IsRefundable = false,
             },
             new Service
             {
@@ -292,6 +304,8 @@ internal sealed class OutboxMessageConfiguration : IEntityTypeConfiguration<Outb
                 MaxPrice = 20000000,
                 MinPrice = 15000000,
                 CategoryId = idCatMiMat,
+                DepositPercent = 0,
+                IsRefundable = false,
             },
             new Service
             {
@@ -301,6 +315,8 @@ internal sealed class OutboxMessageConfiguration : IEntityTypeConfiguration<Outb
                 MaxPrice = 15000000,
                 MinPrice = 8000000,
                 CategoryId = idNangCungMay,
+                DepositPercent = 0,
+                IsRefundable = false,
             },
             new Service
             {
@@ -310,6 +326,8 @@ internal sealed class OutboxMessageConfiguration : IEntityTypeConfiguration<Outb
                 MaxPrice = 70000000,
                 MinPrice = 50000000,
                 CategoryId = idThuNhoNguc,
+                DepositPercent = 0,
+                IsRefundable = false,
             },
             new Service
             {
@@ -319,6 +337,8 @@ internal sealed class OutboxMessageConfiguration : IEntityTypeConfiguration<Outb
                 MaxPrice = 28000000,
                 MinPrice = 18000000,
                 CategoryId = idHutMoMat,
+                DepositPercent = 0,
+                IsRefundable = false,
             },
 
             // Skin Care Đà Nẵng Services (5 services)
@@ -330,6 +350,8 @@ internal sealed class OutboxMessageConfiguration : IEntityTypeConfiguration<Outb
                 MaxPrice = 55000000,
                 MinPrice = 40000000,
                 CategoryId = idNangMui,
+                DepositPercent = 0,
+                IsRefundable = false,
             },
             new Service
             {
@@ -339,6 +361,8 @@ internal sealed class OutboxMessageConfiguration : IEntityTypeConfiguration<Outb
                 MaxPrice = 90000000,
                 MinPrice = 70000000,
                 CategoryId = idNangNguc,
+                DepositPercent = 0,
+                IsRefundable = false,
             },
             new Service
             {
@@ -348,6 +372,8 @@ internal sealed class OutboxMessageConfiguration : IEntityTypeConfiguration<Outb
                 MaxPrice = 65000000,
                 MinPrice = 45000000,
                 CategoryId = idHutMoBung,
+                DepositPercent = 0,
+                IsRefundable = false,
             },
             new Service
             {
@@ -357,6 +383,8 @@ internal sealed class OutboxMessageConfiguration : IEntityTypeConfiguration<Outb
                 MaxPrice = 22000000,
                 MinPrice = 15000000,
                 CategoryId = idCatMiMat,
+                DepositPercent = 0,
+                IsRefundable = false,
             },
             new Service
             {
@@ -366,6 +394,8 @@ internal sealed class OutboxMessageConfiguration : IEntityTypeConfiguration<Outb
                 MaxPrice = 35000000,
                 MinPrice = 25000000,
                 CategoryId = idDonCam,
+                DepositPercent = 0,
+                IsRefundable = false,
             }
         };
         
