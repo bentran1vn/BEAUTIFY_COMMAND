@@ -1,6 +1,7 @@
 namespace BEAUTIFY_COMMAND.APPLICATION.UseCases.Commands.Clinics;
 public class UpdateClinicCommandHandler(
     IRepositoryBase<Clinic, Guid> clinicRepository,
+    IRepositoryBase<TriggerOutbox, Guid> triggerRepository,
     IMediaService mediaService)
     : ICommandHandler<CONTRACT.Services.Clinics.Commands.UpdateClinicCommand>
 {
@@ -22,6 +23,10 @@ public class UpdateClinicCommandHandler(
         if (request.Ward != null) clinic.Ward = request.Ward;
 
         if (request.Address != null) clinic.Address = request.Address;
+        
+        if (request.WorkingTimeStart != null) clinic.WorkingTimeStart = request.WorkingTimeStart;
+
+        if (request.WorkingTimeEnd != null) clinic.WorkingTimeEnd = request.WorkingTimeEnd;
 
         if (request.ProfilePicture != null)
         {
@@ -32,6 +37,9 @@ public class UpdateClinicCommandHandler(
         if (request.IsActivated != null) clinic.IsActivated = request.IsActivated.Value;
         if (request.BankName != null) clinic.BankName = request.BankName;
         if (request.BankAccountNumber != null) clinic.BankAccountNumber = request.BankAccountNumber;
+
+        var trigger = TriggerOutbox.UpdateBranchEvent(true, clinic);
+        triggerRepository.Add(trigger);
 
         return Result.Success("Clinic updated.");
     }

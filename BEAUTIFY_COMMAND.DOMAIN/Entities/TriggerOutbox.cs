@@ -323,4 +323,51 @@ public class TriggerOutbox : AggregateRoot<Guid>, IAuditableEntity
 
         return triggerOutbox;
     }
+    
+    public static TriggerOutbox UpdateBranchEvent(
+        bool isParent, Clinic clinic
+    )
+    {
+        var triggerOutbox = new TriggerOutbox
+        {
+            Id = Guid.NewGuid()
+        };
+
+        triggerOutbox.RaiseDomainEvent(new ClinicDomainEvent.ClinicUpdated(
+            Guid.NewGuid(),
+            new ClinicEvent.ClinicUpdated(
+                new ClinicEvent.Clinic(
+                clinic.Id, clinic.Name, clinic.Email, clinic.City, clinic.Address,
+                clinic.FullAddress, (TimeSpan)clinic.WorkingTimeStart, (TimeSpan)clinic.WorkingTimeEnd,
+                clinic.District, clinic.Ward, clinic.PhoneNumber, clinic.ProfilePictureUrl,
+                clinic.IsParent, clinic.ParentId
+                ),
+            isParent)
+            )
+        );
+
+        return triggerOutbox;
+    }
+    
+    public static TriggerOutbox DeleteBranchEvent(
+        bool isParent, Clinic clinic
+    )
+    {
+        var triggerOutbox = new TriggerOutbox
+        {
+            Id = Guid.NewGuid()
+        };
+
+        triggerOutbox.RaiseDomainEvent(new ClinicDomainEvent.ClinicDeleted(
+                Guid.NewGuid(),
+                new ClinicEvent.ClinicDeleted(
+                    clinic.Id,
+                    isParent,
+                    clinic.ParentId
+                )
+            )
+        );
+
+        return triggerOutbox;
+    }
 }
