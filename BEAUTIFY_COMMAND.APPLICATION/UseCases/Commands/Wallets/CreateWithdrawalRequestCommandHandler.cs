@@ -68,7 +68,7 @@ internal sealed class CreateWithdrawalRequestCommandHandler(
             ClinicId = clinicId,
             Amount = amount,
             TransactionType = Constant.WalletConstants.TransactionType.WITHDRAWAL,
-            Status = clinicId != null
+            Status = clinicId == null
                 ? Constant.WalletConstants.TransactionStatus.PENDING
                 : Constant.WalletConstants.TransactionStatus.WAITING_APPROVAL,
             IsMakeBySystem = false,
