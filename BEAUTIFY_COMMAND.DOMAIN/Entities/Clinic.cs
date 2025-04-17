@@ -32,6 +32,7 @@ public class Clinic : AggregateRoot<Guid>, IAuditableEntity
     [MaxLength(250)] public string? ProfilePictureUrl { get; set; }
     public int? TotalBranches { get; set; } = 0;
     public bool IsActivated { get; set; } = false;
+    public bool? IsFirstLogin { get; set; }
     public bool? IsParent { get; set; } = false;
     [MaxLength(255)] public string? BankName { get; set; }
     [MaxLength(100)] public string? BankAccountNumber { get; set; }
@@ -42,7 +43,6 @@ public class Clinic : AggregateRoot<Guid>, IAuditableEntity
     public virtual ICollection<Clinic> Children { get; set; } = [];
     public virtual ICollection<ClinicOnBoardingRequest>? ClinicOnBoardingRequests { get; set; }
     public virtual ICollection<SystemTransaction>? SystemTransaction { get; set; }
-
     public virtual ICollection<ClinicService>? ClinicServices { get; set; }
     public virtual ICollection<UserClinic>? UserClinics { get; set; }
 
