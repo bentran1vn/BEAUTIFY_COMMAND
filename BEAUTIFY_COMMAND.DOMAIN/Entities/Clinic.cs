@@ -10,6 +10,9 @@ public class Clinic : AggregateRoot<Guid>, IAuditableEntity
     [MaxLength(15, ErrorMessage = "Phone Number must be 10 digits")]
     public required string PhoneNumber { get; set; }
 
+    public TimeSpan? WorkingTimeStart { get; set; }
+    public TimeSpan? WorkingTimeEnd { get; set; }
+
     [MaxLength(100)] public string? City { get; set; }
     [MaxLength(100)] public string? District { get; set; }
     [MaxLength(100)] public string? Ward { get; set; }
@@ -32,7 +35,7 @@ public class Clinic : AggregateRoot<Guid>, IAuditableEntity
     public bool? IsParent { get; set; } = false;
     [MaxLength(255)] public string? BankName { get; set; }
     [MaxLength(100)] public string? BankAccountNumber { get; set; }
-        [Column(TypeName = "decimal(18,2)")] public decimal Balance { get; set; }
+    [Column(TypeName = "decimal(18,2)")] public decimal Balance { get; set; }
     public Guid? ParentId { get; set; }
     public virtual Clinic? Parent { get; set; }
     [MaxLength(250)] public string? Note { get; set; }
