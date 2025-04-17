@@ -16,8 +16,7 @@ internal sealed class StaffUpdateCustomerScheduleTimeCommandHandler(
 
         if (customerSchedule is null)
             return Result.Failure(new Error("404", "Customer Schedule Not Found !"));
-        if (customerSchedule.Status == Constant.OrderStatus.ORDER_COMPLETED)
-            return Result.Failure(new Error("400", "Customer Schedule Already Completed !"));
+
         if (request.IsNext)
         {
             var nextCustomerSchedule = await customerScheduleRepositoryBase.FindSingleAsync(
@@ -77,6 +76,8 @@ internal sealed class StaffUpdateCustomerScheduleTimeCommandHandler(
         }
         else
         {
+            if (customerSchedule.Status == Constant.OrderStatus.ORDER_COMPLETED)
+                return Result.Failure(new Error("400", "Customer Schedule Already Completed !"));
             var workingSchedule = await
                 workingScheduleRepositoryBase.FindAll(x =>
                     x.Date == request.Date && x.DoctorClinicId == customerSchedule.DoctorId &&
