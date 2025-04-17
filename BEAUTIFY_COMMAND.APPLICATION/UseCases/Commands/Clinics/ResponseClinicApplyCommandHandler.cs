@@ -49,6 +49,7 @@ public class ResponseClinicApplyCommandHandler(
         {
             applyRequest.Clinic!.Status = 1;
             applyRequest.Clinic!.IsActivated = true;
+            applyRequest.Clinic!.IsFirstLogin = true;
 
             var passwordRandom = GenerateRandomPassword();
             var hashingPassword = passwordHasherService.HashPassword(passwordRandom);
