@@ -14,6 +14,7 @@ using ServicePromotionDomainEvent = BEAUTIFY_PACKAGES.BEAUTIFY_PACKAGES.CONTRACT
 using ClinicDomainEvent = BEAUTIFY_PACKAGES.BEAUTIFY_PACKAGES.CONTRACT.Services.Clinic.DomainEvents;
 using FeedbackDomainEvent = BEAUTIFY_PACKAGES.BEAUTIFY_PACKAGES.CONTRACT.Services.Feedback.DomainEvents;
 
+
 namespace BEAUTIFY_COMMAND.INFRASTRUCTURE.BackgroundJobs;
 [DisallowConcurrentExecution]
 public class ProcessOutboxMessagesJob(ApplicationDbContext dbContext, IPublishEndpoint publishEndpoint)
@@ -45,43 +46,56 @@ public class ProcessOutboxMessagesJob(ApplicationDbContext dbContext, IPublishEn
             {
                 switch (domainEvent.GetType().Name)
                 {
-                    #region Feedback
-
-                    case nameof(FeedbackDomainEvent.ViewActionFeedback):
-                        var ViewActionFeedback =
-                            JsonConvert.DeserializeObject<FeedbackDomainEvent.ViewActionFeedback>(
+                    // case nameof(PostgreMigrateDomainEvent.PostgreMigrate):
+                    //     var postgreMigrate =
+                    //         JsonConvert.DeserializeObject<PostgreMigrateDomainEvent.PostgreMigrate>(
+                    //             outboxMessage.Content,
+                    //             new JsonSerializerSettings
+                    //             {
+                    //                 TypeNameHandling = TypeNameHandling.All
+                    //             });
+                    //     await _publishEndpoint.Publish(postgreMigrate, context.CancellationToken);
+                    //     break;
+                    case nameof(ClinicDomainEvent.ClinicUpdated):
+                        var clinicUpdated =
+                            JsonConvert.DeserializeObject<ClinicDomainEvent.ClinicUpdated>(
                                 outboxMessage.Content,
                                 new JsonSerializerSettings
                                 {
                                     TypeNameHandling = TypeNameHandling.All
                                 });
-                        await publishEndpoint.Publish(ViewActionFeedback, context.CancellationToken);
+                        await publishEndpoint.Publish(clinicUpdated, context.CancellationToken);
+                        break;
+                    case nameof(ClinicDomainEvent.ClinicDeleted):
+                        var clinicDeleted =
+                            JsonConvert.DeserializeObject<ClinicDomainEvent.ClinicDeleted>(
+                                outboxMessage.Content,
+                                new JsonSerializerSettings
+                                {
+                                    TypeNameHandling = TypeNameHandling.All
+                                });
+                        await publishEndpoint.Publish(clinicDeleted, context.CancellationToken);
                         break;
                     case nameof(FeedbackDomainEvent.UpdateFeedback):
-                        var UpdateFeedback =
+                        var updateFeedback =
                             JsonConvert.DeserializeObject<FeedbackDomainEvent.UpdateFeedback>(
                                 outboxMessage.Content,
                                 new JsonSerializerSettings
                                 {
                                     TypeNameHandling = TypeNameHandling.All
                                 });
-                        await publishEndpoint.Publish(UpdateFeedback, context.CancellationToken);
+                        await publishEndpoint.Publish(updateFeedback, context.CancellationToken);
                         break;
                     case nameof(FeedbackDomainEvent.CreateFeedback):
-                        var CreateFeedback =
+                        var createFeedback =
                             JsonConvert.DeserializeObject<FeedbackDomainEvent.CreateFeedback>(
                                 outboxMessage.Content,
                                 new JsonSerializerSettings
                                 {
                                     TypeNameHandling = TypeNameHandling.All
                                 });
-                        await publishEndpoint.Publish(CreateFeedback, context.CancellationToken);
+                        await publishEndpoint.Publish(createFeedback, context.CancellationToken);
                         break;
-
-                    #endregion
-
-                    #region Clinic
-
                     case nameof(ClinicDomainEvent.ClinicBranchActivatedAction):
                         var clinicBranchActivatedAction =
                             JsonConvert.DeserializeObject<ClinicDomainEvent.ClinicBranchActivatedAction>(
@@ -152,9 +166,6 @@ public class ProcessOutboxMessagesJob(ApplicationDbContext dbContext, IPublishEn
                                 });
                         await publishEndpoint.Publish(procedureDeleted, context.CancellationToken);
                         break;
-
-                    #endregion
-
                     case nameof(WorkingScheduleDomainEvent.WorkingScheduleCreated):
                         var workingScheduleCreated =
                             JsonConvert.DeserializeObject<WorkingScheduleDomainEvent.WorkingScheduleCreated>(
@@ -307,10 +318,13 @@ public class ProcessOutboxMessagesJob(ApplicationDbContext dbContext, IPublishEn
                         await publishEndpoint.Publish(customerScheduleUpdateDateAndTime, context.CancellationToken);
                         break;
 
-                    case nameof(ClinicDomainEvent.DoctorFromClinicDeleted):
+                    case nameof(BEAUTIFY_PACKAGES.BEAUTIFY_PACKAGES.CONTRACT.Services.Clinic.DomainEvents
+                        .DoctorFromClinicDeleted):
                         var doctorFromClinicDeleted =
                             JsonConvert
-                                .DeserializeObject<ClinicDomainEvent.DoctorFromClinicDeleted>(
+                                .DeserializeObject<BEAUTIFY_PACKAGES.BEAUTIFY_PACKAGES.CONTRACT.Services.Clinic.
+                                    DomainEvents
+                                    .DoctorFromClinicDeleted>(
                                     outboxMessage.Content,
                                     new JsonSerializerSettings
                                     {

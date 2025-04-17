@@ -1,5 +1,8 @@
 ﻿namespace BEAUTIFY_COMMAND.APPLICATION.UseCases.Commands.Clinics;
-public class ClinicDeleteBranchCommandHandler(IRepositoryBase<Clinic, Guid> clinicRepository)
+public class ClinicDeleteBranchCommandHandler(
+    IRepositoryBase<Clinic, Guid> clinicRepository,
+    IRepositoryBase<TriggerOutbox, Guid> triggerRepository
+    )
     : ICommandHandler<CONTRACT.Services.Clinics.Commands.ClinicDeleteBranchCommand>
 {
     public async Task<Result> Handle(CONTRACT.Services.Clinics.Commands.ClinicDeleteBranchCommand request,
@@ -12,9 +15,16 @@ public class ClinicDeleteBranchCommandHandler(IRepositoryBase<Clinic, Guid> clin
 
         var parentClinic = await clinicRepository.FindByIdAsync(clinic.ParentId.Value, cancellationToken) ??
                            throw new ClinicException.ClinicNotFoundException(clinic.ParentId.Value);
+        
         parentClinic.TotalBranches--;
+        
         clinicRepository.Remove(clinic);
+        
         clinicRepository.Update(parentClinic);
+        
+        var trigger = TriggerOutbox.DeleteBranchEvent(false, clinic);
+        triggerRepository.Add(trigger);
+        
         return Result.Success();
     }
 }

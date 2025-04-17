@@ -14,7 +14,7 @@
     <ItemGroup>
 
 
-        <PackageReference Include="BEAUTIFY_PACKAGES.SHARE" Version="1.10.8"/>
+        <PackageReference Include="BEAUTIFY_PACKAGES.SHARE" Version="1.11.0" />
         <PackageReference Include="Carter" Version="8.1.0"/>
         <PackageReference Include="MicroElements.Swashbuckle.FluentValidation" Version="6.1.0"/>
         <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.7">

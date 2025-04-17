@@ -45,6 +45,8 @@ internal sealed class
             District = request.District,
             Address = request.Address,
             ParentId = currentUserService.ClinicId.Value,
+            WorkingTimeStart = request.WorkingTimeStart,
+            WorkingTimeEnd = request.WorkingTimeEnd,
             PhoneNumber = request.PhoneNumber,
             TaxCode = parentClinic.TaxCode,
             BusinessLicenseUrl = parentClinic.BusinessLicenseUrl,
