@@ -10,8 +10,8 @@ public class Clinic : AggregateRoot<Guid>, IAuditableEntity
     [MaxLength(15, ErrorMessage = "Phone Number must be 10 digits")]
     public required string PhoneNumber { get; set; }
 
-    public required TimeSpan WorkingTimeStart { get; set; }
-    public required TimeSpan WorkingTimeEnd { get; set; }
+    public TimeSpan? WorkingTimeStart { get; set; }
+    public TimeSpan? WorkingTimeEnd { get; set; }
 
     [MaxLength(100)] public string? City { get; set; }
     [MaxLength(100)] public string? District { get; set; }
