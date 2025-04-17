@@ -99,7 +99,7 @@ internal sealed class StaffUpdateCustomerScheduleTimeCommandHandler(
             customerScheduleRepositoryBase.Update(customerSchedule);
             customerSchedule.CustomerScheduleUpdateDateAndTime(customerSchedule);
 
-            var doctorSchedule = new WorkingSchedule
+            /*var doctorSchedule = new WorkingSchedule
             {
                 Id = Guid.NewGuid(),
                 CustomerScheduleId = customerSchedule.Id,
@@ -107,11 +107,18 @@ internal sealed class StaffUpdateCustomerScheduleTimeCommandHandler(
                 StartTime = request.StartTime,
                 EndTime = endTime,
                 Date = customerSchedule.Date.Value,
-            };
-            workingScheduleRepositoryBase.Add(doctorSchedule);
-            doctorSchedule.WorkingScheduleCreate(customerSchedule.Doctor.UserId, customerSchedule.Doctor.ClinicId,
-                customerSchedule.Doctor.User.FirstName + " " + customerSchedule.Doctor.User.LastName,
-                [doctorSchedule], customerSchedule);
+            };*/
+            var doctorSchedule =
+                await workingScheduleRepositoryBase.FindSingleAsync(x => x.CustomerScheduleId == customerSchedule.Id,
+                    cancellationToken);
+            if (doctorSchedule == null)
+                return Result.Failure(new Error("404", "Doctor Schedule Not Found !"));
+            doctorSchedule.StartTime = request.StartTime;
+            doctorSchedule.EndTime = endTime;
+            doctorSchedule.Date = customerSchedule.Date.Value;
+            workingScheduleRepositoryBase.Update(doctorSchedule);
+            doctorSchedule.WorkingScheduleUpdate([doctorSchedule],
+                customerSchedule.Doctor.User.FirstName + " " + customerSchedule.Doctor.User.LastName);
             mailService.SendMail(new MailContent
             {
                 To = customerSchedule.Customer.Email,

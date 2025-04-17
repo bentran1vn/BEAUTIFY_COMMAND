@@ -19,9 +19,7 @@ public sealed class CovertCommandToOutboxMessagesInterceptor : SaveChangesInterc
 
         var entity = dbContext.ChangeTracker.Entries()
             .Where(
-                e => e.State == EntityState.Added
-                     || e.State == EntityState.Modified
-                     || e.State == EntityState.Deleted)
+                e => e.State is EntityState.Added or EntityState.Modified or EntityState.Deleted)
             .Where(e => e.Metadata.ClrType != typeof(OutboxMessage)).ToList();
         ;
 
@@ -42,7 +40,7 @@ public sealed class CovertCommandToOutboxMessagesInterceptor : SaveChangesInterc
                 return new OutboxMessage
                 {
                     Id = Guid.NewGuid(),
-                    OccurredOnUtc = DateTime.UtcNow,
+                    //OccurredOnUtc = DateTime.UtcNow,
                     Type = nameof(DomainEvents.PostgreMigrate),
                     Content = JsonConvert.SerializeObject(
                         new DomainEvents.PostgreMigrate(
