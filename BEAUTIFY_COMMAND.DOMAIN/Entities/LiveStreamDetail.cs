@@ -1,5 +1,4 @@
 namespace BEAUTIFY_COMMAND.DOMAIN.Entities;
-
 public class LiveStreamDetail : AggregateRoot<Guid>, IAuditableEntity
 {
     public int JoinCount { get; set; }

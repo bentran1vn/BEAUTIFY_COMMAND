@@ -28,11 +28,11 @@ public sealed class TransactionPipelineBehavior<TRequest, TResponse>
         var strategy = _context.Database.CreateExecutionStrategy();
         return await strategy.ExecuteAsync(async () =>
         {
-            await using var transaction = await _context.Database.BeginTransactionAsync();
+            await using var transaction = await _context.Database.BeginTransactionAsync(cancellationToken);
             {
                 var response = await next();
-                await _context.SaveChangesAsync();
-                await transaction.CommitAsync();
+                await _context.SaveChangesAsync(cancellationToken);
+                await transaction.CommitAsync(cancellationToken);
                 return response;
             }
         });
@@ -53,6 +53,7 @@ public sealed class TransactionPipelineBehavior<TRequest, TResponse>
 
         #endregion ============== SQL-SERVER-STRATEGY-2 ==============
     }
+
 
     private bool IsCommand()
     {

@@ -2,14 +2,11 @@ using BEAUTIFY_COMMAND.CONTRACT.MailTemplates;
 using BEAUTIFY_COMMAND.DOMAIN.Entities;
 using BEAUTIFY_COMMAND.PERSISTENCE;
 using BEAUTIFY_PACKAGES.BEAUTIFY_PACKAGES.APPLICATION.Abstractions;
-using BEAUTIFY_PACKAGES.BEAUTIFY_PACKAGES.DOMAIN.Abstractions.Repositories;
-using BEAUTIFY_PACKAGES.BEAUTIFY_PACKAGES.INFRASTRUCTURE.Mail;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Quartz;
 
 namespace BEAUTIFY_COMMAND.INFRASTRUCTURE.BackgroundJobs;
-
 [DisallowConcurrentExecution]
 public class SubscriptionExpiryReminderJob(
     ApplicationDbContext dbContext,
@@ -34,15 +31,15 @@ public class SubscriptionExpiryReminderJob(
                 .Include(t => t.Clinic)
                 .Include(t => t.SubscriptionPackage)
                 .Where(t => t.Status == 2 &&
-                           t.SubscriptionPackageId != null &&
-                           !t.Clinic.IsDeleted &&
-                           !t.SubscriptionPackage.IsDeleted)
+                            t.SubscriptionPackageId != null &&
+                            !t.Clinic.IsDeleted &&
+                            !t.SubscriptionPackage.IsDeleted)
                 .ToListAsync(context.CancellationToken);
 
-            logger.LogInformation("Found {count} completed subscription transactions to check for expiry", completedTransactions.Count);
+            logger.LogInformation("Found {count} completed subscription transactions to check for expiry",
+                completedTransactions.Count);
 
             foreach (var transaction in completedTransactions)
-            {
                 try
                 {
                     // Skip if clinic email is missing
@@ -54,7 +51,7 @@ public class SubscriptionExpiryReminderJob(
 
                     // Calculate expiry date based on transaction date and subscription duration
                     var expiryDate = transaction.TransactionDate.AddDays(transaction.SubscriptionPackage.Duration);
-                    
+
                     // Calculate days remaining until expiry
                     var daysRemaining = (expiryDate - currentDateTimeVN).Days;
 
@@ -79,9 +76,9 @@ public class SubscriptionExpiryReminderJob(
                 catch (Exception ex)
                 {
                     // Log the error but continue processing other transactions
-                    logger.LogError(ex, "Error processing subscription expiry reminder for transaction {transactionId}", transaction.Id);
+                    logger.LogError(ex, "Error processing subscription expiry reminder for transaction {transactionId}",
+                        transaction.Id);
                 }
-            }
 
             logger.LogInformation("Completed SubscriptionExpiryReminderJob at {time}", DateTimeOffset.UtcNow);
         }

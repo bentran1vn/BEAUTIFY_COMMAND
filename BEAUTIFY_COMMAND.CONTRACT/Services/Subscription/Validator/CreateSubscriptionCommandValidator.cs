@@ -7,7 +7,7 @@ internal sealed class CreateSubscriptionCommandValidator : AbstractValidator<Com
             .NotEmpty()
             .MinimumLength(2).WithMessage("Name must be at least 2 characters long")
             .MaximumLength(50).WithMessage("Name must exceed 50 characters");
-          
+
 
         RuleFor(x => x.Description)
             .NotEmpty()
@@ -22,11 +22,11 @@ internal sealed class CreateSubscriptionCommandValidator : AbstractValidator<Com
         RuleFor(x => x.Duration)
             .NotEmpty()
             .GreaterThan(0).WithMessage("Duration must be greater than 0");
-        
+
         RuleFor(x => x.PriceLiveStreamAddition)
             .NotEmpty()
             .GreaterThan(1000).WithMessage("Price must be greater than 1000");
-        
+
         RuleFor(x => x.PriceLiveStreamAddition)
             .NotEmpty()
             .GreaterThan(1000).WithMessage("Price must be greater than 1000");

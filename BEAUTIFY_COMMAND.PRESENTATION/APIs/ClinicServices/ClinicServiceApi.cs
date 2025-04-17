@@ -82,7 +82,7 @@ public class ClinicServiceApi : ApiEndpoint, ICarterModule
         var result = await sender.Send(new Commands.UpdateClinicServiceCommand(
             command.Id, new Guid(userId), clinicId, command.Name, numbersIndexCoverImagesChange,
             command.CoverImages,
-            command.Description, 
+            command.Description,
             command.CategoryId
         ));
 

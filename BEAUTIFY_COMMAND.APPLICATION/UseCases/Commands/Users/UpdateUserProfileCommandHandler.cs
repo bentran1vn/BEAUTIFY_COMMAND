@@ -23,7 +23,8 @@ internal sealed class UpdateUserProfileCommandHandler(
         };
     }
 
-    private async Task<Result> UpdateCustomerProfile(Guid userId, CONTRACT.Services.Users.Commands.UpdateUserProfileCommand request, CancellationToken cancellationToken)
+    private async Task<Result> UpdateCustomerProfile(Guid userId,
+        CONTRACT.Services.Users.Commands.UpdateUserProfileCommand request, CancellationToken cancellationToken)
     {
         // Find the user
         var user = await userRepository.FindByIdAsync(userId, cancellationToken);
@@ -36,7 +37,8 @@ internal sealed class UpdateUserProfileCommandHandler(
         return Result.Success("Customer profile updated successfully");
     }
 
-    private async Task<Result> UpdateDoctorProfile(Guid userId, CONTRACT.Services.Users.Commands.UpdateUserProfileCommand request, CancellationToken cancellationToken)
+    private async Task<Result> UpdateDoctorProfile(Guid userId,
+        CONTRACT.Services.Users.Commands.UpdateUserProfileCommand request, CancellationToken cancellationToken)
     {
         // Find the doctor
         var doctor = await staffRepository.FindByIdAsync(userId, cancellationToken);
@@ -53,7 +55,8 @@ internal sealed class UpdateUserProfileCommandHandler(
         return Result.Success("Doctor profile updated successfully");
     }
 
-    private async Task UpdateUserProperties(User user, CONTRACT.Services.Users.Commands.UpdateUserProfileCommand request, CancellationToken cancellationToken)
+    private async Task UpdateUserProperties(User user,
+        CONTRACT.Services.Users.Commands.UpdateUserProfileCommand request, CancellationToken cancellationToken)
     {
         // Update user properties if provided
         if (request.FirstName != null)
@@ -85,7 +88,8 @@ internal sealed class UpdateUserProfileCommandHandler(
             user.ProfilePicture = await mediaService.UploadImageAsync(request.ProfilePicture);
     }
 
-    private async Task UpdateStaffProperties(Staff staff, CONTRACT.Services.Users.Commands.UpdateUserProfileCommand request, CancellationToken cancellationToken)
+    private async Task UpdateStaffProperties(Staff staff,
+        CONTRACT.Services.Users.Commands.UpdateUserProfileCommand request, CancellationToken cancellationToken)
     {
         // Update staff properties if provided
         if (request.FirstName != null)

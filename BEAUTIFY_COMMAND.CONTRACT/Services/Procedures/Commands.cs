@@ -1,5 +1,3 @@
-using Microsoft.AspNetCore.Http;
-
 namespace BEAUTIFY_COMMAND.CONTRACT.Services.Procedures;
 public class Commands
 {
@@ -9,7 +7,7 @@ public class Commands
         string Description,
         int? StepIndex,
         IEnumerable<ProcedurePriceType> ProcedurePriceTypes) : ICommand;
-    
+
     public record UpdateProcedureCommand(
         Guid ServiceId,
         Guid ProcedureId,
@@ -19,7 +17,10 @@ public class Commands
         IEnumerable<ProcedurePriceType> ProcedurePriceTypes) : ICommand;
 
     public record ProcedurePriceType(
-        string Name, int Duration, decimal Price,bool IsDefault);
+        string Name,
+        int Duration,
+        decimal Price,
+        bool IsDefault);
 
     public record DeleteProcedureCommand(
         Guid Id

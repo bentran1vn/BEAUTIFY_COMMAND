@@ -1,12 +1,13 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
 namespace BEAUTIFY_COMMAND.DOMAIN.Entities;
-public class Staff : AggregateRoot<Guid>,IAuditableEntity
+public class Staff : AggregateRoot<Guid>, IAuditableEntity
 {
     [RegularExpression(@"^([\w\.\-]+)@([\w\-]+)(\.[a-zA-Z]{2,})$", ErrorMessage = "Invalid Email Format")]
     [MaxLength(100)]
     [Required]
     public required string Email { get; init; }
+
     [MaxLength(50)] public required string FirstName { get; set; }
     [MaxLength(50)] public required string LastName { get; set; }
     [MaxLength(255)] public required string Password { get; set; }
@@ -37,7 +38,7 @@ public class Staff : AggregateRoot<Guid>,IAuditableEntity
 
     public virtual ICollection<UserClinic>? UserClinics { get; set; }
     public virtual ICollection<DoctorCertificate>? DoctorCertificates { get; set; }
-    
+
     public virtual ICollection<DoctorService>? DoctorServices { get; set; }
 
     public DateTimeOffset CreatedOnUtc { get; set; }

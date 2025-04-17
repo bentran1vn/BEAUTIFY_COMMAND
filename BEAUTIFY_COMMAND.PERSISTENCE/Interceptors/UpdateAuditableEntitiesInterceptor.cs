@@ -1,6 +1,5 @@
 ﻿using BEAUTIFY_PACKAGES.BEAUTIFY_PACKAGES.DOMAIN.Abstractions.Entities;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 
 namespace BEAUTIFY_COMMAND.PERSISTENCE.Interceptors;
@@ -20,14 +19,14 @@ public sealed class UpdateAuditableEntitiesInterceptor
                 result,
                 cancellationToken);
 
-        IEnumerable<EntityEntry<IAuditableEntity>> entries =
+        var entries =
             dbContext
                 .ChangeTracker
                 .Entries<IAuditableEntity>();
 
         var vietnamTimeZone = TimeZoneInfo.FindSystemTimeZoneById("SE Asia Standard Time");
 
-        foreach (EntityEntry<IAuditableEntity> entityEntry in entries)
+        foreach (var entityEntry in entries)
         {
             if (entityEntry.State == EntityState.Added)
                 entityEntry.Property(a => a.CreatedOnUtc).CurrentValue

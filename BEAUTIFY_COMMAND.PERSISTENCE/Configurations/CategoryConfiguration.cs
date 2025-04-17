@@ -3,7 +3,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace BEAUTIFY_COMMAND.PERSISTENCE.Configurations;
-
 public class CategoryConfiguration : IEntityTypeConfiguration<Category>
 {
     public void Configure(EntityTypeBuilder<Category> builder)
@@ -31,9 +30,9 @@ public class CategoryConfiguration : IEntityTypeConfiguration<Category>
         var idHutMoBung = Guid.Parse("19191919-1919-1919-1919-191919191919");
         var idCangDaBung = Guid.Parse("20202020-2020-2020-2020-202020202020");
 
-        var categories = new List<Category>()
+        var categories = new List<Category>
         {
-            new Category
+            new()
             {
                 Id = idPhauThuatVungMat,
                 Name = "Phẫu Thuật Vùng Mặt",
@@ -41,7 +40,7 @@ public class CategoryConfiguration : IEntityTypeConfiguration<Category>
                 IsParent = true,
                 ParentId = null
             },
-            new Category
+            new()
             {
                 Id = idPhauThuatVungNguc,
                 Name = "Phẫu Thuật Vùng Ngực",
@@ -49,7 +48,7 @@ public class CategoryConfiguration : IEntityTypeConfiguration<Category>
                 IsParent = true,
                 ParentId = null
             },
-            new Category
+            new()
             {
                 Id = idPhauThuatVungBung,
                 Name = "Phẫu Thuật Vùng Bụng",
@@ -57,7 +56,7 @@ public class CategoryConfiguration : IEntityTypeConfiguration<Category>
                 IsParent = true,
                 ParentId = null
             },
-            new Category
+            new()
             {
                 Id = idPhauThuatVungMong,
                 Name = "Phẫu Thuật Vùng Mông",
@@ -65,7 +64,7 @@ public class CategoryConfiguration : IEntityTypeConfiguration<Category>
                 IsParent = true,
                 ParentId = null
             },
-            new Category
+            new()
             {
                 Id = idPhauThuatVungChan,
                 Name = "Phẫu Thuật Vùng Chân",
@@ -73,7 +72,7 @@ public class CategoryConfiguration : IEntityTypeConfiguration<Category>
                 IsParent = true,
                 ParentId = null
             },
-            new Category
+            new()
             {
                 Id = idPhauThuatGiamCan,
                 Name = "Phẫu Thuật Giảm Cân",
@@ -81,7 +80,7 @@ public class CategoryConfiguration : IEntityTypeConfiguration<Category>
                 IsParent = true,
                 ParentId = null
             },
-            new Category
+            new()
             {
                 Id = idPhauThuatTaoHinhCoThe,
                 Name = "Phẫu Thuật Tạo Hình Cơ Thể",
@@ -89,7 +88,7 @@ public class CategoryConfiguration : IEntityTypeConfiguration<Category>
                 IsParent = true,
                 ParentId = null
             },
-            new Category
+            new()
             {
                 Id = idPhauThuatTaoHinhBoPhanSinhDuc,
                 Name = "Phẫu Thuật Tạo Hình Bộ Phận Sinh Dục",
@@ -97,7 +96,7 @@ public class CategoryConfiguration : IEntityTypeConfiguration<Category>
                 IsParent = true,
                 ParentId = null
             },
-            new Category
+            new()
             {
                 Id = idPhauThuatTaoHinhDa,
                 Name = "Phẫu Thuật Tạo Hình Da",
@@ -105,7 +104,7 @@ public class CategoryConfiguration : IEntityTypeConfiguration<Category>
                 IsParent = true,
                 ParentId = null
             },
-            new Category
+            new()
             {
                 Id = idPhauThuatTaoHinhTai,
                 Name = "Phẫu Thuật Tạo Hình Tai",
@@ -113,7 +112,7 @@ public class CategoryConfiguration : IEntityTypeConfiguration<Category>
                 IsParent = true,
                 ParentId = null
             },
-            new Category
+            new()
             {
                 Id = idNangMui,
                 Name = "Nâng Mũi (Rhinoplasty)",
@@ -122,7 +121,7 @@ public class CategoryConfiguration : IEntityTypeConfiguration<Category>
                 ParentId = idPhauThuatVungMat
             },
             // Danh mục con: Cắt mí mắt
-            new Category
+            new()
             {
                 Id = idCatMiMat,
                 Name = "Cắt Mí Mắt (Blepharoplasty)",
@@ -131,7 +130,7 @@ public class CategoryConfiguration : IEntityTypeConfiguration<Category>
                 ParentId = idPhauThuatVungMat
             },
             // Danh mục con: Nâng cung mày
-            new Category
+            new()
             {
                 Id = idNangCungMay,
                 Name = "Nâng Cung Mày (Brow Lift)",
@@ -140,7 +139,7 @@ public class CategoryConfiguration : IEntityTypeConfiguration<Category>
                 ParentId = idPhauThuatVungMat
             },
             // Danh mục con: Độn cằm
-            new Category
+            new()
             {
                 Id = idDonCam,
                 Name = "Độn Cằm (Chin Augmentation)",
@@ -149,14 +148,15 @@ public class CategoryConfiguration : IEntityTypeConfiguration<Category>
                 ParentId = idPhauThuatVungMat
             },
             // Danh mục con: Hút mỡ mặt
-            new Category
+            new()
             {
                 Id = idHutMoMat,
                 Name = "Hút Mỡ Mặt",
                 Description = "Loại bỏ mỡ thừa ở vùng mặt như má, cằm",
                 IsParent = false,
                 ParentId = idPhauThuatVungMat
-            }, new Category
+            },
+            new()
             {
                 Id = idNangNguc,
                 Name = "Nâng Ngực (Breast Augmentation)",
@@ -165,7 +165,7 @@ public class CategoryConfiguration : IEntityTypeConfiguration<Category>
                 ParentId = idPhauThuatVungNguc
             },
             // Danh mục con: Thu nhỏ ngực
-            new Category
+            new()
             {
                 Id = idThuNhoNguc,
                 Name = "Thu Nhỏ Ngực (Breast Reduction)",
@@ -174,7 +174,7 @@ public class CategoryConfiguration : IEntityTypeConfiguration<Category>
                 ParentId = idPhauThuatVungNguc
             },
             // Danh mục con: Hút mỡ bụng
-            new Category
+            new()
             {
                 Id = idHutMoBung,
                 Name = "Hút Mỡ Bụng",
@@ -183,7 +183,7 @@ public class CategoryConfiguration : IEntityTypeConfiguration<Category>
                 ParentId = idPhauThuatVungBung
             },
             // Danh mục con: Căng da bụng
-            new Category
+            new()
             {
                 Id = idCangDaBung,
                 Name = "Căng Da Bụng",

@@ -135,43 +135,38 @@ public static class ServiceCollectionExtensions
             var outboxJobKey = new JobKey(nameof(ProcessOutboxMessagesJob));
             configure
                 .AddJob<ProcessOutboxMessagesJob>(outboxJobKey)
-                .AddTrigger(
-                    trigger =>
-                        trigger.ForJob(outboxJobKey)
-                            .WithSimpleSchedule(
-                                schedule =>
-                                    schedule.WithInterval(TimeSpan.FromMicroseconds(100))
-                                        .RepeatForever()));
+                .AddTrigger(trigger =>
+                    trigger.ForJob(outboxJobKey)
+                        .WithSimpleSchedule(schedule =>
+                            schedule.WithInterval(TimeSpan.FromMicroseconds(100))
+                                .RepeatForever()));
 
             // Unified appointment notification job - runs every hour to handle all notification types
             var appointmentNotificationJobKey = new JobKey(nameof(AppointmentNotificationJob));
             configure
                 .AddJob<AppointmentNotificationJob>(appointmentNotificationJobKey)
-                .AddTrigger(
-                    trigger =>
-                        trigger.ForJob(appointmentNotificationJobKey)
-                            .WithCronSchedule("0 0 * * * ?",
-                                x => x.InTimeZone(TimeZoneInfo.FindSystemTimeZoneById("SE Asia Standard Time"))));
+                .AddTrigger(trigger =>
+                    trigger.ForJob(appointmentNotificationJobKey)
+                        .WithCronSchedule("0 0 * * * ?",
+                            x => x.InTimeZone(TimeZoneInfo.FindSystemTimeZoneById("SE Asia Standard Time"))));
 
             // Subscription purchase email job - runs every 5 minutes to send confirmation emails
             var subscriptionEmailJobKey = new JobKey(nameof(SubscriptionPurchaseEmailJob));
             configure
                 .AddJob<SubscriptionPurchaseEmailJob>(subscriptionEmailJobKey)
-                .AddTrigger(
-                    trigger =>
-                        trigger.ForJob(subscriptionEmailJobKey)
-                            .WithCronSchedule("*/5 * * * * ?",
-                                x => x.InTimeZone(TimeZoneInfo.FindSystemTimeZoneById("SE Asia Standard Time"))));
+                .AddTrigger(trigger =>
+                    trigger.ForJob(subscriptionEmailJobKey)
+                        .WithCronSchedule("*/5 * * * * ?",
+                            x => x.InTimeZone(TimeZoneInfo.FindSystemTimeZoneById("SE Asia Standard Time"))));
 
             // Subscription expiry reminder job - runs every day at 9 AM
             var subscriptionExpiryReminderJobKey = new JobKey(nameof(SubscriptionExpiryReminderJob));
             configure
                 .AddJob<SubscriptionExpiryReminderJob>(subscriptionExpiryReminderJobKey)
-                .AddTrigger(
-                    trigger =>
-                        trigger.ForJob(subscriptionExpiryReminderJobKey)
-                            .WithCronSchedule("0 0 9 * * ?",
-                                x => x.InTimeZone(TimeZoneInfo.FindSystemTimeZoneById("SE Asia Standard Time"))));
+                .AddTrigger(trigger =>
+                    trigger.ForJob(subscriptionExpiryReminderJobKey)
+                        .WithCronSchedule("0 0 9 * * ?",
+                            x => x.InTimeZone(TimeZoneInfo.FindSystemTimeZoneById("SE Asia Standard Time"))));
 
             configure.UseMicrosoftDependencyInjectionJobFactory();
         });

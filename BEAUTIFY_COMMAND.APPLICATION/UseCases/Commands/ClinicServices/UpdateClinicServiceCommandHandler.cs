@@ -29,7 +29,7 @@ public class
 
         // Check Category Existence
         if (category == null || category.IsDeleted) return Result.Failure(new Error("404", "Category not found "));
-        
+
         // Retrieve Clinics
         var clinicIds = request.ClinicId.ToHashSet();
         var clinics = await clinicRepository.FindAll(x => request.ClinicId.Contains(x.Id))
@@ -39,19 +39,19 @@ public class
         if (clinics.Count != clinicIds.Count) return Result.Failure(new Error("404", "Clinic not found "));
 
         // Check User Clinic Admin Role
-        var userClinicIds = (await userClinicRepository.FindAll(
-                    x =>
-                        x.UserId.Equals(request.UserId) &&
-                        x.User != null &&
-                        x.User.Role != null &&
-                        x.User.Role.Name.Equals("Clinic Admin"))
+        var userClinicIds = (await userClinicRepository.FindAll(x =>
+                    x.UserId.Equals(request.UserId) &&
+                    x.User != null &&
+                    x.User.Role != null &&
+                    x.User.Role.Name.Equals("Clinic Admin"))
                 .Select(x => x.ClinicId)
                 .ToListAsync(cancellationToken))
             .ToHashSet();
 
-        if(clinics.Where(x => x.ParentId != null).Select(x => x.ParentId).ToHashSet().Any(x => !userClinicIds.Contains(x.Value)))
+        if (clinics.Where(x => x.ParentId != null).Select(x => x.ParentId).ToHashSet()
+            .Any(x => !userClinicIds.Contains(x.Value)))
             return Result.Failure(new Error("403", "You are not authorized to update this service"));
-        
+
         // Update Service Properties
         service.Name = request.Name;
         service.Description = request.Description;
@@ -64,7 +64,7 @@ public class
         if (clinicsToRemove.Any())
             clinicServiceRepository.RemoveMultiple(service.ClinicServices
                 .Where(x => clinicsToRemove.Contains(x.ClinicId)).ToList());
-        
+
         var newClinicIds = clinicIds.Except(existingClinicIds).ToList();
         if (newClinicIds.Any())
         {
@@ -76,50 +76,44 @@ public class
             }).ToList();
             clinicServiceRepository.AddRange(newClinicServices);
         }
-        
-        List<ServiceMedia> serviceMediaList = new List<ServiceMedia>();
-        List<ServiceMedia> serviceMediaListUpdate = new List<ServiceMedia>();
-        List<ServiceMedia> serviceMediaListAdd = new List<ServiceMedia>();
-        
+
+        var serviceMediaList = new List<ServiceMedia>();
+        var serviceMediaListUpdate = new List<ServiceMedia>();
+        var serviceMediaListAdd = new List<ServiceMedia>();
+
         if (request.IndexCoverImagesChange?.Count > 0)
         {
-            var coverMediaToDelete = service.ServiceMedias?.Where(
-                x => x.ServiceMediaType == 0 &&
-                     request.IndexCoverImagesChange.Contains(x.IndexNumber) &&
-                     !x.IsDeleted).ToList();
-                
-            var coverMediaToUpdate = service.ServiceMedias?.Where(
-                x => x.ServiceMediaType == 0 &&
-                     !request.IndexCoverImagesChange.Contains(x.IndexNumber) &&
-                     !x.IsDeleted).ToList();
+            var coverMediaToDelete = service.ServiceMedias?.Where(x => x.ServiceMediaType == 0 &&
+                                                                       request.IndexCoverImagesChange.Contains(
+                                                                           x.IndexNumber) &&
+                                                                       !x.IsDeleted).ToList();
+
+            var coverMediaToUpdate = service.ServiceMedias?.Where(x => x.ServiceMediaType == 0 &&
+                                                                       !request.IndexCoverImagesChange.Contains(
+                                                                           x.IndexNumber) &&
+                                                                       !x.IsDeleted).ToList();
 
             if (coverMediaToUpdate != null && coverMediaToUpdate.Any())
             {
                 var updateCoverImages = coverMediaToUpdate.OrderBy(x => x.IndexNumber).ToList();
-                for (int i = 0; i < updateCoverImages.Count(); i++)
-                {
-                    updateCoverImages[i].IndexNumber = i;
-                }
-                
+                for (var i = 0; i < updateCoverImages.Count(); i++) updateCoverImages[i].IndexNumber = i;
+
                 serviceMediaList.AddRange(updateCoverImages);
                 serviceMediaListUpdate.AddRange(updateCoverImages);
             }
 
             if (coverMediaToDelete != null && coverMediaToDelete.Any())
             {
-                foreach (var item in coverMediaToDelete)
-                {
-                    item.IsDeleted = true;
-                }
-                
+                foreach (var item in coverMediaToDelete) item.IsDeleted = true;
+
                 serviceMediaListUpdate.AddRange(coverMediaToDelete);
             }
         }
-        
+
         if (request.CoverImages != null)
         {
             var coverImageFiles = request.CoverImages.Where(x => x.Name == "coverImages").ToList();
-            
+
             var coverImageUrls = await Task.WhenAll(coverImageFiles.Select(mediaService.UploadImageAsync));
 
             if (coverImageUrls.Any())
@@ -138,9 +132,9 @@ public class
                 }
                 else
                 {
-                    var oldImgages = service.ServiceMedias?.Where(
-                        x => x.ServiceMediaType == 0 && !x.IsDeleted).ToList();
-                    
+                    var oldImgages = service.ServiceMedias?.Where(x => x.ServiceMediaType == 0 && !x.IsDeleted)
+                        .ToList();
+
                     newCoverMedias = coverImageUrls.Select((x, idx) => new ServiceMedia
                     {
                         Id = Guid.NewGuid(),
@@ -150,18 +144,19 @@ public class
                         ServiceId = service.Id
                     }).ToList();
                 }
+
                 serviceMediaList.AddRange(newCoverMedias);
                 serviceMediaListAdd.AddRange(newCoverMedias);
             }
         }
-        
+
         // Update Service Media
         if (serviceMediaListUpdate.Any()) _serviceMediaRepository.UpdateRange(serviceMediaListUpdate);
         if (serviceMediaListAdd.Any()) _serviceMediaRepository.AddRange(serviceMediaListAdd);
 
         // Update Service
         serviceRepository.Update(service);
-        
+
         // Raise Event
         var trigger = TriggerOutbox.RaiseUpdateClinicServiceEvent(
             service.Id, service.Name, service.Description,
@@ -171,7 +166,7 @@ public class
         );
 
         triggerOutboxRepository.Add(trigger);
-        
+
         return Result.Success("Updated Clinic Services Successfully");
     }
 }

@@ -1,4 +1,4 @@
-﻿﻿﻿namespace BEAUTIFY_COMMAND.APPLICATION.UseCases.Commands.Clinics;
+﻿namespace BEAUTIFY_COMMAND.APPLICATION.UseCases.Commands.Clinics;
 internal sealed class ClinicDeleteAccountOfEmployeeCommandHandler(
     IRepositoryBase<Staff, Guid> staffRepository,
     IRepositoryBase<Clinic, Guid> clinicRepository,
@@ -16,7 +16,7 @@ internal sealed class ClinicDeleteAccountOfEmployeeCommandHandler(
 
         // Get the user's clinic directly from their UserClinics record
         var userClinic = user.UserClinics?.FirstOrDefault() ??
-                        throw new UserClinicException.UserClinicNotFoundException();
+                         throw new UserClinicException.UserClinicNotFoundException();
 
         // Check if the user has any future working schedules
         if (userClinic != null)
@@ -53,12 +53,10 @@ internal sealed class ClinicDeleteAccountOfEmployeeCommandHandler(
 
 
         var doctorService = await doctorServiceRepository.FindAll(x =>
-                x.DoctorId == request.UserId && x.Service.ClinicServices.FirstOrDefault().ClinicId == userClinic.ClinicId)
+                x.DoctorId == request.UserId &&
+                x.Service.ClinicServices.FirstOrDefault().ClinicId == userClinic.ClinicId)
             .ToListAsync(cancellationToken);
-        if (doctorService.Count != 0)
-        {
-            doctorServiceRepository.RemoveMultiple(doctorService);
-        }
+        if (doctorService.Count != 0) doctorServiceRepository.RemoveMultiple(doctorService);
 
         userClinic.RaiseDoctorFromClinicDeletedEvent(user.Id);
         return Result.Success();

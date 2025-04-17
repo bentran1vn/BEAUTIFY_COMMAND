@@ -17,9 +17,7 @@ public class CreateBookingCommandValidator : AbstractValidator<Commands.CreateBo
                 var now = TimeZoneInfo.ConvertTime(DateTime.Now,
                     TimeZoneInfo.FindSystemTimeZoneById("SE Asia Standard Time")).TimeOfDay;
                 if (command.BookingDate == DateOnly.FromDateTime(DateTime.Today))
-                {
                     return startTime > now.Add(TimeSpan.FromMinutes(120));
-                }
 
                 return true;
             })

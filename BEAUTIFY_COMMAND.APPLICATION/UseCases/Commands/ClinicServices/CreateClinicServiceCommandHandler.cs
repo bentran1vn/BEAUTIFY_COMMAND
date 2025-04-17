@@ -18,26 +18,24 @@ public class
 
         if (isCategoryExisted == null || isCategoryExisted.IsDeleted)
             return Result.Failure(new Error("404", "Category not found "));
-        
+
         var isClinicExisted = await clinicRepository.FindAll(x => request.ClinicId.Contains(x.Id))
             .ToListAsync(cancellationToken);
 
         if (isClinicExisted.Count != request.ClinicId.Count)
             return Result.Failure(new Error("404", "Clinic not found "));
-        
+
         var parentClinic = await clinicRepository
             .FindSingleAsync(x => x.Id == request.ParentId
                 , cancellationToken);
 
-        if (parentClinic == null || parentClinic.IsDeleted || parentClinic.ParentId != null || parentClinic.IsParent == false)
+        if (parentClinic == null || parentClinic.IsDeleted || parentClinic.ParentId != null ||
+            parentClinic.IsParent == false)
             return Result.Failure(new Error("404", "Clinic Parent not found "));
 
-        if (!parentClinic.IsActivated)
-        {
-            return Result.Failure(new Error("404", "Clinic Parent is not activated"));
-        }
-        
-        List<ServiceMedia> serviceMediaList = new List<ServiceMedia>();
+        if (!parentClinic.IsActivated) return Result.Failure(new Error("404", "Clinic Parent is not activated"));
+
+        var serviceMediaList = new List<ServiceMedia>();
 
         var coverImagesFilter = request.CoverImages.Where(x => x.Name.Equals("coverImages")).ToList();
 
@@ -78,7 +76,7 @@ public class
         serviceMediaRepository.AddRange(serviceMediaList);
 
         var trigger = TriggerOutbox.RaiseCreateClinicServiceEvent(
-            service.Id, service.Name, service.Description, parentClinic, medias.ToArray(), 
+            service.Id, service.Name, service.Description, parentClinic, medias.ToArray(),
             request.CategoryId, isCategoryExisted.Name, isCategoryExisted.Description ?? "", isClinicExisted
         );
 

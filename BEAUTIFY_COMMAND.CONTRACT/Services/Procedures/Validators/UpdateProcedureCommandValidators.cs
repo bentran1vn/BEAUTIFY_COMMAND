@@ -1,11 +1,10 @@
 namespace BEAUTIFY_COMMAND.CONTRACT.Services.Procedures.Validators;
-
 public class UpdateProcedureCommandValidators : AbstractValidator<Commands.UpdateProcedureCommand>
 {
     public UpdateProcedureCommandValidators()
     {
         RuleFor(x => x.ServiceId).NotEmpty();
-        
+
         RuleFor(x => x.ProcedureId).NotEmpty();
 
         RuleFor(x => x.StepIndex).NotEmpty();
@@ -21,8 +20,8 @@ public class UpdateProcedureCommandValidators : AbstractValidator<Commands.Updat
         RuleForEach(x => x.ProcedurePriceTypes)
             .SetValidator(new ProcedurePriceTypeValidator());
     }
-    
-    
+
+
     public class ProcedurePriceTypeValidator : AbstractValidator<Commands.ProcedurePriceType>
     {
         public ProcedurePriceTypeValidator()
@@ -40,4 +39,3 @@ public class UpdateProcedureCommandValidators : AbstractValidator<Commands.Updat
         }
     }
 }
-

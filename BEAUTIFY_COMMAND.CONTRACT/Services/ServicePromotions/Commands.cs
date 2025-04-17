@@ -32,7 +32,7 @@ public static class Commands
         public DateTime StartDay { get; set; }
         public DateTime EndDate { get; set; }
         public bool IsActivated { get; set; }
-    };
+    }
 
     public record UpdatePromotionServicesCommand(
         Guid ClinicId,

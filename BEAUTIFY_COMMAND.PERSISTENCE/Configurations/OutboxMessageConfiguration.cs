@@ -41,9 +41,9 @@ internal sealed class OutboxMessageConfiguration : IEntityTypeConfiguration<Outb
         var idHutMoBung = Guid.Parse("19191919-1919-1919-1919-191919191919");
         var idCangDaBung = Guid.Parse("20202020-2020-2020-2020-202020202020");
 
-        var categories = new List<Category>()
+        var categories = new List<Category>
         {
-            new Category
+            new()
             {
                 Id = idPhauThuatVungMat,
                 Name = "Phẫu Thuật Vùng Mặt",
@@ -51,7 +51,7 @@ internal sealed class OutboxMessageConfiguration : IEntityTypeConfiguration<Outb
                 IsParent = true,
                 ParentId = null
             },
-            new Category
+            new()
             {
                 Id = idPhauThuatVungNguc,
                 Name = "Phẫu Thuật Vùng Ngực",
@@ -59,7 +59,7 @@ internal sealed class OutboxMessageConfiguration : IEntityTypeConfiguration<Outb
                 IsParent = true,
                 ParentId = null
             },
-            new Category
+            new()
             {
                 Id = idPhauThuatVungBung,
                 Name = "Phẫu Thuật Vùng Bụng",
@@ -67,7 +67,7 @@ internal sealed class OutboxMessageConfiguration : IEntityTypeConfiguration<Outb
                 IsParent = true,
                 ParentId = null
             },
-            new Category
+            new()
             {
                 Id = idPhauThuatVungMong,
                 Name = "Phẫu Thuật Vùng Mông",
@@ -75,7 +75,7 @@ internal sealed class OutboxMessageConfiguration : IEntityTypeConfiguration<Outb
                 IsParent = true,
                 ParentId = null
             },
-            new Category
+            new()
             {
                 Id = idPhauThuatVungChan,
                 Name = "Phẫu Thuật Vùng Chân",
@@ -83,7 +83,7 @@ internal sealed class OutboxMessageConfiguration : IEntityTypeConfiguration<Outb
                 IsParent = true,
                 ParentId = null
             },
-            new Category
+            new()
             {
                 Id = idPhauThuatGiamCan,
                 Name = "Phẫu Thuật Giảm Cân",
@@ -91,7 +91,7 @@ internal sealed class OutboxMessageConfiguration : IEntityTypeConfiguration<Outb
                 IsParent = true,
                 ParentId = null
             },
-            new Category
+            new()
             {
                 Id = idPhauThuatTaoHinhCoThe,
                 Name = "Phẫu Thuật Tạo Hình Cơ Thể",
@@ -99,7 +99,7 @@ internal sealed class OutboxMessageConfiguration : IEntityTypeConfiguration<Outb
                 IsParent = true,
                 ParentId = null
             },
-            new Category
+            new()
             {
                 Id = idPhauThuatTaoHinhBoPhanSinhDuc,
                 Name = "Phẫu Thuật Tạo Hình Bộ Phận Sinh Dục",
@@ -107,7 +107,7 @@ internal sealed class OutboxMessageConfiguration : IEntityTypeConfiguration<Outb
                 IsParent = true,
                 ParentId = null
             },
-            new Category
+            new()
             {
                 Id = idPhauThuatTaoHinhDa,
                 Name = "Phẫu Thuật Tạo Hình Da",
@@ -115,7 +115,7 @@ internal sealed class OutboxMessageConfiguration : IEntityTypeConfiguration<Outb
                 IsParent = true,
                 ParentId = null
             },
-            new Category
+            new()
             {
                 Id = idPhauThuatTaoHinhTai,
                 Name = "Phẫu Thuật Tạo Hình Tai",
@@ -123,7 +123,7 @@ internal sealed class OutboxMessageConfiguration : IEntityTypeConfiguration<Outb
                 IsParent = true,
                 ParentId = null
             },
-            new Category
+            new()
             {
                 Id = idNangMui,
                 Name = "Nâng Mũi (Rhinoplasty)",
@@ -132,7 +132,7 @@ internal sealed class OutboxMessageConfiguration : IEntityTypeConfiguration<Outb
                 ParentId = idPhauThuatVungMat
             },
             // Danh mục con: Cắt mí mắt
-            new Category
+            new()
             {
                 Id = idCatMiMat,
                 Name = "Cắt Mí Mắt (Blepharoplasty)",
@@ -141,7 +141,7 @@ internal sealed class OutboxMessageConfiguration : IEntityTypeConfiguration<Outb
                 ParentId = idPhauThuatVungMat
             },
             // Danh mục con: Nâng cung mày
-            new Category
+            new()
             {
                 Id = idNangCungMay,
                 Name = "Nâng Cung Mày (Brow Lift)",
@@ -150,7 +150,7 @@ internal sealed class OutboxMessageConfiguration : IEntityTypeConfiguration<Outb
                 ParentId = idPhauThuatVungMat
             },
             // Danh mục con: Độn cằm
-            new Category
+            new()
             {
                 Id = idDonCam,
                 Name = "Độn Cằm (Chin Augmentation)",
@@ -159,7 +159,7 @@ internal sealed class OutboxMessageConfiguration : IEntityTypeConfiguration<Outb
                 ParentId = idPhauThuatVungMat
             },
             // Danh mục con: Hút mỡ mặt
-            new Category
+            new()
             {
                 Id = idHutMoMat,
                 Name = "Hút Mỡ Mặt",
@@ -167,7 +167,7 @@ internal sealed class OutboxMessageConfiguration : IEntityTypeConfiguration<Outb
                 IsParent = false,
                 ParentId = idPhauThuatVungMat
             },
-            new Category
+            new()
             {
                 Id = idNangNguc,
                 Name = "Nâng Ngực (Breast Augmentation)",
@@ -176,7 +176,7 @@ internal sealed class OutboxMessageConfiguration : IEntityTypeConfiguration<Outb
                 ParentId = idPhauThuatVungNguc
             },
             // Danh mục con: Thu nhỏ ngực
-            new Category
+            new()
             {
                 Id = idThuNhoNguc,
                 Name = "Thu Nhỏ Ngực (Breast Reduction)",
@@ -185,7 +185,7 @@ internal sealed class OutboxMessageConfiguration : IEntityTypeConfiguration<Outb
                 ParentId = idPhauThuatVungNguc
             },
             // Danh mục con: Hút mỡ bụng
-            new Category
+            new()
             {
                 Id = idHutMoBung,
                 Name = "Hút Mỡ Bụng",
@@ -194,7 +194,7 @@ internal sealed class OutboxMessageConfiguration : IEntityTypeConfiguration<Outb
                 ParentId = idPhauThuatVungBung
             },
             // Danh mục con: Căng da bụng
-            new Category
+            new()
             {
                 Id = idCangDaBung,
                 Name = "Căng Da Bụng",
@@ -226,10 +226,10 @@ internal sealed class OutboxMessageConfiguration : IEntityTypeConfiguration<Outb
         var idSCDN_Service4 = Guid.Parse("c4d3d799-3f62-4a2f-b6b5-3d05b7e1f2a3");
         var idSCDN_Service5 = Guid.Parse("c5d3d799-3f62-4a2f-b6b5-3d05b7e1f2a3");
 
-        var services = new List<Service>()
+        var services = new List<Service>
         {
             // Beauty Center Sài Gòn Services (5 services)
-            new Service
+            new()
             {
                 Id = idBCSG_Service1,
                 Name = "Nâng Mũi Cấu Trúc S-Line Premium",
@@ -239,9 +239,9 @@ internal sealed class OutboxMessageConfiguration : IEntityTypeConfiguration<Outb
                 MinPrice = 30000000,
                 CategoryId = idNangMui,
                 DepositPercent = 0,
-                IsRefundable = false,
+                IsRefundable = false
             },
-            new Service
+            new()
             {
                 Id = idBCSG_Service2,
                 Name = "Cắt Mí Mắt Plasma Luxury",
@@ -251,9 +251,9 @@ internal sealed class OutboxMessageConfiguration : IEntityTypeConfiguration<Outb
                 MinPrice = 12000000,
                 CategoryId = idCatMiMat,
                 DepositPercent = 0,
-                IsRefundable = false,
+                IsRefundable = false
             },
-            new Service
+            new()
             {
                 Id = idBCSG_Service3,
                 Name = "Nâng Ngực Túi Độn Mentor",
@@ -263,9 +263,9 @@ internal sealed class OutboxMessageConfiguration : IEntityTypeConfiguration<Outb
                 MinPrice = 65000000,
                 CategoryId = idNangNguc,
                 DepositPercent = 0,
-                IsRefundable = false,
+                IsRefundable = false
             },
-            new Service
+            new()
             {
                 Id = idBCSG_Service4,
                 Name = "Độn Cằm V-Line Hàn Quốc",
@@ -275,9 +275,9 @@ internal sealed class OutboxMessageConfiguration : IEntityTypeConfiguration<Outb
                 MinPrice = 25000000,
                 CategoryId = idDonCam,
                 DepositPercent = 0,
-                IsRefundable = false,
+                IsRefundable = false
             },
-            new Service
+            new()
             {
                 Id = idBCSG_Service5,
                 Name = "Hút Mỡ Bụng VASER Lipo",
@@ -287,11 +287,11 @@ internal sealed class OutboxMessageConfiguration : IEntityTypeConfiguration<Outb
                 MinPrice = 35000000,
                 CategoryId = idHutMoBung,
                 DepositPercent = 0,
-                IsRefundable = false,
+                IsRefundable = false
             },
 
             // Hanoi Beauty Spa Services (5 services)
-            new Service
+            new()
             {
                 Id = idHBS_Service1,
                 Name = "Nâng Mũi Bio-Silicon Elite",
@@ -301,9 +301,9 @@ internal sealed class OutboxMessageConfiguration : IEntityTypeConfiguration<Outb
                 MinPrice = 35000000,
                 CategoryId = idNangMui,
                 DepositPercent = 0,
-                IsRefundable = false,
+                IsRefundable = false
             },
-            new Service
+            new()
             {
                 Id = idHBS_Service2,
                 Name = "Cắt Mí Mắt Hàn Quốc Không Sẹo",
@@ -313,9 +313,9 @@ internal sealed class OutboxMessageConfiguration : IEntityTypeConfiguration<Outb
                 MinPrice = 15000000,
                 CategoryId = idCatMiMat,
                 DepositPercent = 0,
-                IsRefundable = false,
+                IsRefundable = false
             },
-            new Service
+            new()
             {
                 Id = idHBS_Service3,
                 Name = "Nâng Cung Mày Siêu Âm Hifu",
@@ -325,9 +325,9 @@ internal sealed class OutboxMessageConfiguration : IEntityTypeConfiguration<Outb
                 MinPrice = 8000000,
                 CategoryId = idNangCungMay,
                 DepositPercent = 0,
-                IsRefundable = false,
+                IsRefundable = false
             },
-            new Service
+            new()
             {
                 Id = idHBS_Service4,
                 Name = "Thu Nhỏ Ngực Vertical Short-Scar",
@@ -337,9 +337,9 @@ internal sealed class OutboxMessageConfiguration : IEntityTypeConfiguration<Outb
                 MinPrice = 50000000,
                 CategoryId = idThuNhoNguc,
                 DepositPercent = 0,
-                IsRefundable = false,
+                IsRefundable = false
             },
-            new Service
+            new()
             {
                 Id = idHBS_Service5,
                 Name = "Hút Mỡ Mặt Precision",
@@ -349,11 +349,11 @@ internal sealed class OutboxMessageConfiguration : IEntityTypeConfiguration<Outb
                 MinPrice = 18000000,
                 CategoryId = idHutMoMat,
                 DepositPercent = 0,
-                IsRefundable = false,
+                IsRefundable = false
             },
 
             // Skin Care Đà Nẵng Services (5 services)
-            new Service
+            new()
             {
                 Id = idSCDN_Service1,
                 Name = "Nâng Mũi Cấu Trúc Hybrid",
@@ -363,9 +363,9 @@ internal sealed class OutboxMessageConfiguration : IEntityTypeConfiguration<Outb
                 MinPrice = 40000000,
                 CategoryId = idNangMui,
                 DepositPercent = 0,
-                IsRefundable = false,
+                IsRefundable = false
             },
-            new Service
+            new()
             {
                 Id = idSCDN_Service2,
                 Name = "Nâng Ngực Nội Soi Ergonomix",
@@ -375,9 +375,9 @@ internal sealed class OutboxMessageConfiguration : IEntityTypeConfiguration<Outb
                 MinPrice = 70000000,
                 CategoryId = idNangNguc,
                 DepositPercent = 0,
-                IsRefundable = false,
+                IsRefundable = false
             },
-            new Service
+            new()
             {
                 Id = idSCDN_Service3,
                 Name = "Hút Mỡ Bụng 3D Hi-Definition",
@@ -387,9 +387,9 @@ internal sealed class OutboxMessageConfiguration : IEntityTypeConfiguration<Outb
                 MinPrice = 45000000,
                 CategoryId = idHutMoBung,
                 DepositPercent = 0,
-                IsRefundable = false,
+                IsRefundable = false
             },
-            new Service
+            new()
             {
                 Id = idSCDN_Service4,
                 Name = "Cắt Mí Mắt Plasma Tech",
@@ -399,9 +399,9 @@ internal sealed class OutboxMessageConfiguration : IEntityTypeConfiguration<Outb
                 MinPrice = 15000000,
                 CategoryId = idCatMiMat,
                 DepositPercent = 0,
-                IsRefundable = false,
+                IsRefundable = false
             },
-            new Service
+            new()
             {
                 Id = idSCDN_Service5,
                 Name = "Độn Cằm 3D Crystal",
@@ -411,14 +411,14 @@ internal sealed class OutboxMessageConfiguration : IEntityTypeConfiguration<Outb
                 MinPrice = 25000000,
                 CategoryId = idDonCam,
                 DepositPercent = 0,
-                IsRefundable = false,
+                IsRefundable = false
             }
         };
 
         var clinics = new List<Clinic>
         {
             // Main Clinics (3) - one for each Clinic Admin
-            new Clinic
+            new()
             {
                 Id = new Guid("78705cfa-7097-408f-93e2-70950fc886a3"),
                 Name = "Beauty Center Sài Gòn",
@@ -437,7 +437,7 @@ internal sealed class OutboxMessageConfiguration : IEntityTypeConfiguration<Outb
                 BankName = "Vietcombank",
                 BankAccountNumber = "1234567890123"
             },
-            new Clinic
+            new()
             {
                 Id = new Guid("a96d68d9-3f28-48f3-add5-a74a6b882e93"),
                 Name = "Hanoi Beauty Spa",
@@ -456,7 +456,7 @@ internal sealed class OutboxMessageConfiguration : IEntityTypeConfiguration<Outb
                 BankName = "BIDV",
                 BankAccountNumber = "2345678901234"
             },
-            new Clinic
+            new()
             {
                 Id = new Guid("e5a759cd-af8d-4a1c-8c05-43cc2c95e067"),
                 Name = "Skin Care Đà Nẵng",
@@ -477,7 +477,7 @@ internal sealed class OutboxMessageConfiguration : IEntityTypeConfiguration<Outb
             },
 
             // Sub Clinics for Beauty Center Sài Gòn
-            new Clinic
+            new()
             {
                 Id = new Guid("c0b7058f-8e72-4dee-8742-0df6206d1843"),
                 Name = "Beauty Center Sài Gòn - Chi nhánh Quận 1",
@@ -496,7 +496,7 @@ internal sealed class OutboxMessageConfiguration : IEntityTypeConfiguration<Outb
                 BankName = "Vietcombank",
                 BankAccountNumber = "1234567890124"
             },
-            new Clinic
+            new()
             {
                 Id = new Guid("6e7e4870-d28d-4a2d-9d0f-9e29f2930fc5"),
                 Name = "Beauty Center Sài Gòn - Chi nhánh Quận 3",
@@ -517,7 +517,7 @@ internal sealed class OutboxMessageConfiguration : IEntityTypeConfiguration<Outb
             },
 
             // Sub Clinics for Hanoi Beauty Spa
-            new Clinic
+            new()
             {
                 Id = new Guid("f3e6a7ca-28f9-4c7b-a190-c065cecf7be3"),
                 Name = "Hanoi Beauty Spa - Chi nhánh Đống Đa",
@@ -536,7 +536,7 @@ internal sealed class OutboxMessageConfiguration : IEntityTypeConfiguration<Outb
                 BankName = "BIDV",
                 BankAccountNumber = "2345678901235"
             },
-            new Clinic
+            new()
             {
                 Id = new Guid("c96de07e-32d7-41d5-b417-060cd95ee7ff"),
                 Name = "Hanoi Beauty Spa - Chi nhánh Cầu Giấy",
@@ -557,7 +557,7 @@ internal sealed class OutboxMessageConfiguration : IEntityTypeConfiguration<Outb
             },
 
             // Sub Clinics for Skin Care Đà Nẵng
-            new Clinic
+            new()
             {
                 Id = new Guid("3c8b8f3d-2f3f-4b17-9b46-0517c0183a50"),
                 Name = "Skin Care Đà Nẵng - Chi nhánh Hải Châu",
@@ -576,7 +576,7 @@ internal sealed class OutboxMessageConfiguration : IEntityTypeConfiguration<Outb
                 BankName = "Agribank",
                 BankAccountNumber = "3456789012346"
             },
-            new Clinic
+            new()
             {
                 Id = new Guid("6ed1aefc-863e-4f2e-9c24-83eec7c0181c"),
                 Name = "Skin Care Đà Nẵng - Chi nhánh Sơn Trà",
@@ -611,198 +611,198 @@ internal sealed class OutboxMessageConfiguration : IEntityTypeConfiguration<Outb
         var idSCDN_HC = Guid.Parse("3c8b8f3d-2f3f-4b17-9b46-0517c0183a50"); // Skin Care Đà Nẵng - Chi nhánh Hải Châu
         var idSCDN_ST = Guid.Parse("6ed1aefc-863e-4f2e-9c24-83eec7c0181c"); // Skin Care Đà Nẵng - Chi nhánh Sơn Trà
 
-        var clinicServices = new List<ClinicService>()
+        var clinicServices = new List<ClinicService>
         {
             // Beauty Center Sài Gòn Services at Chi nhánh Quận 1
-            new ClinicService()
+            new()
             {
                 Id = Guid.Parse("a1000001-a000-4000-a000-000000000001"),
                 ServiceId = idBCSG_Service1,
-                ClinicId = idBCSG_Q1,
+                ClinicId = idBCSG_Q1
             },
-            new ClinicService()
+            new()
             {
                 Id = Guid.Parse("a1000002-a000-4000-a000-000000000002"),
                 ServiceId = idBCSG_Service2,
-                ClinicId = idBCSG_Q1,
+                ClinicId = idBCSG_Q1
             },
-            new ClinicService()
+            new()
             {
                 Id = Guid.Parse("a1000003-a000-4000-a000-000000000003"),
                 ServiceId = idBCSG_Service3,
-                ClinicId = idBCSG_Q1,
+                ClinicId = idBCSG_Q1
             },
-            new ClinicService()
+            new()
             {
                 Id = Guid.Parse("a1000004-a000-4000-a000-000000000004"),
                 ServiceId = idBCSG_Service4,
-                ClinicId = idBCSG_Q1,
+                ClinicId = idBCSG_Q1
             },
-            new ClinicService()
+            new()
             {
                 Id = Guid.Parse("a1000005-a000-4000-a000-000000000005"),
                 ServiceId = idBCSG_Service5,
-                ClinicId = idBCSG_Q1,
+                ClinicId = idBCSG_Q1
             },
 
             // Beauty Center Sài Gòn Services at Chi nhánh Quận 3
-            new ClinicService()
+            new()
             {
                 Id = Guid.Parse("a3000001-a000-4000-a000-000000000001"),
                 ServiceId = idBCSG_Service1,
-                ClinicId = idBCSG_Q3,
+                ClinicId = idBCSG_Q3
             },
-            new ClinicService()
+            new()
             {
                 Id = Guid.Parse("a3000002-a000-4000-a000-000000000002"),
                 ServiceId = idBCSG_Service2,
-                ClinicId = idBCSG_Q3,
+                ClinicId = idBCSG_Q3
             },
-            new ClinicService()
+            new()
             {
                 Id = Guid.Parse("a3000003-a000-4000-a000-000000000003"),
                 ServiceId = idBCSG_Service3,
-                ClinicId = idBCSG_Q3,
+                ClinicId = idBCSG_Q3
             },
-            new ClinicService()
+            new()
             {
                 Id = Guid.Parse("a3000004-a000-4000-a000-000000000004"),
                 ServiceId = idBCSG_Service4,
-                ClinicId = idBCSG_Q3,
+                ClinicId = idBCSG_Q3
             },
-            new ClinicService()
+            new()
             {
                 Id = Guid.Parse("a3000005-a000-4000-a000-000000000005"),
                 ServiceId = idBCSG_Service5,
-                ClinicId = idBCSG_Q3,
+                ClinicId = idBCSG_Q3
             },
 
             // Hanoi Beauty Spa Services at Chi nhánh Đống Đa
-            new ClinicService()
+            new()
             {
                 Id = Guid.Parse("b1000001-b000-4000-b000-000000000001"),
                 ServiceId = idHBS_Service1,
-                ClinicId = idHBS_DD,
+                ClinicId = idHBS_DD
             },
-            new ClinicService()
+            new()
             {
                 Id = Guid.Parse("b1000002-b000-4000-b000-000000000002"),
                 ServiceId = idHBS_Service2,
-                ClinicId = idHBS_DD,
+                ClinicId = idHBS_DD
             },
-            new ClinicService()
+            new()
             {
                 Id = Guid.Parse("b1000003-b000-4000-b000-000000000003"),
                 ServiceId = idHBS_Service3,
-                ClinicId = idHBS_DD,
+                ClinicId = idHBS_DD
             },
-            new ClinicService()
+            new()
             {
                 Id = Guid.Parse("b1000004-b000-4000-b000-000000000004"),
                 ServiceId = idHBS_Service4,
-                ClinicId = idHBS_DD,
+                ClinicId = idHBS_DD
             },
-            new ClinicService()
+            new()
             {
                 Id = Guid.Parse("b1000005-b000-4000-b000-000000000005"),
                 ServiceId = idHBS_Service5,
-                ClinicId = idHBS_DD,
+                ClinicId = idHBS_DD
             },
 
             // Hanoi Beauty Spa Services at Chi nhánh Cầu Giấy
-            new ClinicService()
+            new()
             {
                 Id = Guid.Parse("b2000001-b000-4000-b000-000000000001"),
                 ServiceId = idHBS_Service1,
-                ClinicId = idHBS_CG,
+                ClinicId = idHBS_CG
             },
-            new ClinicService()
+            new()
             {
                 Id = Guid.Parse("b2000002-b000-4000-b000-000000000002"),
                 ServiceId = idHBS_Service2,
-                ClinicId = idHBS_CG,
+                ClinicId = idHBS_CG
             },
-            new ClinicService()
+            new()
             {
                 Id = Guid.Parse("b2000003-b000-4000-b000-000000000003"),
                 ServiceId = idHBS_Service3,
-                ClinicId = idHBS_CG,
+                ClinicId = idHBS_CG
             },
-            new ClinicService()
+            new()
             {
                 Id = Guid.Parse("b2000004-b000-4000-b000-000000000004"),
                 ServiceId = idHBS_Service4,
-                ClinicId = idHBS_CG,
+                ClinicId = idHBS_CG
             },
-            new ClinicService()
+            new()
             {
                 Id = Guid.Parse("b2000005-b000-4000-b000-000000000005"),
                 ServiceId = idHBS_Service5,
-                ClinicId = idHBS_CG,
+                ClinicId = idHBS_CG
             },
 
             // Skin Care Đà Nẵng Services at Chi nhánh Hải Châu
-            new ClinicService()
+            new()
             {
                 Id = Guid.Parse("c1000001-c000-4000-c000-000000000001"),
                 ServiceId = idSCDN_Service1,
-                ClinicId = idSCDN_HC,
+                ClinicId = idSCDN_HC
             },
-            new ClinicService()
+            new()
             {
                 Id = Guid.Parse("c1000002-c000-4000-c000-000000000002"),
                 ServiceId = idSCDN_Service2,
-                ClinicId = idSCDN_HC,
+                ClinicId = idSCDN_HC
             },
-            new ClinicService()
+            new()
             {
                 Id = Guid.Parse("c1000003-c000-4000-c000-000000000003"),
                 ServiceId = idSCDN_Service3,
-                ClinicId = idSCDN_HC,
+                ClinicId = idSCDN_HC
             },
-            new ClinicService()
+            new()
             {
                 Id = Guid.Parse("c1000004-c000-4000-c000-000000000004"),
                 ServiceId = idSCDN_Service4,
-                ClinicId = idSCDN_HC,
+                ClinicId = idSCDN_HC
             },
-            new ClinicService()
+            new()
             {
                 Id = Guid.Parse("c1000005-c000-4000-c000-000000000005"),
                 ServiceId = idSCDN_Service5,
-                ClinicId = idSCDN_HC,
+                ClinicId = idSCDN_HC
             },
 
             // Skin Care Đà Nẵng Services at Chi nhánh Sơn Trà
-            new ClinicService()
+            new()
             {
                 Id = Guid.Parse("c2000001-c000-4000-c000-000000000001"),
                 ServiceId = idSCDN_Service1,
-                ClinicId = idSCDN_ST,
+                ClinicId = idSCDN_ST
             },
-            new ClinicService()
+            new()
             {
                 Id = Guid.Parse("c2000002-c000-4000-c000-000000000002"),
                 ServiceId = idSCDN_Service2,
-                ClinicId = idSCDN_ST,
+                ClinicId = idSCDN_ST
             },
-            new ClinicService()
+            new()
             {
                 Id = Guid.Parse("c2000003-c000-4000-c000-000000000003"),
                 ServiceId = idSCDN_Service3,
-                ClinicId = idSCDN_ST,
+                ClinicId = idSCDN_ST
             },
-            new ClinicService()
+            new()
             {
                 Id = Guid.Parse("c2000004-c000-4000-c000-000000000004"),
                 ServiceId = idSCDN_Service4,
-                ClinicId = idSCDN_ST,
+                ClinicId = idSCDN_ST
             },
-            new ClinicService()
+            new()
             {
                 Id = Guid.Parse("c2000005-c000-4000-c000-000000000005"),
                 ServiceId = idSCDN_Service5,
-                ClinicId = idSCDN_ST,
+                ClinicId = idSCDN_ST
             }
         };
 
@@ -903,627 +903,627 @@ internal sealed class OutboxMessageConfiguration : IEntityTypeConfiguration<Outb
         var idSCDN_S5_P3 = Guid.Parse("c5d3d799-1003-4a2f-b6b5-3d05b7e1f2a3");
         var idSCDN_S5_P4 = Guid.Parse("c5d3d799-1004-4a2f-b6b5-3d05b7e1f2a3");
 
-        var procedures = new List<Procedure>()
+        var procedures = new List<Procedure>
         {
             // Beauty Center Sài Gòn Service 1 - Nâng Mũi Cấu Trúc S-Line Premium
-            new Procedure
+            new()
             {
                 Id = idBCSG_S1_P1,
                 Name = "Tư vấn và thiết kế dáng mũi 3D",
                 Description = "Bác sĩ phân tích cấu trúc khuôn mặt, thiết kế dáng mũi 3D phù hợp với từng khách hàng.",
                 StepIndex = 1,
-                ServiceId = idBCSG_Service1,
+                ServiceId = idBCSG_Service1
             },
-            new Procedure
+            new()
             {
                 Id = idBCSG_S1_P2,
                 Name = "Kiểm tra sức khỏe và chuẩn bị tiền phẫu",
                 Description =
                     "Thăm khám, kiểm tra tổng quát, chụp X-quang, xét nghiệm máu và đánh giá tính khả thi của phẫu thuật.",
                 StepIndex = 2,
-                ServiceId = idBCSG_Service1,
+                ServiceId = idBCSG_Service1
             },
-            new Procedure
+            new()
             {
                 Id = idBCSG_S1_P3,
                 Name = "Phẫu thuật nâng mũi cấu trúc S-Line",
                 Description =
                     "Thực hiện phẫu thuật với kỹ thuật cấu trúc S-Line, sử dụng sụn tự thân kết hợp sụn nhân tạo cao cấp.",
                 StepIndex = 3,
-                ServiceId = idBCSG_Service1,
+                ServiceId = idBCSG_Service1
             },
-            new Procedure
+            new()
             {
                 Id = idBCSG_S1_P4,
                 Name = "Theo dõi hậu phẫu 24h",
                 Description =
                     "Theo dõi tình trạng hậu phẫu 24h tại phòng hồi sức với sự chăm sóc của đội ngũ y tá chuyên nghiệp.",
                 StepIndex = 4,
-                ServiceId = idBCSG_Service1,
+                ServiceId = idBCSG_Service1
             },
-            new Procedure
+            new()
             {
                 Id = idBCSG_S1_P5,
                 Name = "Chăm sóc và tái khám sau phẫu thuật",
                 Description =
                     "Lịch tái khám định kỳ, hướng dẫn chăm sóc hậu phẫu và can thiệp kịp thời nếu có biến chứng.",
                 StepIndex = 5,
-                ServiceId = idBCSG_Service1,
+                ServiceId = idBCSG_Service1
             },
 
             // Beauty Center Sài Gòn Service 2 - Cắt Mí Mắt Plasma Luxury
-            new Procedure
+            new()
             {
                 Id = idBCSG_S2_P1,
                 Name = "Tư vấn và thiết kế mí mắt",
                 Description =
                     "Bác sĩ phân tích đặc điểm mắt và khuôn mặt, thiết kế đường mí phù hợp với từng khách hàng.",
                 StepIndex = 1,
-                ServiceId = idBCSG_Service2,
+                ServiceId = idBCSG_Service2
             },
-            new Procedure
+            new()
             {
                 Id = idBCSG_S2_P2,
                 Name = "Kiểm tra trước phẫu thuật",
                 Description =
                     "Kiểm tra sức khỏe tổng quát, thực hiện các xét nghiệm cần thiết để đảm bảo an toàn cho khách hàng.",
                 StepIndex = 2,
-                ServiceId = idBCSG_Service2,
+                ServiceId = idBCSG_Service2
             },
-            new Procedure
+            new()
             {
                 Id = idBCSG_S2_P3,
                 Name = "Phẫu thuật cắt mí bằng công nghệ Plasma",
                 Description =
                     "Thực hiện phẫu thuật với công nghệ Plasma không chạm, tạo đường mí tự nhiên, giảm thiểu chảy máu và đau đớn.",
                 StepIndex = 3,
-                ServiceId = idBCSG_Service2,
+                ServiceId = idBCSG_Service2
             },
-            new Procedure
+            new()
             {
                 Id = idBCSG_S2_P4,
                 Name = "Chăm sóc và tái khám sau phẫu thuật",
                 Description = "Lịch tái khám định kỳ, hướng dẫn chăm sóc vết mổ và theo dõi quá trình hồi phục.",
                 StepIndex = 4,
-                ServiceId = idBCSG_Service2,
+                ServiceId = idBCSG_Service2
             },
 
             // Beauty Center Sài Gòn Service 3 - Nâng Ngực Túi Độn Mentor
-            new Procedure
+            new()
             {
                 Id = idBCSG_S3_P1,
                 Name = "Tư vấn và lựa chọn kích thước túi ngực",
                 Description =
                     "Bác sĩ phân tích cấu trúc cơ thể, tư vấn và giúp khách hàng lựa chọn kích thước túi ngực phù hợp.",
                 StepIndex = 1,
-                ServiceId = idBCSG_Service3,
+                ServiceId = idBCSG_Service3
             },
-            new Procedure
+            new()
             {
                 Id = idBCSG_S3_P2,
                 Name = "Kiểm tra sức khỏe và chuẩn bị tiền phẫu",
                 Description =
                     "Thăm khám, kiểm tra tổng quát, chụp X-quang ngực, xét nghiệm máu và đánh giá tính khả thi của phẫu thuật.",
                 StepIndex = 2,
-                ServiceId = idBCSG_Service3,
+                ServiceId = idBCSG_Service3
             },
-            new Procedure
+            new()
             {
                 Id = idBCSG_S3_P3,
                 Name = "Phẫu thuật nâng ngực nội soi với túi Mentor",
                 Description =
                     "Thực hiện phẫu thuật nâng ngực bằng kỹ thuật nội soi, đặt túi độn Mentor được FDA Hoa Kỳ chứng nhận.",
                 StepIndex = 3,
-                ServiceId = idBCSG_Service3,
+                ServiceId = idBCSG_Service3
             },
-            new Procedure
+            new()
             {
                 Id = idBCSG_S3_P4,
                 Name = "Theo dõi hậu phẫu 48h",
                 Description =
                     "Theo dõi tình trạng hậu phẫu 48h tại phòng hồi sức với sự chăm sóc của đội ngũ y tá chuyên nghiệp.",
                 StepIndex = 4,
-                ServiceId = idBCSG_Service3,
+                ServiceId = idBCSG_Service3
             },
-            new Procedure
+            new()
             {
                 Id = idBCSG_S3_P5,
                 Name = "Chăm sóc và tái khám sau phẫu thuật",
                 Description =
                     "Lịch tái khám định kỳ, hướng dẫn chăm sóc hậu phẫu và theo dõi quá trình hồi phục dài hạn.",
                 StepIndex = 5,
-                ServiceId = idBCSG_Service3,
+                ServiceId = idBCSG_Service3
             },
 
             // Beauty Center Sài Gòn Service 4 - Độn Cằm V-Line Hàn Quốc
-            new Procedure
+            new()
             {
                 Id = idBCSG_S4_P1,
                 Name = "Tư vấn và thiết kế đường cằm V-Line",
                 Description =
                     "Bác sĩ phân tích cấu trúc khuôn mặt, thiết kế đường cằm V-Line phù hợp với từng khách hàng.",
                 StepIndex = 1,
-                ServiceId = idBCSG_Service4,
+                ServiceId = idBCSG_Service4
             },
-            new Procedure
+            new()
             {
                 Id = idBCSG_S4_P2,
                 Name = "Kiểm tra sức khỏe và chuẩn bị tiền phẫu",
                 Description =
                     "Thăm khám, kiểm tra tổng quát, chụp X-quang hàm mặt, xét nghiệm máu và đánh giá tính khả thi của phẫu thuật.",
                 StepIndex = 2,
-                ServiceId = idBCSG_Service4,
+                ServiceId = idBCSG_Service4
             },
-            new Procedure
+            new()
             {
                 Id = idBCSG_S4_P3,
                 Name = "Phẫu thuật độn cằm V-Line",
                 Description =
                     "Thực hiện phẫu thuật với kỹ thuật V-Line của Hàn Quốc, tạo đường cằm thanh thoát, cân đối với khuôn mặt.",
                 StepIndex = 3,
-                ServiceId = idBCSG_Service4,
+                ServiceId = idBCSG_Service4
             },
-            new Procedure
+            new()
             {
                 Id = idBCSG_S4_P4,
                 Name = "Chăm sóc và tái khám sau phẫu thuật",
                 Description = "Lịch tái khám định kỳ, hướng dẫn chăm sóc hậu phẫu và theo dõi quá trình hồi phục.",
                 StepIndex = 4,
-                ServiceId = idBCSG_Service4,
+                ServiceId = idBCSG_Service4
             },
 
             // Beauty Center Sài Gòn Service 5 - Hút Mỡ Bụng VASER Lipo
-            new Procedure
+            new()
             {
                 Id = idBCSG_S5_P1,
                 Name = "Tư vấn và đánh giá vùng mỡ bụng",
                 Description =
                     "Bác sĩ đánh giá tình trạng mỡ bụng, vẽ và đánh dấu vùng cần hút mỡ phù hợp với từng khách hàng.",
                 StepIndex = 1,
-                ServiceId = idBCSG_Service5,
+                ServiceId = idBCSG_Service5
             },
-            new Procedure
+            new()
             {
                 Id = idBCSG_S5_P2,
                 Name = "Kiểm tra sức khỏe và chuẩn bị tiền phẫu",
                 Description =
                     "Thăm khám, kiểm tra tổng quát, xét nghiệm máu, đo chỉ số BMI và đánh giá tính khả thi của phẫu thuật.",
                 StepIndex = 2,
-                ServiceId = idBCSG_Service5,
+                ServiceId = idBCSG_Service5
             },
-            new Procedure
+            new()
             {
                 Id = idBCSG_S5_P3,
                 Name = "Phẫu thuật hút mỡ bụng bằng công nghệ VASER Lipo",
                 Description =
                     "Thực hiện phẫu thuật hút mỡ siêu âm VASER Lipo, loại bỏ mỡ thừa vùng bụng một cách chọn lọc.",
                 StepIndex = 3,
-                ServiceId = idBCSG_Service5,
+                ServiceId = idBCSG_Service5
             },
-            new Procedure
+            new()
             {
                 Id = idBCSG_S5_P4,
                 Name = "Massage định hình sau phẫu thuật",
                 Description =
                     "Thực hiện liệu trình massage định hình vùng bụng sau hút mỡ, giúp làm săn chắc da và đều màu.",
                 StepIndex = 4,
-                ServiceId = idBCSG_Service5,
+                ServiceId = idBCSG_Service5
             },
-            new Procedure
+            new()
             {
                 Id = idBCSG_S5_P5,
                 Name = "Chăm sóc và tái khám sau phẫu thuật",
                 Description = "Lịch tái khám định kỳ, hướng dẫn chăm sóc hậu phẫu và theo dõi quá trình hồi phục.",
                 StepIndex = 5,
-                ServiceId = idBCSG_Service5,
+                ServiceId = idBCSG_Service5
             },
 
             // Hanoi Beauty Spa Service 1 - Nâng Mũi Bio-Silicon Elite
-            new Procedure
+            new()
             {
                 Id = idHBS_S1_P1,
                 Name = "Tư vấn và thiết kế dáng mũi",
                 Description = "Bác sĩ phân tích cấu trúc khuôn mặt, thiết kế dáng mũi phù hợp với từng khách hàng.",
                 StepIndex = 1,
-                ServiceId = idHBS_Service1,
+                ServiceId = idHBS_Service1
             },
-            new Procedure
+            new()
             {
                 Id = idHBS_S1_P2,
                 Name = "Kiểm tra sức khỏe và chuẩn bị tiền phẫu",
                 Description = "Thăm khám, kiểm tra tổng quát, xét nghiệm máu và đánh giá tính khả thi của phẫu thuật.",
                 StepIndex = 2,
-                ServiceId = idHBS_Service1,
+                ServiceId = idHBS_Service1
             },
-            new Procedure
+            new()
             {
                 Id = idHBS_S1_P3,
                 Name = "Phẫu thuật nâng mũi với Bio-Silicon Elite",
                 Description =
                     "Thực hiện phẫu thuật với vật liệu Bio-Silicon cao cấp, kết hợp sụn tự thân để tạo dáng mũi tự nhiên.",
                 StepIndex = 3,
-                ServiceId = idHBS_Service1,
+                ServiceId = idHBS_Service1
             },
-            new Procedure
+            new()
             {
                 Id = idHBS_S1_P4,
                 Name = "Chăm sóc và tái khám sau phẫu thuật",
                 Description = "Lịch tái khám định kỳ, hướng dẫn chăm sóc hậu phẫu và theo dõi quá trình hồi phục.",
                 StepIndex = 4,
-                ServiceId = idHBS_Service1,
+                ServiceId = idHBS_Service1
             },
 
             // Hanoi Beauty Spa Service 2 - Cắt Mí Mắt Hàn Quốc Không Sẹo
-            new Procedure
+            new()
             {
                 Id = idHBS_S2_P1,
                 Name = "Tư vấn và thiết kế đường mí",
                 Description =
                     "Bác sĩ phân tích đặc điểm mắt và khuôn mặt, thiết kế đường mí phù hợp theo công nghệ Hàn Quốc.",
                 StepIndex = 1,
-                ServiceId = idHBS_Service2,
+                ServiceId = idHBS_Service2
             },
-            new Procedure
+            new()
             {
                 Id = idHBS_S2_P2,
                 Name = "Kiểm tra trước phẫu thuật",
                 Description =
                     "Kiểm tra sức khỏe tổng quát, thực hiện các xét nghiệm cần thiết để đảm bảo an toàn cho khách hàng.",
                 StepIndex = 2,
-                ServiceId = idHBS_Service2,
+                ServiceId = idHBS_Service2
             },
-            new Procedure
+            new()
             {
                 Id = idHBS_S2_P3,
                 Name = "Phẫu thuật cắt mí với kỹ thuật không sẹo",
                 Description =
                     "Thực hiện phẫu thuật với kỹ thuật Hàn Quốc tiên tiến, đảm bảo không để lại sẹo, tạo đường mí tự nhiên.",
                 StepIndex = 3,
-                ServiceId = idHBS_Service2,
+                ServiceId = idHBS_Service2
             },
-            new Procedure
+            new()
             {
                 Id = idHBS_S2_P4,
                 Name = "Chăm sóc và tái khám sau phẫu thuật",
                 Description = "Lịch tái khám định kỳ, hướng dẫn chăm sóc vết mổ và theo dõi quá trình hồi phục.",
                 StepIndex = 4,
-                ServiceId = idHBS_Service2,
+                ServiceId = idHBS_Service2
             },
 
             // Hanoi Beauty Spa Service 3 - Nâng Cung Mày Siêu Âm Hifu
-            new Procedure
+            new()
             {
                 Id = idHBS_S3_P1,
                 Name = "Tư vấn và đánh giá cung mày",
                 Description =
                     "Bác sĩ phân tích đặc điểm cung mày và khuôn mặt, tư vấn phương pháp nâng cung mày phù hợp.",
                 StepIndex = 1,
-                ServiceId = idHBS_Service3,
+                ServiceId = idHBS_Service3
             },
-            new Procedure
+            new()
             {
                 Id = idHBS_S3_P2,
                 Name = "Kiểm tra và chuẩn bị trước điều trị",
                 Description = "Kiểm tra sức khỏe tổng quát, vệ sinh vùng điều trị và chuẩn bị các thiết bị Hifu.",
                 StepIndex = 2,
-                ServiceId = idHBS_Service3,
+                ServiceId = idHBS_Service3
             },
-            new Procedure
+            new()
             {
                 Id = idHBS_S3_P3,
                 Name = "Điều trị nâng cung mày bằng siêu âm Hifu",
                 Description =
                     "Sử dụng công nghệ siêu âm Hifu tác động vào tầng SMAS, kích thích tăng sinh collagen, nâng cơ mày.",
                 StepIndex = 3,
-                ServiceId = idHBS_Service3,
+                ServiceId = idHBS_Service3
             },
-            new Procedure
+            new()
             {
                 Id = idHBS_S3_P4,
                 Name = "Chăm sóc và tái khám sau điều trị",
                 Description = "Hướng dẫn chăm sóc sau điều trị và lịch tái khám để đánh giá kết quả.",
                 StepIndex = 4,
-                ServiceId = idHBS_Service3,
+                ServiceId = idHBS_Service3
             },
 
             // Hanoi Beauty Spa Service 4 - Thu Nhỏ Ngực Vertical Short-Scar
-            new Procedure
+            new()
             {
                 Id = idHBS_S4_P1,
                 Name = "Tư vấn và đánh giá tình trạng ngực",
                 Description =
                     "Bác sĩ phân tích kích thước, hình dáng ngực hiện tại và tư vấn kích thước, hình dáng mong muốn.",
                 StepIndex = 1,
-                ServiceId = idHBS_Service4,
+                ServiceId = idHBS_Service4
             },
-            new Procedure
+            new()
             {
                 Id = idHBS_S4_P2,
                 Name = "Kiểm tra sức khỏe và chuẩn bị tiền phẫu",
                 Description =
                     "Thăm khám, kiểm tra tổng quát, chụp X-quang ngực, xét nghiệm máu và đánh giá tính khả thi của phẫu thuật.",
                 StepIndex = 2,
-                ServiceId = idHBS_Service4,
+                ServiceId = idHBS_Service4
             },
-            new Procedure
+            new()
             {
                 Id = idHBS_S4_P3,
                 Name = "Phẫu thuật thu nhỏ ngực Vertical Short-Scar",
                 Description =
                     "Thực hiện phẫu thuật với kỹ thuật Vertical Short-Scar giúp thu nhỏ ngực và tạo hình dáng tự nhiên với sẹo tối thiểu.",
                 StepIndex = 3,
-                ServiceId = idHBS_Service4,
+                ServiceId = idHBS_Service4
             },
-            new Procedure
+            new()
             {
                 Id = idHBS_S4_P4,
                 Name = "Theo dõi hậu phẫu 48h",
                 Description =
                     "Theo dõi tình trạng hậu phẫu 48h tại phòng hồi sức với sự chăm sóc của đội ngũ y tá chuyên nghiệp.",
                 StepIndex = 4,
-                ServiceId = idHBS_Service4,
+                ServiceId = idHBS_Service4
             },
-            new Procedure
+            new()
             {
                 Id = idHBS_S4_P5,
                 Name = "Chăm sóc và tái khám sau phẫu thuật",
                 Description =
                     "Lịch tái khám định kỳ, hướng dẫn chăm sóc hậu phẫu và theo dõi quá trình hồi phục dài hạn.",
                 StepIndex = 5,
-                ServiceId = idHBS_Service4,
+                ServiceId = idHBS_Service4
             },
 
             // Hanoi Beauty Spa Service 5 - Hút Mỡ Mặt Precision
-            new Procedure
+            new()
             {
                 Id = idHBS_S5_P1,
                 Name = "Tư vấn và đánh giá vùng mỡ mặt",
                 Description =
                     "Bác sĩ đánh giá tình trạng mỡ mặt, vẽ và đánh dấu vùng cần hút mỡ phù hợp với từng khách hàng.",
                 StepIndex = 1,
-                ServiceId = idHBS_Service5,
+                ServiceId = idHBS_Service5
             },
-            new Procedure
+            new()
             {
                 Id = idHBS_S5_P2,
                 Name = "Kiểm tra sức khỏe và chuẩn bị tiền phẫu",
                 Description = "Thăm khám, kiểm tra tổng quát, xét nghiệm máu và đánh giá tính khả thi của phẫu thuật.",
                 StepIndex = 2,
-                ServiceId = idHBS_Service5,
+                ServiceId = idHBS_Service5
             },
-            new Procedure
+            new()
             {
                 Id = idHBS_S5_P3,
                 Name = "Phẫu thuật hút mỡ mặt Precision",
                 Description =
                     "Thực hiện phẫu thuật hút mỡ mặt với kỹ thuật Precision, loại bỏ mỡ thừa và tạo đường nét khuôn mặt thanh tú.",
                 StepIndex = 3,
-                ServiceId = idHBS_Service5,
+                ServiceId = idHBS_Service5
             },
-            new Procedure
+            new()
             {
                 Id = idHBS_S5_P4,
                 Name = "Chăm sóc và tái khám sau phẫu thuật",
                 Description = "Lịch tái khám định kỳ, hướng dẫn chăm sóc hậu phẫu và theo dõi quá trình hồi phục.",
                 StepIndex = 4,
-                ServiceId = idHBS_Service5,
+                ServiceId = idHBS_Service5
             },
 
             // Skin Care Đà Nẵng Service 1 - Nâng Mũi Cấu Trúc Hybrid
-            new Procedure
+            new()
             {
                 Id = idSCDN_S1_P1,
                 Name = "Tư vấn và thiết kế dáng mũi",
                 Description = "Bác sĩ phân tích cấu trúc khuôn mặt, thiết kế dáng mũi phù hợp với từng khách hàng.",
                 StepIndex = 1,
-                ServiceId = idSCDN_Service1,
+                ServiceId = idSCDN_Service1
             },
-            new Procedure
+            new()
             {
                 Id = idSCDN_S1_P2,
                 Name = "Kiểm tra sức khỏe và chuẩn bị tiền phẫu",
                 Description = "Thăm khám, kiểm tra tổng quát, xét nghiệm máu và đánh giá tính khả thi của phẫu thuật.",
                 StepIndex = 2,
-                ServiceId = idSCDN_Service1,
+                ServiceId = idSCDN_Service1
             },
-            new Procedure
+            new()
             {
                 Id = idSCDN_S1_P3,
                 Name = "Phẫu thuật nâng mũi cấu trúc Hybrid",
                 Description =
                     "Thực hiện phẫu thuật với kỹ thuật Hybrid kết hợp sụn tự thân và vật liệu y khoa cao cấp.",
                 StepIndex = 3,
-                ServiceId = idSCDN_Service1,
+                ServiceId = idSCDN_Service1
             },
-            new Procedure
+            new()
             {
                 Id = idSCDN_S1_P4,
                 Name = "Theo dõi hậu phẫu 24h",
                 Description =
                     "Theo dõi tình trạng hậu phẫu 24h tại phòng hồi sức với sự chăm sóc của đội ngũ y tá chuyên nghiệp.",
                 StepIndex = 4,
-                ServiceId = idSCDN_Service1,
+                ServiceId = idSCDN_Service1
             },
-            new Procedure
+            new()
             {
                 Id = idSCDN_S1_P5,
                 Name = "Chăm sóc và tái khám sau phẫu thuật",
                 Description = "Lịch tái khám định kỳ, hướng dẫn chăm sóc hậu phẫu và theo dõi quá trình hồi phục.",
                 StepIndex = 5,
-                ServiceId = idSCDN_Service1,
+                ServiceId = idSCDN_Service1
             },
 
             // Skin Care Đà Nẵng Service 2 - Nâng Ngực Nội Soi Ergonomix
-            new Procedure
+            new()
             {
                 Id = idSCDN_S2_P1,
                 Name = "Tư vấn và lựa chọn kích thước túi ngực",
                 Description =
                     "Bác sĩ phân tích cấu trúc cơ thể, tư vấn và giúp khách hàng lựa chọn kích thước túi ngực Ergonomix phù hợp.",
                 StepIndex = 1,
-                ServiceId = idSCDN_Service2,
+                ServiceId = idSCDN_Service2
             },
-            new Procedure
+            new()
             {
                 Id = idSCDN_S2_P2,
                 Name = "Kiểm tra sức khỏe và chuẩn bị tiền phẫu",
                 Description =
                     "Thăm khám, kiểm tra tổng quát, chụp X-quang ngực, xét nghiệm máu và đánh giá tính khả thi của phẫu thuật.",
                 StepIndex = 2,
-                ServiceId = idSCDN_Service2,
+                ServiceId = idSCDN_Service2
             },
-            new Procedure
+            new()
             {
                 Id = idSCDN_S2_P3,
                 Name = "Phẫu thuật nâng ngực nội soi với túi Ergonomix",
                 Description =
                     "Thực hiện phẫu thuật nâng ngực bằng kỹ thuật nội soi với túi Ergonomix có hình giọt nước tự nhiên.",
                 StepIndex = 3,
-                ServiceId = idSCDN_Service2,
+                ServiceId = idSCDN_Service2
             },
-            new Procedure
+            new()
             {
                 Id = idSCDN_S2_P4,
                 Name = "Theo dõi hậu phẫu 48h",
                 Description =
                     "Theo dõi tình trạng hậu phẫu 48h tại phòng hồi sức với sự chăm sóc của đội ngũ y tá chuyên nghiệp.",
                 StepIndex = 4,
-                ServiceId = idSCDN_Service2,
+                ServiceId = idSCDN_Service2
             },
-            new Procedure
+            new()
             {
                 Id = idSCDN_S2_P5,
                 Name = "Chăm sóc và tái khám sau phẫu thuật",
                 Description =
                     "Lịch tái khám định kỳ, hướng dẫn chăm sóc hậu phẫu và theo dõi quá trình hồi phục dài hạn.",
                 StepIndex = 5,
-                ServiceId = idSCDN_Service2,
+                ServiceId = idSCDN_Service2
             },
 
             // Skin Care Đà Nẵng Service 3 - Hút Mỡ Bụng 3D Hi-Definition
-            new Procedure
+            new()
             {
                 Id = idSCDN_S3_P1,
                 Name = "Tư vấn và đánh giá vùng mỡ bụng",
                 Description =
                     "Bác sĩ đánh giá tình trạng mỡ bụng, vẽ và đánh dấu vùng cần hút mỡ phù hợp với từng khách hàng.",
                 StepIndex = 1,
-                ServiceId = idSCDN_Service3,
+                ServiceId = idSCDN_Service3
             },
-            new Procedure
+            new()
             {
                 Id = idSCDN_S3_P2,
                 Name = "Kiểm tra sức khỏe và chuẩn bị tiền phẫu",
                 Description =
                     "Thăm khám, kiểm tra tổng quát, xét nghiệm máu, đo chỉ số BMI và đánh giá tính khả thi của phẫu thuật.",
                 StepIndex = 2,
-                ServiceId = idSCDN_Service3,
+                ServiceId = idSCDN_Service3
             },
-            new Procedure
+            new()
             {
                 Id = idSCDN_S3_P3,
                 Name = "Phẫu thuật hút mỡ bụng 3D Hi-Definition",
                 Description =
                     "Thực hiện phẫu thuật hút mỡ bụng với công nghệ 3D Hi-Definition, tạo đường nét cơ bụng rõ ràng.",
                 StepIndex = 3,
-                ServiceId = idSCDN_Service3,
+                ServiceId = idSCDN_Service3
             },
-            new Procedure
+            new()
             {
                 Id = idSCDN_S3_P4,
                 Name = "Massage định hình sau phẫu thuật",
                 Description =
                     "Thực hiện liệu trình massage định hình vùng bụng sau hút mỡ, giúp làm săn chắc da và đều màu.",
                 StepIndex = 4,
-                ServiceId = idSCDN_Service3,
+                ServiceId = idSCDN_Service3
             },
-            new Procedure
+            new()
             {
                 Id = idSCDN_S3_P5,
                 Name = "Chăm sóc và tái khám sau phẫu thuật",
                 Description = "Lịch tái khám định kỳ, hướng dẫn chăm sóc hậu phẫu và theo dõi quá trình hồi phục.",
                 StepIndex = 5,
-                ServiceId = idSCDN_Service3,
+                ServiceId = idSCDN_Service3
             },
 
             // Skin Care Đà Nẵng Service 4 - Cắt Mí Mắt Plasma Tech
-            new Procedure
+            new()
             {
                 Id = idSCDN_S4_P1,
                 Name = "Tư vấn và thiết kế đường mí",
                 Description =
                     "Bác sĩ phân tích đặc điểm mắt và khuôn mặt, thiết kế đường mí phù hợp với từng khách hàng.",
                 StepIndex = 1,
-                ServiceId = idSCDN_Service4,
+                ServiceId = idSCDN_Service4
             },
-            new Procedure
+            new()
             {
                 Id = idSCDN_S4_P2,
                 Name = "Kiểm tra trước phẫu thuật",
                 Description =
                     "Kiểm tra sức khỏe tổng quát, thực hiện các xét nghiệm cần thiết để đảm bảo an toàn cho khách hàng.",
                 StepIndex = 2,
-                ServiceId = idSCDN_Service4,
+                ServiceId = idSCDN_Service4
             },
-            new Procedure
+            new()
             {
                 Id = idSCDN_S4_P3,
                 Name = "Phẫu thuật cắt mí với công nghệ Plasma Tech",
                 Description =
                     "Thực hiện phẫu thuật với công nghệ Plasma Tech hiện đại, tạo đường mí tự nhiên, giảm thiểu đau đớn và thời gian hồi phục.",
                 StepIndex = 3,
-                ServiceId = idSCDN_Service4,
+                ServiceId = idSCDN_Service4
             },
-            new Procedure
+            new()
             {
                 Id = idSCDN_S4_P4,
                 Name = "Chăm sóc và tái khám sau phẫu thuật",
                 Description = "Lịch tái khám định kỳ, hướng dẫn chăm sóc vết mổ và theo dõi quá trình hồi phục.",
                 StepIndex = 4,
-                ServiceId = idSCDN_Service4,
+                ServiceId = idSCDN_Service4
             },
 
             // Skin Care Đà Nẵng Service 5 - Độn Cằm 3D Crystal
-            new Procedure
+            new()
             {
                 Id = idSCDN_S5_P1,
                 Name = "Tư vấn và thiết kế dáng cằm",
                 Description = "Bác sĩ phân tích cấu trúc khuôn mặt, thiết kế dáng cằm phù hợp với từng khách hàng.",
                 StepIndex = 1,
-                ServiceId = idSCDN_Service5,
+                ServiceId = idSCDN_Service5
             },
-            new Procedure
+            new()
             {
                 Id = idSCDN_S5_P2,
                 Name = "Kiểm tra sức khỏe và chuẩn bị tiền phẫu",
                 Description =
                     "Thăm khám, kiểm tra tổng quát, chụp X-quang hàm mặt, xét nghiệm máu và đánh giá tính khả thi của phẫu thuật.",
                 StepIndex = 2,
-                ServiceId = idSCDN_Service5,
+                ServiceId = idSCDN_Service5
             },
-            new Procedure
+            new()
             {
                 Id = idSCDN_S5_P3,
                 Name = "Phẫu thuật độn cằm với vật liệu 3D Crystal",
                 Description =
                     "Thực hiện phẫu thuật độn cằm với vật liệu 3D Crystal cao cấp, tạo dáng cằm tự nhiên và cân đối.",
                 StepIndex = 3,
-                ServiceId = idSCDN_Service5,
+                ServiceId = idSCDN_Service5
             },
-            new Procedure
+            new()
             {
                 Id = idSCDN_S5_P4,
                 Name = "Chăm sóc và tái khám sau phẫu thuật",
                 Description = "Lịch tái khám định kỳ, hướng dẫn chăm sóc hậu phẫu và theo dõi quá trình hồi phục.",
                 StepIndex = 4,
-                ServiceId = idSCDN_Service5,
+                ServiceId = idSCDN_Service5
             }
         };
 
-        var procedurePriceTypes = new List<ProcedurePriceType>()
+        var procedurePriceTypes = new List<ProcedurePriceType>
         {
             // Beauty Center Sài Gòn Service 1 - Nâng Mũi Cấu Trúc S-Line Premium - Procedure 1
-            new ProcedurePriceType
+            new()
             {
                 Id = Guid.Parse("a1d3d799-1001-4a2f-0001-3d05b7e1f2a3"),
                 Name = "Tư vấn cơ bản",
@@ -1532,7 +1532,7 @@ internal sealed class OutboxMessageConfiguration : IEntityTypeConfiguration<Outb
                 IsDefault = true,
                 ProcedureId = idBCSG_S1_P1
             },
-            new ProcedurePriceType
+            new()
             {
                 Id = Guid.Parse("a1d3d799-1001-4a2f-0002-3d05b7e1f2a3"),
                 Name = "Tư vấn chuyên sâu",
@@ -1541,7 +1541,7 @@ internal sealed class OutboxMessageConfiguration : IEntityTypeConfiguration<Outb
                 IsDefault = false,
                 ProcedureId = idBCSG_S1_P1
             },
-            new ProcedurePriceType
+            new()
             {
                 Id = Guid.Parse("a1d3d799-1001-4a2f-0003-3d05b7e1f2a3"),
                 Name = "Tư vấn VIP kèm mô phỏng 3D",
@@ -1552,7 +1552,7 @@ internal sealed class OutboxMessageConfiguration : IEntityTypeConfiguration<Outb
             },
 
             // Beauty Center Sài Gòn Service 1 - Procedure 2
-            new ProcedurePriceType
+            new()
             {
                 Id = Guid.Parse("a1d3d799-1002-4a2f-0001-3d05b7e1f2a3"),
                 Name = "Kiểm tra sức khỏe tiêu chuẩn",
@@ -1561,7 +1561,7 @@ internal sealed class OutboxMessageConfiguration : IEntityTypeConfiguration<Outb
                 IsDefault = true,
                 ProcedureId = idBCSG_S1_P2
             },
-            new ProcedurePriceType
+            new()
             {
                 Id = Guid.Parse("a1d3d799-1002-4a2f-0002-3d05b7e1f2a3"),
                 Name = "Kiểm tra sức khỏe toàn diện",
@@ -1572,7 +1572,7 @@ internal sealed class OutboxMessageConfiguration : IEntityTypeConfiguration<Outb
             },
 
             // Beauty Center Sài Gòn Service 1 - Procedure 3
-            new ProcedurePriceType
+            new()
             {
                 Id = Guid.Parse("a1d3d799-1003-4a2f-0001-3d05b7e1f2a3"),
                 Name = "Phẫu thuật cơ bản",
@@ -1581,7 +1581,7 @@ internal sealed class OutboxMessageConfiguration : IEntityTypeConfiguration<Outb
                 IsDefault = true,
                 ProcedureId = idBCSG_S1_P3
             },
-            new ProcedurePriceType
+            new()
             {
                 Id = Guid.Parse("a1d3d799-1003-4a2f-0002-3d05b7e1f2a3"),
                 Name = "Phẫu thuật cao cấp",
@@ -1590,7 +1590,7 @@ internal sealed class OutboxMessageConfiguration : IEntityTypeConfiguration<Outb
                 IsDefault = false,
                 ProcedureId = idBCSG_S1_P3
             },
-            new ProcedurePriceType
+            new()
             {
                 Id = Guid.Parse("a1d3d799-1003-4a2f-0003-3d05b7e1f2a3"),
                 Name = "Phẫu thuật VIP với bác sĩ chuyên gia",
@@ -1601,7 +1601,7 @@ internal sealed class OutboxMessageConfiguration : IEntityTypeConfiguration<Outb
             },
 
             // Beauty Center Sài Gòn Service 1 - Procedure 4
-            new ProcedurePriceType
+            new()
             {
                 Id = Guid.Parse("a1d3d799-1004-4a2f-0001-3d05b7e1f2a3"),
                 Name = "Theo dõi hậu phẫu tiêu chuẩn",
@@ -1610,7 +1610,7 @@ internal sealed class OutboxMessageConfiguration : IEntityTypeConfiguration<Outb
                 IsDefault = true,
                 ProcedureId = idBCSG_S1_P4
             },
-            new ProcedurePriceType
+            new()
             {
                 Id = Guid.Parse("a1d3d799-1004-4a2f-0002-3d05b7e1f2a3"),
                 Name = "Theo dõi hậu phẫu VIP",
@@ -1621,7 +1621,7 @@ internal sealed class OutboxMessageConfiguration : IEntityTypeConfiguration<Outb
             },
 
             // Beauty Center Sài Gòn Service 1 - Procedure 5
-            new ProcedurePriceType
+            new()
             {
                 Id = Guid.Parse("a1d3d799-1005-4a2f-0001-3d05b7e1f2a3"),
                 Name = "Gói tái khám cơ bản",
@@ -1630,7 +1630,7 @@ internal sealed class OutboxMessageConfiguration : IEntityTypeConfiguration<Outb
                 IsDefault = true,
                 ProcedureId = idBCSG_S1_P5
             },
-            new ProcedurePriceType
+            new()
             {
                 Id = Guid.Parse("a1d3d799-1005-4a2f-0002-3d05b7e1f2a3"),
                 Name = "Gói tái khám VIP",
@@ -1641,7 +1641,7 @@ internal sealed class OutboxMessageConfiguration : IEntityTypeConfiguration<Outb
             },
 
             // Beauty Center Sài Gòn Service 2 - Cắt Mí Mắt Plasma Luxury - Procedure 1
-            new ProcedurePriceType
+            new()
             {
                 Id = Guid.Parse("a2d3d799-1001-4a2f-0001-3d05b7e1f2a3"),
                 Name = "Tư vấn thiết kế mí cơ bản",
@@ -1650,7 +1650,7 @@ internal sealed class OutboxMessageConfiguration : IEntityTypeConfiguration<Outb
                 IsDefault = true,
                 ProcedureId = idBCSG_S2_P1
             },
-            new ProcedurePriceType
+            new()
             {
                 Id = Guid.Parse("a2d3d799-1001-4a2f-0002-3d05b7e1f2a3"),
                 Name = "Tư vấn thiết kế mí chuyên sâu",
@@ -1661,7 +1661,7 @@ internal sealed class OutboxMessageConfiguration : IEntityTypeConfiguration<Outb
             },
 
             // Beauty Center Sài Gòn Service 2 - Procedure 2
-            new ProcedurePriceType
+            new()
             {
                 Id = Guid.Parse("a2d3d799-1002-4a2f-0001-3d05b7e1f2a3"),
                 Name = "Kiểm tra tiêu chuẩn",
@@ -1670,7 +1670,7 @@ internal sealed class OutboxMessageConfiguration : IEntityTypeConfiguration<Outb
                 IsDefault = true,
                 ProcedureId = idBCSG_S2_P2
             },
-            new ProcedurePriceType
+            new()
             {
                 Id = Guid.Parse("a2d3d799-1002-4a2f-0002-3d05b7e1f2a3"),
                 Name = "Kiểm tra nâng cao",
@@ -1681,7 +1681,7 @@ internal sealed class OutboxMessageConfiguration : IEntityTypeConfiguration<Outb
             },
 
             // Beauty Center Sài Gòn Service 2 - Procedure 3
-            new ProcedurePriceType
+            new()
             {
                 Id = Guid.Parse("a2d3d799-1003-4a2f-0001-3d05b7e1f2a3"),
                 Name = "Phẫu thuật cắt mí Plasma tiêu chuẩn",
@@ -1690,7 +1690,7 @@ internal sealed class OutboxMessageConfiguration : IEntityTypeConfiguration<Outb
                 IsDefault = true,
                 ProcedureId = idBCSG_S2_P3
             },
-            new ProcedurePriceType
+            new()
             {
                 Id = Guid.Parse("a2d3d799-1003-4a2f-0002-3d05b7e1f2a3"),
                 Name = "Phẫu thuật cắt mí Plasma cao cấp",
@@ -1699,7 +1699,7 @@ internal sealed class OutboxMessageConfiguration : IEntityTypeConfiguration<Outb
                 IsDefault = false,
                 ProcedureId = idBCSG_S2_P3
             },
-            new ProcedurePriceType
+            new()
             {
                 Id = Guid.Parse("a2d3d799-1003-4a2f-0003-3d05b7e1f2a3"),
                 Name = "Phẫu thuật cắt mí Plasma Luxury",
@@ -1710,7 +1710,7 @@ internal sealed class OutboxMessageConfiguration : IEntityTypeConfiguration<Outb
             },
 
             // Beauty Center Sài Gòn Service 2 - Procedure 4
-            new ProcedurePriceType
+            new()
             {
                 Id = Guid.Parse("a2d3d799-1004-4a2f-0001-3d05b7e1f2a3"),
                 Name = "Gói chăm sóc hậu phẫu cơ bản",
@@ -1719,7 +1719,7 @@ internal sealed class OutboxMessageConfiguration : IEntityTypeConfiguration<Outb
                 IsDefault = true,
                 ProcedureId = idBCSG_S2_P4
             },
-            new ProcedurePriceType
+            new()
             {
                 Id = Guid.Parse("a2d3d799-1004-4a2f-0002-3d05b7e1f2a3"),
                 Name = "Gói chăm sóc hậu phẫu cao cấp",
@@ -1730,7 +1730,7 @@ internal sealed class OutboxMessageConfiguration : IEntityTypeConfiguration<Outb
             },
 
             // Beauty Center Sài Gòn Service 3 - Nâng Ngực Túi Độn Mentor - Procedure 1
-            new ProcedurePriceType
+            new()
             {
                 Id = Guid.Parse("a3d3d799-1001-4a2f-0001-3d05b7e1f2a3"),
                 Name = "Tư vấn và lựa chọn túi ngực tiêu chuẩn",
@@ -1739,7 +1739,7 @@ internal sealed class OutboxMessageConfiguration : IEntityTypeConfiguration<Outb
                 IsDefault = true,
                 ProcedureId = idBCSG_S3_P1
             },
-            new ProcedurePriceType
+            new()
             {
                 Id = Guid.Parse("a3d3d799-1001-4a2f-0002-3d05b7e1f2a3"),
                 Name = "Tư vấn và lựa chọn túi ngực cao cấp kèm mô phỏng 3D",
@@ -1750,7 +1750,7 @@ internal sealed class OutboxMessageConfiguration : IEntityTypeConfiguration<Outb
             },
 
             // Beauty Center Sài Gòn Service 3 - Procedure 2
-            new ProcedurePriceType
+            new()
             {
                 Id = Guid.Parse("a3d3d799-1002-4a2f-0001-3d05b7e1f2a3"),
                 Name = "Kiểm tra sức khỏe tiêu chuẩn",
@@ -1759,7 +1759,7 @@ internal sealed class OutboxMessageConfiguration : IEntityTypeConfiguration<Outb
                 IsDefault = true,
                 ProcedureId = idBCSG_S3_P2
             },
-            new ProcedurePriceType
+            new()
             {
                 Id = Guid.Parse("a3d3d799-1002-4a2f-0002-3d05b7e1f2a3"),
                 Name = "Kiểm tra sức khỏe toàn diện",
@@ -1770,7 +1770,7 @@ internal sealed class OutboxMessageConfiguration : IEntityTypeConfiguration<Outb
             },
 
             // Beauty Center Sài Gòn Service 3 - Procedure 3
-            new ProcedurePriceType
+            new()
             {
                 Id = Guid.Parse("a3d3d799-1003-4a2f-0001-3d05b7e1f2a3"),
                 Name = "Phẫu thuật nâng ngực Mentor cơ bản",
@@ -1779,7 +1779,7 @@ internal sealed class OutboxMessageConfiguration : IEntityTypeConfiguration<Outb
                 IsDefault = true,
                 ProcedureId = idBCSG_S3_P3
             },
-            new ProcedurePriceType
+            new()
             {
                 Id = Guid.Parse("a3d3d799-1003-4a2f-0002-3d05b7e1f2a3"),
                 Name = "Phẫu thuật nâng ngực Mentor cao cấp",
@@ -1788,7 +1788,7 @@ internal sealed class OutboxMessageConfiguration : IEntityTypeConfiguration<Outb
                 IsDefault = false,
                 ProcedureId = idBCSG_S3_P3
             },
-            new ProcedurePriceType
+            new()
             {
                 Id = Guid.Parse("a3d3d799-1003-4a2f-0003-3d05b7e1f2a3"),
                 Name = "Phẫu thuật nâng ngực Mentor VIP",
@@ -1799,7 +1799,7 @@ internal sealed class OutboxMessageConfiguration : IEntityTypeConfiguration<Outb
             },
 
             // Beauty Center Sài Gòn Service 3 - Procedure 4
-            new ProcedurePriceType
+            new()
             {
                 Id = Guid.Parse("a3d3d799-1004-4a2f-0001-3d05b7e1f2a3"),
                 Name = "Theo dõi hậu phẫu tiêu chuẩn",
@@ -1808,7 +1808,7 @@ internal sealed class OutboxMessageConfiguration : IEntityTypeConfiguration<Outb
                 IsDefault = true,
                 ProcedureId = idBCSG_S3_P4
             },
-            new ProcedurePriceType
+            new()
             {
                 Id = Guid.Parse("a3d3d799-1004-4a2f-0002-3d05b7e1f2a3"),
                 Name = "Theo dõi hậu phẫu VIP",
@@ -1819,7 +1819,7 @@ internal sealed class OutboxMessageConfiguration : IEntityTypeConfiguration<Outb
             },
 
             // Beauty Center Sài Gòn Service 3 - Procedure 5
-            new ProcedurePriceType
+            new()
             {
                 Id = Guid.Parse("a3d3d799-1005-4a2f-0001-3d05b7e1f2a3"),
                 Name = "Gói tái khám định kỳ tiêu chuẩn",
@@ -1828,7 +1828,7 @@ internal sealed class OutboxMessageConfiguration : IEntityTypeConfiguration<Outb
                 IsDefault = true,
                 ProcedureId = idBCSG_S3_P5
             },
-            new ProcedurePriceType
+            new()
             {
                 Id = Guid.Parse("a3d3d799-1005-4a2f-0002-3d05b7e1f2a3"),
                 Name = "Gói tái khám định kỳ VIP",
@@ -1839,7 +1839,7 @@ internal sealed class OutboxMessageConfiguration : IEntityTypeConfiguration<Outb
             },
 
             // Beauty Center Sài Gòn Service 4 - Độn Cằm V-Line Hàn Quốc - Procedure 1
-            new ProcedurePriceType
+            new()
             {
                 Id = Guid.Parse("a4d3d799-1001-4a2f-0001-3d05b7e1f2a3"),
                 Name = "Tư vấn thiết kế cằm V-Line cơ bản",
@@ -1848,7 +1848,7 @@ internal sealed class OutboxMessageConfiguration : IEntityTypeConfiguration<Outb
                 IsDefault = true,
                 ProcedureId = idBCSG_S4_P1
             },
-            new ProcedurePriceType
+            new()
             {
                 Id = Guid.Parse("a4d3d799-1001-4a2f-0002-3d05b7e1f2a3"),
                 Name = "Tư vấn thiết kế cằm V-Line chuyên sâu với mô phỏng 3D",
@@ -1859,7 +1859,7 @@ internal sealed class OutboxMessageConfiguration : IEntityTypeConfiguration<Outb
             },
 
             // Beauty Center Sài Gòn Service 4 - Procedure 2
-            new ProcedurePriceType
+            new()
             {
                 Id = Guid.Parse("a4d3d799-1002-4a2f-0001-3d05b7e1f2a3"),
                 Name = "Kiểm tra sức khỏe tiêu chuẩn",
@@ -1868,7 +1868,7 @@ internal sealed class OutboxMessageConfiguration : IEntityTypeConfiguration<Outb
                 IsDefault = true,
                 ProcedureId = idBCSG_S4_P2
             },
-            new ProcedurePriceType
+            new()
             {
                 Id = Guid.Parse("a4d3d799-1002-4a2f-0002-3d05b7e1f2a3"),
                 Name = "Kiểm tra sức khỏe toàn diện",
@@ -1879,7 +1879,7 @@ internal sealed class OutboxMessageConfiguration : IEntityTypeConfiguration<Outb
             },
 
             // Beauty Center Sài Gòn Service 4 - Procedure 3
-            new ProcedurePriceType
+            new()
             {
                 Id = Guid.Parse("a4d3d799-1003-4a2f-0001-3d05b7e1f2a3"),
                 Name = "Phẫu thuật độn cằm V-Line cơ bản",
@@ -1888,7 +1888,7 @@ internal sealed class OutboxMessageConfiguration : IEntityTypeConfiguration<Outb
                 IsDefault = true,
                 ProcedureId = idBCSG_S4_P3
             },
-            new ProcedurePriceType
+            new()
             {
                 Id = Guid.Parse("a4d3d799-1003-4a2f-0002-3d05b7e1f2a3"),
                 Name = "Phẫu thuật độn cằm V-Line cao cấp",
@@ -1897,7 +1897,7 @@ internal sealed class OutboxMessageConfiguration : IEntityTypeConfiguration<Outb
                 IsDefault = false,
                 ProcedureId = idBCSG_S4_P3
             },
-            new ProcedurePriceType
+            new()
             {
                 Id = Guid.Parse("a4d3d799-1003-4a2f-0003-3d05b7e1f2a3"),
                 Name = "Phẫu thuật độn cằm V-Line VIP",
@@ -1908,7 +1908,7 @@ internal sealed class OutboxMessageConfiguration : IEntityTypeConfiguration<Outb
             },
 
             // Beauty Center Sài Gòn Service 4 - Procedure 4
-            new ProcedurePriceType
+            new()
             {
                 Id = Guid.Parse("a4d3d799-1004-4a2f-0001-3d05b7e1f2a3"),
                 Name = "Gói chăm sóc và tái khám tiêu chuẩn",
@@ -1917,7 +1917,7 @@ internal sealed class OutboxMessageConfiguration : IEntityTypeConfiguration<Outb
                 IsDefault = true,
                 ProcedureId = idBCSG_S4_P4
             },
-            new ProcedurePriceType
+            new()
             {
                 Id = Guid.Parse("a4d3d799-1004-4a2f-0002-3d05b7e1f2a3"),
                 Name = "Gói chăm sóc và tái khám cao cấp",
@@ -1928,7 +1928,7 @@ internal sealed class OutboxMessageConfiguration : IEntityTypeConfiguration<Outb
             },
 
             // Beauty Center Sài Gòn Service 5 - Procedure 1
-            new ProcedurePriceType
+            new()
             {
                 Id = Guid.Parse("a4d3d799-1005-4a2f-0001-3d05b7e1f2a3"),
                 Name = "Tư vấn đánh giá vùng mỡ bụng tiêu chuẩn",
@@ -1937,7 +1937,7 @@ internal sealed class OutboxMessageConfiguration : IEntityTypeConfiguration<Outb
                 IsDefault = true,
                 ProcedureId = idBCSG_S5_P1
             },
-            new ProcedurePriceType
+            new()
             {
                 Id = Guid.Parse("a4d3d799-1005-4a2f-0002-3d05b7e1f2a3"),
                 Name = "Tư vấn đánh giá vùng mỡ bụng chuyên sâu với chụp hình 3D",
@@ -1948,7 +1948,7 @@ internal sealed class OutboxMessageConfiguration : IEntityTypeConfiguration<Outb
             },
 
             // Beauty Center Sài Gòn Service 5 - Procedure 2
-            new ProcedurePriceType
+            new()
             {
                 Id = Guid.Parse("a4d3d799-1006-4a2f-0001-3d05b7e1f2a3"),
                 Name = "Kiểm tra sức khỏe tiêu chuẩn trước phẫu thuật",
@@ -1957,7 +1957,7 @@ internal sealed class OutboxMessageConfiguration : IEntityTypeConfiguration<Outb
                 IsDefault = true,
                 ProcedureId = idBCSG_S5_P2
             },
-            new ProcedurePriceType
+            new()
             {
                 Id = Guid.Parse("a4d3d799-1006-4a2f-0002-3d05b7e1f2a3"),
                 Name = "Kiểm tra sức khỏe toàn diện trước phẫu thuật",
@@ -1968,7 +1968,7 @@ internal sealed class OutboxMessageConfiguration : IEntityTypeConfiguration<Outb
             },
 
             // Beauty Center Sài Gòn Service 5 - Procedure 3
-            new ProcedurePriceType
+            new()
             {
                 Id = Guid.Parse("a4d3d799-1007-4a2f-0001-3d05b7e1f2a3"),
                 Name = "Hút mỡ bụng VASER Lipo vùng nhỏ",
@@ -1977,7 +1977,7 @@ internal sealed class OutboxMessageConfiguration : IEntityTypeConfiguration<Outb
                 IsDefault = true,
                 ProcedureId = idBCSG_S5_P3
             },
-            new ProcedurePriceType
+            new()
             {
                 Id = Guid.Parse("a4d3d799-1007-4a2f-0002-3d05b7e1f2a3"),
                 Name = "Hút mỡ bụng VASER Lipo vùng trung bình",
@@ -1986,7 +1986,7 @@ internal sealed class OutboxMessageConfiguration : IEntityTypeConfiguration<Outb
                 IsDefault = false,
                 ProcedureId = idBCSG_S5_P3
             },
-            new ProcedurePriceType
+            new()
             {
                 Id = Guid.Parse("a4d3d799-1007-4a2f-0003-3d05b7e1f2a3"),
                 Name = "Hút mỡ bụng VASER Lipo toàn vùng bụng",
@@ -1997,7 +1997,7 @@ internal sealed class OutboxMessageConfiguration : IEntityTypeConfiguration<Outb
             },
 
             // Beauty Center Sài Gòn Service 5 - Procedure 4
-            new ProcedurePriceType
+            new()
             {
                 Id = Guid.Parse("a4d3d799-1008-4a2f-0001-3d05b7e1f2a3"),
                 Name = "Liệu trình massage định hình cơ bản (5 buổi)",
@@ -2006,7 +2006,7 @@ internal sealed class OutboxMessageConfiguration : IEntityTypeConfiguration<Outb
                 IsDefault = true,
                 ProcedureId = idBCSG_S5_P4
             },
-            new ProcedurePriceType
+            new()
             {
                 Id = Guid.Parse("a4d3d799-1008-4a2f-0002-3d05b7e1f2a3"),
                 Name = "Liệu trình massage định hình cao cấp (10 buổi)",
@@ -2017,7 +2017,7 @@ internal sealed class OutboxMessageConfiguration : IEntityTypeConfiguration<Outb
             },
 
             // Beauty Center Sài Gòn Service 5 - Procedure 5
-            new ProcedurePriceType
+            new()
             {
                 Id = Guid.Parse("a4d3d799-1009-4a2f-0001-3d05b7e1f2a3"),
                 Name = "Gói chăm sóc và tái khám tiêu chuẩn (3 tháng)",
@@ -2026,7 +2026,7 @@ internal sealed class OutboxMessageConfiguration : IEntityTypeConfiguration<Outb
                 IsDefault = true,
                 ProcedureId = idBCSG_S5_P5
             },
-            new ProcedurePriceType
+            new()
             {
                 Id = Guid.Parse("a4d3d799-1009-4a2f-0002-3d05b7e1f2a3"),
                 Name = "Gói chăm sóc và tái khám cao cấp (6 tháng)",
@@ -2037,392 +2037,392 @@ internal sealed class OutboxMessageConfiguration : IEntityTypeConfiguration<Outb
             },
 
             // Hanoi Beauty Spa Service 1 - Nâng Mũi Bio-Silicon Elite - Procedure 1
-            new ProcedurePriceType
+            new()
             {
                 Id = Guid.Parse("b1d3d799-1111-4a2f-b6b5-3d05b7e1f2a3"),
                 Name = "Tư Vấn Dáng Mũi Cá Nhân Hóa",
                 Price = 12000000M,
                 IsDefault = true,
                 ProcedureId = idHBS_S1_P1,
-                Duration = 60,
+                Duration = 60
             },
-            new ProcedurePriceType
+            new()
             {
                 Id = Guid.Parse("b1d3d799-1112-4a2f-b6b5-3d05b7e1f2a3"),
                 Name = "Thiết Kế Dáng Mũi 3D Chuyên Sâu",
                 Price = 18000000M,
                 IsDefault = false,
                 ProcedureId = idHBS_S1_P1,
-                Duration = 90,
+                Duration = 90
             },
-            new ProcedurePriceType
+            new()
             {
                 Id = Guid.Parse("b1d3d799-1113-4a2f-b6b5-3d05b7e1f2a3"),
                 Name = "Quy Trình Thiết Kế VIP Cùng Chuyên Gia Hàn Quốc",
                 Price = 25000000M,
                 IsDefault = false,
                 ProcedureId = idHBS_S1_P1,
-                Duration = 120,
+                Duration = 120
             },
 
             // Hanoi Beauty Spa Service 1 - Nâng Mũi Bio-Silicon Elite - Procedure 2
-            new ProcedurePriceType
+            new()
             {
                 Id = Guid.Parse("b1d3d799-1121-4a2f-b6b5-3d05b7e1f2a3"),
                 Name = "Đánh Giá Sức Khỏe Pre-Surgery Chuẩn Y Khoa",
                 Price = 1500000M,
                 IsDefault = true,
                 ProcedureId = idHBS_S1_P2,
-                Duration = 30,
+                Duration = 30
             },
-            new ProcedurePriceType
+            new()
             {
                 Id = Guid.Parse("b1d3d799-1122-4a2f-b6b5-3d05b7e1f2a3"),
                 Name = "Gói Kiểm Tra Toàn Diện Với Bác Sĩ Chuyên Khoa",
                 Price = 2500000M,
                 IsDefault = false,
                 ProcedureId = idHBS_S1_P2,
-                Duration = 45,
+                Duration = 45
             },
 
             // Hanoi Beauty Spa Service 1 - Nâng Mũi Bio-Silicon Elite - Procedure 3
-            new ProcedurePriceType
+            new()
             {
                 Id = Guid.Parse("b1d3d799-1131-4a2f-b6b5-3d05b7e1f2a3"),
                 Name = "Nâng Mũi Natural Look Với Sụn Tự Thân",
                 Price = 20000000M,
                 IsDefault = true,
                 ProcedureId = idHBS_S1_P3,
-                Duration = 120,
+                Duration = 120
             },
-            new ProcedurePriceType
+            new()
             {
                 Id = Guid.Parse("b1d3d799-1132-4a2f-b6b5-3d05b7e1f2a3"),
                 Name = "Nâng Mũi Perfect Balance - Công Nghệ Kết Hợp",
                 Price = 30000000M,
                 IsDefault = false,
                 ProcedureId = idHBS_S1_P3,
-                Duration = 150,
+                Duration = 150
             },
-            new ProcedurePriceType
+            new()
             {
                 Id = Guid.Parse("b1d3d799-1133-4a2f-b6b5-3d05b7e1f2a3"),
                 Name = "Nâng Mũi Luxury Elite - Công Nghệ Hàn Quốc Độc Quyền",
                 Price = 45000000M,
                 IsDefault = false,
                 ProcedureId = idHBS_S1_P3,
-                Duration = 180,
+                Duration = 180
             },
 
             // Hanoi Beauty Spa Service 1 - Nâng Mũi Bio-Silicon Elite - Procedure 4
-            new ProcedurePriceType
+            new()
             {
                 Id = Guid.Parse("b1d3d799-1141-4a2f-b6b5-3d05b7e1f2a3"),
                 Name = "Phục Hồi Nhanh - Gói Chăm Sóc Thiết Yếu",
                 Price = 500000M,
                 IsDefault = true,
                 ProcedureId = idHBS_S1_P4,
-                Duration = 30,
+                Duration = 30
             },
-            new ProcedurePriceType
+            new()
             {
                 Id = Guid.Parse("b1d3d799-1142-4a2f-b6b5-3d05b7e1f2a3"),
                 Name = "Golden Care - Gói Phục Hồi Toàn Diện Cao Cấp",
                 Price = 1200000M,
                 IsDefault = false,
                 ProcedureId = idHBS_S1_P4,
-                Duration = 60,
+                Duration = 60
             },
 
             // Hanoi Beauty Spa Service 2 - Cắt Mí Mắt Hàn Quốc Không Sẹo - Procedure 1
-            new ProcedurePriceType
+            new()
             {
                 Id = Guid.Parse("b2d3d799-1111-4a2f-b6b5-3d05b7e1f2a3"),
                 Name = "Tư Vấn Mí Quyến Rũ - Gói Cơ Bản",
                 Price = 8000000M,
                 IsDefault = true,
                 ProcedureId = idHBS_S2_P1,
-                Duration = 60,
+                Duration = 60
             },
-            new ProcedurePriceType
+            new()
             {
                 Id = Guid.Parse("b2d3d799-1112-4a2f-b6b5-3d05b7e1f2a3"),
                 Name = "Tư Vấn Mí Tự Nhiên 3D - Gói Cao Cấp",
                 Price = 12000000M,
                 IsDefault = false,
                 ProcedureId = idHBS_S2_P1,
-                Duration = 75,
+                Duration = 75
             },
-            new ProcedurePriceType
+            new()
             {
                 Id = Guid.Parse("b2d3d799-1113-4a2f-b6b5-3d05b7e1f2a3"),
                 Name = "Celebrity Eyes - Tư Vấn VIP Cùng Chuyên Gia Hàn Quốc",
                 Price = 18000000M,
                 IsDefault = false,
                 ProcedureId = idHBS_S2_P1,
-                Duration = 90,
+                Duration = 90
             },
 
             // Hanoi Beauty Spa Service 2 - Cắt Mí Mắt Hàn Quốc Không Sẹo - Procedure 2
-            new ProcedurePriceType
+            new()
             {
                 Id = Guid.Parse("b2d3d799-1121-4a2f-b6b5-3d05b7e1f2a3"),
                 Name = "Kiểm Tra Sức Khỏe An Toàn Trước Phẫu Thuật",
                 Price = 1000000M,
                 IsDefault = true,
                 ProcedureId = idHBS_S2_P2,
-                Duration = 30,
+                Duration = 30
             },
-            new ProcedurePriceType
+            new()
             {
                 Id = Guid.Parse("b2d3d799-1122-4a2f-b6b5-3d05b7e1f2a3"),
                 Name = "Đánh Giá Sức Khỏe Toàn Diện Premium",
                 Price = 2000000M,
                 IsDefault = false,
                 ProcedureId = idHBS_S2_P2,
-                Duration = 45,
+                Duration = 45
             },
 
             // Hanoi Beauty Spa Service 2 - Cắt Mí Mắt Hàn Quốc Không Sẹo - Procedure 3
-            new ProcedurePriceType
+            new()
             {
                 Id = Guid.Parse("b2d3d799-1131-4a2f-b6b5-3d05b7e1f2a3"),
                 Name = "Phẫu Thuật Mí Tự Nhiên - Công Nghệ Không Sẹo Hàn Quốc",
                 Price = 15000000M,
                 IsDefault = true,
                 ProcedureId = idHBS_S2_P3,
-                Duration = 90,
+                Duration = 90
             },
-            new ProcedurePriceType
+            new()
             {
                 Id = Guid.Parse("b2d3d799-1132-4a2f-b6b5-3d05b7e1f2a3"),
                 Name = "Phẫu Thuật Double-Fold Premium - Kỹ Thuật Chuyên Gia",
                 Price = 22000000M,
                 IsDefault = false,
                 ProcedureId = idHBS_S2_P3,
-                Duration = 120,
+                Duration = 120
             },
 
             // Hanoi Beauty Spa Service 2 - Cắt Mí Mắt Hàn Quốc Không Sẹo - Procedure 4
-            new ProcedurePriceType
+            new()
             {
                 Id = Guid.Parse("b2d3d799-1141-4a2f-b6b5-3d05b7e1f2a3"),
                 Name = "Phục Hồi Nhanh - Chăm Sóc Sau Phẫu Thuật",
                 Price = 800000M,
                 IsDefault = true,
                 ProcedureId = idHBS_S2_P4,
-                Duration = 30,
+                Duration = 30
             },
-            new ProcedurePriceType
+            new()
             {
                 Id = Guid.Parse("b2d3d799-1142-4a2f-b6b5-3d05b7e1f2a3"),
                 Name = "Tái Sinh Siêu Tốc - Liệu Trình Phục Hồi Cao Cấp",
                 Price = 1500000M,
                 IsDefault = false,
                 ProcedureId = idHBS_S2_P4,
-                Duration = 45,
+                Duration = 45
             },
 
-            new ProcedurePriceType
+            new()
             {
                 Id = Guid.Parse("b3d3d799-1111-4a2f-b6b5-3d05b7e1f2a3"),
                 Name = "Định Hình Cung Mày Cá Nhân Hóa",
                 Price = 5000000M,
                 IsDefault = true,
                 ProcedureId = idHBS_S3_P1,
-                Duration = 45,
+                Duration = 45
             },
-            new ProcedurePriceType
+            new()
             {
                 Id = Guid.Parse("b3d3d799-1112-4a2f-b6b5-3d05b7e1f2a3"),
                 Name = "Phân Tích & Thiết Kế Cung Mày 3D Cao Cấp",
                 Price = 8000000M,
                 IsDefault = false,
                 ProcedureId = idHBS_S3_P1,
-                Duration = 60,
+                Duration = 60
             },
 
             // Hanoi Beauty Spa Service 3 - Nâng Cung Mày Siêu Âm Hifu - Procedure 2
-            new ProcedurePriceType
+            new()
             {
                 Id = Guid.Parse("b3d3d799-1121-4a2f-b6b5-3d05b7e1f2a3"),
                 Name = "Chuẩn Bị Hifu Standard - An Toàn Tối Ưu",
                 Price = 800000M,
                 IsDefault = true,
                 ProcedureId = idHBS_S3_P2,
-                Duration = 30,
+                Duration = 30
             },
-            new ProcedurePriceType
+            new()
             {
                 Id = Guid.Parse("b3d3d799-1122-4a2f-b6b5-3d05b7e1f2a3"),
                 Name = "Chuẩn Bị Hifu Premium - Kiểm Tra Toàn Diện",
                 Price = 1200000M,
                 IsDefault = false,
                 ProcedureId = idHBS_S3_P2,
-                Duration = 45,
+                Duration = 45
             },
 
             // Hanoi Beauty Spa Service 3 - Nâng Cung Mày Siêu Âm Hifu - Procedure 3
-            new ProcedurePriceType
+            new()
             {
                 Id = Guid.Parse("b3d3d799-1131-4a2f-b6b5-3d05b7e1f2a3"),
                 Name = "Hifu Power Lift - Liệu Trình Đơn",
                 Price = 7000000M,
                 IsDefault = true,
                 ProcedureId = idHBS_S3_P3,
-                Duration = 60,
+                Duration = 60
             },
-            new ProcedurePriceType
+            new()
             {
                 Id = Guid.Parse("b3d3d799-1132-4a2f-b6b5-3d05b7e1f2a3"),
                 Name = "Hifu Ultra Lift - Liệu Trình 3 Buổi Tăng Cường",
                 Price = 18000000M,
                 IsDefault = false,
                 ProcedureId = idHBS_S3_P3,
-                Duration = 180,
+                Duration = 180
             },
-            new ProcedurePriceType
+            new()
             {
                 Id = Guid.Parse("b3d3d799-1133-4a2f-b6b5-3d05b7e1f2a3"),
                 Name = "Hifu Royal V-Shape - Liệu Trình Hoàng Gia 5 Buổi",
                 Price = 28000000M,
                 IsDefault = false,
                 ProcedureId = idHBS_S3_P3,
-                Duration = 300,
+                Duration = 300
             },
 
             // Hanoi Beauty Spa Service 3 - Nâng Cung Mày Siêu Âm Hifu - Procedure 4
-            new ProcedurePriceType
+            new()
             {
                 Id = Guid.Parse("b3d3d799-1141-4a2f-b6b5-3d05b7e1f2a3"),
                 Name = "Phục Hồi Express - Theo Dõi Kết Quả Chuẩn Y Khoa",
                 Price = 600000M,
                 IsDefault = true,
                 ProcedureId = idHBS_S3_P4,
-                Duration = 30,
+                Duration = 30
             },
-            new ProcedurePriceType
+            new()
             {
                 Id = Guid.Parse("b3d3d799-1142-4a2f-b6b5-3d05b7e1f2a3"),
                 Name = "Phục Hồi Luxury - Liệu Trình Dưỡng Ẩm Chuyên Sâu",
                 Price = 1000000M,
                 IsDefault = false,
                 ProcedureId = idHBS_S3_P4,
-                Duration = 45,
+                Duration = 45
             },
 
             // Hanoi Beauty Spa Service 4 - Thu Nhỏ Ngực Vertical Short-Scar - Procedure 1
-            new ProcedurePriceType
+            new()
             {
                 Id = Guid.Parse("b4d3d799-1111-4a2f-b6b5-3d05b7e1f2a3"),
                 Name = "Tư Vấn Định Hình Dáng Ngực Tự Nhiên",
                 Price = 40000000M,
                 IsDefault = true,
                 ProcedureId = idHBS_S4_P1,
-                Duration = 180,
+                Duration = 180
             },
-            new ProcedurePriceType
+            new()
             {
                 Id = Guid.Parse("b4d3d799-1112-4a2f-b6b5-3d05b7e1f2a3"),
                 Name = "Tư Vấn Thẩm Mỹ Ngực Toàn Diện Với Chuyên Gia Quốc Tế",
                 Price = 65000000M,
                 IsDefault = false,
                 ProcedureId = idHBS_S4_P1,
-                Duration = 240,
+                Duration = 240
             },
 
             // Hanoi Beauty Spa Service 4 - Thu Nhỏ Ngực Vertical Short-Scar - Procedure 2
-            new ProcedurePriceType
+            new()
             {
                 Id = Guid.Parse("b4d3d799-1121-4a2f-b6b5-3d05b7e1f2a3"),
                 Name = "Kiểm Tra Tiền Phẫu Standard - An Toàn Tối Ưu",
                 Price = 2000000M,
                 IsDefault = true,
                 ProcedureId = idHBS_S4_P2,
-                Duration = 45,
+                Duration = 45
             },
-            new ProcedurePriceType
+            new()
             {
                 Id = Guid.Parse("b4d3d799-1122-4a2f-b6b5-3d05b7e1f2a3"),
                 Name = "Kiểm Tra Tiền Phẫu Premium - Đánh Giá Chuyên Sâu",
                 Price = 3500000M,
                 IsDefault = false,
                 ProcedureId = idHBS_S4_P2,
-                Duration = 60,
+                Duration = 60
             },
 
             // Hanoi Beauty Spa Service 4 - Thu Nhỏ Ngực Vertical Short-Scar - Procedure 3
-            new ProcedurePriceType
+            new()
             {
                 Id = Guid.Parse("b4d3d799-1131-4a2f-b6b5-3d05b7e1f2a3"),
                 Name = "Phẫu Thuật Vertical Short-Scar Chuẩn Quốc Tế",
                 Price = 55000000M,
                 IsDefault = true,
                 ProcedureId = idHBS_S4_P3,
-                Duration = 180,
+                Duration = 180
             },
-            new ProcedurePriceType
+            new()
             {
                 Id = Guid.Parse("b4d3d799-1132-4a2f-b6b5-3d05b7e1f2a3"),
                 Name = "Phẫu Thuật Short-Scar Premium - Dáng Ngực Hoàn Hảo",
                 Price = 75000000M,
                 IsDefault = false,
                 ProcedureId = idHBS_S4_P3,
-                Duration = 240,
+                Duration = 240
             },
-            new ProcedurePriceType
+            new()
             {
                 Id = Guid.Parse("b4d3d799-1133-4a2f-b6b5-3d05b7e1f2a3"),
                 Name = "Phẫu Thuật Executive Suite - Dáng Ngực Tự Nhiên Không Dấu Vết",
                 Price = 100000000M,
                 IsDefault = false,
                 ProcedureId = idHBS_S4_P3,
-                Duration = 300,
+                Duration = 300
             },
 
             // Hanoi Beauty Spa Service 4 - Thu Nhỏ Ngực Vertical Short-Scar - Procedure 4
-            new ProcedurePriceType
+            new()
             {
                 Id = Guid.Parse("b4d3d799-1141-4a2f-b6b5-3d05b7e1f2a3"),
                 Name = "48h Recovery Suite - Chăm Sóc Phục Hồi Chuyên Nghiệp",
                 Price = 5000000M,
                 IsDefault = true,
                 ProcedureId = idHBS_S4_P4,
-                Duration = 60,
+                Duration = 60
             },
-            new ProcedurePriceType
+            new()
             {
                 Id = Guid.Parse("b4d3d799-1142-4a2f-b6b5-3d05b7e1f2a3"),
                 Name = "48h VIP Recovery Suite - Phục Hồi Cao Cấp Với Y Tá Riêng",
                 Price = 8000000M,
                 IsDefault = false,
                 ProcedureId = idHBS_S4_P4,
-                Duration = 90,
+                Duration = 90
             },
 
             // Hanoi Beauty Spa Service 4 - Thu Nhỏ Ngực Vertical Short-Scar - Procedure 5
-            new ProcedurePriceType
+            new()
             {
                 Id = Guid.Parse("b4d3d799-1151-4a2f-b6b5-3d05b7e1f2a3"),
                 Name = "Phục Hồi Sau Phẫu Thuật - Gói 3 Tháng Theo Dõi",
                 Price = 1500000M,
                 IsDefault = true,
                 ProcedureId = idHBS_S4_P5,
-                Duration = 45,
+                Duration = 45
             },
-            new ProcedurePriceType
+            new()
             {
                 Id = Guid.Parse("b4d3d799-1152-4a2f-b6b5-3d05b7e1f2a3"),
                 Name = "Phục Hồi Toàn Diện - Gói VIP 6 Tháng Với Bác Sĩ Chuyên Khoa",
                 Price = 3000000M,
                 IsDefault = false,
                 ProcedureId = idHBS_S4_P5,
-                Duration = 60,
+                Duration = 60
             },
 
             // Hanoi Beauty Spa Service 5 - Hút Mỡ Mặt Precision
             // Procedure 1 - Tư vấn và đánh giá vùng mỡ mặt
-            new ProcedurePriceType
+            new()
             {
                 Id = Guid.Parse("d5d3d799-1001-4a2f-0001-3d05b7e1f2a3"),
                 Name = "Đánh Giá Tạo Hình V-Line Tự Nhiên",
@@ -2431,7 +2431,7 @@ internal sealed class OutboxMessageConfiguration : IEntityTypeConfiguration<Outb
                 IsDefault = true,
                 ProcedureId = idHBS_S5_P1
             },
-            new ProcedurePriceType
+            new()
             {
                 Id = Guid.Parse("d5d3d799-1001-4a2f-0002-3d05b7e1f2a3"),
                 Name = "Tư Vấn Tạo Hình Khuôn Mặt 3D Chuyên Sâu",
@@ -2442,7 +2442,7 @@ internal sealed class OutboxMessageConfiguration : IEntityTypeConfiguration<Outb
             },
 
             // Procedure 2 - Kiểm tra sức khỏe và chuẩn bị tiền phẫu
-            new ProcedurePriceType
+            new()
             {
                 Id = Guid.Parse("d5d3d799-1002-4a2f-0001-3d05b7e1f2a3"),
                 Name = "Kiểm Tra Sức Khỏe Pre-Surgery Standard",
@@ -2451,7 +2451,7 @@ internal sealed class OutboxMessageConfiguration : IEntityTypeConfiguration<Outb
                 IsDefault = true,
                 ProcedureId = idHBS_S5_P2
             },
-            new ProcedurePriceType
+            new()
             {
                 Id = Guid.Parse("d5d3d799-1002-4a2f-0002-3d05b7e1f2a3"),
                 Name = "Đánh Giá Tiền Phẫu Toàn Diện Premium",
@@ -2462,7 +2462,7 @@ internal sealed class OutboxMessageConfiguration : IEntityTypeConfiguration<Outb
             },
 
             // Procedure 3 - Phẫu thuật hút mỡ mặt Precision
-            new ProcedurePriceType
+            new()
             {
                 Id = Guid.Parse("d5d3d799-1003-4a2f-0001-3d05b7e1f2a3"),
                 Name = "Precision V-Shape Facial Contouring",
@@ -2471,7 +2471,7 @@ internal sealed class OutboxMessageConfiguration : IEntityTypeConfiguration<Outb
                 IsDefault = true,
                 ProcedureId = idHBS_S5_P3
             },
-            new ProcedurePriceType
+            new()
             {
                 Id = Guid.Parse("d5d3d799-1003-4a2f-0002-3d05b7e1f2a3"),
                 Name = "Elite Precision 360° Facial Sculpting",
@@ -2482,7 +2482,7 @@ internal sealed class OutboxMessageConfiguration : IEntityTypeConfiguration<Outb
             },
 
             // Procedure 4 - Chăm sóc và tái khám sau phẫu thuật
-            new ProcedurePriceType
+            new()
             {
                 Id = Guid.Parse("d5d3d799-1004-4a2f-0001-3d05b7e1f2a3"),
                 Name = "Phục Hồi 24h - Chăm Sóc Hậu Phẫu Chuyên Nghiệp",
@@ -2491,7 +2491,7 @@ internal sealed class OutboxMessageConfiguration : IEntityTypeConfiguration<Outb
                 IsDefault = true,
                 ProcedureId = idHBS_S5_P4
             },
-            new ProcedurePriceType
+            new()
             {
                 Id = Guid.Parse("d5d3d799-1004-4a2f-0002-3d05b7e1f2a3"),
                 Name = "Phục Hồi 48h VIP - Theo Dõi Toàn Diện Với Chuyên Gia",
@@ -2503,7 +2503,7 @@ internal sealed class OutboxMessageConfiguration : IEntityTypeConfiguration<Outb
 
             // Skin Care Đà Nẵng Service 1 - Nâng Mũi Cấu Trúc Hybrid
             // Procedure 1 - Tư vấn và thăm khám
-            new ProcedurePriceType
+            new()
             {
                 Id = Guid.Parse("e1d3d799-1001-4a2f-0001-3d05b7e1f2a3"),
                 Name = "Tư vấn nâng mũi cơ bản",
@@ -2512,7 +2512,7 @@ internal sealed class OutboxMessageConfiguration : IEntityTypeConfiguration<Outb
                 IsDefault = true,
                 ProcedureId = idSCDN_S1_P1
             },
-            new ProcedurePriceType
+            new()
             {
                 Id = Guid.Parse("e1d3d799-1001-4a2f-0002-3d05b7e1f2a3"),
                 Name = "Tư vấn nâng mũi chuyên sâu",
@@ -2523,7 +2523,7 @@ internal sealed class OutboxMessageConfiguration : IEntityTypeConfiguration<Outb
             },
 
             // Procedure 2 - Phân tích và thiết kế
-            new ProcedurePriceType
+            new()
             {
                 Id = Guid.Parse("e1d3d799-1002-4a2f-0001-3d05b7e1f2a3"),
                 Name = "Phân tích và thiết kế tiêu chuẩn",
@@ -2532,7 +2532,7 @@ internal sealed class OutboxMessageConfiguration : IEntityTypeConfiguration<Outb
                 IsDefault = true,
                 ProcedureId = idSCDN_S1_P2
             },
-            new ProcedurePriceType
+            new()
             {
                 Id = Guid.Parse("e1d3d799-1002-4a2f-0002-3d05b7e1f2a3"),
                 Name = "Phân tích và thiết kế 3D",
@@ -2543,7 +2543,7 @@ internal sealed class OutboxMessageConfiguration : IEntityTypeConfiguration<Outb
             },
 
             // Procedure 3 - Chuẩn bị vật liệu
-            new ProcedurePriceType
+            new()
             {
                 Id = Guid.Parse("e1d3d799-1003-4a2f-0001-3d05b7e1f2a3"),
                 Name = "Vật liệu tiêu chuẩn",
@@ -2552,7 +2552,7 @@ internal sealed class OutboxMessageConfiguration : IEntityTypeConfiguration<Outb
                 IsDefault = true,
                 ProcedureId = idSCDN_S1_P3
             },
-            new ProcedurePriceType
+            new()
             {
                 Id = Guid.Parse("e1d3d799-1003-4a2f-0002-3d05b7e1f2a3"),
                 Name = "Vật liệu cao cấp nhập khẩu",
@@ -2563,7 +2563,7 @@ internal sealed class OutboxMessageConfiguration : IEntityTypeConfiguration<Outb
             },
 
             // Procedure 4 - Thực hiện phẫu thuật
-            new ProcedurePriceType
+            new()
             {
                 Id = Guid.Parse("e1d3d799-1004-4a2f-0001-3d05b7e1f2a3"),
                 Name = "Phẫu thuật tiêu chuẩn",
@@ -2572,7 +2572,7 @@ internal sealed class OutboxMessageConfiguration : IEntityTypeConfiguration<Outb
                 IsDefault = true,
                 ProcedureId = idSCDN_S1_P4
             },
-            new ProcedurePriceType
+            new()
             {
                 Id = Guid.Parse("e1d3d799-1004-4a2f-0002-3d05b7e1f2a3"),
                 Name = "Phẫu thuật kỹ thuật cao",
@@ -2583,7 +2583,7 @@ internal sealed class OutboxMessageConfiguration : IEntityTypeConfiguration<Outb
             },
 
             // Procedure 5 - Theo dõi và chăm sóc hậu phẫu
-            new ProcedurePriceType
+            new()
             {
                 Id = Guid.Parse("e1d3d799-1005-4a2f-0001-3d05b7e1f2a3"),
                 Name = "Chăm sóc hậu phẫu tiêu chuẩn",
@@ -2592,7 +2592,7 @@ internal sealed class OutboxMessageConfiguration : IEntityTypeConfiguration<Outb
                 IsDefault = true,
                 ProcedureId = idSCDN_S1_P5
             },
-            new ProcedurePriceType
+            new()
             {
                 Id = Guid.Parse("e1d3d799-1005-4a2f-0002-3d05b7e1f2a3"),
                 Name = "Chăm sóc hậu phẫu VIP",
@@ -2604,7 +2604,7 @@ internal sealed class OutboxMessageConfiguration : IEntityTypeConfiguration<Outb
 
             // Skin Care Đà Nẵng Service 2 - Nâng Ngực Nội Soi Ergonomix
             // Procedure 1 - Tư vấn và thăm khám
-            new ProcedurePriceType
+            new()
             {
                 Id = Guid.Parse("e2d3d799-1001-4a2f-0001-3d05b7e1f2a3"),
                 Name = "Tư vấn nâng ngực cơ bản",
@@ -2613,7 +2613,7 @@ internal sealed class OutboxMessageConfiguration : IEntityTypeConfiguration<Outb
                 IsDefault = true,
                 ProcedureId = idSCDN_S2_P1
             },
-            new ProcedurePriceType
+            new()
             {
                 Id = Guid.Parse("e2d3d799-1001-4a2f-0002-3d05b7e1f2a3"),
                 Name = "Tư vấn nâng ngực chuyên sâu",
@@ -2624,7 +2624,7 @@ internal sealed class OutboxMessageConfiguration : IEntityTypeConfiguration<Outb
             },
 
             // Procedure 2 - Phân tích và thiết kế
-            new ProcedurePriceType
+            new()
             {
                 Id = Guid.Parse("e2d3d799-1002-4a2f-0001-3d05b7e1f2a3"),
                 Name = "Thiết kế tiêu chuẩn",
@@ -2633,7 +2633,7 @@ internal sealed class OutboxMessageConfiguration : IEntityTypeConfiguration<Outb
                 IsDefault = true,
                 ProcedureId = idSCDN_S2_P2
             },
-            new ProcedurePriceType
+            new()
             {
                 Id = Guid.Parse("e2d3d799-1002-4a2f-0002-3d05b7e1f2a3"),
                 Name = "Thiết kế 3D Simulation",
@@ -2644,7 +2644,7 @@ internal sealed class OutboxMessageConfiguration : IEntityTypeConfiguration<Outb
             },
 
             // Procedure 3 - Chuẩn bị túi độn
-            new ProcedurePriceType
+            new()
             {
                 Id = Guid.Parse("e2d3d799-1003-4a2f-0001-3d05b7e1f2a3"),
                 Name = "Túi độn tiêu chuẩn",
@@ -2653,7 +2653,7 @@ internal sealed class OutboxMessageConfiguration : IEntityTypeConfiguration<Outb
                 IsDefault = true,
                 ProcedureId = idSCDN_S2_P3
             },
-            new ProcedurePriceType
+            new()
             {
                 Id = Guid.Parse("e2d3d799-1003-4a2f-0002-3d05b7e1f2a3"),
                 Name = "Túi độn cao cấp Mentor",
@@ -2664,7 +2664,7 @@ internal sealed class OutboxMessageConfiguration : IEntityTypeConfiguration<Outb
             },
 
             // Procedure 4 - Thực hiện phẫu thuật
-            new ProcedurePriceType
+            new()
             {
                 Id = Guid.Parse("e2d3d799-1004-4a2f-0001-3d05b7e1f2a3"),
                 Name = "Phẫu thuật tiêu chuẩn",
@@ -2673,7 +2673,7 @@ internal sealed class OutboxMessageConfiguration : IEntityTypeConfiguration<Outb
                 IsDefault = true,
                 ProcedureId = idSCDN_S2_P4
             },
-            new ProcedurePriceType
+            new()
             {
                 Id = Guid.Parse("e2d3d799-1004-4a2f-0002-3d05b7e1f2a3"),
                 Name = "Phẫu thuật nội soi cao cấp",
@@ -2684,7 +2684,7 @@ internal sealed class OutboxMessageConfiguration : IEntityTypeConfiguration<Outb
             },
 
             // Procedure 5 - Theo dõi và chăm sóc hậu phẫu
-            new ProcedurePriceType
+            new()
             {
                 Id = Guid.Parse("e2d3d799-1005-4a2f-0001-3d05b7e1f2a3"),
                 Name = "Chăm sóc hậu phẫu tiêu chuẩn",
@@ -2693,7 +2693,7 @@ internal sealed class OutboxMessageConfiguration : IEntityTypeConfiguration<Outb
                 IsDefault = true,
                 ProcedureId = idSCDN_S2_P5
             },
-            new ProcedurePriceType
+            new()
             {
                 Id = Guid.Parse("e2d3d799-1005-4a2f-0002-3d05b7e1f2a3"),
                 Name = "Chăm sóc hậu phẫu premium",
@@ -2705,7 +2705,7 @@ internal sealed class OutboxMessageConfiguration : IEntityTypeConfiguration<Outb
 
             // Skin Care Đà Nẵng Service 3 - Hút Mỡ Bụng 3D Hi-Definition
             // Procedure 1 - Tư vấn và đánh giá
-            new ProcedurePriceType
+            new()
             {
                 Id = Guid.Parse("e3d3d799-1001-4a2f-0001-3d05b7e1f2a3"),
                 Name = "Tư vấn tiêu chuẩn",
@@ -2714,7 +2714,7 @@ internal sealed class OutboxMessageConfiguration : IEntityTypeConfiguration<Outb
                 IsDefault = true,
                 ProcedureId = idSCDN_S3_P1
             },
-            new ProcedurePriceType
+            new()
             {
                 Id = Guid.Parse("e3d3d799-1001-4a2f-0002-3d05b7e1f2a3"),
                 Name = "Tư vấn và đánh giá chuyên sâu",
@@ -2725,7 +2725,7 @@ internal sealed class OutboxMessageConfiguration : IEntityTypeConfiguration<Outb
             },
 
             // Procedure 2 - Thiết kế định hình cơ thể
-            new ProcedurePriceType
+            new()
             {
                 Id = Guid.Parse("e3d3d799-1002-4a2f-0001-3d05b7e1f2a3"),
                 Name = "Định hình cơ bản",
@@ -2734,7 +2734,7 @@ internal sealed class OutboxMessageConfiguration : IEntityTypeConfiguration<Outb
                 IsDefault = true,
                 ProcedureId = idSCDN_S3_P2
             },
-            new ProcedurePriceType
+            new()
             {
                 Id = Guid.Parse("e3d3d799-1002-4a2f-0002-3d05b7e1f2a3"),
                 Name = "Định hình 3D precision",
@@ -2745,7 +2745,7 @@ internal sealed class OutboxMessageConfiguration : IEntityTypeConfiguration<Outb
             },
 
             // Procedure 3 - Chuẩn bị trước phẫu thuật
-            new ProcedurePriceType
+            new()
             {
                 Id = Guid.Parse("e3d3d799-1003-4a2f-0001-3d05b7e1f2a3"),
                 Name = "Chuẩn bị tiêu chuẩn",
@@ -2754,7 +2754,7 @@ internal sealed class OutboxMessageConfiguration : IEntityTypeConfiguration<Outb
                 IsDefault = true,
                 ProcedureId = idSCDN_S3_P3
             },
-            new ProcedurePriceType
+            new()
             {
                 Id = Guid.Parse("e3d3d799-1003-4a2f-0002-3d05b7e1f2a3"),
                 Name = "Chuẩn bị cao cấp",
@@ -2765,7 +2765,7 @@ internal sealed class OutboxMessageConfiguration : IEntityTypeConfiguration<Outb
             },
 
             // Procedure 4 - Thực hiện hút mỡ
-            new ProcedurePriceType
+            new()
             {
                 Id = Guid.Parse("e3d3d799-1004-4a2f-0001-3d05b7e1f2a3"),
                 Name = "Hút mỡ tiêu chuẩn",
@@ -2774,7 +2774,7 @@ internal sealed class OutboxMessageConfiguration : IEntityTypeConfiguration<Outb
                 IsDefault = true,
                 ProcedureId = idSCDN_S3_P4
             },
-            new ProcedurePriceType
+            new()
             {
                 Id = Guid.Parse("e3d3d799-1004-4a2f-0002-3d05b7e1f2a3"),
                 Name = "Hút mỡ 3D Hi-Definition",
@@ -2785,7 +2785,7 @@ internal sealed class OutboxMessageConfiguration : IEntityTypeConfiguration<Outb
             },
 
             // Procedure 5 - Theo dõi và chăm sóc hậu phẫu
-            new ProcedurePriceType
+            new()
             {
                 Id = Guid.Parse("e3d3d799-1005-4a2f-0001-3d05b7e1f2a3"),
                 Name = "Chăm sóc phục hồi tiêu chuẩn",
@@ -2794,7 +2794,7 @@ internal sealed class OutboxMessageConfiguration : IEntityTypeConfiguration<Outb
                 IsDefault = true,
                 ProcedureId = idSCDN_S3_P5
             },
-            new ProcedurePriceType
+            new()
             {
                 Id = Guid.Parse("e3d3d799-1005-4a2f-0002-3d05b7e1f2a3"),
                 Name = "Chăm sóc phục hồi nhanh VIP",
@@ -2806,7 +2806,7 @@ internal sealed class OutboxMessageConfiguration : IEntityTypeConfiguration<Outb
 
             // Skin Care Đà Nẵng Service 4 - Cắt Mí Mắt Plasma Tech
             // Procedure 1 - Tư vấn và thăm khám
-            new ProcedurePriceType
+            new()
             {
                 Id = Guid.Parse("e4d3d799-1001-4a2f-0001-3d05b7e1f2a3"),
                 Name = "Tư vấn cơ bản",
@@ -2815,7 +2815,7 @@ internal sealed class OutboxMessageConfiguration : IEntityTypeConfiguration<Outb
                 IsDefault = true,
                 ProcedureId = idSCDN_S4_P1
             },
-            new ProcedurePriceType
+            new()
             {
                 Id = Guid.Parse("e4d3d799-1001-4a2f-0002-3d05b7e1f2a3"),
                 Name = "Tư vấn chuyên sâu",
@@ -2826,7 +2826,7 @@ internal sealed class OutboxMessageConfiguration : IEntityTypeConfiguration<Outb
             },
 
             // Procedure 2 - Thiết kế mí mắt
-            new ProcedurePriceType
+            new()
             {
                 Id = Guid.Parse("e4d3d799-1002-4a2f-0001-3d05b7e1f2a3"),
                 Name = "Thiết kế tiêu chuẩn",
@@ -2835,7 +2835,7 @@ internal sealed class OutboxMessageConfiguration : IEntityTypeConfiguration<Outb
                 IsDefault = true,
                 ProcedureId = idSCDN_S4_P2
             },
-            new ProcedurePriceType
+            new()
             {
                 Id = Guid.Parse("e4d3d799-1002-4a2f-0002-3d05b7e1f2a3"),
                 Name = "Thiết kế 3D precision",
@@ -2846,7 +2846,7 @@ internal sealed class OutboxMessageConfiguration : IEntityTypeConfiguration<Outb
             },
 
             // Procedure 3 - Thực hiện cắt mí
-            new ProcedurePriceType
+            new()
             {
                 Id = Guid.Parse("e4d3d799-1003-4a2f-0001-3d05b7e1f2a3"),
                 Name = "Cắt mí tiêu chuẩn",
@@ -2855,7 +2855,7 @@ internal sealed class OutboxMessageConfiguration : IEntityTypeConfiguration<Outb
                 IsDefault = true,
                 ProcedureId = idSCDN_S4_P3
             },
-            new ProcedurePriceType
+            new()
             {
                 Id = Guid.Parse("e4d3d799-1003-4a2f-0002-3d05b7e1f2a3"),
                 Name = "Cắt mí Plasma Tech cao cấp",
@@ -2866,7 +2866,7 @@ internal sealed class OutboxMessageConfiguration : IEntityTypeConfiguration<Outb
             },
 
             // Procedure 4 - Theo dõi và chăm sóc
-            new ProcedurePriceType
+            new()
             {
                 Id = Guid.Parse("e4d3d799-1004-4a2f-0001-3d05b7e1f2a3"),
                 Name = "Chăm sóc tiêu chuẩn",
@@ -2875,7 +2875,7 @@ internal sealed class OutboxMessageConfiguration : IEntityTypeConfiguration<Outb
                 IsDefault = true,
                 ProcedureId = idSCDN_S4_P4
             },
-            new ProcedurePriceType
+            new()
             {
                 Id = Guid.Parse("e4d3d799-1004-4a2f-0002-3d05b7e1f2a3"),
                 Name = "Chăm sóc phục hồi nhanh",
@@ -2887,7 +2887,7 @@ internal sealed class OutboxMessageConfiguration : IEntityTypeConfiguration<Outb
 
             // Skin Care Đà Nẵng Service 5 - Độn Cằm 3D Crystal
             // Procedure 1 - Tư vấn và thăm khám
-            new ProcedurePriceType
+            new()
             {
                 Id = Guid.Parse("e5d3d799-1001-4a2f-0001-3d05b7e1f2a3"),
                 Name = "Tư vấn độn cằm cơ bản",
@@ -2896,7 +2896,7 @@ internal sealed class OutboxMessageConfiguration : IEntityTypeConfiguration<Outb
                 IsDefault = true,
                 ProcedureId = idSCDN_S5_P1
             },
-            new ProcedurePriceType
+            new()
             {
                 Id = Guid.Parse("e5d3d799-1001-4a2f-0002-3d05b7e1f2a3"),
                 Name = "Tư vấn độn cằm chuyên sâu",
@@ -2907,7 +2907,7 @@ internal sealed class OutboxMessageConfiguration : IEntityTypeConfiguration<Outb
             },
 
             // Procedure 2 - Thiết kế và tạo hình
-            new ProcedurePriceType
+            new()
             {
                 Id = Guid.Parse("e5d3d799-1002-4a2f-0001-3d05b7e1f2a3"),
                 Name = "Thiết kế tiêu chuẩn",
@@ -2916,7 +2916,7 @@ internal sealed class OutboxMessageConfiguration : IEntityTypeConfiguration<Outb
                 IsDefault = true,
                 ProcedureId = idSCDN_S5_P2
             },
-            new ProcedurePriceType
+            new()
             {
                 Id = Guid.Parse("e5d3d799-1002-4a2f-0002-3d05b7e1f2a3"),
                 Name = "Thiết kế 3D Crystal",
@@ -2927,7 +2927,7 @@ internal sealed class OutboxMessageConfiguration : IEntityTypeConfiguration<Outb
             },
 
             // Procedure 3 - Thực hiện độn cằm
-            new ProcedurePriceType
+            new()
             {
                 Id = Guid.Parse("e5d3d799-1003-4a2f-0001-3d05b7e1f2a3"),
                 Name = "Độn cằm silicon tiêu chuẩn",
@@ -2936,7 +2936,7 @@ internal sealed class OutboxMessageConfiguration : IEntityTypeConfiguration<Outb
                 IsDefault = true,
                 ProcedureId = idSCDN_S5_P3
             },
-            new ProcedurePriceType
+            new()
             {
                 Id = Guid.Parse("e5d3d799-1003-4a2f-0002-3d05b7e1f2a3"),
                 Name = "Độn cằm 3D Crystal cao cấp",
@@ -2947,7 +2947,7 @@ internal sealed class OutboxMessageConfiguration : IEntityTypeConfiguration<Outb
             },
 
             // Procedure 4 - Theo dõi và chăm sóc
-            new ProcedurePriceType
+            new()
             {
                 Id = Guid.Parse("e5d3d799-1004-4a2f-0001-3d05b7e1f2a3"),
                 Name = "Chăm sóc hậu phẫu tiêu chuẩn",
@@ -2956,7 +2956,7 @@ internal sealed class OutboxMessageConfiguration : IEntityTypeConfiguration<Outb
                 IsDefault = true,
                 ProcedureId = idSCDN_S5_P4
             },
-            new ProcedurePriceType
+            new()
             {
                 Id = Guid.Parse("e5d3d799-1004-4a2f-0002-3d05b7e1f2a3"),
                 Name = "Chăm sóc hậu phẫu VIP",
@@ -2967,198 +2967,198 @@ internal sealed class OutboxMessageConfiguration : IEntityTypeConfiguration<Outb
             }
         };
 
-        var doctorServices = new List<DoctorService>()
+        var doctorServices = new List<DoctorService>
         {
             // Beauty Center Sài Gòn - Chi nhánh Quận 1
-            new DoctorService()
+            new()
             {
                 Id = Guid.Parse("d23e467d-d315-44de-bdb0-49a78a520fe5"),
                 DoctorId = Guid.Parse("ab23d158-44e2-44d4-b679-d7c568993702"), // Lê Thị Thanh Đoan
-                ServiceId = Guid.Parse("a1d3d799-3f62-4a2f-b6b5-3d05b7e1f2a3"), // BCSG Service 1
+                ServiceId = Guid.Parse("a1d3d799-3f62-4a2f-b6b5-3d05b7e1f2a3") // BCSG Service 1
             },
-            new DoctorService()
+            new()
             {
                 Id = Guid.Parse("b5c39c4b-4a90-47ea-bdb7-87edcfcff0e9"),
                 DoctorId = Guid.Parse("ab23d158-44e2-44d4-b679-d7c568993702"), // Lê Thị Thanh Đoan
-                ServiceId = Guid.Parse("a2d3d799-3f62-4a2f-b6b5-3d05b7e1f2a3"), // BCSG Service 2
+                ServiceId = Guid.Parse("a2d3d799-3f62-4a2f-b6b5-3d05b7e1f2a3") // BCSG Service 2
             },
-            new DoctorService()
+            new()
             {
                 Id = Guid.Parse("bd7be97f-c632-45de-8d4a-b0a38cd04335"),
                 DoctorId = Guid.Parse("a2b21279-5bbd-40c3-8981-6821c7f6b2ea"), // Phạm Minh Hoàng
-                ServiceId = Guid.Parse("a3d3d799-3f62-4a2f-b6b5-3d05b7e1f2a3"), // BCSG Service 3
+                ServiceId = Guid.Parse("a3d3d799-3f62-4a2f-b6b5-3d05b7e1f2a3") // BCSG Service 3
             },
-            new DoctorService()
+            new()
             {
                 Id = Guid.Parse("6bca7894-b94d-4840-a218-56fcd0803a8b"),
                 DoctorId = Guid.Parse("a2b21279-5bbd-40c3-8981-6821c7f6b2ea"), // Phạm Minh Hoàng
-                ServiceId = Guid.Parse("a4d3d799-3f62-4a2f-b6b5-3d05b7e1f2a3"), // BCSG Service 4
+                ServiceId = Guid.Parse("a4d3d799-3f62-4a2f-b6b5-3d05b7e1f2a3") // BCSG Service 4
             },
-            new DoctorService()
+            new()
             {
                 Id = Guid.Parse("38b2c6de-e4eb-4f33-bf66-626563349b87"),
                 DoctorId = Guid.Parse("ab23d158-44e2-44d4-b679-d7c568993702"), // Lê Thị Thanh Đoan
-                ServiceId = Guid.Parse("a5d3d799-3f62-4a2f-b6b5-3d05b7e1f2a3"), // BCSG Service 5
+                ServiceId = Guid.Parse("a5d3d799-3f62-4a2f-b6b5-3d05b7e1f2a3") // BCSG Service 5
             },
 
             // Beauty Center Sài Gòn - Chi nhánh Quận 3
-            new DoctorService()
+            new()
             {
                 Id = Guid.Parse("4c0288d1-0289-4e0c-b8b4-b68ad25d713e"),
                 DoctorId = Guid.Parse("da2d6a80-75cc-4757-8ed3-e0b508ffb080"), // Trịnh Thượng Lâm
-                ServiceId = Guid.Parse("a1d3d799-3f62-4a2f-b6b5-3d05b7e1f2a3"), // BCSG Service 1
+                ServiceId = Guid.Parse("a1d3d799-3f62-4a2f-b6b5-3d05b7e1f2a3") // BCSG Service 1
             },
-            new DoctorService()
+            new()
             {
                 Id = Guid.Parse("c3d459ff-0f1f-4208-8cc3-45c4b8a0c2a3"),
                 DoctorId = Guid.Parse("da2d6a80-75cc-4757-8ed3-e0b508ffb080"), // Trịnh Thượng Lâm
-                ServiceId = Guid.Parse("a2d3d799-3f62-4a2f-b6b5-3d05b7e1f2a3"), // BCSG Service 2
+                ServiceId = Guid.Parse("a2d3d799-3f62-4a2f-b6b5-3d05b7e1f2a3") // BCSG Service 2
             },
-            new DoctorService()
+            new()
             {
                 Id = Guid.Parse("48f8d39c-44e1-47e3-907d-91c1bc81acb1"),
                 DoctorId = Guid.Parse("8b0f0b23-f07f-453d-b8bc-1acb26d03d87"), // Đoàn Thanh Tiến
-                ServiceId = Guid.Parse("a3d3d799-3f62-4a2f-b6b5-3d05b7e1f2a3"), // BCSG Service 3
+                ServiceId = Guid.Parse("a3d3d799-3f62-4a2f-b6b5-3d05b7e1f2a3") // BCSG Service 3
             },
-            new DoctorService()
+            new()
             {
                 Id = Guid.Parse("d8c1f4f3-e92e-41db-b8b0-48a4ff5b82e5"),
                 DoctorId = Guid.Parse("8b0f0b23-f07f-453d-b8bc-1acb26d03d87"), // Đoàn Thanh Tiến
-                ServiceId = Guid.Parse("a4d3d799-3f62-4a2f-b6b5-3d05b7e1f2a3"), // BCSG Service 4
+                ServiceId = Guid.Parse("a4d3d799-3f62-4a2f-b6b5-3d05b7e1f2a3") // BCSG Service 4
             },
-            new DoctorService()
+            new()
             {
                 Id = Guid.Parse("90f89c34-b439-4874-91f6-7d4e5975b2a7"),
                 DoctorId = Guid.Parse("da2d6a80-75cc-4757-8ed3-e0b508ffb080"), // Trịnh Thượng Lâm
-                ServiceId = Guid.Parse("a5d3d799-3f62-4a2f-b6b5-3d05b7e1f2a3"), // BCSG Service 5
+                ServiceId = Guid.Parse("a5d3d799-3f62-4a2f-b6b5-3d05b7e1f2a3") // BCSG Service 5
             },
 
             // Hanoi Beauty Spa - Chi nhánh Đống Đa
-            new DoctorService()
+            new()
             {
                 Id = Guid.Parse("679d6015-d626-44c9-826d-5b508e13de68"),
                 DoctorId = Guid.Parse("79f207d4-dbbf-488d-848d-fc74a7fdbb29"), // Phan Văn Khoa
-                ServiceId = Guid.Parse("b1d3d799-3f62-4a2f-b6b5-3d05b7e1f2a3"), // HBS Service 1
+                ServiceId = Guid.Parse("b1d3d799-3f62-4a2f-b6b5-3d05b7e1f2a3") // HBS Service 1
             },
-            new DoctorService()
+            new()
             {
                 Id = Guid.Parse("61c90551-2202-4d71-872f-75c9d6e93f07"),
                 DoctorId = Guid.Parse("79f207d4-dbbf-488d-848d-fc74a7fdbb29"), // Phan Văn Khoa
-                ServiceId = Guid.Parse("b2d3d799-3f62-4a2f-b6b5-3d05b7e1f2a3"), // HBS Service 2
+                ServiceId = Guid.Parse("b2d3d799-3f62-4a2f-b6b5-3d05b7e1f2a3") // HBS Service 2
             },
-            new DoctorService()
+            new()
             {
                 Id = Guid.Parse("d43105a5-8252-4b71-b227-f3422261c99d"),
                 DoctorId = Guid.Parse("32e8cfbb-d8b4-4768-8695-81b6b7e63c63"), // Hoàng Minh Trang
-                ServiceId = Guid.Parse("b3d3d799-3f62-4a2f-b6b5-3d05b7e1f2a3"), // HBS Service 3
+                ServiceId = Guid.Parse("b3d3d799-3f62-4a2f-b6b5-3d05b7e1f2a3") // HBS Service 3
             },
-            new DoctorService()
+            new()
             {
                 Id = Guid.Parse("3db20969-d29c-44d9-9395-ff775d82c9a5"),
                 DoctorId = Guid.Parse("32e8cfbb-d8b4-4768-8695-81b6b7e63c63"), // Hoàng Minh Trang
-                ServiceId = Guid.Parse("b4d3d799-3f62-4a2f-b6b5-3d05b7e1f2a3"), // HBS Service 4
+                ServiceId = Guid.Parse("b4d3d799-3f62-4a2f-b6b5-3d05b7e1f2a3") // HBS Service 4
             },
-            new DoctorService()
+            new()
             {
                 Id = Guid.Parse("c9ad65b7-3e2e-4d07-b5f9-76e5c846c8b0"),
                 DoctorId = Guid.Parse("79f207d4-dbbf-488d-848d-fc74a7fdbb29"), // Phan Văn Khoa
-                ServiceId = Guid.Parse("b5d3d799-3f62-4a2f-b6b5-3d05b7e1f2a3"), // HBS Service 5
+                ServiceId = Guid.Parse("b5d3d799-3f62-4a2f-b6b5-3d05b7e1f2a3") // HBS Service 5
             },
 
             // Hanoi Beauty Spa - Chi nhánh Cầu Giấy
-            new DoctorService()
+            new()
             {
                 Id = Guid.Parse("50b60f10-1c51-4d9f-8cfb-5abfda601c07"),
                 DoctorId = Guid.Parse("c21fa13a-b2f6-4eba-8b77-d2c57854bc5f"), // Trần Thanh Long
-                ServiceId = Guid.Parse("b1d3d799-3f62-4a2f-b6b5-3d05b7e1f2a3"), // HBS Service 1
+                ServiceId = Guid.Parse("b1d3d799-3f62-4a2f-b6b5-3d05b7e1f2a3") // HBS Service 1
             },
-            new DoctorService()
+            new()
             {
                 Id = Guid.Parse("6181eeb3-fb27-4568-8c3e-9db2c50028d0"),
                 DoctorId = Guid.Parse("c21fa13a-b2f6-4eba-8b77-d2c57854bc5f"), // Trần Thanh Long
-                ServiceId = Guid.Parse("b2d3d799-3f62-4a2f-b6b5-3d05b7e1f2a3"), // HBS Service 2
+                ServiceId = Guid.Parse("b2d3d799-3f62-4a2f-b6b5-3d05b7e1f2a3") // HBS Service 2
             },
-            new DoctorService()
+            new()
             {
                 Id = Guid.Parse("16b828a7-d18c-4a58-9a61-179a7d8fa1a9"),
                 DoctorId = Guid.Parse("bd3c9480-7bca-43d7-94ed-58cea8b32733"), // Nguyễn Ngọc Mai Hương
-                ServiceId = Guid.Parse("b3d3d799-3f62-4a2f-b6b5-3d05b7e1f2a3"), // HBS Service 3
+                ServiceId = Guid.Parse("b3d3d799-3f62-4a2f-b6b5-3d05b7e1f2a3") // HBS Service 3
             },
-            new DoctorService()
+            new()
             {
                 Id = Guid.Parse("e8c6a7a2-ea73-433f-888d-b100f8edb3fa"),
                 DoctorId = Guid.Parse("bd3c9480-7bca-43d7-94ed-58cea8b32733"), // Nguyễn Ngọc Mai Hương
-                ServiceId = Guid.Parse("b4d3d799-3f62-4a2f-b6b5-3d05b7e1f2a3"), // HBS Service 4
+                ServiceId = Guid.Parse("b4d3d799-3f62-4a2f-b6b5-3d05b7e1f2a3") // HBS Service 4
             },
-            new DoctorService()
+            new()
             {
                 Id = Guid.Parse("7cf6932d-f327-46eb-83a1-7745035cbebd"),
                 DoctorId = Guid.Parse("c21fa13a-b2f6-4eba-8b77-d2c57854bc5f"), // Trần Thanh Long
-                ServiceId = Guid.Parse("b5d3d799-3f62-4a2f-b6b5-3d05b7e1f2a3"), // HBS Service 5
+                ServiceId = Guid.Parse("b5d3d799-3f62-4a2f-b6b5-3d05b7e1f2a3") // HBS Service 5
             },
 
             // Skin Care Đà Nẵng - Chi nhánh Hải Châu
-            new DoctorService()
+            new()
             {
                 Id = Guid.Parse("24d7e8bc-7558-4875-bc38-91b26df3de36"),
                 DoctorId = Guid.Parse("5e9bd8dd-fb53-4f74-bf59-b3aedb96aa7c"), // Võ Anh Quân
-                ServiceId = Guid.Parse("c1d3d799-3f62-4a2f-b6b5-3d05b7e1f2a3"), // SCDN Service 1
+                ServiceId = Guid.Parse("c1d3d799-3f62-4a2f-b6b5-3d05b7e1f2a3") // SCDN Service 1
             },
-            new DoctorService()
+            new()
             {
                 Id = Guid.Parse("4655940b-1167-4f64-8be6-243dcb7b4311"),
                 DoctorId = Guid.Parse("5e9bd8dd-fb53-4f74-bf59-b3aedb96aa7c"), // Võ Anh Quân
-                ServiceId = Guid.Parse("c2d3d799-3f62-4a2f-b6b5-3d05b7e1f2a3"), // SCDN Service 2
+                ServiceId = Guid.Parse("c2d3d799-3f62-4a2f-b6b5-3d05b7e1f2a3") // SCDN Service 2
             },
-            new DoctorService()
+            new()
             {
                 Id = Guid.Parse("b4a09f65-5b68-4796-9ea6-b07f82574bb6"),
                 DoctorId = Guid.Parse("71ddc3c7-a3a0-4e6b-bd1d-f03d5deedbfa"), // Lê Thị Kim Hoa
-                ServiceId = Guid.Parse("c3d3d799-3f62-4a2f-b6b5-3d05b7e1f2a3"), // SCDN Service 3
+                ServiceId = Guid.Parse("c3d3d799-3f62-4a2f-b6b5-3d05b7e1f2a3") // SCDN Service 3
             },
-            new DoctorService()
+            new()
             {
                 Id = Guid.Parse("6d27ad69-d68b-4977-95d6-487982c87bc3"),
                 DoctorId = Guid.Parse("71ddc3c7-a3a0-4e6b-bd1d-f03d5deedbfa"), // Lê Thị Kim Hoa
-                ServiceId = Guid.Parse("c4d3d799-3f62-4a2f-b6b5-3d05b7e1f2a3"), // SCDN Service 4
+                ServiceId = Guid.Parse("c4d3d799-3f62-4a2f-b6b5-3d05b7e1f2a3") // SCDN Service 4
             },
-            new DoctorService()
+            new()
             {
                 Id = Guid.Parse("8b9a08e3-cda4-4292-b21c-cd92d1e20719"),
                 DoctorId = Guid.Parse("5e9bd8dd-fb53-4f74-bf59-b3aedb96aa7c"), // Võ Anh Quân
-                ServiceId = Guid.Parse("c5d3d799-3f62-4a2f-b6b5-3d05b7e1f2a3"), // SCDN Service 5
+                ServiceId = Guid.Parse("c5d3d799-3f62-4a2f-b6b5-3d05b7e1f2a3") // SCDN Service 5
             },
 
             // Skin Care Đà Nẵng - Chi nhánh Sơn Trà
-            new DoctorService()
+            new()
             {
                 Id = Guid.Parse("be83c87c-7b4b-4fd4-8a88-18bcf6b8e09e"),
                 DoctorId = Guid.Parse("e8e3f18b-9179-48a6-94bb-1e5320fb8f30"), // Phạm Tuấn Minh
-                ServiceId = Guid.Parse("c1d3d799-3f62-4a2f-b6b5-3d05b7e1f2a3"), // SCDN Service 1
+                ServiceId = Guid.Parse("c1d3d799-3f62-4a2f-b6b5-3d05b7e1f2a3") // SCDN Service 1
             },
-            new DoctorService()
+            new()
             {
                 Id = Guid.Parse("24d67f77-5106-4e56-92d4-97d8d17c680d"),
                 DoctorId = Guid.Parse("e8e3f18b-9179-48a6-94bb-1e5320fb8f30"), // Phạm Tuấn Minh
-                ServiceId = Guid.Parse("c2d3d799-3f62-4a2f-b6b5-3d05b7e1f2a3"), // SCDN Service 2
+                ServiceId = Guid.Parse("c2d3d799-3f62-4a2f-b6b5-3d05b7e1f2a3") // SCDN Service 2
             },
-            new DoctorService()
+            new()
             {
                 Id = Guid.Parse("e3d7125f-f2f0-4df0-b6c3-e828b0e37a8e"),
                 DoctorId = Guid.Parse("f76d8ab1-c9eb-4e29-a9f1-5302b543c283"), // Nguyễn Minh Hiếu
-                ServiceId = Guid.Parse("c3d3d799-3f62-4a2f-b6b5-3d05b7e1f2a3"), // SCDN Service 3
+                ServiceId = Guid.Parse("c3d3d799-3f62-4a2f-b6b5-3d05b7e1f2a3") // SCDN Service 3
             },
-            new DoctorService()
+            new()
             {
                 Id = Guid.Parse("1cd46c70-1c69-4188-b3be-5f35c62798cc"),
                 DoctorId = Guid.Parse("f76d8ab1-c9eb-4e29-a9f1-5302b543c283"), // Nguyễn Minh Hiếu
-                ServiceId = Guid.Parse("c4d3d799-3f62-4a2f-b6b5-3d05b7e1f2a3"), // SCDN Service 4
+                ServiceId = Guid.Parse("c4d3d799-3f62-4a2f-b6b5-3d05b7e1f2a3") // SCDN Service 4
             },
-            new DoctorService()
+            new()
             {
                 Id = Guid.Parse("7a84f0b0-e4da-4935-9e63-b35e5a82d9e4"),
                 DoctorId = Guid.Parse("e8e3f18b-9179-48a6-94bb-1e5320fb8f30"), // Phạm Tuấn Minh
-                ServiceId = Guid.Parse("c5d3d799-3f62-4a2f-b6b5-3d05b7e1f2a3"), // SCDN Service 5
+                ServiceId = Guid.Parse("c5d3d799-3f62-4a2f-b6b5-3d05b7e1f2a3") // SCDN Service 5
             }
         };
 
@@ -3290,7 +3290,7 @@ internal sealed class OutboxMessageConfiguration : IEntityTypeConfiguration<Outb
         var branding = new List<Clinic>
         {
             // Main Clinics (3) - one for each Clinic Admin
-            new Clinic
+            new()
             {
                 Id = new Guid("78705cfa-7097-408f-93e2-70950fc886a3"),
                 Name = "Beauty Center Sài Gòn",
@@ -3309,7 +3309,7 @@ internal sealed class OutboxMessageConfiguration : IEntityTypeConfiguration<Outb
                 BankName = "Vietcombank",
                 BankAccountNumber = "1234567890123"
             },
-            new Clinic
+            new()
             {
                 Id = new Guid("a96d68d9-3f28-48f3-add5-a74a6b882e93"),
                 Name = "Hanoi Beauty Spa",
@@ -3328,7 +3328,7 @@ internal sealed class OutboxMessageConfiguration : IEntityTypeConfiguration<Outb
                 BankName = "BIDV",
                 BankAccountNumber = "2345678901234"
             },
-            new Clinic
+            new()
             {
                 Id = new Guid("e5a759cd-af8d-4a1c-8c05-43cc2c95e067"),
                 Name = "Skin Care Đà Nẵng",
@@ -3403,8 +3403,8 @@ internal sealed class OutboxMessageConfiguration : IEntityTypeConfiguration<Outb
             Guid.NewGuid(),
             new ProcedureEvent.CreateProcedure(
                 pro.Id, (Guid)pro.ServiceId!, pro.Name, pro.Description, 0, 0, 0,
-                0, pro.StepIndex, procedurePriceTypes.Where(prt => prt.ProcedureId.Equals(pro.Id)).Select(
-                    x => new ProcedureEvent.ProcedurePriceType(
+                0, pro.StepIndex, procedurePriceTypes.Where(prt => prt.ProcedureId.Equals(pro.Id)).Select(x =>
+                    new ProcedureEvent.ProcedurePriceType(
                         x.Id, x.Name, x.Price, x.Duration, x.IsDefault
                     )).ToList()
             ))).ToList();
@@ -3414,11 +3414,11 @@ internal sealed class OutboxMessageConfiguration : IEntityTypeConfiguration<Outb
             .Select(x =>
             {
                 var doctor = staff.FirstOrDefault(y => y.Id.Equals(x.DoctorId))!;
-                return new EntityEvent.DoctorServiceEntity()
+                return new EntityEvent.DoctorServiceEntity
                 {
                     Id = x.Id,
                     ServiceId = x.ServiceId,
-                    Doctor = new EntityEvent.UserEntity()
+                    Doctor = new EntityEvent.UserEntity
                     {
                         Id = x.DoctorId,
                         FullName = doctor.FirstName + " " + doctor.LastName,

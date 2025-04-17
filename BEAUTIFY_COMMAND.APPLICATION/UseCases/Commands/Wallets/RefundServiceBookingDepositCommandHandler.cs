@@ -1,6 +1,6 @@
 ﻿namespace BEAUTIFY_COMMAND.APPLICATION.UseCases.Commands.Wallets;
 /// <summary>
-/// Handler for refunding service booking deposits after the first meeting
+///     Handler for refunding service booking deposits after the first meeting
 /// </summary>
 internal sealed class RefundServiceBookingDepositCommandHandler(
     IRepositoryBase<User, Guid> userRepository,
@@ -14,32 +14,22 @@ internal sealed class RefundServiceBookingDepositCommandHandler(
     {
         // Validate user exists
         var user = await userRepository.FindByIdAsync(request.CustomerId, cancellationToken);
-        if (user == null)
-        {
-            return Result.Failure(new Error("404", "User not found"));
-        }
+        if (user == null) return Result.Failure(new Error("404", "User not found"));
 
         // Validate order exists
         var order = await orderRepository.FindByIdAsync(request.OrderId, cancellationToken);
-        if (order == null)
-        {
-            return Result.Failure(new Error("404", "Order not found"));
-        }
+        if (order == null) return Result.Failure(new Error("404", "Order not found"));
 
         // Validate original deposit transaction exists
         var originalTransaction = await walletTransactionRepository.FindByIdAsync(
             request.WalletTransactionId, cancellationToken);
 
         if (originalTransaction == null)
-        {
             return Result.Failure(new Error("404", "Original deposit transaction not found"));
-        }
 
         // Validate transaction is a service deposit
         if (originalTransaction.TransactionType != Constant.WalletConstants.TransactionType.SERVICE_DEPOSIT)
-        {
             return Result.Failure(new Error("400", "Transaction is not a service deposit"));
-        }
 
         // Create and save the refund transaction
         var refundTransaction = CreateRefundTransaction(
@@ -60,7 +50,7 @@ internal sealed class RefundServiceBookingDepositCommandHandler(
     }
 
     /// <summary>
-    /// Creates a new wallet transaction for the service booking deposit refund
+    ///     Creates a new wallet transaction for the service booking deposit refund
     /// </summary>
     private static WalletTransaction CreateRefundTransaction(
         Guid userId,

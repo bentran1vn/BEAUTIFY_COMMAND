@@ -28,15 +28,9 @@ internal sealed class
             clinic.BusinessLicenseUrl = businessLicenseUrl;
         }
 
-        if (request.BankAccountNumber != null)
-        {
-            clinic.BankAccountNumber = request.BankAccountNumber;
-        }
+        if (request.BankAccountNumber != null) clinic.BankAccountNumber = request.BankAccountNumber;
 
-        if (request.BankName != null)
-        {
-            clinic.BankName = request.BankName;
-        }
+        if (request.BankName != null) clinic.BankName = request.BankName;
 
 
         clinic.OperatingLicenseExpiryDate = request.OperatingLicenseExpiryDate;

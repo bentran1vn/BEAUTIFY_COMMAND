@@ -1,80 +1,67 @@
-using MongoDB.Driver.Linq;
-
 namespace BEAUTIFY_COMMAND.APPLICATION.UseCases.Commands.Procedures;
-
 public class UpdateProcedureCommandHandler(
-        IRepositoryBase<Service, Guid> clinicServiceRepository,
-        IRepositoryBase<Procedure, Guid> procedureServiceRepository,
-        IRepositoryBase<ProcedurePriceType, Guid> procedurePriceTypeServiceRepository,
-        IRepositoryBase<TriggerOutbox, Guid> triggerOutboxRepository
-    ) : ICommandHandler<CONTRACT.Services.Procedures.Commands.UpdateProcedureCommand>
+    IRepositoryBase<Service, Guid> clinicServiceRepository,
+    IRepositoryBase<Procedure, Guid> procedureServiceRepository,
+    IRepositoryBase<ProcedurePriceType, Guid> procedurePriceTypeServiceRepository,
+    IRepositoryBase<TriggerOutbox, Guid> triggerOutboxRepository
+) : ICommandHandler<CONTRACT.Services.Procedures.Commands.UpdateProcedureCommand>
 {
-    public async Task<Result> Handle(CONTRACT.Services.Procedures.Commands.UpdateProcedureCommand request, CancellationToken cancellationToken)
+    public async Task<Result> Handle(CONTRACT.Services.Procedures.Commands.UpdateProcedureCommand request,
+        CancellationToken cancellationToken)
     {
-        var procedures = await procedureServiceRepository.FindAll(
-            x => x.ServiceId.Equals(request.ServiceId) &&
-                 !x.IsDeleted).Include(x => x.ProcedurePriceTypes).ToListAsync(cancellationToken);
-        
+        var procedures = await procedureServiceRepository.FindAll(x => x.ServiceId.Equals(request.ServiceId) &&
+                                                                       !x.IsDeleted).Include(x => x.ProcedurePriceTypes)
+            .ToListAsync(cancellationToken);
+
         var isExisted = procedures.FirstOrDefault(x => x.Id.Equals(request.ProcedureId));
-        
-        if(isExisted == null || isExisted.IsDeleted) return Result.Failure(new Error("404", "Procedure not found !"));
-        
-        if(request.ProcedurePriceTypes.Count(x => x.IsDefault) > 1)
+
+        if (isExisted == null || isExisted.IsDeleted) return Result.Failure(new Error("404", "Procedure not found !"));
+
+        if (request.ProcedurePriceTypes.Count(x => x.IsDefault) > 1)
             return Result.Failure(new Error("400", "Only one price type can be default !"));
-        
+
         isExisted.Name = request.Name;
         isExisted.Description = request.Description;
-        
+
         if (procedures.Max(x => x.StepIndex) < request.StepIndex ||
             request.StepIndex < procedures.Min(x => x.StepIndex))
-        {
             return Result.Failure(new Error("400", "Step index is out of range !"));
-        }
-        
-        if(isExisted.StepIndex != request.StepIndex)
+
+        if (isExisted.StepIndex != request.StepIndex)
         {
-            List<Procedure> proceduresToUpdate = new List<Procedure>();
-            
+            var proceduresToUpdate = new List<Procedure>();
+
             // Jump back
-            if(isExisted.StepIndex > request.StepIndex)
+            if (isExisted.StepIndex > request.StepIndex)
             {
                 proceduresToUpdate = procedures
                     .Where(x => x.StepIndex >= request.StepIndex &&
-                        x.StepIndex < isExisted.StepIndex).ToList();
-                
-                foreach (var item in proceduresToUpdate)
-                {
-                    item.StepIndex += 1;
-                }
+                                x.StepIndex < isExisted.StepIndex).ToList();
+
+                foreach (var item in proceduresToUpdate) item.StepIndex += 1;
             }
-            
+
             // Jump next
-            if(isExisted.StepIndex < request.StepIndex)
+            if (isExisted.StepIndex < request.StepIndex)
             {
                 proceduresToUpdate = procedures
                     .Where(x => x.StepIndex <= request.StepIndex &&
                                 x.StepIndex > isExisted.StepIndex).ToList();
-                foreach (var item in proceduresToUpdate)
-                {
-                    item.StepIndex -= 1;
-                }
+                foreach (var item in proceduresToUpdate) item.StepIndex -= 1;
             }
 
-            if(proceduresToUpdate.Any()) 
+            if (proceduresToUpdate.Any())
                 procedureServiceRepository.UpdateRange(proceduresToUpdate);
-            
+
             isExisted.StepIndex = request.StepIndex;
         }
-        
+
         // procedureServiceRepository.Update(isExisted);
 
-        foreach (var item in isExisted.ProcedurePriceTypes)
-        {
-            item.IsDeleted = true;
-        }
-        
+        foreach (var item in isExisted.ProcedurePriceTypes) item.IsDeleted = true;
+
         procedurePriceTypeServiceRepository.UpdateRange(isExisted.ProcedurePriceTypes);
-        
+
         var newProcedurePriceTypes = request.ProcedurePriceTypes.Select(x => new ProcedurePriceType
         {
             Id = Guid.NewGuid(),
@@ -84,16 +71,16 @@ public class UpdateProcedureCommandHandler(
             IsDefault = x.IsDefault,
             ProcedureId = isExisted.Id
         }).ToList();
-        
+
         procedurePriceTypeServiceRepository.AddRange(newProcedurePriceTypes);
-        
+
         var service = await clinicServiceRepository.FindByIdAsync(request.ServiceId, cancellationToken,
             x => x.Promotions);
-        
-        var discountPercent = service!.Promotions?.FirstOrDefault(
-            x => x.ServiceId.Equals(request.ServiceId) &&
-                 !x.IsDeleted && x.IsActivated && x.LivestreamRoom == null)?.DiscountPercent;
-        
+
+        var discountPercent = service!.Promotions?.FirstOrDefault(x => x.ServiceId.Equals(request.ServiceId) &&
+                                                                       !x.IsDeleted && x.IsActivated &&
+                                                                       x.LivestreamRoom == null)?.DiscountPercent;
+
         var lowestPrice = service.Procedures?.Where(x => !x.IsDeleted).Sum(procedure =>
             procedure.ProcedurePriceTypes.Any()
                 ? procedure.ProcedurePriceTypes.Where(x => !x.IsDeleted).Min(pt => pt.Price)
@@ -103,18 +90,18 @@ public class UpdateProcedureCommandHandler(
             procedure.ProcedurePriceTypes.Any()
                 ? procedure.ProcedurePriceTypes.Where(x => !x.IsDeleted).Max(pt => pt.Price)
                 : 0) ?? 0;
-        
+
         service.MaxPrice = highestPrice;
         service.MinPrice = lowestPrice;
-        
+
         var triggerOutbox = TriggerOutbox.RaiseUpdateServiceProcedureEvent(
             isExisted.Id, (Guid)isExisted.ServiceId, isExisted.Name, isExisted.Description,
             highestPrice, lowestPrice, highestPrice - (decimal?)discountPercent * highestPrice,
             lowestPrice - (decimal?)discountPercent * lowestPrice, isExisted.StepIndex,
             newProcedurePriceTypes.ToList());
-        
+
         triggerOutboxRepository.Add(triggerOutbox);
-        
+
         return Result.Success("Update Service's Procedure Successfully");
     }
 }

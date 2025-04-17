@@ -18,8 +18,7 @@ public sealed class CovertCommandToOutboxMessagesInterceptor : SaveChangesInterc
         if (dbContext is null) return base.SavingChangesAsync(eventData, result, cancellationToken);
 
         var entity = dbContext.ChangeTracker.Entries()
-            .Where(
-                e => e.State is EntityState.Added or EntityState.Modified or EntityState.Deleted)
+            .Where(e => e.State is EntityState.Added or EntityState.Modified or EntityState.Deleted)
             .Where(e => e.Metadata.ClrType != typeof(OutboxMessage)).ToList();
         ;
 

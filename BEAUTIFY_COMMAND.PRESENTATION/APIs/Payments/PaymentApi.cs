@@ -19,16 +19,17 @@ public class PaymentApi : ApiEndpoint, ICarterModule
             .WithName("Subscription Payments")
             .WithSummary("Subscription Payments.")
             .RequireAuthorization();
-        
+
         gr1.MapPost("subscription/over", CreateSubscriptionOverOrder)
             .WithName("Subscription Over Payments")
             .WithSummary("Subscription Over Payments.")
             .RequireAuthorization();
-        
+
         gr1.MapPost("order/{id:guid}/{amount:decimal}/{paymentMethod}/", CustomerOrderPayment)
             .WithName("Customer Order Payments")
             .WithSummary("Customer Order Payments.")
-            .RequireAuthorization();;
+            .RequireAuthorization();
+        ;
 
         gr1.MapPost("wallets/top-ups", CustomerTopUpWallet)
             .RequireAuthorization(Constant.Role.CUSTOMER)
@@ -76,7 +77,7 @@ public class PaymentApi : ApiEndpoint, ICarterModule
 
         return result.IsFailure ? HandlerFailure(result) : Results.Ok(result);
     }
-    
+
     private static async Task<IResult> CreateSubscriptionOverOrder(
         ISender sender, HttpContext context,
         [FromBody] Commands.SubscriptionOverOrderBody command)
@@ -99,7 +100,7 @@ public class PaymentApi : ApiEndpoint, ICarterModule
         var result = await sender.Send(new Commands.CustomerOrderPaymentCommand(id, paymentMethod, amount));
         return result.IsFailure ? HandlerFailure(result) : Results.Ok(result);
     }
-    
+
     private static async Task<IResult> CustomerTopUpWallet(
         ISender sender,
         [FromBody] CONTRACT.Services.Wallets.Commands.CustomerTopUpWalletCommand command)

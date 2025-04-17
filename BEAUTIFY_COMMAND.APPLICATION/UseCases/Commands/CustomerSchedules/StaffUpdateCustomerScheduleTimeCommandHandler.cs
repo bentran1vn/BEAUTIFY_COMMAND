@@ -25,9 +25,7 @@ internal sealed class StaffUpdateCustomerScheduleTimeCommandHandler(
                      customerSchedule.ProcedurePriceType.Procedure.StepIndex + 1, cancellationToken);
 
             if (nextCustomerSchedule == null)
-            {
                 return Result.Failure(new Error("404", "Next Customer Schedule Not Found !"));
-            }
 
             if (nextCustomerSchedule.Status == Constant.OrderStatus.ORDER_COMPLETED)
                 return Result.Failure(new Error("400", "Next Customer Schedule Already Completed !"));
@@ -60,7 +58,7 @@ internal sealed class StaffUpdateCustomerScheduleTimeCommandHandler(
                 DoctorClinicId = customerSchedule.DoctorId,
                 StartTime = request.StartTime,
                 EndTime = endTime,
-                Date = customerSchedule.Date.Value,
+                Date = customerSchedule.Date.Value
             };
             workingScheduleRepositoryBase.Add(doctorSchedule);
             doctorSchedule.WorkingScheduleCreate(customerSchedule.Doctor.UserId, customerSchedule.Doctor.ClinicId,

@@ -1,4 +1,3 @@
-using System.Text.Json;
 using BEAUTIFY_COMMAND.CONTRACT.Services.Procedures;
 using BEAUTIFY_PACKAGES.BEAUTIFY_PACKAGES.CONTRACT.Abstractions.Shared;
 
@@ -15,7 +14,7 @@ public class ProcedureApi : ApiEndpoint, ICarterModule
         gr1.MapPost(string.Empty, CreateProcedure);
 
         gr1.MapPut("{procedureId}", UpdateProcedure);
-        
+
         gr1.MapDelete("{id}", DeleteProcedure)
             .WithName("Delete Service's Procedures")
             .WithSummary("Delete Service's Procedures")
@@ -29,11 +28,11 @@ public class ProcedureApi : ApiEndpoint, ICarterModule
 
         return result.IsFailure ? HandlerFailure(result) : Results.Ok(result);
     }
-    
+
     private static async Task<IResult> UpdateProcedure(ISender sender,
         [FromBody] Commands.UpdateProcedureCommand command, Guid procedureId)
     {
-        if(procedureId != command.ProcedureId)
+        if (procedureId != command.ProcedureId)
             return HandlerFailure(Result.Failure(new Error("400", "Id mismatch.")));
 
         var result = await sender.Send(command);

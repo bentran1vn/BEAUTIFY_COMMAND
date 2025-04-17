@@ -1,20 +1,18 @@
 ﻿using BEAUTIFY_COMMAND.DOMAIN.Entities;
 using BEAUTIFY_PACKAGES.BEAUTIFY_PACKAGES.APPLICATION.Abstractions;
-using BEAUTIFY_PACKAGES.BEAUTIFY_PACKAGES.INFRASTRUCTURE.Mail;
 
 namespace BEAUTIFY_COMMAND.CONTRACT.MailTemplates;
-
 public static class SubscriptionPurchaseEmailTemplate
 {
     public static MailContent GetSubscriptionPurchaseConfirmationTemplate(
-        Clinic clinic, 
+        Clinic clinic,
         SubscriptionPackage subscription,
         SystemTransaction transaction)
     {
         var vietnamTimeZone = TimeZoneInfo.FindSystemTimeZoneById("SE Asia Standard Time");
         var purchaseDate = TimeZoneInfo.ConvertTime(transaction.TransactionDate, vietnamTimeZone);
         var expiryDate = purchaseDate.AddDays(subscription.Duration);
-        
+
         var body = $@"
 <!DOCTYPE html>
 <html>

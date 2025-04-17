@@ -36,9 +36,7 @@ internal sealed class DoctorSetWorkingServiceCommandHandler(
             .ToListAsync(cancellationToken);
 
         if (doctors.Count != request.DoctorId.Count)
-        {
-            return Result.Failure(new Error("404", $"One or more doctors not found"));
-        }
+            return Result.Failure(new Error("404", "One or more doctors not found"));
 
         // Check if all users are doctors
         var nonDoctors = doctors.Where(d => d?.Role?.Name != Constant.Role.DOCTOR).ToList();
@@ -57,10 +55,7 @@ internal sealed class DoctorSetWorkingServiceCommandHandler(
                 ServiceId = request.ServiceIds
             }).ToList();
 
-        if (newDoctorServices.Count == 0)
-        {
-            return Result.Success("No new doctor-service relationships to create");
-        }
+        if (newDoctorServices.Count == 0) return Result.Success("No new doctor-service relationships to create");
 
         // Create doctor service entities for the event
         var doctorServiceEntities = new List<EntityEvent.DoctorServiceEntity>();
@@ -68,7 +63,6 @@ internal sealed class DoctorSetWorkingServiceCommandHandler(
         {
             var doctor = doctors.FirstOrDefault(d => d.Id == ds.DoctorId);
             if (doctor != null)
-            {
                 doctorServiceEntities.Add(new EntityEvent.DoctorServiceEntity
                 {
                     Id = ds.Id,
@@ -82,7 +76,6 @@ internal sealed class DoctorSetWorkingServiceCommandHandler(
                         ProfilePictureUrl = doctor.ProfilePicture ?? ""
                     }
                 });
-            }
         }
 
         // Raise event and save changes
@@ -90,6 +83,5 @@ internal sealed class DoctorSetWorkingServiceCommandHandler(
         newDoctorServices.First().RaiseDoctorServiceCreatedEvent(doctorServiceEntities);
         doctorServiceRepository.AddRange(newDoctorServices);
         return Result.Success("Services assigned to doctors successfully");
-
     }
 }

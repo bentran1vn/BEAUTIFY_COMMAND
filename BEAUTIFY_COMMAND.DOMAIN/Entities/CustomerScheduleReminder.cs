@@ -1,14 +1,12 @@
 using System.ComponentModel.DataAnnotations;
 
 namespace BEAUTIFY_COMMAND.DOMAIN.Entities;
-
 public class CustomerScheduleReminder : AggregateRoot<Guid>, IAuditableEntity
 {
     public Guid CustomerScheduleId { get; set; }
     public virtual CustomerSchedule? CustomerSchedule { get; set; }
 
-    [MaxLength(20)]
-    public string ReminderType { get; set; } = string.Empty;
+    [MaxLength(20)] public string ReminderType { get; set; } = string.Empty;
 
     public DateTimeOffset SentOnUtc { get; set; }
 

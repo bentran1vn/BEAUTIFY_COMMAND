@@ -1,5 +1,4 @@
 using System.ComponentModel.DataAnnotations;
-using BEAUTIFY_PACKAGES.BEAUTIFY_PACKAGES.DOMAIN.Constrants;
 using Microsoft.AspNetCore.Http;
 
 namespace BEAUTIFY_COMMAND.CONTRACT.Services.Clinics;
@@ -53,24 +52,6 @@ public static class Commands
         int Action
         // 0 Approve, 1 Reject, 2 Banned
     ) : ICommand;
-
-    #endregion
-
-    #region ClinicCreateAccountForEmployeeCommand
-
-    public record ClinicCreateAccountForEmployeeCommand(
-        Guid ClinicId,
-        string Email,
-        string FirstName,
-        string LastName,
-        Roles RoleType
-    ) : ICommand;
-
-    public enum Roles
-    {
-        DOCTOR = 1,
-        CLINIC_STAFF = 2
-    }
 
     #endregion
 
@@ -166,4 +147,22 @@ public static class Commands
     public record ChangeClinicActivateStatusCommand(
         Guid ClinicId
     ) : ICommand;
+
+    #region ClinicCreateAccountForEmployeeCommand
+
+    public record ClinicCreateAccountForEmployeeCommand(
+        Guid ClinicId,
+        string Email,
+        string FirstName,
+        string LastName,
+        Roles RoleType
+    ) : ICommand;
+
+    public enum Roles
+    {
+        DOCTOR = 1,
+        CLINIC_STAFF = 2
+    }
+
+    #endregion
 }

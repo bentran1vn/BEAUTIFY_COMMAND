@@ -1,6 +1,5 @@
 using BEAUTIFY_COMMAND.PERSISTENCE;
 using Microsoft.AspNetCore.SignalR;
-using Microsoft.EntityFrameworkCore.Storage;
 
 namespace BEAUTIFY_COMMAND.APPLICATION.Hub;
 public class PaymentHub(

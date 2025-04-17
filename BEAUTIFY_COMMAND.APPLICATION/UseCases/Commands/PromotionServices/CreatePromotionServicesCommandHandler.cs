@@ -35,11 +35,10 @@ public class
 
         if (isAuth == null) return Result.Failure(new Error("401", "Unauthorized Access"));
 
-        var isValidServiceQuery = _clinicServicerepository.FindAll(
-            x =>
-                x.ServiceId == request.ServiceId &&
-                (x.ClinicId == request.ClinicId || x.Clinics.ParentId == request.ClinicId) &&
-                !x.IsDeleted
+        var isValidServiceQuery = _clinicServicerepository.FindAll(x =>
+            x.ServiceId == request.ServiceId &&
+            (x.ClinicId == request.ClinicId || x.Clinics.ParentId == request.ClinicId) &&
+            !x.IsDeleted
         ).AsTracking();
 
         isValidServiceQuery = isValidServiceQuery
@@ -56,12 +55,9 @@ public class
 
         if (lastestPromotion != null) lastestPromotion.IsActivated = false;
 
-        string imageUrl = string.Empty;
-        
-        if (request.Image != null)
-        {
-            imageUrl = await _mediaService.UploadImageAsync(request.Image);
-        }
+        var imageUrl = string.Empty;
+
+        if (request.Image != null) imageUrl = await _mediaService.UploadImageAsync(request.Image);
 
         var promotion = new Promotion
         {
@@ -91,7 +87,7 @@ public class
         // isValidService.Services!.MaxPrice = highestPrice * (decimal)promotion.DiscountPercent;
 
         isValidService.Services.DiscountPrice = (decimal)promotion.DiscountPercent;
-        
+
         var trigger = TriggerOutbox.RaiseCreatePromotionEvent(
             promotion.Id, request.ServiceId, promotion.Name,
             promotion.DiscountPercent, promotion.ImageUrl,

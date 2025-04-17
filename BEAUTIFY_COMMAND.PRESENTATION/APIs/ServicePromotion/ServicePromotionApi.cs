@@ -1,6 +1,5 @@
 using BEAUTIFY_COMMAND.CONTRACT.Services.ServicePromotions;
 using BEAUTIFY_PACKAGES.BEAUTIFY_PACKAGES.CONTRACT.Abstractions.Shared;
-using BEAUTIFY_PACKAGES.BEAUTIFY_PACKAGES.DOMAIN.Constrants;
 
 namespace BEAUTIFY_COMMAND.PRESENTATION.APIs.ServicePromotion;
 public class ServicePromotionApi : ApiEndpoint, ICarterModule
@@ -57,7 +56,7 @@ public class ServicePromotionApi : ApiEndpoint, ICarterModule
         HttpContext httpContext, [FromForm] Commands.UpdatePromotionServicesBody command)
     {
         if (id != command.PromotionId) return HandlerFailure(Result.Failure(new Error("400", "Id mismatch.")));
-        
+
         var clinicId = httpContext.User.FindFirst(c => c.Type == "ClinicId")?.Value!;
 
         var result = await sender.Send(new Commands.UpdatePromotionServicesCommand(
@@ -77,9 +76,9 @@ public class ServicePromotionApi : ApiEndpoint, ICarterModule
         HttpContext httpContext, [FromBody] Commands.DeletePromotionServicesBody command)
     {
         if (id != command.PromotionId) return HandlerFailure(Result.Failure(new Error("400", "Id mismatch.")));
-        
+
         var clinicId = httpContext.User.FindFirst(c => c.Type == "ClinicId")?.Value!;
-        
+
         var result = await sender.Send(new Commands.DeletePromotionServicesCommand(
             Guid.Parse(clinicId),
             command.PromotionId));

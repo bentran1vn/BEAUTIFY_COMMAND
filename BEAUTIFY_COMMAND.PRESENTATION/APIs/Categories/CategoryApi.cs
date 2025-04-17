@@ -61,7 +61,7 @@ public class CategoryApi : ApiEndpoint, ICarterModule
 
     private static async Task<IResult> UpdateSubCategoryCategoryCommand(
         ISender sender,
-        Guid subCategoryId,Guid categoryId) // Directly receive CategoryId
+        Guid subCategoryId, Guid categoryId) // Directly receive CategoryId
     {
         var result = await sender.Send(new Commands.MoveSubCategoryToCategoryCommand(subCategoryId, categoryId));
         return result.IsFailure ? HandlerFailure(result) : Results.Ok(result);

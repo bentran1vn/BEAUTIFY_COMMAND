@@ -3,13 +3,12 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace BEAUTIFY_COMMAND.PERSISTENCE.Configurations;
-
-public class ClassificationRuleConfiguration: IEntityTypeConfiguration<ClassificationRule>
+public class ClassificationRuleConfiguration : IEntityTypeConfiguration<ClassificationRule>
 {
     public void Configure(EntityTypeBuilder<ClassificationRule> builder)
     {
         var surveyDaId = Guid.Parse("f3e2c9f4-9d1b-4d3f-98a6-2a7fabc12345");
-        
+
         Guid[] questionIds =
         {
             Guid.Parse("d1a2c3b4-e5f6-4789-abcd-111111111111"), // Q1
@@ -21,10 +20,10 @@ public class ClassificationRuleConfiguration: IEntityTypeConfiguration<Classific
             Guid.Parse("d1a2c3b4-e5f6-4789-abcd-777777777777"), // Q7
             Guid.Parse("d1a2c3b4-e5f6-4789-abcd-888888888888"), // Q8
             Guid.Parse("d1a2c3b4-e5f6-4789-abcd-999999999999"), // Q9
-            Guid.Parse("d1a2c3b4-e5f6-4789-abcd-aaaaaaaaaaaa")  // Q10
+            Guid.Parse("d1a2c3b4-e5f6-4789-abcd-aaaaaaaaaaaa") // Q10
         };
-        
-         builder.HasData(
+
+        builder.HasData(
             // Q1, Option A => Da khô
             new ClassificationRule
             {
