@@ -36,6 +36,8 @@ public static class Commands
         public string? District { get; set; }
         public string? Ward { get; set; }
         public string? Address { get; set; }
+        public TimeSpan? WorkingTimeStart { get; set; }
+        public TimeSpan? WorkingTimeEnd { get; set; }
         public IFormFile? ProfilePicture { get; set; }
         public bool? IsActivated { get; set; }
         public string? BankName { get; set; }
@@ -100,6 +102,8 @@ public static class Commands
         public string PhoneNumber { get; set; }
         public string City { get; set; }
         public string District { get; set; }
+        public TimeSpan WorkingTimeStart { get; set; }
+        public TimeSpan WorkingTimeEnd { get; set; }
         public string Ward { get; set; }
         public string Address { get; set; }
         public string BankName { get; set; }
@@ -125,6 +129,8 @@ public static class Commands
         public string District { get; set; }
         public string Ward { get; set; }
         public string Address { get; set; }
+        public TimeSpan WorkingTimeStart { get; set; }
+        public TimeSpan WorkingTimeEnd { get; set; }
         public bool IsActivated { get; set; }
         public IFormFile? BusinessLicense { get; set; }
         public IFormFile? OperatingLicense { get; set; }

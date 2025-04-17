@@ -12,15 +12,15 @@ public class TriggerOutbox : AggregateRoot<Guid>, IAuditableEntity
     public DateTimeOffset? ModifiedOnUtc { get; set; }
 
     public static TriggerOutbox RaiseActivatedActionEvent(Guid clinicId, bool isActive, bool isParent, Guid parentId)
-    {
+    {   
         var triggerOutbox = new TriggerOutbox
         {
             Id = Guid.NewGuid()
         };
-
+        
         triggerOutbox.RaiseDomainEvent(new ClinicDomainEvent.ClinicBranchActivatedAction(Guid.NewGuid(),
             new ClinicEvent.InActivatedClinic(clinicId, isActive, isParent, parentId)));
-
+        
         return triggerOutbox;
     }
 
@@ -38,14 +38,15 @@ public class TriggerOutbox : AggregateRoot<Guid>, IAuditableEntity
             Guid.NewGuid(),
             new ProcedureEvent.CreateProcedure(
                 procedureId, serviceId, name, description, maxPrice, minPrice, discountMaxPrice,
-                discountMinPrice, stepIndex, procedurePriceTypes.Select(x => new ProcedureEvent.ProcedurePriceType(
-                    x.Id, x.Name, x.Price, x.Duration, x.IsDefault
-                )).ToList()
+                discountMinPrice, stepIndex, procedurePriceTypes.Select(
+                    x => new ProcedureEvent.ProcedurePriceType(
+                        x.Id, x.Name, x.Price, x.Duration, x.IsDefault
+                    )).ToList()
             )));
 
         return triggerOutbox;
     }
-
+    
     public static TriggerOutbox RaiseUpdateServiceProcedureEvent(
         Guid procedureId, Guid serviceId, string name, string description,
         decimal maxPrice, decimal minPrice, decimal? discountMaxPrice, decimal? discountMinPrice,
@@ -60,18 +61,20 @@ public class TriggerOutbox : AggregateRoot<Guid>, IAuditableEntity
             Guid.NewGuid(),
             new ProcedureEvent.CreateProcedure(
                 procedureId, serviceId, name, description, maxPrice, minPrice, discountMaxPrice,
-                discountMinPrice, stepIndex, procedurePriceTypes.Select(x => new ProcedureEvent.ProcedurePriceType(
-                    x.Id, x.Name, x.Price, x.Duration, x.IsDefault
-                )).ToList()
+                discountMinPrice, stepIndex, procedurePriceTypes.Select(
+                    x => new ProcedureEvent.ProcedurePriceType(
+                        x.Id, x.Name, x.Price, x.Duration, x.IsDefault
+                    )).ToList()
             )));
 
         return triggerOutbox;
     }
-
+    
     public static TriggerOutbox RaiseDeleteServiceProcedureEvent(
         Guid serviceId, Guid procedureId,
         decimal maxPrice, decimal minPrice,
         decimal discountMaxPrice, decimal discountMinPrice
+        
     )
     {
         var triggerOutbox = new TriggerOutbox
@@ -115,7 +118,7 @@ public class TriggerOutbox : AggregateRoot<Guid>, IAuditableEntity
 
         return triggerOutbox;
     }
-
+    
     public static TriggerOutbox RaiseUpdatePromotionEvent(
         Guid promotionId,
         Guid serviceId,
@@ -136,17 +139,17 @@ public class TriggerOutbox : AggregateRoot<Guid>, IAuditableEntity
         triggerOutbox.RaiseDomainEvent(new ServicePromotionDomainEvent.ServicePromotionUpdated(
             Guid.NewGuid(),
             new PromotionEvent.UpdateServicePromotion(
-                serviceId, promotionId, name, discountPercent, imageUrl, discountMaxPrice,
+                serviceId, promotionId , name, discountPercent, imageUrl, discountMaxPrice,
                 discountMinPrice, startDay, endDate, isActivated
             )));
 
         return triggerOutbox;
     }
-
+    
     public static TriggerOutbox RaiseDeletePromotionEvent(
         Guid promotionId,
         Guid serviceId
-    )
+        )
     {
         var triggerOutbox = new TriggerOutbox
         {
@@ -156,12 +159,12 @@ public class TriggerOutbox : AggregateRoot<Guid>, IAuditableEntity
         triggerOutbox.RaiseDomainEvent(new ServicePromotionDomainEvent.ServicePromotionDeleted(
             Guid.NewGuid(),
             new PromotionEvent.RemoveServicePromotion(
-                serviceId, promotionId
+                serviceId, promotionId 
             )));
 
         return triggerOutbox;
     }
-
+    
     public static TriggerOutbox RaiseCreateClinicServiceEvent(
         Guid id, string name, string description,
         Clinic branding,
@@ -179,15 +182,19 @@ public class TriggerOutbox : AggregateRoot<Guid>, IAuditableEntity
             Guid.NewGuid(),
             new ClinicServiceEvent.CreateClinicService(
                 id, name, description, new ClinicServiceEvent.Clinic(branding.Id, branding.Name, branding.Email,
-                    branding.City, branding.Address, branding.FullAddress, branding.District, branding.Ward,
+                    branding.City, branding.Address, branding.FullAddress, (TimeSpan)branding.WorkingTimeStart,
+                    (TimeSpan)branding.WorkingTimeEnd, branding.District, branding.Ward,
                     branding.PhoneNumber, branding.ProfilePictureUrl,
                     branding.IsParent, branding.ParentId),
                 coverImage.Select(x => new ClinicServiceEvent.Image(
                     x.Id, x.IndexNumber, x.ImageUrl
                 )).ToArray(),
+                
                 new ClinicServiceEvent.Category(cateId, cateName, cateDescription),
                 clinics.Select(x => new ClinicServiceEvent.Clinic(x.Id, x.Name, x.Email,
-                    x.City, x.Address, x.FullAddress, x.District, x.Ward, x.PhoneNumber, x.ProfilePictureUrl,
+                    x.City, x.Address, x.FullAddress, (TimeSpan)x.WorkingTimeStart,
+                    (TimeSpan)x.WorkingTimeEnd,
+                    x.District, x.Ward, x.PhoneNumber, x.ProfilePictureUrl,
                     x.IsParent, x.ParentId)).ToList()
             )));
 
@@ -215,13 +222,15 @@ public class TriggerOutbox : AggregateRoot<Guid>, IAuditableEntity
                 )).ToArray(),
                 new ClinicServiceEvent.Category(cateId, cateName, cateDescription),
                 clinics.Select(x => new ClinicServiceEvent.Clinic(x.Id, x.Name, x.Email,
-                    x.City, x.Address, x.FullAddress, x.District, x.Ward, x.PhoneNumber, x.ProfilePictureUrl,
+                    x.City, x.Address, x.FullAddress, (TimeSpan)x.WorkingTimeStart,
+                    (TimeSpan)x.WorkingTimeEnd, x.District, x.Ward,
+                    x.PhoneNumber, x.ProfilePictureUrl,
                     x.IsParent, x.ParentId)).ToList()
             )));
 
         return triggerOutbox;
     }
-
+    
     public static TriggerOutbox RaiseDeleteClinicServiceEvent(
         Guid id
     )
@@ -269,12 +278,12 @@ public class TriggerOutbox : AggregateRoot<Guid>, IAuditableEntity
                     LastName = user.LastName,
                     Address = user.Address
                 },
-                CreatedAt = createdAt
+                CreatedAt = createdAt 
             }));
 
         return triggerOutbox;
     }
-
+    
     public static TriggerOutbox UpdateFeedbackEvent(
         Guid feedbackId, Guid serviceId, ICollection<string> images,
         string content, int rating, DateTimeOffset updateAt
@@ -287,19 +296,19 @@ public class TriggerOutbox : AggregateRoot<Guid>, IAuditableEntity
 
         triggerOutbox.RaiseDomainEvent(new FeedbackDomainEvent.UpdateFeedback(
             Guid.NewGuid(),
-            new FeedbackEvent.UpdateFeedback
+            new FeedbackEvent.UpdateFeedback()
             {
                 FeedbackId = feedbackId,
                 ServiceId = serviceId,
                 Images = images,
                 Content = content,
                 Rating = rating,
-                UpdateAt = updateAt
+                UpdateAt = updateAt 
             }));
 
         return triggerOutbox;
     }
-
+    
     public static TriggerOutbox DisplayFeedbackEvent(
         Guid feedbackId, Guid serviceId, bool isView
     )
@@ -311,12 +320,59 @@ public class TriggerOutbox : AggregateRoot<Guid>, IAuditableEntity
 
         triggerOutbox.RaiseDomainEvent(new FeedbackDomainEvent.ViewActionFeedback(
             Guid.NewGuid(),
-            new FeedbackEvent.ViewActionFeedback
+            new FeedbackEvent.ViewActionFeedback()
             {
                 FeedbackId = feedbackId,
                 ServiceId = serviceId,
                 IsView = isView
             }));
+
+        return triggerOutbox;
+    }
+    
+    public static TriggerOutbox UpdateBranchEvent(
+        bool isParent, Clinic clinic
+    )
+    {
+        var triggerOutbox = new TriggerOutbox
+        {
+            Id = Guid.NewGuid()
+        };
+
+        triggerOutbox.RaiseDomainEvent(new ClinicDomainEvent.ClinicUpdated(
+            Guid.NewGuid(),
+            new ClinicEvent.ClinicUpdated(
+                new ClinicEvent.Clinic(
+                clinic.Id, clinic.Name, clinic.Email, clinic.City, clinic.Address,
+                clinic.FullAddress, (TimeSpan)clinic.WorkingTimeStart, (TimeSpan)clinic.WorkingTimeEnd,
+                clinic.District, clinic.Ward, clinic.PhoneNumber, clinic.ProfilePictureUrl,
+                clinic.IsParent, clinic.ParentId
+                ),
+            isParent)
+            )
+        );
+
+        return triggerOutbox;
+    }
+    
+    public static TriggerOutbox DeleteBranchEvent(
+        bool isParent, Clinic clinic
+    )
+    {
+        var triggerOutbox = new TriggerOutbox
+        {
+            Id = Guid.NewGuid()
+        };
+
+        triggerOutbox.RaiseDomainEvent(new ClinicDomainEvent.ClinicDeleted(
+                Guid.NewGuid(),
+                new ClinicEvent.ClinicDeleted(
+                    clinic.Id,
+                    isParent,
+                    clinic.ParentId
+                )
+            )
+        );
 
         return triggerOutbox;
     }

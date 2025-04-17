@@ -1,6 +1,9 @@
 ﻿namespace BEAUTIFY_COMMAND.APPLICATION.UseCases.Commands.Clinics;
 internal sealed class
-    ClinicUpdateBranchCommandHandler(IRepositoryBase<Clinic, Guid> clinicRepository, IMediaService mediaService)
+    ClinicUpdateBranchCommandHandler(
+        IRepositoryBase<Clinic, Guid> clinicRepository,
+        IRepositoryBase<TriggerOutbox, Guid> triggerRepository,
+        IMediaService mediaService)
     : ICommandHandler<CONTRACT.Services.Clinics.Commands.ClinicUpdateBranchCommand>
 {
     public async Task<Result> Handle(CONTRACT.Services.Clinics.Commands.ClinicUpdateBranchCommand request,
@@ -28,20 +31,31 @@ internal sealed class
             clinic.BusinessLicenseUrl = businessLicenseUrl;
         }
 
-        if (request.BankAccountNumber != null) clinic.BankAccountNumber = request.BankAccountNumber;
+        if (request.BankAccountNumber != null)
+        {
+            clinic.BankAccountNumber = request.BankAccountNumber;
+        }
 
-        if (request.BankName != null) clinic.BankName = request.BankName;
-
-
+        if (request.BankName != null)
+        {
+            clinic.BankName = request.BankName;
+        }
+        
         clinic.OperatingLicenseExpiryDate = request.OperatingLicenseExpiryDate;
         clinic.Name = request.Name;
         clinic.City = request.City;
         clinic.District = request.District;
         clinic.Ward = request.Ward;
         clinic.Address = request.Address;
+        clinic.WorkingTimeStart = request.WorkingTimeStart;
+        clinic.WorkingTimeEnd = request.WorkingTimeEnd;
         clinic.PhoneNumber = request.PhoneNumber;
         clinic.IsActivated = request.IsActivated;
         clinicRepository.Update(clinic);
+        
+        var trigger = TriggerOutbox.UpdateBranchEvent(false, clinic);
+        triggerRepository.Add(trigger);
+        
         return Result.Success();
     }
 }

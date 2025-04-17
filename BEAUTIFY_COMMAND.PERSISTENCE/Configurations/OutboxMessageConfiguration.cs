@@ -3377,6 +3377,8 @@ internal sealed class OutboxMessageConfiguration : IEntityTypeConfiguration<Outb
                     se.Id, se.Name, se.Description, new ClinicServiceEvent.Clinic(
                         brand.Id, brand.Name, brand.Email,
                         brand.City, brand.Address, brand.FullAddress,
+                        (TimeSpan)brand.WorkingTimeStart,
+                        (TimeSpan)brand.WorkingTimeEnd,
                         brand.District, brand.Ward, brand.PhoneNumber,
                         brand.ProfilePictureUrl,
                         brand.IsParent, brand.ParentId),
@@ -3392,7 +3394,10 @@ internal sealed class OutboxMessageConfiguration : IEntityTypeConfiguration<Outb
                             var x = clinics.FirstOrDefault(z => z.Id.Equals(y.ClinicId));
 
                             return new ClinicServiceEvent.Clinic(x.Id, x.Name, x.Email,
-                                x.City, x.Address, x.FullAddress, x.District, x.Ward, x.PhoneNumber,
+                                x.City, x.Address, x.FullAddress,
+                                (TimeSpan)x.WorkingTimeStart,
+                                (TimeSpan)x.WorkingTimeEnd,
+                                x.District, x.Ward, x.PhoneNumber,
                                 x.ProfilePictureUrl,
                                 x.IsParent, x.ParentId);
                         }).ToList()
