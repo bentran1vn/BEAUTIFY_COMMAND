@@ -182,7 +182,9 @@ public class TriggerOutbox : AggregateRoot<Guid>, IAuditableEntity
             Guid.NewGuid(),
             new ClinicServiceEvent.CreateClinicService(
                 id, name, description, new ClinicServiceEvent.Clinic(branding.Id, branding.Name, branding.Email,
-                    branding.City, branding.Address, branding.FullAddress, branding.District, branding.Ward, branding.PhoneNumber, branding.ProfilePictureUrl,
+                    branding.City, branding.Address, branding.FullAddress, (TimeSpan)branding.WorkingTimeStart,
+                    (TimeSpan)branding.WorkingTimeEnd, branding.District, branding.Ward,
+                    branding.PhoneNumber, branding.ProfilePictureUrl,
                     branding.IsParent, branding.ParentId),
                 coverImage.Select(x => new ClinicServiceEvent.Image(
                     x.Id, x.IndexNumber, x.ImageUrl
@@ -190,7 +192,9 @@ public class TriggerOutbox : AggregateRoot<Guid>, IAuditableEntity
                 
                 new ClinicServiceEvent.Category(cateId, cateName, cateDescription),
                 clinics.Select(x => new ClinicServiceEvent.Clinic(x.Id, x.Name, x.Email,
-                    x.City, x.Address, x.FullAddress, x.District, x.Ward, x.PhoneNumber, x.ProfilePictureUrl,
+                    x.City, x.Address, x.FullAddress, (TimeSpan)x.WorkingTimeStart,
+                    (TimeSpan)x.WorkingTimeEnd,
+                    x.District, x.Ward, x.PhoneNumber, x.ProfilePictureUrl,
                     x.IsParent, x.ParentId)).ToList()
             )));
 
@@ -218,7 +222,9 @@ public class TriggerOutbox : AggregateRoot<Guid>, IAuditableEntity
                 )).ToArray(),
                 new ClinicServiceEvent.Category(cateId, cateName, cateDescription),
                 clinics.Select(x => new ClinicServiceEvent.Clinic(x.Id, x.Name, x.Email,
-                    x.City, x.Address, x.FullAddress, x.District, x.Ward, x.PhoneNumber, x.ProfilePictureUrl,
+                    x.City, x.Address, x.FullAddress, (TimeSpan)x.WorkingTimeStart,
+                    (TimeSpan)x.WorkingTimeEnd, x.District, x.Ward,
+                    x.PhoneNumber, x.ProfilePictureUrl,
                     x.IsParent, x.ParentId)).ToList()
             )));
 
