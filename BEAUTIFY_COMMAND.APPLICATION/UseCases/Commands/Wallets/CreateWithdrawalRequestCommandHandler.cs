@@ -44,8 +44,8 @@ internal sealed class CreateWithdrawalRequestCommandHandler(
     private static Result ValidateWithdrawalRequest(Clinic childClinic, decimal amount)
     {
         // Verify the child clinic has a parent
-        if (childClinic.ParentId == null)
-            return Result.Failure(new Error("400", ErrorMessages.Clinic.ClinicIsNotABranch));
+        /*if (childClinic.ParentId == null)
+            return Result.Failure(new Error("400", ErrorMessages.Clinic.ClinicIsNotABranch));*/
 
         // Verify the amount is valid
         if (amount < MINIMUM_WITHDRAWAL_AMOUNT)
