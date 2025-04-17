@@ -8,6 +8,7 @@ public class Order : AggregateRoot<Guid>, IAuditableEntity
     public virtual User? Customer { get; set; }
     [Column(TypeName = "decimal(18,2)")] public decimal? TotalAmount { get; set; }
     [Column(TypeName = "decimal(18,2)")] public decimal? Discount { get; set; }
+    [Column(TypeName = "decimal(18,2)")] public required decimal DepositAmount { get; set; }
     [Column(TypeName = "decimal(18,2)")] public decimal? FinalAmount { get; set; }
     public DateOnly OrderDate { get; set; } = DateOnly.FromDateTime(DateTime.UtcNow);
     public Guid? LivestreamRoomId { get; set; }

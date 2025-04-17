@@ -3,6 +3,9 @@ using BEAUTIFY_COMMAND.DOMAIN;
 using BEAUTIFY_COMMAND.INFRASTRUCTURE.Locking;
 
 namespace BEAUTIFY_COMMAND.APPLICATION.UseCases.Commands.Bookings;
+/// <summary>
+/// Handler for creating a new booking with distributed locking to prevent double-bookings
+/// </summary>
 internal sealed class
     CreateBookingCommandHandler(
         IRepositoryBase<User, Guid> userRepositoryBase,
@@ -65,6 +68,8 @@ internal sealed class
 
         #endregion
 
+        #region Distributed Locking
+
         // Create a unique lock key based on doctor, date, and time
         var lockKey = $"booking:{request.DoctorId}:{request.BookingDate}:{request.StartTime}";
 
@@ -78,6 +83,8 @@ internal sealed class
                 cancellationToken);
 
 
+            #region Availability Verification
+
             // Check again if the time slot is still available (double-check after acquiring the lock)
             var workingSchedule = await
                 workingScheduleRepositoryBase.FindAll(x =>
@@ -86,6 +93,10 @@ internal sealed class
 
             if (workingSchedule.Count != 0)
                 return Result.Failure(new Error("400", "Doctor is busy at this time !"));
+
+            #endregion
+
+            #region Procedure Validation
 
             var query = procedurePriceTypeRepositoryBase.FindAll(x => !x.IsDeleted)
                 .Select(x => new
@@ -127,7 +138,9 @@ internal sealed class
                     new Error("400", "Step indexes are not in a valid sequence or steps are missing."));
             }
 
-            #region livestream
+            #endregion
+
+            #region Pricing and Discount Calculation
 
             decimal? discountPrice = 0;
             var total = list.Sum(x => x.Price);
@@ -159,9 +172,6 @@ internal sealed class
             }
 
             // Now discountPrice contains the final price after discount
-
-            #endregion livestream
-
             var depositAmount = Math.Round((total - discountPrice ?? 0) * 0.2m, 2);
 
             // Check if user has sufficient balance for deposit
@@ -171,6 +181,10 @@ internal sealed class
                                                        $" You need at least {depositAmount} in your wallet for the deposit."));
             }
 
+            #endregion
+
+            #region Entity Creation
+
             var order = new Order
             {
                 Id = Guid.NewGuid(),
@@ -179,6 +193,7 @@ internal sealed class
                 Status = Constant.OrderStatus.ORDER_PENDING,
                 Discount = discountPrice,
                 TotalAmount = total,
+                DepositAmount = depositAmount,
                 FinalAmount = total - discountPrice - depositAmount,
                 LivestreamRoomId = request.LiveStreamRoomId
             };
@@ -218,6 +233,10 @@ internal sealed class
                 Date = request.BookingDate,
             };
 
+            #endregion
+
+            #region Transaction Processing
+
             // Process the deposit directly instead of using the command bus
             // Create the wallet transaction for the deposit
             var depositTransaction = CreateDepositTransaction(
@@ -231,6 +250,10 @@ internal sealed class
             user.Balance -= depositAmount;
             userRepositoryBase.Update(user);
 
+            #endregion
+
+            #region Persistence
+
             // Save the transaction
             walletTransactionRepositoryBase.Add(depositTransaction);
 
@@ -242,6 +265,10 @@ internal sealed class
             doctorSchedule.WorkingScheduleCreate(doctor.Id, clinic.Id, doctor.FirstName + " " + doctor.LastName,
                 [doctorSchedule], customerSchedule);
             customerSchedule.Create(customerSchedule);
+
+            #endregion
+
+            #region Notification
 
             // Send booking confirmation email using the template
             await mailService.SendMail(
@@ -258,7 +285,11 @@ internal sealed class
                 )
             );
 
+            #endregion
+
             return Result.Success();
+
+            #endregion
         }
         catch (TimeoutException ex)
         {
@@ -266,6 +297,8 @@ internal sealed class
                 "The booking time slot is currently being processed by another request. Please try again."));
         }
     }
+
+    #region Helper Methods
 
     /// <summary>
     /// Creates a new wallet transaction for the service booking deposit
@@ -294,4 +327,6 @@ internal sealed class
             OrderId = orderId
         };
     }
+
+    #endregion
 }
