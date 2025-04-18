@@ -10,6 +10,84 @@ public class ClinicApplyCommandHandler(
         CancellationToken cancellationToken)
     {
         var vietnamTimeZone = TimeZoneInfo.FindSystemTimeZoneById("SE Asia Standard Time");
+        
+        if (request.RoleName == "Clinic Admin")
+        {
+            var clinic = await clinicRepository
+                .FindByIdAsync(request.ClinicId, cancellationToken);
+
+            if (clinic == null)
+            {
+                throw new Exception($"Clinic {request.ClinicId} not found"); 
+            }
+            
+            if(clinic.Email != request.Email)
+            {
+                return Result.Failure(new Error("400", "Clinic Email not match"));
+            }
+            
+            if(clinic.PhoneNumber != request.PhoneNumber)
+            {
+                return Result.Failure(new Error("400", "Clinic Phone Number not match"));
+            }
+            
+            if(clinic.TaxCode != request.TaxCode)
+            {
+                return Result.Failure(new Error("400", "Clinic Tax Code not match"));
+            }
+            
+            var uploadPromises = await Task.WhenAll(
+                mediaService.UploadImageAsync(request.BusinessLicense),
+                mediaService.UploadImageAsync(request.OperatingLicense),
+                mediaService.UploadImageAsync(request.ProfilePictureUrl)
+            );
+            var businessLicenseUrl = uploadPromises[0];
+            var operatingLicenseUrl = uploadPromises[1];
+            var profilePictureUrl = uploadPromises[2];
+            
+            clinic.BusinessLicenseUrl = businessLicenseUrl;
+            clinic.OperatingLicenseUrl = operatingLicenseUrl;
+            clinic.ProfilePictureUrl = profilePictureUrl;
+            clinic.Name = request.Name;
+            clinic.City = request.City;
+            clinic.Ward = request.Ward;
+            clinic.District = request.District;
+            clinic.Address = request.Address;
+            clinic.BankName = request.BankName;
+            clinic.BankAccountNumber = request.BankAccountNumber;
+            clinic.Status = 0;
+            clinic.TotalApply += 1;
+            clinic.OperatingLicenseExpiryDate = DateTimeOffset.Parse(request.OperatingLicenseExpiryDate);
+            
+            var clinicOnBoardingRequest = new ClinicOnBoardingRequest
+            {
+                Id = Guid.NewGuid(),
+                ClinicId = clinic.Id,
+                Status = 0,
+                SendMailDate = TimeZoneInfo.ConvertTime(DateTimeOffset.UtcNow, vietnamTimeZone)
+            };
+
+            clinicOnBoardingRequestRepository.Add(clinicOnBoardingRequest);
+            
+            await mailService.SendMail(new MailContent
+            {
+                To = request.Email,
+                Subject = "Your Request Has Been Registered !",
+                Body = $@"
+                    <p>Dear {request.Email},</p>
+                    <p> System regis your information: </p>
+                    <p> Clinic contact email: {request.Email}</p>
+                    <p> Clinic contact phone number: {request.PhoneNumber}</p>
+                    <p> Clinic contact tax code: {request.TaxCode}</p>
+                    <p>Thank you for your application !</p>
+                    <p>Our system will handle as soon as possible !</p>
+                "
+            });
+            
+            return Result.Success("Clinic Apply Successfully");
+        }
+        
+        
 
         // Get all clinics that match any of the fields in a single query
         var existingClinics = await clinicRepository

@@ -77,7 +77,7 @@ public static class ClinicApplicationEmailTemplates
 </html>";
     }
 
-    public static string GetRejectedTemplate(string email, string reason)
+    public static string GetRejectedTemplate(string email, string reason, string password)
     {
         return $@"
 <!DOCTYPE html>
@@ -131,6 +131,8 @@ public static class ClinicApplicationEmailTemplates
             <p>We regret to inform you that your application does not meet our requirements:</p>
             <p><strong>Reason:</strong> {reason}</p>
         </div>
+
+        <div>You can still sign in an reapply with password: {password}</div>
         
         <p>You may prepare and submit a new application in the future.</p>
         <p>If you have any questions, please reply to this email.</p>
