@@ -3,10 +3,6 @@ public class CreateClinicEmptyScheduleCommandValidators : AbstractValidator<Comm
 {
     public CreateClinicEmptyScheduleCommandValidators()
     {
-        RuleFor(x => x.WorkingDates)
-            .NotEmpty()
-            .WithMessage("Working dates cannot be empty.");
-
         RuleForEach(x => x.WorkingDates)
             .ChildRules(workingDate =>
             {
