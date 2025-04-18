@@ -7,7 +7,7 @@ public static class Commands
 
     public record UpdateWorkingScheduleCommand(List<UpdateWorkingDate> WorkingDates) : ICommand;
 
-    public record CreateClinicEmptyScheduleCommand(Guid ClinicId, List<WorkingDateWithCapacity> WorkingDates)
+    public record CreateClinicEmptyScheduleCommand(List<WorkingDateWithCapacity> WorkingDates)
         : ICommand;
 
     public record DoctorRegisterScheduleCommand(List<Guid> WorkingScheduleIds) : ICommand;
