@@ -26,7 +26,7 @@ public class WorkingSchedule : AggregateRoot<Guid>, IAuditableEntity
         var workingScheduleEntities = workingSchedule.Select(x => new EntityEvent.WorkingScheduleEntity
         {
             Id = x.Id,
-            DoctorClinicId = Id = DoctorId,
+            DoctorClinicId = DoctorId,
             ClinicId = ClinicId,
             Date = x.Date,
             StartTime = x.StartTime,
