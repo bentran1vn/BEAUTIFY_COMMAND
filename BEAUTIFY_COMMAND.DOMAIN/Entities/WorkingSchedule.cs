@@ -26,7 +26,7 @@ public class WorkingSchedule : AggregateRoot<Guid>, IAuditableEntity
         var workingScheduleEntities = workingSchedule.Select(x => new EntityEvent.WorkingScheduleEntity
         {
             Id = x.Id,
-            DoctorId = DoctorId,
+            DoctorClinicId = Id = DoctorId,
             ClinicId = ClinicId,
             Date = x.Date,
             StartTime = x.StartTime,
@@ -47,7 +47,7 @@ public class WorkingSchedule : AggregateRoot<Guid>, IAuditableEntity
                 ServiceId = customerSchedule.ServiceId,
                 ServiceName = customerSchedule.Service.Name,
                 DoctorId = customerSchedule.DoctorId,
-                DoctorName = customerSchedule.Doctor.User.FirstName + " " + customerSchedule.Doctor.User.LastName,      
+                DoctorName = customerSchedule.Doctor.User.FirstName + " " + customerSchedule.Doctor.User.LastName,
                 ClinicId = customerSchedule.Doctor.ClinicId,
                 ClinicName = customerSchedule.Doctor.Clinic.Name,
                 CurrentProcedure = new EntityEvent.ProcedurePriceTypeEntity
@@ -92,11 +92,12 @@ public class WorkingSchedule : AggregateRoot<Guid>, IAuditableEntity
         // Raise the domain event for empty schedules
         RaiseDomainEvent(new DomainEvents.ClinicEmptyScheduleCreated(
             Guid.NewGuid(),
-            workingScheduleEntities, 
+            Guid.NewGuid(),
+            workingScheduleEntities,
             ClinicName));
     }
-    
-    public void ChangeShiftCapacity(Guid ClinicId, string ClinicName, Guid ShiftGroupId, 
+
+    public void ChangeShiftCapacity(Guid ClinicId, string ClinicName, Guid ShiftGroupId,
         int OldCapacity, int NewCapacity, List<WorkingSchedule> affectedSchedules)
     {
         // Map from workingSchedule to WorkingScheduleEntities for affected schedules
@@ -113,7 +114,7 @@ public class WorkingSchedule : AggregateRoot<Guid>, IAuditableEntity
             Note = string.Empty,
             ShiftGroupId = x.ShiftGroupId,
             ShiftCapacity = x.ShiftCapacity,
-            DoctorId = x.DoctorClinicId != null ? x.DoctorClinic?.UserId : null
+            DoctorClinicId = x.DoctorClinicId != null ? x.DoctorClinic?.UserId : null
         }).ToList();
 
         // Raise the domain event for capacity change
@@ -122,17 +123,16 @@ public class WorkingSchedule : AggregateRoot<Guid>, IAuditableEntity
             ShiftGroupId,
             OldCapacity,
             NewCapacity,
-            workingScheduleEntities, 
-            ClinicName));
+            workingScheduleEntities));
     }
-    
+
     public void RegisterDoctorSchedule(Guid DoctorId, string DoctorName, List<WorkingSchedule> registeredSchedules)
     {
         // Map from workingSchedule to WorkingScheduleEntities for registered schedules
         var workingScheduleEntities = registeredSchedules.Select(x => new EntityEvent.WorkingScheduleEntity
         {
             Id = x.Id,
-            DoctorId = DoctorId,
+            DoctorClinicId = DoctorId,
             ClinicId = x.DoctorClinic?.ClinicId ?? Guid.Empty,
             Date = x.Date,
             StartTime = x.StartTime,
