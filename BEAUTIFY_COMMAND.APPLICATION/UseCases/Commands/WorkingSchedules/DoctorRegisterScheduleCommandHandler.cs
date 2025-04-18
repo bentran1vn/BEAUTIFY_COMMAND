@@ -6,6 +6,7 @@ internal sealed class DoctorRegisterScheduleCommandHandler(
     ICurrentUserService currentUserService)
     : ICommandHandler<CONTRACT.Services.WorkingSchedules.Commands.DoctorRegisterScheduleCommand>
 {
+    //todo not hardcode
     // Maximum weekly working hours (44 hours)
     private const int MaxWeeklyHours = 44;
 
@@ -24,7 +25,7 @@ internal sealed class DoctorRegisterScheduleCommandHandler(
         // 2. Get doctor's clinic association
         var doctorClinic = await userClinicRepository.FindSingleAsync(
             x => x.UserId == currentUserService.UserId.Value &&
-                 x.ClinicId == currentUserService.ClinicId.Value,
+                 x.ClinicId == request.clinicId,
             cancellationToken);
 
         if (doctorClinic == null)
@@ -39,7 +40,7 @@ internal sealed class DoctorRegisterScheduleCommandHandler(
             return Result.Failure(new Error("404", "Một hoặc nhiều lịch làm việc không tồn tại"));
 
         // 4. Validate that all schedules are empty (not assigned to any doctor)
-        if (requestedSchedules.Any(x => x.DoctorClinicId != null))
+        if (requestedSchedules.Any(x => x.DoctorId != null))
             return Result.Failure(new Error("409", "Một hoặc nhiều lịch làm việc đã được đăng ký cho bác sĩ khác"));
 
         // 5. Calculate total hours for the requested schedules
@@ -50,7 +51,7 @@ internal sealed class DoctorRegisterScheduleCommandHandler(
         var requestedWeekEnd = requestedWeekStart.AddDays(6);
 
         var existingSchedules = await workingScheduleRepository
-            .FindAll(x => x.DoctorClinicId == doctorClinic.Id &&
+            .FindAll(x => x.DoctorId == doctorClinic.User.Id &&
                           x.Date >= requestedWeekStart &&
                           x.Date <= requestedWeekEnd)
             .ToListAsync(cancellationToken);
@@ -66,7 +67,7 @@ internal sealed class DoctorRegisterScheduleCommandHandler(
         // 8. Assign the doctor to the schedules
         foreach (var schedule in requestedSchedules)
         {
-            schedule.DoctorClinicId = doctorClinic.Id;
+            schedule.DoctorId = doctorClinic.User.Id;
             workingScheduleRepository.Update(schedule);
         }
 

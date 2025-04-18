@@ -9,15 +9,15 @@ public class Api : ApiEndpoint, ICarterModule
     public void AddRoutes(IEndpointRouteBuilder app)
     {
         var gr1 = app.NewVersionedApi("Working Schedules").MapGroup(BaseUrl).HasApiVersion(1);
-        gr1.MapPost("", CreateWorkingSchedule);
-        gr1.MapPost("clinic/empty", CreateClinicEmptySchedule)
+
+        // Better RESTful routes:
+        gr1.MapPost("schedules", CreateClinicEmptySchedule)
             .RequireAuthorization(Constant.Role.CLINIC_STAFF)
-            .WithDescription("Create empty working schedules with capacity for multiple doctors per shift");
-        gr1.MapPost("doctor/register", DoctorRegisterSchedule)
+            .WithDescription("Create empty working schedules");
+
+        gr1.MapPost("doctor/schedules", DoctorRegisterSchedule)
             .RequireAuthorization(Constant.Role.DOCTOR)
-            .WithDescription("Register a doctor for pre-created empty working schedules (max 44 hours per week)");
-        gr1.MapDelete("{id:guid}", RemoveWorkingSchedule);
-        gr1.MapPut("", UpdateWorkingSchedule);
+            .WithDescription("Register a doctor for schedules");
     }
 
     private static async Task<IResult> CreateWorkingSchedule(ISender sender,
@@ -26,14 +26,14 @@ public class Api : ApiEndpoint, ICarterModule
         var result = await sender.Send(createWorkingScheduleCommand);
         return result.IsFailure ? HandlerFailure(result) : Results.Ok(result);
     }
-    
+
     private static async Task<IResult> CreateClinicEmptySchedule(ISender sender,
         [FromBody] Commands.CreateClinicEmptyScheduleCommand createClinicEmptyScheduleCommand)
     {
         var result = await sender.Send(createClinicEmptyScheduleCommand);
         return result.IsFailure ? HandlerFailure(result) : Results.Ok(result);
     }
-    
+
     private static async Task<IResult> DoctorRegisterSchedule(ISender sender,
         [FromBody] Commands.DoctorRegisterScheduleCommand doctorRegisterScheduleCommand)
     {
