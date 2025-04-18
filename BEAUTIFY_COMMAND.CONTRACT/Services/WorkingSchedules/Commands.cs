@@ -6,16 +6,18 @@ public static class Commands
     public record DeleteWorkingScheduleCommand(Guid WorkingScheduleId) : ICommand;
 
     public record UpdateWorkingScheduleCommand(List<UpdateWorkingDate> WorkingDates) : ICommand;
-
-    public record CreateClinicEmptyScheduleCommand(List<WorkingDateWithCapacity> WorkingDates) : ICommand;
+    
+    public record CreateClinicEmptyScheduleCommand(Guid ClinicId, List<WorkingDateWithCapacity> WorkingDates) : ICommand;
+    
+    public record DoctorRegisterScheduleCommand(Guid DoctorId, List<Guid> WorkingScheduleIds) : ICommand;
 
     public class WorkingDate
     {
-        public DateOnly Date { get; set; }
-        public TimeSpan StartTime { get; set; }
-        public TimeSpan EndTime { get; set; }
+        public string Date { get; set; }
+        public string StartTime { get; set; }
+        public string EndTime { get; set; }
     }
-
+    
     public class WorkingDateWithCapacity : WorkingDate
     {
         public int Capacity { get; set; } = 1; // Default to 1 doctor per slot
