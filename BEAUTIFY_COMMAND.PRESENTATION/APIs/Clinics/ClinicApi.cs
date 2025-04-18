@@ -144,9 +144,9 @@ public class ClinicApi : ApiEndpoint, ICarterModule
     private static async Task<IResult> ClinicApply(ISender sender, HttpContext httpContext,
         [FromForm] Commands.ClinicApplyBody command)
     {   
-        var clinicId = httpContext.User.FindFirst(c => c.Type == "ClinicId")?.Value!;
-        var roleName = httpContext.User.FindFirst(c => c.Type == "RoleName")?.Value!;
-        var result = await sender.Send(new Commands.ClinicApplyCommand(new Guid(clinicId), roleName,
+        var clinicId = httpContext.User.FindFirst(c => c.Type == "ClinicId")?.Value;
+        var roleName = httpContext.User.FindFirst(c => c.Type == "RoleName")?.Value;
+        var result = await sender.Send(new Commands.ClinicApplyCommand(clinicId == null ? null : new Guid(clinicId), roleName,
             command.Name, command.Email, command.PhoneNumber, command.City, command.District,
             command.Ward,command.Address, command.TaxCode, command.BankName, command.BankAccountNumber,
             command.BusinessLicense, command.OperatingLicense, command.OperatingLicenseExpiryDate,
