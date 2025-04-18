@@ -7,8 +7,7 @@ public class TriggerFromHookCommandHandler(
     IRepositoryBase<ClinicTransaction, Guid> clinicTransactionRepository,
     IRepositoryBase<WalletTransaction, Guid> walletTransactionRepository,
     IHubContext<PaymentHub> hubContext,
-    IRepositoryBase<Order, Guid> orderRepository,
-    IRepositoryBase<Clinic, Guid> clinicRepository)
+    IRepositoryBase<Order, Guid> orderRepository)
     : ICommandHandler<CONTRACT.Services.Payments.Commands.TriggerFromHookCommand>
 {
     public async Task<Result> Handle(CONTRACT.Services.Payments.Commands.TriggerFromHookCommand request,
