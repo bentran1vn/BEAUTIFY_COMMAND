@@ -1,5 +1,5 @@
 ﻿namespace BEAUTIFY_COMMAND.APPLICATION.UseCases.Commands.WorkingSchedules;
-public class UpdateWorkingScheduleCommandHandler(
+/*public class UpdateWorkingScheduleCommandHandler(
     IRepositoryBase<WorkingSchedule, Guid> workingScheduleRepository,
     IRepositoryBase<User, Guid> userRepository)
     : ICommandHandler<CONTRACT.Services.WorkingSchedules.Commands.UpdateWorkingScheduleCommand>
@@ -116,4 +116,4 @@ public class UpdateWorkingScheduleCommandHandler(
         // start1 < end2 AND start2 < end1
         return start1 < end2 && start2 < end1;
     }
-}
+}*/

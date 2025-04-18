@@ -1,5 +1,5 @@
 ﻿namespace BEAUTIFY_COMMAND.APPLICATION.UseCases.Commands.WorkingSchedules;
-internal sealed class CreateWorkingScheduleCommandHandler(
+/*internal sealed class CreateWorkingScheduleCommandHandler(
     IRepositoryBase<Staff, Guid> staffRepository,
     IRepositoryBase<WorkingSchedule, Guid> workingScheduleRepository,
     IRepositoryBase<Clinic, Guid> clinicRepository)
@@ -57,7 +57,7 @@ internal sealed class CreateWorkingScheduleCommandHandler(
                 return Result.Failure(new Error("Overlap",
                     $"Cannot add schedule ({startTime} - {endTime}) on {date}. It overlaps with another schedule in this request."));
 
-            // 3d. All good – add to the list
+            // 3d. All good - add to the list
             schedulesToAdd.Add(new WorkingSchedule
             {
                 Id = Guid.NewGuid(),
@@ -90,4 +90,4 @@ internal sealed class CreateWorkingScheduleCommandHandler(
         // start1 < end2 AND start2 < end1
         return start1 < end2 && start2 < end1;
     }
-}
+}*/
