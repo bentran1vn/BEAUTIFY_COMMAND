@@ -16,7 +16,7 @@ internal sealed class
     {
         var parentClinic = await clinicRepository.FindByIdAsync(currentUserService.ClinicId.Value, cancellationToken) ??
                            throw new ClinicException.ClinicNotFoundException(currentUserService.ClinicId.Value);
-        
+
         // var systemTrans = await systemTransactionRepository.FindAll(
         //         x => x.ClinicId == parentClinic.Id && x.Status == 2).OrderByDescending(x => x.TransactionDate)
         //     .FirstOrDefaultAsync(cancellationToken);
@@ -27,14 +27,12 @@ internal sealed class
         // }
 
         if (parentClinic.TotalBranches >= parentClinic.AdditionBranches)
-        {
             return Result.Failure(new Error("403", "You have reached the maximum number of branches"));
-        }
 
 
         var role = await roleRepository.FindSingleAsync(x => x.Name == "Clinic Staff", cancellationToken);
         var oUrl = await mediaService.UploadImageAsync(request.OperatingLicense);
-        
+
         var clinic = new Clinic
         {
             Id = Guid.NewGuid(),

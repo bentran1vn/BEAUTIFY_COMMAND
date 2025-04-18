@@ -13,7 +13,9 @@ public class ClinicApplyCommandHandler(
 
         // Get all clinics that match any of the fields in a single query
         var existingClinics = await clinicRepository
-            .FindAll(x => (x.Email == request.Email || x.TaxCode == request.TaxCode || x.PhoneNumber == request.PhoneNumber) && !x.IsDeleted)
+            .FindAll(x =>
+                (x.Email == request.Email || x.TaxCode == request.TaxCode || x.PhoneNumber == request.PhoneNumber) &&
+                !x.IsDeleted)
             .ToListAsync(cancellationToken);
 
         // Check if any field already exists
@@ -24,14 +26,17 @@ public class ClinicApplyCommandHandler(
             if (existingClinics.Any(x => x.TaxCode == request.TaxCode)) duplicateFields.Add("Tax Code");
             if (existingClinics.Any(x => x.PhoneNumber == request.PhoneNumber)) duplicateFields.Add("Phone Number");
 
-            return Result.Failure(new Error("400", $"The following information already exists: {string.Join(", ", duplicateFields)}"));
+            return Result.Failure(new Error("400",
+                $"The following information already exists: {string.Join(", ", duplicateFields)}"));
         }
 
         // If we need the clinic with all its related data for further processing
         // Since we've already checked that no clinic exists with any of the fields,
         // this will return null, but we'll keep it for code clarity
         var isExist = await clinicRepository
-            .FindAll(x => (x.Email == request.Email && x.TaxCode == request.TaxCode && x.PhoneNumber == request.PhoneNumber) && !x.IsDeleted,
+            .FindAll(
+                x => x.Email == request.Email && x.TaxCode == request.TaxCode && x.PhoneNumber == request.PhoneNumber &&
+                     !x.IsDeleted,
                 x => x.ClinicOnBoardingRequests!)
             .AsTracking()
             .FirstOrDefaultAsync(cancellationToken);

@@ -1,7 +1,6 @@
 using System.Reflection;
 using BEAUTIFY_COMMAND.DOMAIN.Entities;
 using BEAUTIFY_PACKAGES.BEAUTIFY_PACKAGES.DOMAIN.Abstractions.Entities;
-using BEAUTIFY_PACKAGES.BEAUTIFY_PACKAGES.DOMAIN.Constrants;
 using Microsoft.EntityFrameworkCore;
 
 namespace BEAUTIFY_COMMAND.PERSISTENCE;
@@ -30,7 +29,7 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
             .WithMany() // or .WithMany(of => of.Orders) if there's a collection
             .HasForeignKey(o => o.OrderFeedbackId)
             .IsRequired(false);
-        
+
         builder.ApplyConfigurationsFromAssembly(AssemblyReference.Assembly);
         builder.Entity<CustomerSchedule>()
             .HasOne(cs => cs.Customer)
@@ -71,12 +70,13 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
         builder.Entity<DoctorService>().HasQueryFilter(x => !x.IsDeleted);
         builder.Entity<LiveStreamDetail>().HasQueryFilter(x => !x.IsDeleted); // Add filter for LiveStreamDetail
         builder.Entity<Feedback>().HasQueryFilter(x => !x.IsDeleted); // Add filter for Feedback
-        builder.Entity<CustomerScheduleReminder>().HasQueryFilter(x => !x.IsDeleted); // Add filter for CustomerScheduleReminder
-        
+        builder.Entity<CustomerScheduleReminder>()
+            .HasQueryFilter(x => !x.IsDeleted); // Add filter for CustomerScheduleReminder
+
         builder.Entity<LivestreamRoom>()
             .HasOne(lr => lr.LiveStreamDetail)
-            .WithOne()  // Assuming one-to-one relationship, adjust if it's one-to-many
+            .WithOne() // Assuming one-to-one relationship, adjust if it's one-to-many
             .HasForeignKey<LivestreamRoom>(lr => lr.LiveStreamDetailId)
-            .OnDelete(DeleteBehavior.Restrict);  // Adjust delete behavior as needed
+            .OnDelete(DeleteBehavior.Restrict); // Adjust delete behavior as needed
     }
 }

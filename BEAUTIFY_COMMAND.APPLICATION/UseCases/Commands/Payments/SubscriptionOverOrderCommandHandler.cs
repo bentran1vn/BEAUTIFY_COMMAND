@@ -1,20 +1,22 @@
 namespace BEAUTIFY_COMMAND.APPLICATION.UseCases.Commands.Payments;
-
-public class SubscriptionOverOrderCommandHandler 
+public class SubscriptionOverOrderCommandHandler
     : ICommandHandler<CONTRACT.Services.Payments.Commands.SubscriptionOverOrderCommand>
 {
-    private readonly IRepositoryBase<SystemTransaction, Guid> _systemTransactionRepository;
-    private readonly IRepositoryBase<SubscriptionPackage, Guid> _subscriptionPackageRepository;
     private readonly IRepositoryBase<Clinic, Guid> _clinicRepository;
+    private readonly IRepositoryBase<SubscriptionPackage, Guid> _subscriptionPackageRepository;
+    private readonly IRepositoryBase<SystemTransaction, Guid> _systemTransactionRepository;
 
-    public SubscriptionOverOrderCommandHandler(IRepositoryBase<SystemTransaction, Guid> systemTransactionRepository, IRepositoryBase<SubscriptionPackage, Guid> subscriptionPackageRepository, IRepositoryBase<Clinic, Guid> clinicRepository)
+    public SubscriptionOverOrderCommandHandler(IRepositoryBase<SystemTransaction, Guid> systemTransactionRepository,
+        IRepositoryBase<SubscriptionPackage, Guid> subscriptionPackageRepository,
+        IRepositoryBase<Clinic, Guid> clinicRepository)
     {
         _systemTransactionRepository = systemTransactionRepository;
         _subscriptionPackageRepository = subscriptionPackageRepository;
         _clinicRepository = clinicRepository;
     }
 
-    public async Task<Result> Handle(CONTRACT.Services.Payments.Commands.SubscriptionOverOrderCommand request, CancellationToken cancellationToken)
+    public async Task<Result> Handle(CONTRACT.Services.Payments.Commands.SubscriptionOverOrderCommand request,
+        CancellationToken cancellationToken)
     {
         var clinic = await _clinicRepository.FindByIdAsync(request.ClinicId, cancellationToken);
 
@@ -26,15 +28,16 @@ public class SubscriptionOverOrderCommandHandler
         var sub = await _subscriptionPackageRepository.FindByIdAsync(request.SubscriptionId, cancellationToken);
 
         if (sub == null || sub.IsDeleted) return Result.Failure(new Error("404", "Subscription package not found"));
-        
-        if (sub.PriceMoreBranch * request.AdditionBranch + sub.PriceMoreLivestream * request.AdditionLiveStream != request.CurrentAmount)
+
+        if (sub.PriceMoreBranch * request.AdditionBranch + sub.PriceMoreLivestream * request.AdditionLiveStream !=
+            request.CurrentAmount)
             return Result.Failure(new Error("404", "Giá gói đăng ký đã thay đổi"));
 
         var vietnamTimeZone = TimeZoneInfo.FindSystemTimeZoneById("SE Asia Standard Time");
-        
+
         var pricePayment = sub.PriceMoreBranch * request.AdditionBranch +
-            sub.PriceMoreLivestream * request.AdditionLiveStream;
-        
+                           sub.PriceMoreLivestream * request.AdditionLiveStream;
+
         var trans = new SystemTransaction
         {
             Id = Guid.NewGuid(),
@@ -47,7 +50,7 @@ public class SubscriptionOverOrderCommandHandler
             TransactionDate = TimeZoneInfo.ConvertTime(DateTimeOffset.UtcNow, vietnamTimeZone),
             PaymentMethod = "SePay"
         };
-        
+
         _systemTransactionRepository.Add(trans);
 
         var qrUrl =
@@ -62,7 +65,7 @@ public class SubscriptionOverOrderCommandHandler
             OrderDescription = $"Beautify-{trans.Id}",
             QrUrl = qrUrl
         };
-        
+
         return Result.Success(result);
     }
 }

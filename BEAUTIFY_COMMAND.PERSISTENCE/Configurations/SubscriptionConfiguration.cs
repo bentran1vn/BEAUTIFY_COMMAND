@@ -3,7 +3,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace BEAUTIFY_COMMAND.PERSISTENCE.Configurations;
-
 public class SubscriptionConfiguration : IEntityTypeConfiguration<SubscriptionPackage>
 {
     public void Configure(EntityTypeBuilder<SubscriptionPackage> builder)

@@ -1,6 +1,5 @@
 using BEAUTIFY_COMMAND.DOMAIN.Entities;
 using BEAUTIFY_PACKAGES.BEAUTIFY_PACKAGES.APPLICATION.Abstractions;
-using BEAUTIFY_PACKAGES.BEAUTIFY_PACKAGES.INFRASTRUCTURE.Mail;
 
 namespace BEAUTIFY_COMMAND.CONTRACT.MailTemplates;
 public static class SubscriptionExpiryReminderEmailTemplate

@@ -54,7 +54,7 @@ public class WorkingSchedule : AggregateRoot<Guid>, IAuditableEntity
                     Id = customerSchedule.ProcedurePriceTypeId.Value,
                     StepIndex = customerSchedule.ProcedurePriceType.Procedure.StepIndex.ToString(),
                     DateCompleted = (DateOnly)customerSchedule.Date,
-                    Duration = 0,
+                    Duration = 0
                 },
                 Status = customerSchedule.Status,
                 CompletedProcedures = [],
@@ -86,7 +86,7 @@ public class WorkingSchedule : AggregateRoot<Guid>, IAuditableEntity
             StartTime = x.StartTime,
             EndTime = x.EndTime,
             IsDeleted = false,
-            CustomerScheduleId = x.CustomerScheduleId.Value,
+            CustomerScheduleId = x.CustomerScheduleId.Value
         }).ToList();
 
         // Raise the domain event

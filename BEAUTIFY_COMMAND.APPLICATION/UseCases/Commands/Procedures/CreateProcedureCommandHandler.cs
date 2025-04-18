@@ -17,16 +17,17 @@ public class
 
         if (!request.ProcedurePriceTypes.Any())
             return Result.Failure(new Error("400", "No Price Types !"));
-        
-        if(request.ProcedurePriceTypes.Count(x => x.IsDefault) > 1)
+
+        if (request.ProcedurePriceTypes.Count(x => x.IsDefault) > 1)
             return Result.Failure(new Error("400", "Only one price type can be default !"));
 
         Procedure? procedure = null;
-        
+
         if (request.StepIndex == null)
         {
-            var nextStepIndex = isExisted.Procedures?.Any() == true ? isExisted.Procedures.Max(x => x.StepIndex) + 1 : 1;
-            
+            var nextStepIndex =
+                isExisted.Procedures?.Any() == true ? isExisted.Procedures.Max(x => x.StepIndex) + 1 : 1;
+
             procedure = new Procedure
             {
                 Id = Guid.NewGuid(),
@@ -38,30 +39,28 @@ public class
         }
         else
         {
-            var existIndex = isExisted.Procedures?.FirstOrDefault(
-                x => x.StepIndex == request.StepIndex && x.IsDeleted == false
-            );
-            
+            var existIndex =
+                isExisted.Procedures?.FirstOrDefault(x => x.StepIndex == request.StepIndex && x.IsDeleted == false
+                );
+
             int? indexToAdd = null;
-            
+
             if (existIndex != null)
             {
                 var procedures = isExisted.Procedures?.Where(x => x.StepIndex >= request.StepIndex).ToList();
                 if (procedures != null)
                 {
-                    foreach (var item in procedures)
-                    {
-                        item.StepIndex += 1;
-                    }
+                    foreach (var item in procedures) item.StepIndex += 1;
                     procedureServiceRepository.UpdateRange(procedures);
                 }
+
                 indexToAdd = request.StepIndex;
             }
             else
             {
                 indexToAdd = isExisted.Procedures?.Any() == true ? isExisted.Procedures?.Max(x => x.StepIndex) + 1 : 1;
             }
-            
+
             procedure = new Procedure
             {
                 Id = Guid.NewGuid(),
@@ -100,7 +99,7 @@ public class
 
         var discountPercent = isExisted.Promotions?.FirstOrDefault(x =>
             x.IsActivated && x.ServiceId.Equals(request.ClinicServiceId) &&
-                          !x.IsDeleted  && x.LivestreamRoom == null)?.DiscountPercent;
+            !x.IsDeleted && x.LivestreamRoom == null)?.DiscountPercent;
 
         isExisted.MaxPrice = highestPrice;
         isExisted.MinPrice = lowestPrice;

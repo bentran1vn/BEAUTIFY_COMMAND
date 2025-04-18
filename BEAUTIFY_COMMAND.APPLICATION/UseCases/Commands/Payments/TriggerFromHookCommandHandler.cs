@@ -69,13 +69,13 @@ public class TriggerFromHookCommandHandler(
         // The background job will look for transactions with status 1 and SubscriptionPackageId not null
         // to send confirmation emails
         transaction.Status = 1;
-        
+
         if (transaction.Clinic == null)
             return Result.Failure(new Error("404", "Clinic not found for this transaction"));
 
         transaction.Clinic.AdditionBranches += transaction.SubscriptionPackage.LimitBranch;
         transaction.Clinic.AdditionLivestreams += transaction.SubscriptionPackage.LimitLiveStream;
-        
+
         // Notify clients about successful payment
         await hubContext.Clients.Group(transaction.Id.ToString())
             .SendAsync("ReceivePaymentStatus", true, cancellationToken);
@@ -205,12 +205,10 @@ public class TriggerFromHookCommandHandler(
 
         // Handle clinic withdrawal
         // Handle user withdrawal
-         if (transaction.User != null)
-        {
+        if (transaction.User != null)
             // Update user balance
             transaction.User.Balance -= transaction.Amount;
-        }
-      
+
 
         // Notify clients about successful payment
         await hubContext.Clients.Group(transaction.Id.ToString())
@@ -225,13 +223,13 @@ public class TriggerFromHookCommandHandler(
         // Fetch withdrawal transaction
         var transaction = await systemTransactionRepository.FindByIdAsync(request.Id, cancellationToken,
             x => x.Clinic, x => x.SubscriptionPackage);
-        
+
         // Validate transaction exists
-        if (transaction == null || transaction.IsDeleted) 
+        if (transaction == null || transaction.IsDeleted)
             return Result.Failure(new Error("404", "Transaction not found"));
-        
+
         // Validate transaction status
-        if (transaction.Status != 0) 
+        if (transaction.Status != 0)
             return Result.Failure(new Error("400", "Transaction already handled"));
 
         // Validate transaction amount
@@ -249,22 +247,22 @@ public class TriggerFromHookCommandHandler(
         // Validate transaction date
         if (transaction.TransactionDate > DateTimeOffset.Now)
             return Result.Failure(new Error("400", "Transaction Date invalid"));
-        
+
         transaction.Status = 1;
-        
+
         if (transaction.Clinic == null)
             return Result.Failure(new Error("404", "Clinic not found for this transaction"));
-        
-        if(transaction.AdditionBranches != null)
+
+        if (transaction.AdditionBranches != null)
             transaction.Clinic.AdditionBranches += (int)transaction.AdditionBranches;
-        
-        if(transaction.AdditionLivestreams != null)
+
+        if (transaction.AdditionLivestreams != null)
             transaction.Clinic.AdditionLivestreams += (int)transaction.AdditionLivestreams;
-        
+
         // Notify clients about successful payment
         await hubContext.Clients.Group(transaction.Id.ToString())
             .SendAsync("ReceivePaymentStatus", true, cancellationToken);
-            
+
         return Result.Success("Subscription transaction processed successfully.");
     }
 }

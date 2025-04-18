@@ -1,5 +1,4 @@
 using BEAUTIFY_COMMAND.CONTRACT.Services.Clinics;
-using BEAUTIFY_PACKAGES.BEAUTIFY_PACKAGES.DOMAIN.Constrants;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Models;
 
@@ -31,26 +30,25 @@ public class ClinicApi : ApiEndpoint, ICarterModule
                                 Type = "object",
                                 Properties = new Dictionary<string, OpenApiSchema>
                                 {
-                                    ["name"] = new OpenApiSchema
+                                    ["name"] = new()
                                         { Type = "string", Example = new OpenApiString("Thẩm mĩ viện Hướng Dương") },
-                                    ["email"] = new OpenApiSchema
+                                    ["email"] = new()
                                     {
                                         Type = "string", Format = "email",
                                         Example = new OpenApiString("tan11105@gmail.com")
                                     },
-                                    ["phone_number"] = new OpenApiSchema
+                                    ["phone_number"] = new()
                                     {
                                         Type = "string", Format = "phone", Example = new OpenApiString("+84983460123")
                                     },
-                                    ["address"] = new OpenApiSchema
+                                    ["address"] = new()
                                         { Type = "string", Example = new OpenApiString("Biên Hoà, Đồng Nai") },
-                                    ["tax_code"] = new OpenApiSchema
-                                        { Type = "string", Example = new OpenApiString("123123") },
-                                    ["business_license"] = new OpenApiSchema { Type = "string", Format = "binary" },
-                                    ["operating_license"] = new OpenApiSchema { Type = "string", Format = "binary" },
-                                    ["operating_license_expiry_date"] = new OpenApiSchema
+                                    ["tax_code"] = new() { Type = "string", Example = new OpenApiString("123123") },
+                                    ["business_license"] = new() { Type = "string", Format = "binary" },
+                                    ["operating_license"] = new() { Type = "string", Format = "binary" },
+                                    ["operating_license_expiry_date"] = new()
                                         { Type = "string", Format = "date", Example = new OpenApiString("2025-12-31") },
-                                    ["profile_picture_url"] = new OpenApiSchema { Type = "string", Format = "binary" }
+                                    ["profile_picture_url"] = new() { Type = "string", Format = "binary" }
                                 }
                             }
                         }
@@ -129,10 +127,7 @@ public class ClinicApi : ApiEndpoint, ICarterModule
     private static async Task<IResult> ClinicCreateAccountForEmployee(ISender sender, [FromRoute] Guid id,
         [FromForm] Commands.ClinicCreateAccountForEmployeeCommand command)
     {
-        if (id != command.ClinicId)
-        {
-            throw new Exception("Id not matching");
-        }
+        if (id != command.ClinicId) throw new Exception("Id not matching");
 
         var result = await sender.Send(command);
         return result.IsFailure ? HandlerFailure(result) : Results.Ok(result);
@@ -185,7 +180,7 @@ public class ClinicApi : ApiEndpoint, ICarterModule
     private static async Task<IResult> ClinicDeleteBranch(ISender sender, [FromRoute] Guid id,
         [FromRoute] Guid branchId, [FromForm] Commands.ClinicDeleteBranchCommand command)
     {
-        var result = await sender.Send(new Commands.ClinicDeleteBranchCommand(BranchId: branchId));
+        var result = await sender.Send(new Commands.ClinicDeleteBranchCommand(branchId));
         return result.IsFailure ? HandlerFailure(result) : Results.Ok(result);
     }
 }

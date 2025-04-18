@@ -1,8 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 
 namespace BEAUTIFY_COMMAND.DOMAIN.Entities;
-
-public class OrderFeedback: AggregateRoot<Guid>, IAuditableEntity
+public class OrderFeedback : AggregateRoot<Guid>, IAuditableEntity
 {
     public Guid OrderId { get; set; }
     [MaxLength(5000)] public string? Content { get; set; }

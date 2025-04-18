@@ -1,8 +1,6 @@
-﻿using System;
-using System.Globalization;
+﻿using System.Globalization;
 using BEAUTIFY_COMMAND.DOMAIN.Entities;
 using BEAUTIFY_PACKAGES.BEAUTIFY_PACKAGES.APPLICATION.Abstractions;
-using BEAUTIFY_PACKAGES.BEAUTIFY_PACKAGES.INFRASTRUCTURE.Mail;
 
 namespace BEAUTIFY_COMMAND.CONTRACT.MailTemplates;
 public static class BookingEmailTemplate
@@ -123,7 +121,7 @@ public static class BookingEmailTemplate
                 <li><strong>Booking ID:</strong> {order.Id}</li>
                 <li><strong>Booking Date:</strong> {bookingDate.ToString("dd/MM/yyyy", CultureInfo.InvariantCulture)}</li>
                 <li><strong>Start Time:</strong> {startTime.ToString(@"hh\:mm")}</li>
-                <li><strong>End Time:</strong> {(customerSchedule.EndTime?.ToString(@"hh\:mm") ?? "N/A")}</li>
+                <li><strong>End Time:</strong> {customerSchedule.EndTime?.ToString(@"hh\:mm") ?? "N/A"}</li>
                 <li><strong>Service:</strong> {service.Name}</li>
                 <li><strong>Doctor:</strong> {doctor.FirstName} {doctor.LastName}</li>
                 <li><strong>Address:</strong> {clinic.Address}</li>

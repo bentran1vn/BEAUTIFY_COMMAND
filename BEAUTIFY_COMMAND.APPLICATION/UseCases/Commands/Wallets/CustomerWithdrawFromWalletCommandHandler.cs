@@ -2,7 +2,7 @@ using BEAUTIFY_COMMAND.DOMAIN;
 
 namespace BEAUTIFY_COMMAND.APPLICATION.UseCases.Commands.Wallets;
 /// <summary>
-/// Handler for customer withdrawal requests
+///     Handler for customer withdrawal requests
 /// </summary>
 internal sealed class CustomerWithdrawFromWalletCommandHandler(
     IRepositoryBase<User, Guid> userRepository,
@@ -20,17 +20,11 @@ internal sealed class CustomerWithdrawFromWalletCommandHandler(
 
         // Get the user with a single database call
         var user = await userRepository.FindByIdAsync(currentUserService.UserId.Value, cancellationToken);
-        if (user == null)
-        {
-            return Result.Failure(new Error("404", "User not found"));
-        }
+        if (user == null) return Result.Failure(new Error("404", "User not found"));
 
         // Validate request parameters
         var validationResult = ValidateWithdrawalRequest(user, request.Amount);
-        if (validationResult.IsFailure)
-        {
-            return validationResult;
-        }
+        if (validationResult.IsFailure) return validationResult;
 
         // Create and save the transaction
         var walletTransaction = CreateWalletTransaction(
@@ -58,15 +52,13 @@ internal sealed class CustomerWithdrawFromWalletCommandHandler(
     }
 
     /// <summary>
-    /// Validates the withdrawal request parameters
+    ///     Validates the withdrawal request parameters
     /// </summary>
     private static Result ValidateWithdrawalRequest(User user, decimal amount)
     {
         // Verify the amount is valid
         if (amount < MINIMUM_WITHDRAWAL_AMOUNT)
-        {
             return Result.Failure(new Error("400", ErrorMessages.Clinic.AmountMustBeGreaterThan2000));
-        }
 
         // Verify the user has sufficient balance
         return user.Balance < amount
@@ -75,7 +67,7 @@ internal sealed class CustomerWithdrawFromWalletCommandHandler(
     }
 
     /// <summary>
-    /// Creates a new wallet transaction for the withdrawal request
+    ///     Creates a new wallet transaction for the withdrawal request
     /// </summary>
     private static WalletTransaction CreateWalletTransaction(Guid userId, decimal amount, string description)
     {

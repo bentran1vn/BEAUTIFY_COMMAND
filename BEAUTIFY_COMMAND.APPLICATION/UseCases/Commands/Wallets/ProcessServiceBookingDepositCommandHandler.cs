@@ -1,9 +1,8 @@
 ﻿using BEAUTIFY_COMMAND.DOMAIN;
 
 namespace BEAUTIFY_COMMAND.APPLICATION.UseCases.Commands.Wallets;
-
 /// <summary>
-/// Handler for processing service booking deposits
+///     Handler for processing service booking deposits
 /// </summary>
 internal sealed class ProcessServiceBookingDepositCommandHandler(
     IRepositoryBase<User, Guid> userRepository,
@@ -18,30 +17,19 @@ internal sealed class ProcessServiceBookingDepositCommandHandler(
     {
         // Validate user exists and has permission
         var user = await userRepository.FindByIdAsync(request.CustomerId, cancellationToken);
-        if (user == null)
-        {
-            return Result.Failure(new Error("404", "User not found"));
-        }
+        if (user == null) return Result.Failure(new Error("404", "User not found"));
 
         // Validate service exists
         var service = await serviceRepository.FindByIdAsync(request.ServiceId, cancellationToken);
-        if (service == null)
-        {
-            return Result.Failure(new Error("404", "Service not found"));
-        }
+        if (service == null) return Result.Failure(new Error("404", "Service not found"));
 
         // Validate order exists
         var order = await orderRepository.FindByIdAsync(request.OrderId, cancellationToken);
-        if (order == null)
-        {
-            return Result.Failure(new Error("404", "Order not found"));
-        }
+        if (order == null) return Result.Failure(new Error("404", "Order not found"));
 
         // Validate user has sufficient balance
         if (user.Balance < request.DepositAmount)
-        {
             return Result.Failure(new Error("400", ErrorMessages.Wallet.InsufficientBalance));
-        }
 
         // Create and save the transaction
         var walletTransaction = CreateDepositTransaction(
@@ -53,7 +41,7 @@ internal sealed class ProcessServiceBookingDepositCommandHandler(
         // Deduct the deposit amount from the user's balance
         user.Balance -= request.DepositAmount;
         userRepository.Update(user);
-        
+
         // Save the transaction
         walletTransactionRepository.Add(walletTransaction);
 
@@ -61,12 +49,12 @@ internal sealed class ProcessServiceBookingDepositCommandHandler(
     }
 
     /// <summary>
-    /// Creates a new wallet transaction for the service booking deposit
+    ///     Creates a new wallet transaction for the service booking deposit
     /// </summary>
     private static WalletTransaction CreateDepositTransaction(
-        Guid userId, 
-        Guid orderId, 
-        decimal amount, 
+        Guid userId,
+        Guid orderId,
+        decimal amount,
         string description)
     {
         // Get current time in Vietnam timezone

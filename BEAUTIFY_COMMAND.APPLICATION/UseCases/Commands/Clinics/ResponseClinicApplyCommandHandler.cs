@@ -31,7 +31,7 @@ public class ResponseClinicApplyCommandHandler(
             To = applyRequest.Clinic!.Email,
             Subject = "Clinic Application Decision"
         };
-        
+
         applyRequest.Status = request.Action + 1;
 
         if (request.Action != 0)
@@ -90,7 +90,7 @@ public class ResponseClinicApplyCommandHandler(
 
             applyRequest.Clinic.AdditionBranches = sub.LimitBranch;
             applyRequest.Clinic.AdditionLivestreams = sub.LimitLiveStream;
-            
+
             var vietnamTimeZone = TimeZoneInfo.FindSystemTimeZoneById("SE Asia Standard Time");
 
             var trans = new SystemTransaction

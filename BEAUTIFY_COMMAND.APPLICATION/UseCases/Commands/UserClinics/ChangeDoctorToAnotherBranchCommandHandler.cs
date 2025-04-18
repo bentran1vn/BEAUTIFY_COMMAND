@@ -8,7 +8,6 @@ internal sealed class ChangeDoctorToAnotherBranchCommandHandler(
     public async Task<Result> Handle(CONTRACT.Services.UserClinics.Commands.ChangeDoctorToAnotherBranchCommand request,
         CancellationToken cancellationToken)
     {
-        
         var doctor = await staffRepository.FindByIdAsync(request.DoctorId, cancellationToken);
         if (doctor == null)
             return Result.Failure(new Error("404", "Doctor Not Found"));

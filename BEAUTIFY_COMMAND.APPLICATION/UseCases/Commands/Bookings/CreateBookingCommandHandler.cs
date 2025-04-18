@@ -4,7 +4,7 @@ using BEAUTIFY_COMMAND.INFRASTRUCTURE.Locking;
 
 namespace BEAUTIFY_COMMAND.APPLICATION.UseCases.Commands.Bookings;
 /// <summary>
-/// Handler for creating a new booking with distributed locking to prevent double-bookings
+///     Handler for creating a new booking with distributed locking to prevent double-bookings
 /// </summary>
 internal sealed class
     CreateBookingCommandHandler(
@@ -125,18 +125,14 @@ internal sealed class
 
             var stepIndexes = list.Select(x => x.Procedure.StepIndex).ToList();
             if (serviceIds.Count > 1 || stepIndexes.Count != stepIndexes.Distinct().Count())
-            {
                 return Result.Failure(new Error("400",
                     "Conflicting procedures: Multiple services or overlapping steps."));
-            }
 
             var maxStepIndex = stepIndexes.Max();
             var expectedSteps = Enumerable.Range(1, maxStepIndex).ToList();
             if (!stepIndexes.OrderBy(x => x).SequenceEqual(expectedSteps))
-            {
                 return Result.Failure(
                     new Error("400", "Step indexes are not in a valid sequence or steps are missing."));
-            }
 
             #endregion
 
@@ -159,16 +155,12 @@ internal sealed class
                     cancellationToken);
 
                 if (discount != null)
-                {
                     // Calculate the discounted price, not the discount amount
                     discountPrice = total * (1 - (decimal)discount.DiscountPercent);
-                }
                 else
-                {
                     // If using service.DiscountPrice, make sure this is the final price after discount
                     // not the discount amount
                     discountPrice = service.DiscountPrice;
-                }
             }
 
             var deposit = service.DepositPercent;
@@ -177,10 +169,8 @@ internal sealed class
 
             // Check if user has sufficient balance for deposit
             if (user.Balance < depositAmount)
-            {
                 return Result.Failure(new Error("400", ErrorMessages.Wallet.InsufficientBalance +
                                                        $" Bạn cần tối thiểu {depositAmount} trong ví dùng để đặt cọc."));
-            }
 
             #endregion
 
@@ -222,7 +212,7 @@ internal sealed class
                 Date = request.BookingDate,
                 ProcedurePriceTypeId = initialProcedure,
                 ProcedurePriceType = procedure,
-                Status = Constant.OrderStatus.ORDER_PENDING,
+                Status = Constant.OrderStatus.ORDER_PENDING
             };
             var doctorSchedule = new WorkingSchedule
             {
@@ -231,7 +221,7 @@ internal sealed class
                 DoctorClinicId = userClinic.Id,
                 StartTime = request.StartTime,
                 EndTime = request.StartTime.Add(TimeSpan.FromHours(durationOfProcedures)),
-                Date = request.BookingDate,
+                Date = request.BookingDate
             };
 
             #endregion
@@ -302,7 +292,7 @@ internal sealed class
     #region Helper Methods
 
     /// <summary>
-    /// Creates a new wallet transaction for the service booking deposit
+    ///     Creates a new wallet transaction for the service booking deposit
     /// </summary>
     private static WalletTransaction CreateDepositTransaction(
         Guid userId,

@@ -73,7 +73,7 @@ internal sealed class StaffUpdateCustomerScheduleStatusAfterCheckInCommandHandle
     }
 
     /// <summary>
-    /// Creates a new wallet transaction for the service booking deposit refund
+    ///     Creates a new wallet transaction for the service booking deposit refund
     /// </summary>
     private static WalletTransaction CreateRefundTransaction(
         Guid userId,

@@ -1,9 +1,7 @@
 ﻿using BEAUTIFY_COMMAND.DOMAIN.Entities;
 using BEAUTIFY_PACKAGES.BEAUTIFY_PACKAGES.APPLICATION.Abstractions;
-using BEAUTIFY_PACKAGES.BEAUTIFY_PACKAGES.INFRASTRUCTURE.Mail;
 
 namespace BEAUTIFY_COMMAND.CONTRACT.MailTemplates;
-
 public static class AppointmentNotificationEmailTemplate
 {
     public static MailContent GetEmailTemplate(CustomerSchedule schedule, string reminderType)
@@ -20,19 +18,15 @@ public static class AppointmentNotificationEmailTemplate
 
         // Choose the appropriate template based on the reminder type
         if (reminderType == CustomerScheduleReminder.ReminderTypes.MissedAppointment)
-        {
             return GetMissedAppointmentTemplate(
-                customerName, serviceName, doctorName, clinicName, 
+                customerName, serviceName, doctorName, clinicName,
                 clinicAddress, scheduleDate, startTime, endTime, schedule);
-        }
-        else
-        {
-            string reminderTimeText = GetReminderTimeText(reminderType);
-            return GetUpcomingAppointmentTemplate(
-                customerName, serviceName, doctorName, clinicName, 
-                clinicAddress, scheduleDate, startTime, endTime, 
-                reminderTimeText, schedule);
-        }
+
+        var reminderTimeText = GetReminderTimeText(reminderType);
+        return GetUpcomingAppointmentTemplate(
+            customerName, serviceName, doctorName, clinicName,
+            clinicAddress, scheduleDate, startTime, endTime,
+            reminderTimeText, schedule);
     }
 
     private static string GetReminderTimeText(string reminderType)
@@ -48,9 +42,9 @@ public static class AppointmentNotificationEmailTemplate
     }
 
     private static MailContent GetUpcomingAppointmentTemplate(
-        string customerName, string serviceName, string doctorName, 
-        string clinicName, string clinicAddress, string scheduleDate, 
-        string startTime, string endTime, string reminderTimeText, 
+        string customerName, string serviceName, string doctorName,
+        string clinicName, string clinicAddress, string scheduleDate,
+        string startTime, string endTime, string reminderTimeText,
         CustomerSchedule schedule)
     {
         var body = $@"
@@ -151,8 +145,8 @@ public static class AppointmentNotificationEmailTemplate
     }
 
     private static MailContent GetMissedAppointmentTemplate(
-        string customerName, string serviceName, string doctorName, 
-        string clinicName, string clinicAddress, string scheduleDate, 
+        string customerName, string serviceName, string doctorName,
+        string clinicName, string clinicAddress, string scheduleDate,
         string startTime, string endTime, CustomerSchedule schedule)
     {
         var body = $@"

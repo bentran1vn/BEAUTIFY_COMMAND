@@ -6,7 +6,8 @@ public class
     private readonly IRepositoryBase<Service, Guid> _clinicServiceRepository;
     private readonly IRepositoryBase<TriggerOutbox, Guid> _triggerOutboxRepository;
 
-    public DeleteClinicServiceCommandHandler(IRepositoryBase<Service, Guid> clinicServiceRepository, IRepositoryBase<TriggerOutbox, Guid> triggerOutboxRepository)
+    public DeleteClinicServiceCommandHandler(IRepositoryBase<Service, Guid> clinicServiceRepository,
+        IRepositoryBase<TriggerOutbox, Guid> triggerOutboxRepository)
     {
         _clinicServiceRepository = clinicServiceRepository;
         _triggerOutboxRepository = triggerOutboxRepository;

@@ -17,7 +17,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\BEAUTIFY_COMMAND.DOMAIN\BEAUTIFY_COMMAND.DOMAIN.csproj" />
+        <ProjectReference Include="..\BEAUTIFY_COMMAND.DOMAIN\BEAUTIFY_COMMAND.DOMAIN.csproj"/>
     </ItemGroup>
 
 

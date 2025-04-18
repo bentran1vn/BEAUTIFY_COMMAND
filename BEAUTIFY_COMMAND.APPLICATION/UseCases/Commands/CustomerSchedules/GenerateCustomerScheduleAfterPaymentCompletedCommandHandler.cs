@@ -16,7 +16,7 @@ internal sealed class GenerateCustomerScheduleAfterPaymentCompletedCommandHandle
         x => x.ProcedurePriceType,
         x => x.Order,
         x => x.ProcedurePriceType!.Procedure,
-        x => x.ProcedurePriceType!.Procedure!.Service,
+        x => x.ProcedurePriceType!.Procedure!.Service
     ];
 
     public async Task<Result> Handle(Command.GenerateCustomerScheduleAfterPaymentCompletedCommand request,
@@ -58,17 +58,20 @@ internal sealed class GenerateCustomerScheduleAfterPaymentCompletedCommandHandle
         return order is { Status: Constant.OrderStatus.ORDER_COMPLETED } ? order : null;
     }
 
-    private static List<OrderDetail> GetProcedurePriceTypes(Order order) =>
-        order.OrderDetails?
+    private static List<OrderDetail> GetProcedurePriceTypes(Order order)
+    {
+        return order.OrderDetails?
             .OrderBy(x => x.ProcedurePriceType.Procedure.StepIndex)
             .Skip(1)
-            .ToList() ??[];
+            .ToList() ?? [];
+    }
 
     private static List<CustomerSchedule> CreateNewSchedules(
         CustomerSchedule customerSchedule,
         Order order,
-        List<OrderDetail> procedurePriceTypes) =>
-        procedurePriceTypes.Select(x => new CustomerSchedule
+        List<OrderDetail> procedurePriceTypes)
+    {
+        return procedurePriceTypes.Select(x => new CustomerSchedule
         {
             CustomerId = customerSchedule.CustomerId,
             ServiceId = customerSchedule.ServiceId,
@@ -80,6 +83,7 @@ internal sealed class GenerateCustomerScheduleAfterPaymentCompletedCommandHandle
             ProcedurePriceTypeId = x.ProcedurePriceTypeId,
             OrderId = order.Id,
             DoctorNote = customerSchedule.DoctorNote,
-            ProcedurePriceType = x.ProcedurePriceType,
+            ProcedurePriceType = x.ProcedurePriceType
         }).ToList();
+    }
 }

@@ -24,7 +24,7 @@ internal sealed class CustomerOrderPaymentCommandHandler(
             Status = Constant.OrderStatus.ORDER_PENDING,
             Amount = order.FinalAmount!.Value,
             TransactionDate = transactionDate,
-            PaymentMethod = request.PaymentMethod,
+            PaymentMethod = request.PaymentMethod
         });
         var qrUrl =
             $"https://qr.sepay.vn/img?bank=MBBank&acc=0901928382&template=&amount={order.FinalAmount.Value}&des=BeautifyOrder{id}";

@@ -1,4 +1,4 @@
-﻿﻿using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace BEAUTIFY_COMMAND.DOMAIN.Entities;
 public class LivestreamRoom : AggregateRoot<Guid>, IAuditableEntity
@@ -14,7 +14,9 @@ public class LivestreamRoom : AggregateRoot<Guid>, IAuditableEntity
     public int? Duration { get; set; }
     public int? TotalViewers { get; set; }
     public Guid? ClinicId { get; set; }
+
     public virtual Clinic Clinic { get; set; }
+
     // Remove the LiveStreamDetailId property to avoid conflicts
     public Guid? LiveStreamDetailId { get; set; }
     public virtual LiveStreamDetail? LiveStreamDetail { get; set; }

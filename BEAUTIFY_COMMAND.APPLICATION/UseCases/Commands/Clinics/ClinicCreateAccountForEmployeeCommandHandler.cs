@@ -65,19 +65,19 @@ internal sealed class ClinicCreateAccountForEmployeeCommandHandler(
                     ClinicId = request.ClinicId,
                     UserId = userId
                 }
-            },
-             // Add this field to your Staff entity if not exists
+            }
+            // Add this field to your Staff entity if not exists
         };
 
         staffRepository.Add(user);
-        
+
         // var userClinic = new UserClinic
         // {
         //     Id = Guid.NewGuid(),
         //     ClinicId = request.ClinicId,
         //     UserId = userId
         // };
-        
+
         // userClinicRepository.Add(userClinic);
 
         // Send email with the new account details
@@ -86,8 +86,8 @@ internal sealed class ClinicCreateAccountForEmployeeCommandHandler(
             To = request.Email,
             Subject = $"Your {role.Replace("_", " ")} Account Has Been Created",
             Body = EmployeeAccountEmailTemplates.GetAccountCreationTemplate(
-                request.Email, 
-                request.FirstName, 
+                request.Email,
+                request.FirstName,
                 temporaryPassword,
                 role)
         });
@@ -101,25 +101,22 @@ internal sealed class ClinicCreateAccountForEmployeeCommandHandler(
         const string validChars = "ABCDEFGHJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*?_-";
         var random = new Random();
         var chars = new char[12];
-        
+
         // Ensure at least one uppercase, one lowercase, one digit and one special char
         chars[0] = validChars[random.Next(0, 26)]; // uppercase
         chars[1] = validChars[random.Next(26, 52)]; // lowercase
         chars[2] = validChars[random.Next(52, 62)]; // digit
         chars[3] = validChars[random.Next(62, validChars.Length)]; // special
-        
-        for (int i = 4; i < chars.Length; i++)
-        {
-            chars[i] = validChars[random.Next(validChars.Length)];
-        }
-        
+
+        for (var i = 4; i < chars.Length; i++) chars[i] = validChars[random.Next(validChars.Length)];
+
         // Shuffle the array
-        for (int i = 0; i < chars.Length; i++)
+        for (var i = 0; i < chars.Length; i++)
         {
             var r = random.Next(i, chars.Length);
             (chars[r], chars[i]) = (chars[i], chars[r]);
         }
-        
+
         return new string(chars);
     }
 }

@@ -30,16 +30,10 @@ internal sealed class ChangeClinicActivateStatusCommandHandler(
                     .ToListAsync(cancellationToken);
 
                 clinic.IsActivated = false;
-                foreach (var childClinic in childClinics)
-                {
-                    childClinic.IsActivated = false;
-                }
+                foreach (var childClinic in childClinics) childClinic.IsActivated = false;
 
                 // ✅ Batch update instead of looping
-                if (childClinics.Count > 0)
-                {
-                    clinicRepositoryBase.UpdateRange(childClinics);
-                }
+                if (childClinics.Count > 0) clinicRepositoryBase.UpdateRange(childClinics);
             }
         }
         else
@@ -54,9 +48,7 @@ internal sealed class ChangeClinicActivateStatusCommandHandler(
                         .AnyAsync(cancellationToken);
 
                     if (!parentIsActive)
-                    {
                         return Result.Failure(new Error("403", "Parent clinic must be activated first."));
-                    }
                 }
 
                 clinic.IsActivated = true;
@@ -70,9 +62,9 @@ internal sealed class ChangeClinicActivateStatusCommandHandler(
         // ✅ Minimize database calls
         clinicRepositoryBase.Update(clinic);
 
-        TriggerOutbox triggerOutbox =
+        var triggerOutbox =
             TriggerOutbox.RaiseActivatedActionEvent(clinic.Id, clinic.IsActivated, clinic.IsParent ?? true,
-                clinic.IsParent == true  ? clinic.Id : (Guid)clinic.ParentId!);
+                clinic.IsParent == true ? clinic.Id : (Guid)clinic.ParentId!);
 
         triggerOutboxRepositoryBase.Add(triggerOutbox);
 
