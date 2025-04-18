@@ -8,6 +8,8 @@ public class Commands
         string Name,
         IFormFileCollection CoverImages,
         string Description,
+        double DepositPercent,
+        bool IsRefundable,
         Guid CategoryId);
 
     public record CreateClinicServiceCommand(
@@ -16,6 +18,8 @@ public class Commands
         string Name,
         IFormFileCollection CoverImages,
         string Description,
+        double DepositPercent,
+        bool IsRefundable,
         Guid CategoryId) : ICommand;
 
     public class UpdateClinicServiceBody
@@ -26,6 +30,8 @@ public class Commands
         public string? IndexCoverImagesChange { get; set; }
         public IFormFileCollection? CoverImages { get; set; }
         public string Description { get; set; }
+        public double DepositPercent { get; set; }
+        public bool IsRefundable { get; set; }
         public Guid CategoryId { get; set; }
     }
 
@@ -37,6 +43,8 @@ public class Commands
         List<int>? IndexCoverImagesChange,
         IFormFileCollection? CoverImages,
         string Description,
+        double DepositPercent,
+        bool IsRefundable,
         Guid CategoryId) : ICommand;
 
     public record DeleteClinicServiceCommand(Guid Id) : ICommand;

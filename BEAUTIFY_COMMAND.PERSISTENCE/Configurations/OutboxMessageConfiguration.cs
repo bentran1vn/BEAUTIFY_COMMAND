@@ -3382,6 +3382,7 @@ internal sealed class OutboxMessageConfiguration : IEntityTypeConfiguration<Outb
                         brand.District, brand.Ward, brand.PhoneNumber,
                         brand.ProfilePictureUrl,
                         brand.IsParent, brand.ParentId),
+                    se.DepositPercent, se.IsRefundable,
                     [],
                     new ClinicServiceEvent.Category(
                         categories.FirstOrDefault(x => x.Id.Equals(se.CategoryId))!.Id,

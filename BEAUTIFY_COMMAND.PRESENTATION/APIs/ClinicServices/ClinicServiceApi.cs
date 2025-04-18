@@ -50,7 +50,8 @@ public class ClinicServiceApi : ApiEndpoint, ICarterModule
 
         var result = await sender.Send(new Commands.CreateClinicServiceCommand(new Guid(parentId),
             clinicId, command.Name, command.CoverImages,
-            command.Description, command.CategoryId
+            command.Description, command.DepositPercent ,
+            command.IsRefundable ,command.CategoryId
         ));
 
         return result.IsFailure ? HandlerFailure(result) : Results.Ok(result);
@@ -83,6 +84,8 @@ public class ClinicServiceApi : ApiEndpoint, ICarterModule
             command.Id, new Guid(userId), clinicId, command.Name, numbersIndexCoverImagesChange,
             command.CoverImages,
             command.Description,
+            command.DepositPercent ,
+            command.IsRefundable,
             command.CategoryId
         ));
 
