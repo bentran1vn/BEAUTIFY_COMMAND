@@ -61,7 +61,7 @@ internal sealed class CreateClinicEmptyScheduleCommandHandler(
                 shiftGroupId = existingGroup.ShiftGroupId.Value;
 
                 // Count how many slots are already filled
-                var filledSlots = existingShiftGroups.Count(x => x.DoctorClinicId != null);
+                var filledSlots = existingShiftGroups.Count(x => x.DoctorId != null);
                 var currentCapacity = existingGroup.ShiftCapacity ?? 1;
 
                 // If we're trying to increase capacity, we need to add more slots
@@ -84,6 +84,7 @@ internal sealed class CreateClinicEmptyScheduleCommandHandler(
                             StartTime = startTime,
                             EndTime = endTime,
                             ShiftGroupId = shiftGroupId,
+                            ClinicId = currentUserService.ClinicId.Value,
                             ShiftCapacity = capacity
                         });
                     }
@@ -117,7 +118,7 @@ internal sealed class CreateClinicEmptyScheduleCommandHandler(
                     }
 
                     // Remove excess empty slots
-                    var emptySlots = existingShiftGroups.Where(x => x.DoctorClinicId == null).ToList();
+                    var emptySlots = existingShiftGroups.Where(x => x.DoctorId == null).ToList();
                     var slotsToRemove = new List<WorkingSchedule>();
 
                     for (var i = 0; i < currentCapacity - capacity; i++)
@@ -160,6 +161,7 @@ internal sealed class CreateClinicEmptyScheduleCommandHandler(
                         Id = Guid.NewGuid(),
                         Date = date,
                         StartTime = startTime,
+                        ClinicId = currentUserService.ClinicId.Value,
                         EndTime = endTime,
                         ShiftGroupId = shiftGroupId,
                         ShiftCapacity = capacity

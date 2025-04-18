@@ -32,7 +32,9 @@ internal sealed class StaffUpdateCustomerScheduleTimeCommandHandler(
 
             var workingSchedule = await
                 workingScheduleRepositoryBase.FindAll(x =>
-                    x.Date == request.Date && x.DoctorClinicId == customerSchedule.DoctorId &&
+                    x.Date == request.Date &&
+                    x.DoctorId == customerSchedule.Doctor.UserId &&
+                    x.ClinicId == customerSchedule.Doctor.ClinicId &&
                     x.StartTime == request.StartTime).ToListAsync(cancellationToken);
 
             if (workingSchedule.Count != 0)
@@ -55,7 +57,8 @@ internal sealed class StaffUpdateCustomerScheduleTimeCommandHandler(
             {
                 Id = Guid.NewGuid(),
                 CustomerScheduleId = customerSchedule.Id,
-                DoctorClinicId = customerSchedule.DoctorId,
+                DoctorId = customerSchedule.Doctor.UserId,
+                ClinicId = customerSchedule.Doctor.ClinicId,
                 StartTime = request.StartTime,
                 EndTime = endTime,
                 Date = customerSchedule.Date.Value
@@ -78,7 +81,8 @@ internal sealed class StaffUpdateCustomerScheduleTimeCommandHandler(
                 return Result.Failure(new Error("400", "Customer Schedule Already Completed !"));
             var workingSchedule = await
                 workingScheduleRepositoryBase.FindAll(x =>
-                    x.Date == request.Date && x.DoctorClinicId == customerSchedule.DoctorId &&
+                    x.Date == request.Date && x.DoctorId == customerSchedule.Doctor.UserId &&
+                    x.ClinicId == customerSchedule.Doctor.ClinicId &&
                     x.StartTime == request.StartTime).ToListAsync(cancellationToken);
 
             if (workingSchedule.Count != 0)

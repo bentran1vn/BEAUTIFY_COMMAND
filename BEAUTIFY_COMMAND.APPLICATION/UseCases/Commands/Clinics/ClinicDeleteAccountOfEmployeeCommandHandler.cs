@@ -1,7 +1,7 @@
 ﻿namespace BEAUTIFY_COMMAND.APPLICATION.UseCases.Commands.Clinics;
 internal sealed class ClinicDeleteAccountOfEmployeeCommandHandler(
     IRepositoryBase<Staff, Guid> staffRepository,
-    IRepositoryBase<Clinic, Guid> clinicRepository,
+    ICurrentUserService currentUserService,
     IRepositoryBase<UserClinic, Guid> userClinicRepository,
     IRepositoryBase<WorkingSchedule, Guid> workingScheduleRepository,
     IRepositoryBase<DoctorService, Guid> doctorServiceRepository)
@@ -28,14 +28,14 @@ internal sealed class ClinicDeleteAccountOfEmployeeCommandHandler(
 
             // Check if any future working schedules exist (more efficient than loading all records)
             var hasFutureSchedules = await workingScheduleRepository
-                .FindAll(x => x.DoctorClinicId == userClinic.Id && x.Date >= today)
+                .FindAll(x => x.DoctorId == user.Id && x.ClinicId == currentUserService.ClinicId && x.Date >= today)
                 .AnyAsync(cancellationToken);
 
             if (hasFutureSchedules)
             {
                 // Get the next scheduled date for a more informative error message
                 var nextSchedule = await workingScheduleRepository
-                    .FindAll(x => x.DoctorClinicId == userClinic.Id && x.Date >= today)
+                    .FindAll(x => x.DoctorId == user.Id && x.ClinicId == currentUserService.ClinicId && x.Date >= today)
                     .OrderBy(x => x.Date)
                     .ThenBy(x => x.StartTime)
                     .FirstOrDefaultAsync(cancellationToken);

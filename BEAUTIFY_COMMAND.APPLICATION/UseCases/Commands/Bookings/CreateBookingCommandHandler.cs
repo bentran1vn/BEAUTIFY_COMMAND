@@ -88,7 +88,7 @@ internal sealed class
             // Check again if the time slot is still available (double-check after acquiring the lock)
             var workingSchedule = await
                 workingScheduleRepositoryBase.FindAll(x =>
-                    x.Date == request.BookingDate && x.DoctorClinicId == userClinic.Id &&
+                    x.Date == request.BookingDate && x.DoctorId == doctor.Id && x.ClinicId == clinic.Id &&
                     x.StartTime == request.StartTime).ToListAsync(cancellationToken);
 
             if (workingSchedule.Count != 0)
@@ -218,7 +218,8 @@ internal sealed class
             {
                 Id = Guid.NewGuid(),
                 CustomerScheduleId = customerSchedule.Id,
-                DoctorClinicId = userClinic.Id,
+                DoctorId = doctor.Id,
+                ClinicId = clinic.Id,
                 StartTime = request.StartTime,
                 EndTime = request.StartTime.Add(TimeSpan.FromHours(durationOfProcedures)),
                 Date = request.BookingDate

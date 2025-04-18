@@ -350,6 +350,16 @@ public class ProcessOutboxMessagesJob(ApplicationDbContext dbContext, IPublishEn
 
                         await publishEndpoint.Publish(clinicScheduleCapacityChanged, context.CancellationToken);
                         break;
+                    case nameof(WorkingScheduleDomainEvent.DoctorScheduleRegistered):
+                        var doctorScheduleRegistered =
+                            JsonConvert.DeserializeObject<WorkingScheduleDomainEvent.DoctorScheduleRegistered>(
+                                outboxMessage.Content,
+                                new JsonSerializerSettings
+                                {
+                                    TypeNameHandling = TypeNameHandling.All
+                                });
+                        await publishEndpoint.Publish(doctorScheduleRegistered, context.CancellationToken);
+                        break;
                 }
 
                 outboxMessage.ProcessedOnUtc = DateTime.UtcNow;

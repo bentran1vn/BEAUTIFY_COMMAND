@@ -5,8 +5,10 @@ using BEAUTIFY_PACKAGES.BEAUTIFY_PACKAGES.DOMAIN.EntityEvents;
 namespace BEAUTIFY_COMMAND.DOMAIN.Entities;
 public class WorkingSchedule : AggregateRoot<Guid>, IAuditableEntity
 {
-    public Guid? DoctorClinicId { get; set; }
-    public virtual UserClinic? DoctorClinic { get; set; }
+    public Guid? ClinicId { get; set; }
+    public virtual Clinic? Clinic { get; set; }
+    public Guid? DoctorId { get; set; }
+    public virtual Staff? Doctor { get; set; }
 
     public Guid? CustomerScheduleId { get; set; }
     public virtual CustomerSchedule? CustomerSchedule { get; set; }
@@ -18,58 +20,6 @@ public class WorkingSchedule : AggregateRoot<Guid>, IAuditableEntity
     public DateTimeOffset CreatedOnUtc { get; set; }
     public DateTimeOffset? ModifiedOnUtc { get; set; }
 
-
-    public void WorkingScheduleCreate(Guid DoctorId, Guid ClinicId, string DoctorName,
-        List<WorkingSchedule> workingSchedule, CustomerSchedule? customerSchedule)
-    {
-        //map from workingSchedule to WorkingScheduleEntities
-        var workingScheduleEntities = workingSchedule.Select(x => new EntityEvent.WorkingScheduleEntity
-        {
-            Id = x.Id,
-            DoctorClinicId = DoctorId,
-            ClinicId = ClinicId,
-            Date = x.Date,
-            StartTime = x.StartTime,
-            EndTime = x.EndTime,
-            IsDeleted = false,
-            ModifiedOnUtc = null,
-            Status = Constant.OrderStatus.ORDER_PENDING,
-            Note = string.Empty,
-            CustomerScheduleId = customerSchedule!.Id,
-            CustomerScheduleEntity = new EntityEvent.CustomerScheduleEntity
-            {
-                Id = customerSchedule.Id,
-                CustomerName = customerSchedule.Customer.FirstName + " " + customerSchedule.Customer.LastName,
-                CustomerId = customerSchedule.CustomerId,
-                StartTime = customerSchedule.StartTime.Value,
-                EndTime = customerSchedule.EndTime.Value,
-                Date = customerSchedule.Date.Value,
-                ServiceId = customerSchedule.ServiceId,
-                ServiceName = customerSchedule.Service.Name,
-                DoctorId = customerSchedule.DoctorId,
-                DoctorName = customerSchedule.Doctor.User.FirstName + " " + customerSchedule.Doctor.User.LastName,
-                ClinicId = customerSchedule.Doctor.ClinicId,
-                ClinicName = customerSchedule.Doctor.Clinic.Name,
-                CurrentProcedure = new EntityEvent.ProcedurePriceTypeEntity
-                {
-                    Name = customerSchedule.ProcedurePriceType.Name,
-                    Id = customerSchedule.ProcedurePriceTypeId.Value,
-                    StepIndex = customerSchedule.ProcedurePriceType.Procedure.StepIndex.ToString(),
-                    DateCompleted = (DateOnly)customerSchedule.Date,
-                    Duration = 0
-                },
-                Status = customerSchedule.Status,
-                CompletedProcedures = [],
-                PendingProcedures = []
-            }
-        }).ToList();
-
-
-        // Raise the domain event
-        RaiseDomainEvent(new DomainEvents.WorkingScheduleCreated(
-            Guid.NewGuid(),
-            workingScheduleEntities, DoctorName));
-    }
 
     public void CreateEmptyClinicSchedule(Guid ClinicId, string ClinicName, List<WorkingSchedule> workingSchedules)
     {
@@ -114,7 +64,7 @@ public class WorkingSchedule : AggregateRoot<Guid>, IAuditableEntity
             Note = string.Empty,
             ShiftGroupId = x.ShiftGroupId,
             ShiftCapacity = x.ShiftCapacity,
-            DoctorClinicId = x.DoctorClinicId != null ? x.DoctorClinic?.UserId : null
+            DoctorId = x.DoctorId,
         }).ToList();
 
         // Raise the domain event for capacity change
@@ -125,6 +75,35 @@ public class WorkingSchedule : AggregateRoot<Guid>, IAuditableEntity
             NewCapacity,
             workingScheduleEntities));
     }
+
+    public void RegisterDoctorSchedule(Guid DoctorId, string DoctorName, List<WorkingSchedule> registeredSchedules)
+    {
+        // Map from workingSchedule to WorkingScheduleEntities for registered schedules
+        var workingScheduleEntities = registeredSchedules.Select(x => new EntityEvent.WorkingScheduleEntity
+        {
+            Id = x.Id,
+            DoctorId = DoctorId,
+            ClinicId = x.ClinicId ?? Guid.Empty,
+            Date = x.Date,
+            StartTime = x.StartTime,
+            EndTime = x.EndTime,
+            IsDeleted = false,
+            ModifiedOnUtc = null,
+            Status = Constant.OrderStatus.ORDER_PENDING,
+            Note = string.Empty,
+            ShiftGroupId = x.ShiftGroupId,
+            ShiftCapacity = x.ShiftCapacity
+        }).ToList();
+
+        // Raise the domain event for doctor schedule registration
+        RaiseDomainEvent(new DomainEvents.DoctorScheduleRegistered(
+            Guid.NewGuid(),
+            DoctorId,
+            DoctorName,
+            workingScheduleEntities));
+    }
+
+    #region NoUse
 
     public void WorkingScheduleDelete(Guid WorkingScheduleId)
     {
@@ -150,4 +129,58 @@ public class WorkingSchedule : AggregateRoot<Guid>, IAuditableEntity
             Guid.NewGuid(),
             workingScheduleEntities, DoctorName));
     }
+
+    public void WorkingScheduleCreate(Guid DoctorId, Guid ClinicId, string DoctorName,
+        List<WorkingSchedule> workingSchedule, CustomerSchedule? customerSchedule)
+    {
+        //map from workingSchedule to WorkingScheduleEntities
+        var workingScheduleEntities = workingSchedule.Select(x => new EntityEvent.WorkingScheduleEntity
+        {
+            Id = x.Id,
+            // DoctorClinicId = DoctorId,
+            ClinicId = ClinicId,
+            Date = x.Date,
+            StartTime = x.StartTime,
+            EndTime = x.EndTime,
+            IsDeleted = false,
+            ModifiedOnUtc = null,
+            Status = Constant.OrderStatus.ORDER_PENDING,
+            Note = string.Empty,
+            CustomerScheduleId = customerSchedule!.Id,
+            CustomerScheduleEntity = new EntityEvent.CustomerScheduleEntity
+            {
+                Id = customerSchedule.Id,
+                CustomerName = customerSchedule.Customer.FirstName + " " + customerSchedule.Customer.LastName,
+                CustomerId = customerSchedule.CustomerId,
+                StartTime = customerSchedule.StartTime.Value,
+                EndTime = customerSchedule.EndTime.Value,
+                Date = customerSchedule.Date.Value,
+                ServiceId = customerSchedule.ServiceId,
+                ServiceName = customerSchedule.Service.Name,
+                DoctorId = customerSchedule.DoctorId,
+                DoctorName = customerSchedule.Doctor.User.FirstName + " " + customerSchedule.Doctor.User.LastName,
+                ClinicId = customerSchedule.Doctor.ClinicId,
+                ClinicName = customerSchedule.Doctor.Clinic.Name,
+                CurrentProcedure = new EntityEvent.ProcedurePriceTypeEntity
+                {
+                    Name = customerSchedule.ProcedurePriceType.Name,
+                    Id = customerSchedule.ProcedurePriceTypeId.Value,
+                    StepIndex = customerSchedule.ProcedurePriceType.Procedure.StepIndex.ToString(),
+                    DateCompleted = (DateOnly)customerSchedule.Date,
+                    Duration = 0
+                },
+                Status = customerSchedule.Status,
+                CompletedProcedures = [],
+                PendingProcedures = []
+            }
+        }).ToList();
+
+
+        // Raise the domain event
+        RaiseDomainEvent(new DomainEvents.WorkingScheduleCreated(
+            Guid.NewGuid(),
+            workingScheduleEntities, DoctorName));
+    }
+
+    #endregion
 }
