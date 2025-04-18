@@ -8,7 +8,7 @@
 
     <ItemGroup>
 
-        <PackageReference Include="BEAUTIFY_PACKAGES.SHARE" Version="1.11.8"/>
+        <PackageReference Include="BEAUTIFY_PACKAGES.SHARE" Version="1.11.9"/>
         <PackageReference Include="Swashbuckle.AspNetCore.Annotations" Version="7.2.0"/>
     </ItemGroup>
 
