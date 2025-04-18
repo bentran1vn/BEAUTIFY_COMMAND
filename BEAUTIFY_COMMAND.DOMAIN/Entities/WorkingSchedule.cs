@@ -1,4 +1,4 @@
-﻿using BEAUTIFY_PACKAGES.BEAUTIFY_PACKAGES.CONTRACT.Services.WorkingSchedules;
+using BEAUTIFY_PACKAGES.BEAUTIFY_PACKAGES.CONTRACT.Services.WorkingSchedules;
 using BEAUTIFY_PACKAGES.BEAUTIFY_PACKAGES.DOMAIN.Constrants;
 using BEAUTIFY_PACKAGES.BEAUTIFY_PACKAGES.DOMAIN.EntityEvents;
 
@@ -13,6 +13,8 @@ public class WorkingSchedule : AggregateRoot<Guid>, IAuditableEntity
     public DateOnly Date { get; set; }
     public TimeSpan StartTime { get; set; }
     public TimeSpan EndTime { get; set; }
+    public Guid? ShiftGroupId { get; set; } // Added to group schedules in the same shift
+    public int? ShiftCapacity { get; set; } // Added to track how many doctors can work in this shift
     public DateTimeOffset CreatedOnUtc { get; set; }
     public DateTimeOffset? ModifiedOnUtc { get; set; }
 
@@ -24,7 +26,7 @@ public class WorkingSchedule : AggregateRoot<Guid>, IAuditableEntity
         var workingScheduleEntities = workingSchedule.Select(x => new EntityEvent.WorkingScheduleEntity
         {
             Id = x.Id,
-            DoctorId = DoctorId,
+            DoctorClinicId = DoctorId,
             ClinicId = ClinicId,
             Date = x.Date,
             StartTime = x.StartTime,
@@ -69,6 +71,60 @@ public class WorkingSchedule : AggregateRoot<Guid>, IAuditableEntity
             workingScheduleEntities, DoctorName));
     }
 
+    public void CreateEmptyClinicSchedule(Guid ClinicId, string ClinicName, List<WorkingSchedule> workingSchedules)
+    {
+        // Map from workingSchedule to WorkingScheduleEntities for empty schedules
+        var workingScheduleEntities = workingSchedules.Select(x => new EntityEvent.WorkingScheduleEntity
+        {
+            Id = x.Id,
+            ClinicId = ClinicId,
+            Date = x.Date,
+            StartTime = x.StartTime,
+            EndTime = x.EndTime,
+            IsDeleted = false,
+            ModifiedOnUtc = null,
+            Status = Constant.OrderStatus.ORDER_PENDING,
+            Note = string.Empty,
+            ShiftGroupId = x.ShiftGroupId,
+            ShiftCapacity = x.ShiftCapacity
+        }).ToList();
+
+        // Raise the domain event for empty schedules
+        RaiseDomainEvent(new DomainEvents.ClinicEmptyScheduleCreated(
+            Guid.NewGuid(),
+            Guid.NewGuid(),
+            workingScheduleEntities,
+            ClinicName));
+    }
+
+    public void ChangeShiftCapacity(Guid ClinicId, string ClinicName, Guid ShiftGroupId,
+        int OldCapacity, int NewCapacity, List<WorkingSchedule> affectedSchedules)
+    {
+        // Map from workingSchedule to WorkingScheduleEntities for affected schedules
+        var workingScheduleEntities = affectedSchedules.Select(x => new EntityEvent.WorkingScheduleEntity
+        {
+            Id = x.Id,
+            ClinicId = ClinicId,
+            Date = x.Date,
+            StartTime = x.StartTime,
+            EndTime = x.EndTime,
+            IsDeleted = false,
+            ModifiedOnUtc = null,
+            Status = Constant.OrderStatus.ORDER_PENDING,
+            Note = string.Empty,
+            ShiftGroupId = x.ShiftGroupId,
+            ShiftCapacity = x.ShiftCapacity,
+            DoctorClinicId = x.DoctorClinicId != null ? x.DoctorClinic?.UserId : null
+        }).ToList();
+
+        // Raise the domain event for capacity change
+        RaiseDomainEvent(new DomainEvents.ClinicScheduleCapacityChanged(
+            Guid.NewGuid(),
+            ShiftGroupId,
+            OldCapacity,
+            NewCapacity,
+            workingScheduleEntities));
+    }
 
     public void WorkingScheduleDelete(Guid WorkingScheduleId)
     {

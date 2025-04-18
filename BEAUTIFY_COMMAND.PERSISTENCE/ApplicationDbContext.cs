@@ -73,6 +73,8 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
         builder.Entity<CustomerScheduleReminder>()
             .HasQueryFilter(x => !x.IsDeleted); // Add filter for CustomerScheduleReminder
 
+        builder.Entity<WorkingSchedule>().HasQueryFilter(x => !x.IsDeleted);
+
         builder.Entity<LivestreamRoom>()
             .HasOne(lr => lr.LiveStreamDetail)
             .WithOne() // Assuming one-to-one relationship, adjust if it's one-to-many

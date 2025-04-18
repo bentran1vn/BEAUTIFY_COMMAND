@@ -318,19 +318,37 @@ public class ProcessOutboxMessagesJob(ApplicationDbContext dbContext, IPublishEn
                         await publishEndpoint.Publish(customerScheduleUpdateDateAndTime, context.CancellationToken);
                         break;
 
-                    case nameof(BEAUTIFY_PACKAGES.BEAUTIFY_PACKAGES.CONTRACT.Services.Clinic.DomainEvents
-                        .DoctorFromClinicDeleted):
+                    case nameof(ClinicDomainEvent.DoctorFromClinicDeleted):
                         var doctorFromClinicDeleted =
                             JsonConvert
-                                .DeserializeObject<BEAUTIFY_PACKAGES.BEAUTIFY_PACKAGES.CONTRACT.Services.Clinic.
-                                    DomainEvents
-                                    .DoctorFromClinicDeleted>(
+                                .DeserializeObject<ClinicDomainEvent.DoctorFromClinicDeleted>(
                                     outboxMessage.Content,
                                     new JsonSerializerSettings
                                     {
                                         TypeNameHandling = TypeNameHandling.All
                                     });
                         await publishEndpoint.Publish(doctorFromClinicDeleted, context.CancellationToken);
+                        break;
+                    case nameof(WorkingScheduleDomainEvent.ClinicEmptyScheduleCreated):
+                        var clinicEmptyScheduleCreated =
+                            JsonConvert.DeserializeObject<WorkingScheduleDomainEvent.ClinicEmptyScheduleCreated>(
+                                outboxMessage.Content,
+                                new JsonSerializerSettings
+                                {
+                                    TypeNameHandling = TypeNameHandling.All
+                                });
+                        await publishEndpoint.Publish(clinicEmptyScheduleCreated, context.CancellationToken);
+                        break;
+                    case nameof(WorkingScheduleDomainEvent.ClinicScheduleCapacityChanged):
+                        var clinicScheduleCapacityChanged =
+                            JsonConvert.DeserializeObject<WorkingScheduleDomainEvent.ClinicScheduleCapacityChanged>(
+                                outboxMessage.Content,
+                                new JsonSerializerSettings
+                                {
+                                    TypeNameHandling = TypeNameHandling.All
+                                });
+
+                        await publishEndpoint.Publish(clinicScheduleCapacityChanged, context.CancellationToken);
                         break;
                 }
 
