@@ -167,6 +167,8 @@ public class TriggerOutbox : AggregateRoot<Guid>, IAuditableEntity
     
     public static TriggerOutbox RaiseCreateClinicServiceEvent(
         Guid id, string name, string description,
+        double depositPercent,
+        bool isRefundable,
         Clinic branding,
         ServiceMedia[] coverImage,
         Guid cateId, string cateName,
@@ -186,6 +188,7 @@ public class TriggerOutbox : AggregateRoot<Guid>, IAuditableEntity
                     (TimeSpan)branding.WorkingTimeEnd, branding.District, branding.Ward,
                     branding.PhoneNumber, branding.ProfilePictureUrl,
                     branding.IsParent, branding.ParentId),
+                depositPercent, isRefundable,
                 coverImage.Select(x => new ClinicServiceEvent.Image(
                     x.Id, x.IndexNumber, x.ImageUrl
                 )).ToArray(),
@@ -203,6 +206,8 @@ public class TriggerOutbox : AggregateRoot<Guid>, IAuditableEntity
 
     public static TriggerOutbox RaiseUpdateClinicServiceEvent(
         Guid id, string name, string description,
+        double depositPercent,
+        bool isRefundable,
         ServiceMedia[] changeCoverImage, ServiceMedia[] changeDescriptionImage,
         Guid cateId, string cateName,
         string cateDescription, List<Clinic> clinics
@@ -217,6 +222,7 @@ public class TriggerOutbox : AggregateRoot<Guid>, IAuditableEntity
             Guid.NewGuid(),
             new ClinicServiceEvent.UpdateClinicService(
                 id, name, description,
+                depositPercent, isRefundable,
                 changeCoverImage.Select(x => new ClinicServiceEvent.Image(
                     x.Id, x.IndexNumber, x.ImageUrl
                 )).ToArray(),

@@ -48,6 +48,8 @@ public class
             Id = Guid.NewGuid(),
             Name = request.Name,
             Description = request.Description,
+            IsRefundable = request.IsRefundable,
+            DepositPercent = request.DepositPercent,
             CategoryId = request.CategoryId
         };
 
@@ -76,7 +78,9 @@ public class
         serviceMediaRepository.AddRange(serviceMediaList);
 
         var trigger = TriggerOutbox.RaiseCreateClinicServiceEvent(
-            service.Id, service.Name, service.Description, parentClinic, medias.ToArray(),
+            service.Id, service.Name, service.Description,
+            service.DepositPercent, service.IsRefundable,
+            parentClinic, medias.ToArray(),
             request.CategoryId, isCategoryExisted.Name, isCategoryExisted.Description ?? "", isClinicExisted
         );
 

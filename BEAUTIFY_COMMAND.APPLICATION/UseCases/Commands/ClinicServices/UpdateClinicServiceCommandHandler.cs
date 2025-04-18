@@ -56,6 +56,8 @@ public class
         service.Name = request.Name;
         service.Description = request.Description;
         service.CategoryId = request.CategoryId;
+        service.IsRefundable = request.IsRefundable;
+        service.DepositPercent = request.DepositPercent;
 
         // Update Clinic Services
         var existingClinicIds = service.ClinicServices.Select(x => x.ClinicId).ToHashSet();
@@ -160,6 +162,7 @@ public class
         // Raise Event
         var trigger = TriggerOutbox.RaiseUpdateClinicServiceEvent(
             service.Id, service.Name, service.Description,
+            service.DepositPercent, service.IsRefundable,
             serviceMediaList.Where(x => x.ServiceMediaType == 0).ToArray(),
             [],
             request.CategoryId, category.Name, category.Description ?? "", clinics
