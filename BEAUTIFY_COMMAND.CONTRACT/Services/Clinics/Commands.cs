@@ -7,8 +7,8 @@ public static class Commands
     #region ClinicApplyCommand
 
     public record ClinicApplyCommand(
-        Guid ClinicId,
-        string RoleName,
+        Guid? ClinicId,
+        string? RoleName,
         string Name,
         string Email,
         string PhoneNumber,
@@ -19,10 +19,10 @@ public static class Commands
         string TaxCode,
         string BankName,
         string BankAccountNumber,
-        IFormFile BusinessLicense,
-        IFormFile OperatingLicense,
+        IFormFile? BusinessLicense,
+        IFormFile? OperatingLicense,
         string OperatingLicenseExpiryDate,
-        IFormFile ProfilePictureUrl
+        IFormFile? ProfilePictureUrl
     ) : ICommand;
 
     public class ClinicApplyBody
@@ -37,10 +37,10 @@ public static class Commands
         public string TaxCode {get; set;}
         public string BankName {get; set;}
         public string BankAccountNumber {get; set;}
-        public IFormFile BusinessLicense {get; set;}
-        public IFormFile OperatingLicense {get; set;}
+        public IFormFile? BusinessLicense {get; set;}
+        public IFormFile? OperatingLicense {get; set;}
         public string OperatingLicenseExpiryDate {get; set;}
-        public IFormFile ProfilePictureUrl {get; set;}
+        public IFormFile? ProfilePictureUrl {get; set;}
     }
     
     #endregion

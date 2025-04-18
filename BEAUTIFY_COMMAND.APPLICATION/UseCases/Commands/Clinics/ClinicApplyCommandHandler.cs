@@ -10,11 +10,24 @@ public class ClinicApplyCommandHandler(
         CancellationToken cancellationToken)
     {
         var vietnamTimeZone = TimeZoneInfo.FindSystemTimeZoneById("SE Asia Standard Time");
-        
-        if (request.RoleName == "Clinic Admin")
+
+        if (request.RoleName != null || request.ClinicId != null)
         {
+            if (!(request.RoleName != null && request.ClinicId != null))
+            {
+                return Result.Failure(new Error("500", "Must have RoleName and ClinicId"));
+            }
+        }
+        
+        if (request.RoleName != null && request.ClinicId != null)
+        {
+            if(request.RoleName != "Clinic Admin")
+            {
+                return Result.Failure(new Error("403", "Not Authorized"));
+            }
+            
             var clinic = await clinicRepository
-                .FindByIdAsync(request.ClinicId, cancellationToken);
+                .FindByIdAsync((Guid)request.ClinicId, cancellationToken);
 
             if (clinic == null)
             {
@@ -35,19 +48,25 @@ public class ClinicApplyCommandHandler(
             {
                 return Result.Failure(new Error("400", "Clinic Tax Code not match"));
             }
+
+            if (request.BusinessLicense != null)
+            {
+                var businessLicenseUrl = await mediaService.UploadImageAsync(request.BusinessLicense);
+                clinic.BusinessLicenseUrl = businessLicenseUrl;
+            }
             
-            var uploadPromises = await Task.WhenAll(
-                mediaService.UploadImageAsync(request.BusinessLicense),
-                mediaService.UploadImageAsync(request.OperatingLicense),
-                mediaService.UploadImageAsync(request.ProfilePictureUrl)
-            );
-            var businessLicenseUrl = uploadPromises[0];
-            var operatingLicenseUrl = uploadPromises[1];
-            var profilePictureUrl = uploadPromises[2];
+            if (request.OperatingLicense != null)
+            {
+                var operatingLicenseUrl = await mediaService.UploadImageAsync(request.OperatingLicense);
+                clinic.OperatingLicenseUrl = operatingLicenseUrl;
+            }
             
-            clinic.BusinessLicenseUrl = businessLicenseUrl;
-            clinic.OperatingLicenseUrl = operatingLicenseUrl;
-            clinic.ProfilePictureUrl = profilePictureUrl;
+            if (request.ProfilePictureUrl != null)
+            {
+                var profilePictureUrl = await mediaService.UploadImageAsync(request.ProfilePictureUrl);
+                clinic.ProfilePictureUrl = profilePictureUrl;
+            }
+            
             clinic.Name = request.Name;
             clinic.City = request.City;
             clinic.Ward = request.Ward;
@@ -87,8 +106,11 @@ public class ClinicApplyCommandHandler(
             return Result.Success("Clinic Apply Successfully");
         }
         
+        if(request.BusinessLicense == null || request.OperatingLicense == null || request.ProfilePictureUrl == null)
+        {
+            return Result.Failure(new Error("500", "Must have BusinessLicense, OperatingLicense and ProfilePictureUrl"));
+        }
         
-
         // Get all clinics that match any of the fields in a single query
         var existingClinics = await clinicRepository
             .FindAll(x =>
