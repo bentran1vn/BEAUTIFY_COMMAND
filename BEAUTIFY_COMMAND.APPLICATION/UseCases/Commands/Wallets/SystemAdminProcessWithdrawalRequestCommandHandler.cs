@@ -24,7 +24,7 @@ internal sealed class SystemAdminProcessWithdrawalRequestCommandHandler(
 
         // Process the request based on approval status
         return request.IsApproved
-            ? await ApproveWithdrawal(transaction, clinic)
+            ? await ApproveWithdrawal(transaction)
             : await RejectWithdrawal(transaction, clinic);
     }
 
@@ -46,20 +46,13 @@ internal sealed class SystemAdminProcessWithdrawalRequestCommandHandler(
     ///     Approves the withdrawal request and generates payment information
     /// </summary>
     private async Task<Result> ApproveWithdrawal(
-        WalletTransaction transaction,
-        Clinic clinic)
+        WalletTransaction transaction)
     {
-        // Verify sufficient funds
-        if (clinic.Balance < transaction.Amount)
-            return Result.Failure(new Error("400", ErrorMessages.Clinic.InsufficientFunds));
-
         // Update transaction with Vietnam timezone
         var vietnamTimeZone = TimeZoneInfo.FindSystemTimeZoneById("SE Asia Standard Time");
         transaction.TransactionDate = TimeZoneInfo.ConvertTime(DateTime.UtcNow, vietnamTimeZone);
         transaction.Status = Constant.WalletConstants.TransactionStatus.WAITING_FOR_PAYMENT;
         transaction.ModifiedOnUtc = DateTimeOffset.UtcNow;
-
-        // Save changes
 
 
         // Generate payment information
