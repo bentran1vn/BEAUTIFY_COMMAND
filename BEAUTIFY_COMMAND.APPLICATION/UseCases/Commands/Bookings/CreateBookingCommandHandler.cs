@@ -7,6 +7,9 @@ namespace BEAUTIFY_COMMAND.APPLICATION.UseCases.Commands.Bookings;
 ///     Handler for creating a new booking with distributed locking to prevent double-bookings
 /// </summary>
 internal sealed class
+
+    #region DI
+
     CreateBookingCommandHandler(
         IRepositoryBase<User, Guid> userRepositoryBase,
         IRepositoryBase<Staff, Guid> staffRepositoryBase,
@@ -25,6 +28,9 @@ internal sealed class
         IDistributedLockService distributedLockService,
         IRepositoryBase<WalletTransaction, Guid> walletTransactionRepositoryBase
     )
+
+    #endregion
+
     : ICommandHandler<CONTRACT.Services.Bookings.Commands.CreateBookingCommand>
 {
     public async Task<Result> Handle(CONTRACT.Services.Bookings.Commands.CreateBookingCommand request,
@@ -83,19 +89,6 @@ internal sealed class
                 cancellationToken);
 
 
-            #region Availability Verification
-
-            // Check again if the time slot is still available (double-check after acquiring the lock)
-            var workingSchedule = await
-                workingScheduleRepositoryBase.FindAll(x =>
-                    x.Date == request.BookingDate && x.DoctorId == doctor.Id && x.ClinicId == clinic.Id &&
-                    x.StartTime == request.StartTime).ToListAsync(cancellationToken);
-
-            if (workingSchedule.Count != 0)
-                return Result.Failure(new Error("400", "Doctor is busy at this time !"));
-
-            #endregion
-
             #region Procedure Validation
 
             var query = procedurePriceTypeRepositoryBase.FindAll(x => !x.IsDeleted)
@@ -133,6 +126,54 @@ internal sealed class
             if (!stepIndexes.OrderBy(x => x).SequenceEqual(expectedSteps))
                 return Result.Failure(
                     new Error("400", "Step indexes are not in a valid sequence or steps are missing."));
+
+            // Calculate duration of procedures before using it
+            var initialProcedure = list.Where(x => x.StepIndex == 1).Select(x => x.Id).FirstOrDefault();
+            var durationOfProcedures =
+                list.Where(x => x.StepIndex == 1).Select(x => x.Duration).FirstOrDefault() / 60.0 + 0.5;
+
+            #endregion
+
+            #region Availability Verification
+
+            // Find a doctor shift that covers the requested booking time
+            var doctorShift = await workingScheduleRepositoryBase.FindSingleAsync(x =>
+                    x.Date == request.BookingDate &&
+                    x.DoctorId == doctor.Id &&
+                    x.ClinicId == clinic.Id &&
+                    x.CustomerScheduleId == null && // This is a registered shift, not a booking
+                    x.StartTime <= request.StartTime &&
+                    x.EndTime > request.StartTime,
+                cancellationToken);
+
+            if (doctorShift == null)
+                return Result.Failure(new Error("400", "Doctor is not scheduled to work at this time."));
+
+            // Calculate the end time of the requested booking
+            var requestEndTime = request.StartTime.Add(TimeSpan.FromHours(durationOfProcedures));
+
+            // Ensure the entire booking duration fits within the doctor's shift
+            if (requestEndTime > doctorShift.EndTime)
+                return Result.Failure(new Error("400", "Booking duration exceeds doctor's shift end time."));
+
+            // Check if the doctor already has a booking that conflicts with this time
+            var existingBooking = await workingScheduleRepositoryBase.FindSingleAsync(x =>
+                    x.Date == request.BookingDate &&
+                    x.DoctorId == doctor.Id &&
+                    x.ClinicId == clinic.Id &&
+                    x.CustomerScheduleId != null && // This indicates a booking
+                    (
+                        (request.StartTime >= x.StartTime &&
+                         request.StartTime < x.EndTime) || // New booking starts during existing booking
+                        (requestEndTime > x.StartTime &&
+                         requestEndTime <= x.EndTime) || // New booking ends during existing booking
+                        (request.StartTime <= x.StartTime &&
+                         requestEndTime >= x.EndTime) // New booking completely overlaps existing booking
+                    ),
+                cancellationToken);
+
+            if (existingBooking != null)
+                return Result.Failure(new Error("400", "Doctor already has a booking at this time."));
 
             #endregion
 
@@ -188,6 +229,7 @@ internal sealed class
                 FinalAmount = total - discountPrice - depositAmount,
                 LivestreamRoomId = request.LiveStreamRoomId
             };
+
             var orderDetails = list.Select(x => new OrderDetail
             {
                 Id = Guid.NewGuid(),
@@ -195,9 +237,7 @@ internal sealed class
                 ProcedurePriceTypeId = x.Id,
                 Price = x.Price
             }).ToList();
-            var durationOfProcedures =
-                list.Where(x => x.StepIndex == 1).Select(x => x.Duration).FirstOrDefault() / 60.0 + 0.5;
-            var initialProcedure = list.Where(x => x.StepIndex == 1).Select(x => x.Id).FirstOrDefault();
+
             var procedure = await procedurePriceTypeRepositoryBase.FindByIdAsync(initialProcedure, cancellationToken);
 
             var customerSchedule = new CustomerSchedule
@@ -208,12 +248,13 @@ internal sealed class
                 ServiceId = request.ServiceId,
                 OrderId = order.Id,
                 StartTime = request.StartTime,
-                EndTime = request.StartTime.Add(TimeSpan.FromHours(durationOfProcedures)),
+                EndTime = requestEndTime,
                 Date = request.BookingDate,
                 ProcedurePriceTypeId = initialProcedure,
                 ProcedurePriceType = procedure,
                 Status = Constant.OrderStatus.ORDER_PENDING
             };
+
             var doctorSchedule = new WorkingSchedule
             {
                 Id = Guid.NewGuid(),
@@ -221,8 +262,9 @@ internal sealed class
                 DoctorId = doctor.Id,
                 ClinicId = clinic.Id,
                 StartTime = request.StartTime,
-                EndTime = request.StartTime.Add(TimeSpan.FromHours(durationOfProcedures)),
-                Date = request.BookingDate
+                EndTime = requestEndTime,
+                Date = request.BookingDate,
+                ShiftGroupId = doctorShift.ShiftGroupId // Maintain the shift group reference
             };
 
             #endregion
@@ -279,15 +321,16 @@ internal sealed class
 
             #endregion
 
-            return Result.Success(order.Id);
 
-            #endregion
+            return Result.Success(order.Id);
         }
         catch (TimeoutException ex)
         {
             return Result.Failure(new Error("409",
                 "The booking time slot is currently being processed by another request. Please try again."));
         }
+
+        #endregion
     }
 
     #region Helper Methods
