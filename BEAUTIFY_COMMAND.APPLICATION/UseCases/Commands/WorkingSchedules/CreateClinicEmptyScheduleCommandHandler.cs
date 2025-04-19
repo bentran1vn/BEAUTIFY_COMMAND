@@ -29,12 +29,16 @@ internal sealed class CreateClinicEmptyScheduleCommandHandler(
         foreach (var workingDateRequest in request.WorkingDates)
         {
             var date = workingDateRequest.Date;
-            var startTime = workingDateRequest.StartTime;
-            var endTime = workingDateRequest.EndTime;
+            var parsedStartTime = TimeSpan.TryParse(workingDateRequest.StartTime, out var startTime);
+
+            var parsedEndTime = TimeSpan.TryParse(workingDateRequest.EndTime, out var endTime);
+            if (!parsedStartTime || !parsedEndTime)
+                return Result.Failure(new Error("400",
+                    ErrorMessages.Clinic.InvalidTimeFormat));
             var capacity = workingDateRequest.Capacity;
 
             // 2a. Basic time validation
-            if (startTime >= endTime)
+            if (startTime >= endTime && endTime != TimeSpan.Zero)
                 return Result.Failure(new Error("400",
                     ErrorMessages.Clinic.ClinicStartTimeMustBeEarlierThanEndTime(startTime, endTime)));
 

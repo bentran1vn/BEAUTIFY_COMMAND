@@ -15,8 +15,8 @@ public static class Commands
     public class WorkingDate
     {
         public DateOnly Date { get; set; }
-        public TimeSpan StartTime { get; set; }
-        public TimeSpan EndTime { get; set; }
+        public required string StartTime { get; set; }
+        public required string EndTime { get; set; }
     }
 
     public class WorkingDateWithCapacity : WorkingDate

@@ -7,6 +7,7 @@ public static class ErrorMessages
         public const string ClinicIsNotABranch = "Phòng khám không phải là chi nhánh.";
         public const string ParentClinicNotFound = "Không tìm thấy phòng khám chi nhánh chính";
         public const string AmountMustBeGreaterThan2000 = "Số tiền phải lớn hơn 2000";
+        public const string InvalidTimeFormat = "Thời gian không hợp lệ. Định dạng thời gian phải là HH:mm";
         public const string InsufficientFunds = "Số dư không đủ";
         public const string ClinicDoNotHaveWorkingHours = "Phòng khám không có giờ làm việc";
 
