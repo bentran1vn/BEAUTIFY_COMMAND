@@ -1,5 +1,5 @@
 ﻿namespace BEAUTIFY_COMMAND.APPLICATION.UseCases.Commands.DoctorCertificate;
-internal sealed class Delete(
+internal sealed class DeleteDoctorCertificateCommandHandler(
     IRepositoryBase<DOMAIN.Entities.DoctorCertificate, Guid> _doctorCertificateRepository,
     ICurrentUserService currentUserService)
     : ICommandHandler<CONTRACT.Services.DoctorCertificate.Commands.DeleteCommand>

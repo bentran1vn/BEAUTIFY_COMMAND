@@ -12,6 +12,13 @@ public class ClinicUpdateAccountOfEmployeeCommandHandler(
 
         if (user.Role?.Name == Constant.Role.CLINIC_ADMIN) throw new UnauthorizedAccessException();
 
+        var userPhone = await staffRepository
+            .FindAll(x => x.PhoneNumber != null && x.PhoneNumber.Equals(request.PhoneNumber))
+            .FirstOrDefaultAsync(cancellationToken);
+        
+        if(userPhone != null && userPhone.Id != request.UserId)
+            return Result.Failure(new Error("400", "Phone number already exists"));
+
         user.FirstName = request.FirstName;
         user.LastName = request.LastName;
         user.City = request.City;

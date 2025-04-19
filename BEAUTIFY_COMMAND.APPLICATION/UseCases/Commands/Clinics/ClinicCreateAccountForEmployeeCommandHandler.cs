@@ -18,10 +18,10 @@ internal sealed class ClinicCreateAccountForEmployeeCommandHandler(
         if (string.IsNullOrWhiteSpace(request.Email))
             return Result.Failure(new Error("400", "Email is required"));
 
-        // Check for existing users
-        var userExisted = await userRepository.FindSingleAsync(x => x.Email == request.Email, cancellationToken);
-        if (userExisted != null)
-            return Result.Failure(new Error("400", "Email already exists - Please use another email"));
+        // // Check for existing users
+        // var userExisted = await userRepository.FindSingleAsync(x => x.Email == request.Email, cancellationToken);
+        // if (userExisted != null)
+        //     return Result.Failure(new Error("400", "Email already exists - Please use another email"));
 
         var existingStaff = await staffRepository.FindSingleAsync(x => x.Email == request.Email, cancellationToken);
         if (existingStaff != null)
@@ -29,6 +29,7 @@ internal sealed class ClinicCreateAccountForEmployeeCommandHandler(
 
         // Validate clinic
         var clinic = await clinicRepository.FindByIdAsync(request.ClinicId, cancellationToken);
+        
         if (clinic == null)
             return Result.Failure(new Error("404", "Clinic not found"));
         if (!clinic.IsActivated)
