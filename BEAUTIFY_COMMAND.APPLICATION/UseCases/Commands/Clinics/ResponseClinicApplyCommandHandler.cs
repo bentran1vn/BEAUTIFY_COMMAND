@@ -42,36 +42,50 @@ public class ResponseClinicApplyCommandHandler(
             
             if (request.Action == 1)
             {
-                var passwordRandom = GenerateRandomPassword();
-                var hashingPassword = passwordHasherService.HashPassword(passwordRandom);
-                var user = new Staff
-                {
-                    Email = applyRequest.Clinic!.Email,
-                    FirstName = applyRequest.Clinic.Name,
-                    LastName = "",
-                    PhoneNumber = applyRequest.Clinic!.PhoneNumber,
-                    DateOfBirth = DateOnly.Parse("1999-01-01"),
-                    City = applyRequest.Clinic.City,
-                    District = applyRequest.Clinic.District,
-                    Ward = applyRequest.Clinic.Ward,
-                    Address = applyRequest.Clinic.Address,
-                    Password = hashingPassword,
-                    RoleId = new Guid("C6D93B8C-F509-4498-ABBB-FE63EDC66F2B"),
-                    Status = 1
-                };
+                var userExist = staffRepository
+                    .FindAll(x => x.Email.Equals(applyRequest.Clinic!.Email) &&
+                                x.PhoneNumber.Equals(applyRequest.Clinic.PhoneNumber) &&
+                                x.IsDeleted == false)
+                    .FirstOrDefault();
                 
-                staffRepository.Add(user);
-
-                var userClinic = new UserClinic
+                if(userExist != null)
                 {
-                    UserId = user.Id,
-                    ClinicId = applyRequest.Clinic.Id
-                };
+                    content.Body = ClinicApplicationEmailTemplates.GetRejectedTemplate(applyRequest.Clinic.Email,
+                        applyRequest.RejectReason ?? "", userExist.Password);
+                }
+                else
+                {
+                    var passwordRandom = GenerateRandomPassword();
+                    var hashingPassword = passwordHasherService.HashPassword(passwordRandom);
+                    var user = new Staff
+                    {
+                        Email = applyRequest.Clinic!.Email,
+                        FirstName = applyRequest.Clinic.Name,
+                        LastName = "",
+                        PhoneNumber = applyRequest.Clinic!.PhoneNumber,
+                        DateOfBirth = DateOnly.Parse("1999-01-01"),
+                        City = applyRequest.Clinic.City,
+                        District = applyRequest.Clinic.District,
+                        Ward = applyRequest.Clinic.Ward,
+                        Address = applyRequest.Clinic.Address,
+                        Password = hashingPassword,
+                        RoleId = new Guid("C6D93B8C-F509-4498-ABBB-FE63EDC66F2B"),
+                        Status = 1
+                    };
+                
+                    staffRepository.Add(user);
 
-                userClinicRepository.Add(userClinic);
+                    var userClinic = new UserClinic
+                    {
+                        UserId = user.Id,
+                        ClinicId = applyRequest.Clinic.Id
+                    };
 
-                content.Body = ClinicApplicationEmailTemplates.GetRejectedTemplate(applyRequest.Clinic.Email,
-                    applyRequest.RejectReason, passwordRandom);
+                    userClinicRepository.Add(userClinic);
+
+                    content.Body = ClinicApplicationEmailTemplates.GetRejectedTemplate(applyRequest.Clinic.Email,
+                        applyRequest.RejectReason, passwordRandom);
+                }
             }
             else
             {
