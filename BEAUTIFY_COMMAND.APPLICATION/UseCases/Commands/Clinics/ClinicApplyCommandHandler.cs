@@ -48,6 +48,11 @@ public class ClinicApplyCommandHandler(
             {
                 return Result.Failure(new Error("400", "Clinic Tax Code not match"));
             }
+            
+            if(request.BankName == null || request.BankAccountNumber == null)
+            {
+                return Result.Failure(new Error("500", "Must have BankName and BankAccountNumber"));
+            }
 
             if (request.BusinessLicense != null)
             {
@@ -106,7 +111,7 @@ public class ClinicApplyCommandHandler(
             return Result.Success("Clinic Apply Successfully");
         }
         
-        if(request.BusinessLicense == null || request.OperatingLicense == null || request.ProfilePictureUrl == null)
+        if(request.BusinessLicense == null || request.OperatingLicense == null || request.ProfilePictureUrl == null || request.OperatingLicenseExpiryDate == null)
         {
             return Result.Failure(new Error("500", "Must have BusinessLicense, OperatingLicense and ProfilePictureUrl"));
         }
@@ -193,8 +198,6 @@ public class ClinicApplyCommandHandler(
                 District = request.District,
                 Address = request.Address,
                 PhoneNumber = request.PhoneNumber,
-                BankName = request.BankName,
-                BankAccountNumber = request.BankAccountNumber,
                 TaxCode = request.TaxCode,
                 BusinessLicenseUrl = businessLicenseUrl,
                 OperatingLicenseUrl = operatingLicenseUrl,

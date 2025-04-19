@@ -17,11 +17,11 @@ public static class Commands
         string Ward,
         string Address,
         string TaxCode,
-        string BankName,
-        string BankAccountNumber,
+        string? BankName,
+        string? BankAccountNumber,
         IFormFile? BusinessLicense,
         IFormFile? OperatingLicense,
-        string OperatingLicenseExpiryDate,
+        string? OperatingLicenseExpiryDate,
         IFormFile? ProfilePictureUrl
     ) : ICommand;
 
@@ -35,11 +35,11 @@ public static class Commands
         public string Ward {get; set;}
         public string Address {get; set;}
         public string TaxCode {get; set;}
-        public string BankName {get; set;}
-        public string BankAccountNumber {get; set;}
+        public string? BankName {get; set;}
+        public string? BankAccountNumber {get; set;}
         public IFormFile? BusinessLicense {get; set;}
         public IFormFile? OperatingLicense {get; set;}
-        public string OperatingLicenseExpiryDate {get; set;}
+        public string? OperatingLicenseExpiryDate {get; set;}
         public IFormFile? ProfilePictureUrl {get; set;}
     }
     
