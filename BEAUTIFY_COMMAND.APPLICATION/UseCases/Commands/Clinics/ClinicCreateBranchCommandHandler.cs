@@ -16,22 +16,22 @@ internal sealed class
     {
         var parentClinic = await clinicRepository.FindByIdAsync(currentUserService.ClinicId.Value, cancellationToken) ??
                            throw new ClinicException.ClinicNotFoundException(currentUserService.ClinicId.Value);
-
-        // var systemTrans = await systemTransactionRepository.FindAll(
-        //         x => x.ClinicId == parentClinic.Id && x.Status == 2).OrderByDescending(x => x.TransactionDate)
-        //     .FirstOrDefaultAsync(cancellationToken);
-        //
-        // if (systemTrans == null)
-        // {
-        //     return Result.Failure(new Error("400", "You have not paid the system fee"));
-        // }
-
+        
         if (parentClinic.TotalBranches >= parentClinic.AdditionBranches)
             return Result.Failure(new Error("403", "You have reached the maximum number of branches"));
-
-
+        
+        var isExist = await clinicRepository
+            .FindAll(x => x.PhoneNumber == request.PhoneNumber && x.IsDeleted == false)
+            .FirstOrDefaultAsync(cancellationToken);
+        
         var role = await roleRepository.FindSingleAsync(x => x.Name == "Clinic Staff", cancellationToken);
         var oUrl = await mediaService.UploadImageAsync(request.OperatingLicense);
+        
+        if(role == null)
+            return Result.Failure(new Error("404", "Role not found"));
+
+        if (isExist != null)
+            return Result.Failure(new Error("400", "Clinic with phone number already exists"));
 
         var clinic = new Clinic
         {
@@ -55,6 +55,7 @@ internal sealed class
             BankAccountNumber = request.BankAccountNumber,
             IsActivated = true
         };
+        
         if (request.ProfilePictureUrl != null)
         {
             var pUrl = await mediaService.UploadImageAsync(request.ProfilePictureUrl);
@@ -62,29 +63,33 @@ internal sealed class
         }
 
         parentClinic.TotalBranches++;
-        // create account for branch
-        var branchAccount = new Staff
-        {
-            Id = Guid.NewGuid(),
-            Email = request.Email,
-            FirstName = request.Name,
-            LastName = $" ({parentClinic.Name})",
-            Password = passwordHasherService.HashPassword("123456789"),
-            Status = 1,
-            PhoneNumber = request.PhoneNumber,
-            City = request.City,
-            Ward = request.Ward,
-            District = request.District,
-            Address = request.Address,
-            RoleId = role.Id
-        };
-        userClinicRepository.Add(new UserClinic
-        {
-            ClinicId = clinic.Id,
-            UserId = branchAccount.Id
-        });
-        clinicRepository.Add(clinic);
-        staffRepository.Add(branchAccount);
+
+        // var branchAccount = new Staff
+        // {
+        //     Id = Guid.NewGuid(),
+        //     Email = request.Email,
+        //     FirstName = request.Name,
+        //     LastName = $" ({parentClinic.Name})",
+        //     Password = passwordHasherService.HashPassword("123456789"),
+        //     Status = 1,
+        //     PhoneNumber = request.PhoneNumber,
+        //     City = request.City,
+        //     Ward = request.Ward,
+        //     District = request.District,
+        //     Address = request.Address,
+        //     RoleId = role.Id
+        // };
+        //
+        // userClinicRepository.Add(new UserClinic
+        // {
+        //     ClinicId = clinic.Id,
+        //     UserId = branchAccount.Id
+        // });
+        //
+        // clinicRepository.Add(clinic);
+        //
+        // staffRepository.Add(branchAccount);
+        
         return Result.Success();
     }
 }

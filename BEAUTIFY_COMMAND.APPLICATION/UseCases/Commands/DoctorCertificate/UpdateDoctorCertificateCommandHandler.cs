@@ -1,5 +1,5 @@
 ﻿namespace BEAUTIFY_COMMAND.APPLICATION.UseCases.Commands.DoctorCertificate;
-internal sealed class Update(
+internal sealed class UpdateDoctorCertificateCommandHandler(
     IRepositoryBase<DOMAIN.Entities.DoctorCertificate, Guid> _repositoryBase,
     IMediaService mediaService)
     : ICommandHandler<CONTRACT.Services.DoctorCertificate.Commands.UpdateCommand>
