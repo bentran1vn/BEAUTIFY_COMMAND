@@ -5,7 +5,7 @@ public class ClinicApplyCommandValidators : AbstractValidator<Commands.ClinicApp
     {
         RuleFor(x => x.Name)
             .NotEmpty()
-            .MinimumLength(5).WithMessage("Clinic Name must be at least 2 words long")
+            .MinimumLength(5).WithMessage("Clinic Name must be at least 5 characters")
             .MaximumLength(30).WithMessage("Clinic Name must exceed 30 characters");
 
         RuleFor(x => x.Email)
