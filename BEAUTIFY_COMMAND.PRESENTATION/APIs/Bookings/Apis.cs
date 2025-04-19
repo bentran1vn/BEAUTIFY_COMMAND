@@ -1,4 +1,5 @@
 ﻿using BEAUTIFY_COMMAND.CONTRACT.Services.Bookings;
+using BEAUTIFY_PACKAGES.BEAUTIFY_PACKAGES.DOMAIN.Constrants;
 
 namespace BEAUTIFY_COMMAND.PRESENTATION.APIs.Bookings;
 public class Apis : ApiEndpoint, ICarterModule
@@ -9,7 +10,7 @@ public class Apis : ApiEndpoint, ICarterModule
     {
         var gr1 = app.NewVersionedApi("Bookings")
             .MapGroup(BaseUrl).HasApiVersion(1);
-        gr1.MapPost("", CreateBooking).RequireAuthorization()
+        gr1.MapPost("", CreateBooking).RequireAuthorization(Constant.Role.CUSTOMER)
             .WithDescription("If is default is true then dont need to pass procedure price types");
     }
 

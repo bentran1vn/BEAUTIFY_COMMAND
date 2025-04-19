@@ -18,9 +18,7 @@ internal sealed class DoctorRegisterScheduleCommandHandler(
         if (doctor == null)
             return Result.Failure(new Error("404", "Không tìm thấy bác sĩ"));
 
-
         var doctorName = $"{doctor.FirstName} {doctor.LastName}";
-
 
         // 2. Get doctor's clinic association
         var doctorClinic = await userClinicRepository.FindSingleAsync(
@@ -56,6 +54,39 @@ internal sealed class DoctorRegisterScheduleCommandHandler(
                           x.Date <= requestedWeekEnd)
             .ToListAsync(cancellationToken);
 
+        // 4.5. Check for overlaps within requested schedules
+        for (var i = 0; i < requestedSchedules.Count; i++)
+        {
+            var schedule1 = requestedSchedules[i];
+
+            for (var j = i + 1; j < requestedSchedules.Count; j++)
+            {
+                var schedule2 = requestedSchedules[j];
+
+                // Check if schedules are on the same date
+                if (schedule1.Date != schedule2.Date) continue;
+                // Check for time overlap
+                if (TimesOverlap(schedule1.StartTime, schedule1.EndTime, schedule2.StartTime, schedule2.EndTime))
+                {
+                    return Result.Failure(new Error("409",
+                        $"Lịch làm việc từ {schedule1.StartTime} đến {schedule1.EndTime} trùng thời gian với lịch từ {schedule2.StartTime} đến {schedule2.EndTime} vào ngày {schedule1.Date}"));
+                }
+            }
+        }
+
+        // Check for overlaps with doctor's existing schedules
+        foreach (var newSchedule in requestedSchedules)
+        {
+            foreach (var existingSchedule in existingSchedules.Where(existingSchedule =>
+                         newSchedule.Date == existingSchedule.Date &&
+                         TimesOverlap(newSchedule.StartTime, newSchedule.EndTime, existingSchedule.StartTime,
+                             existingSchedule.EndTime)))
+            {
+                return Result.Failure(new Error("409",
+                    $"Lịch làm việc từ {newSchedule.StartTime} đến {newSchedule.EndTime} vào ngày {newSchedule.Date} trùng thời gian với lịch hiện tại từ {existingSchedule.StartTime} đến {existingSchedule.EndTime}"));
+            }
+        }
+
         var existingHours = existingSchedules.Sum(x => (x.EndTime - x.StartTime).TotalHours);
 
         // 7. Check if adding the new schedules would exceed the weekly limit
@@ -87,5 +118,12 @@ internal sealed class DoctorRegisterScheduleCommandHandler(
         var diff = (int)date.DayOfWeek - 1;
         if (diff < 0) diff += 7; // Adjust for Sunday (DayOfWeek = 0)
         return date.AddDays(-diff);
+    }
+
+    private static bool TimesOverlap(TimeSpan start1, TimeSpan end1, TimeSpan start2, TimeSpan end2)
+    {
+        // Two ranges [start1, end1) and [start2, end2) overlap if
+        // start1 < end2 AND start2 < end1
+        return start1 < end2 && start2 < end1;
     }
 }
