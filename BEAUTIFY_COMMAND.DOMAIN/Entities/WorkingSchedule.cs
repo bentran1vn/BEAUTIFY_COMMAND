@@ -146,6 +146,8 @@ public class WorkingSchedule : AggregateRoot<Guid>, IAuditableEntity
             ModifiedOnUtc = null,
             Status = Constant.OrderStatus.ORDER_PENDING,
             Note = string.Empty,
+            ShiftGroupId = x.ShiftGroupId,
+            ShiftCapacity = x.ShiftCapacity,
             CustomerScheduleId = customerSchedule!.Id,
             CustomerScheduleEntity = new EntityEvent.CustomerScheduleEntity
             {

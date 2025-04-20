@@ -6,6 +6,11 @@ namespace BEAUTIFY_COMMAND.APPLICATION.UseCases.Commands.Bookings;
 /// <summary>
 ///     Handler for creating a new booking with distributed locking to prevent double-bookings
 /// </summary>
+/// <remarks>
+///     API Route: POST api/v{version:apiVersion}/bookings
+///     Authorization: Requires CUSTOMER role
+///     Description: Creates a new booking for a service with a doctor at a clinic
+/// </remarks>
 internal sealed class
 
     #region DI
