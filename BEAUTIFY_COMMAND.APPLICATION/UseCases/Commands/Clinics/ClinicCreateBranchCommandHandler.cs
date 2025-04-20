@@ -37,7 +37,7 @@ internal sealed class
         if (isExist != null && isExist.IsActivated && isExist.Status == 1)
             return Result.Failure(new Error("500", "Clinic with phone number already exists"));
 
-        if (isExistEmail != null && isExist.IsActivated && isExist.Status == 1 && isExistEmail.Id != currentUserService.ClinicId.Value)
+        if (isExistEmail != null && isExistEmail.IsActivated && isExistEmail.Status == 1 && isExistEmail.Id != currentUserService.ClinicId.Value)
         {
             return Result.Failure(new Error("500", "Clinic with email already exists"));
         }
