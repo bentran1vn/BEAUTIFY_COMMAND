@@ -92,6 +92,13 @@ public class ClinicApi : ApiEndpoint, ICarterModule
         gr1.MapPost("{id:guid}/branches", ClinicCreateBranch)
             .DisableAntiforgery()
             .RequireAuthorization();
+        
+        gr1.MapPut("{id}/response/branch", ResponseClinicBranchApply)
+            .WithName("RespondToBranchApplyRequest")
+            .WithSummary("Admin response to clinic branch create request")
+            .WithDescription(
+                "Action = 0 (Approve), Action = 1 (Reject).  Reject reason is required for Action 1.")
+            .RequireAuthorization();
 
         gr1.MapPut("{id:guid}/branches/{branchId:guid}", ClinicUpdateBranch)
             .DisableAntiforgery()
@@ -164,6 +171,13 @@ public class ClinicApi : ApiEndpoint, ICarterModule
 
     private static async Task<IResult> ResponseClinicApply(ISender sender, [FromRoute] string id,
         Commands.ResponseClinicApplyCommand command)
+    {
+        var result = await sender.Send(command with { RequestId = id });
+        return result.IsFailure ? HandlerFailure(result) : Results.Ok(result);
+    }
+    
+    private static async Task<IResult> ResponseClinicBranchApply(ISender sender, [FromRoute] string id,
+        Commands.ResponseClinicBranchApplyCommand command)
     {
         var result = await sender.Send(command with { RequestId = id });
         return result.IsFailure ? HandlerFailure(result) : Results.Ok(result);

@@ -87,6 +87,7 @@ public class ClinicApplyCommandHandler(
             {
                 Id = Guid.NewGuid(),
                 ClinicId = clinic.Id,
+                IsMain = true,
                 Status = 0,
                 SendMailDate = TimeZoneInfo.ConvertTime(DateTimeOffset.UtcNow, vietnamTimeZone)
             };
@@ -171,6 +172,7 @@ public class ClinicApplyCommandHandler(
             {
                 Id = Guid.NewGuid(),
                 ClinicId = isExist.Id,
+                IsMain = true,
                 Status = 0,
                 SendMailDate = TimeZoneInfo.ConvertTime(DateTimeOffset.UtcNow, vietnamTimeZone)
             };
@@ -214,6 +216,7 @@ public class ClinicApplyCommandHandler(
             {
                 Id = Guid.NewGuid(),
                 ClinicId = clinic.Id,
+                IsMain = true,
                 Status = 0,
                 SendMailDate = TimeZoneInfo.ConvertTime(DateTimeOffset.UtcNow, vietnamTimeZone)
             };
