@@ -137,8 +137,8 @@ public class WorkingSchedule : AggregateRoot<Guid>, IAuditableEntity
         var workingScheduleEntities = workingSchedule.Select(x => new EntityEvent.WorkingScheduleEntity
         {
             Id = x.Id,
-            // DoctorClinicId = DoctorId,
             ClinicId = ClinicId,
+            DoctorId = DoctorId,
             Date = x.Date,
             StartTime = x.StartTime,
             EndTime = x.EndTime,
@@ -170,8 +170,6 @@ public class WorkingSchedule : AggregateRoot<Guid>, IAuditableEntity
                     Duration = 0
                 },
                 Status = customerSchedule.Status,
-                CompletedProcedures = [],
-                PendingProcedures = []
             }
         }).ToList();
 
