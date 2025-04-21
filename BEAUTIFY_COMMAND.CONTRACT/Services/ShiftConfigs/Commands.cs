@@ -19,4 +19,9 @@ public static class Commands
         Guid Id, string Name, string? Note, TimeSpan StartTime, TimeSpan EndTime,
         Guid ClinicId
     ) : ICommand;
+
+    public record DeleteShiftConfigCommand(
+        Guid Id,
+        Guid ClinicId
+    ) : ICommand;
 }
