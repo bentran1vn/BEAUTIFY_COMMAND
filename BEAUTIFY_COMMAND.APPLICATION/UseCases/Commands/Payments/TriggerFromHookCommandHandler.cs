@@ -6,6 +6,7 @@ public class TriggerFromHookCommandHandler(
     IRepositoryBase<SystemTransaction, Guid> systemTransactionRepository,
     IRepositoryBase<ClinicTransaction, Guid> clinicTransactionRepository,
     IRepositoryBase<WalletTransaction, Guid> walletTransactionRepository,
+    IRepositoryBase<User, Guid> userRepository,
     IHubContext<PaymentHub> hubContext,
     IRepositoryBase<Order, Guid> orderRepository)
     : ICommandHandler<CONTRACT.Services.Payments.Commands.TriggerFromHookCommand>
@@ -120,9 +121,10 @@ public class TriggerFromHookCommandHandler(
         if (order.Status == Constant.OrderStatus.ORDER_COMPLETED)
             return Result.Failure(new Error("400", "Order already completed"));
 
-        if (order.FinalAmount != request.TransferAmount)
-            return Result.Failure(new Error("422", "Order Amount invalid"));
-
+        /*  var user = await userRepository.FindByIdAsync(order.CustomerId, cancellationToken);
+          if (order.FinalAmount - user.Balance != request.TransferAmount)
+              return Result.Failure(new Error("422", "Order Amount invalid"));
+  */
         // Update order status to completed
         order.Status = Constant.OrderStatus.ORDER_COMPLETED;
 
