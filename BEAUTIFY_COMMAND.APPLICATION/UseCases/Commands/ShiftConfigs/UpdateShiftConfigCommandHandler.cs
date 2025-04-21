@@ -29,7 +29,7 @@ public class UpdateShiftConfigCommandHandler: ICommandHandler<CONTRACT.Services.
         
         var shift = await _shiftConfigRepository.FindByIdAsync(request.Id, cancellationToken);
         
-        if (shift == null)
+        if (shift == null || shift.IsDeleted)
         {
             return Result.Failure(new Error("404", "Shift config not found"));
         }
