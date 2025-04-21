@@ -122,6 +122,9 @@ finally
     await app.DisposeAsync();
 }
 
-public abstract partial class Program
+namespace BEAUTIFY_COMMAND.API
 {
+    public abstract partial class Program
+    {
+    }
 }
