@@ -55,6 +55,8 @@ internal sealed class CustomerOrderPaymentCommandHandler(
 
                 // Update remaining amount
                 remainingAmount = finalAmount - deductAmount;
+                order.Status = Constant.OrderStatus.ORDER_COMPLETED;
+                orderRepositoryBase.Update(order);
             }
         }
 
