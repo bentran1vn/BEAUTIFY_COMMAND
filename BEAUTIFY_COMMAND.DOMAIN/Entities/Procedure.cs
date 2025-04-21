@@ -9,7 +9,7 @@ public class Procedure : AggregateRoot<Guid>, IAuditableEntity
     public int StepIndex { get; set; }
     public Guid? ServiceId { get; set; }
     public virtual Service? Service { get; set; }
-    public virtual ICollection<CustomerSchedule>? CustomerSchedules { get; set; } = [];
+
     public virtual ICollection<ProcedureMedia> ProcedureMedias { get; set; } = [];
     public virtual ICollection<ProcedurePriceType> ProcedurePriceTypes { get; set; } = [];
 

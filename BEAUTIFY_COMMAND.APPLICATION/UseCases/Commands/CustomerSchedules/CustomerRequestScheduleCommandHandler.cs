@@ -1,5 +1,8 @@
 ﻿using BEAUTIFY_COMMAND.CONTRACT.Services.CustomerSchedule;
 
+/// <summary>
+/// customer-schedule/customer
+/// </summary>
 namespace BEAUTIFY_COMMAND.APPLICATION.UseCases.Commands.CustomerSchedules;
 internal sealed class CustomerRequestScheduleCommandHandler(
     IRepositoryBase<CustomerSchedule, Guid> customerScheduleRepositoryBase,
