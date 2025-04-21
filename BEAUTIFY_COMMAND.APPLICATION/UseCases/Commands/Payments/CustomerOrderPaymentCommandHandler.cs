@@ -55,8 +55,6 @@ internal sealed class CustomerOrderPaymentCommandHandler(
 
                 // Update remaining amount
                 remainingAmount = finalAmount - deductAmount;
-                order.Status = Constant.OrderStatus.ORDER_COMPLETED;
-                orderRepositoryBase.Update(order);
             }
         }
 
@@ -74,7 +72,8 @@ internal sealed class CustomerOrderPaymentCommandHandler(
                 TransactionDate = transactionDate,
                 PaymentMethod = request.PaymentMethod
             });
-
+            order.Status = Constant.OrderStatus.ORDER_COMPLETED;
+            orderRepositoryBase.Update(order);
             return Result.Success(new { FullyPaid = true });
         }
 
