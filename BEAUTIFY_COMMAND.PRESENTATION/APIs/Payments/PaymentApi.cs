@@ -25,7 +25,7 @@ public class PaymentApi : ApiEndpoint, ICarterModule
             .WithSummary("Subscription Over Payments.")
             .RequireAuthorization();
 
-        gr1.MapPost("order/{id:guid}/{amount:decimal}/{paymentMethod}/", CustomerOrderPayment)
+        gr1.MapPost("order/", CustomerOrderPayment)
             .WithName("Customer Order Payments")
             .WithSummary("Customer Order Payments.")
             .RequireAuthorization();
@@ -94,10 +94,10 @@ public class PaymentApi : ApiEndpoint, ICarterModule
         return result.IsFailure ? HandlerFailure(result) : Results.Ok(result);
     }
 
-    private static async Task<IResult> CustomerOrderPayment(ISender sender, Guid id, decimal amount,
-        string paymentMethod)
+    private static async Task<IResult> CustomerOrderPayment(ISender sender,
+        Commands.CustomerOrderPaymentCommand command)
     {
-        var result = await sender.Send(new Commands.CustomerOrderPaymentCommand(id, paymentMethod, amount));
+        var result = await sender.Send(command);
         return result.IsFailure ? HandlerFailure(result) : Results.Ok(result);
     }
 

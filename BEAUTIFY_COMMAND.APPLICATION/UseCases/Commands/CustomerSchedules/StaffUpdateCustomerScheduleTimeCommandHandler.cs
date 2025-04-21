@@ -1,6 +1,12 @@
 ﻿using BEAUTIFY_COMMAND.CONTRACT.Services.CustomerSchedule;
 
 namespace BEAUTIFY_COMMAND.APPLICATION.UseCases.Commands.CustomerSchedules;
+/// <summary>
+///  customer-schedules/staff
+/// </summary>
+/// <param name="customerScheduleRepositoryBase"></param>
+/// <param name="workingScheduleRepositoryBase"></param>
+/// <param name="mailService"></param>
 internal sealed class StaffUpdateCustomerScheduleTimeCommandHandler(
     IRepositoryBase<CustomerSchedule, Guid> customerScheduleRepositoryBase,
     IRepositoryBase<WorkingSchedule, Guid> workingScheduleRepositoryBase,
@@ -42,12 +48,24 @@ internal sealed class StaffUpdateCustomerScheduleTimeCommandHandler(
 
             nextCustomerSchedule.Date = request.Date;
             nextCustomerSchedule.StartTime = request.StartTime;
-            var endTime =
-                request.StartTime.Add(
-                    TimeSpan.FromHours(nextCustomerSchedule.ProcedurePriceType.Duration / 60.0 + 0.5));
 
-            if (endTime.Hours > 20 || endTime is { Hours: 20, Minutes: > 30 })
-                return Result.Failure(new Error("400", "Choose start time soner because clinic close at 20:30"));
+            //toodo tru hao 30p
+            var endTime = request.StartTime.Add(
+                TimeSpan.FromHours(nextCustomerSchedule.ProcedurePriceType.Duration / 60.0 + 0.5));
+
+            var overlapCheck = await CheckScheduleOverlap(
+                workingScheduleRepositoryBase.FindAll(),
+                request.Date,
+                customerSchedule.Doctor.UserId,
+                customerSchedule.Doctor.ClinicId,
+                nextCustomerSchedule.Id,
+                request.StartTime,
+                endTime,
+                cancellationToken);
+
+            if (overlapCheck.IsFailure)
+                return overlapCheck;
+
             nextCustomerSchedule.EndTime = endTime;
             nextCustomerSchedule.Status = Constant.OrderStatus.ORDER_PENDING;
 
@@ -90,11 +108,22 @@ internal sealed class StaffUpdateCustomerScheduleTimeCommandHandler(
 
             customerSchedule.Date = request.Date;
             customerSchedule.StartTime = request.StartTime;
-            var endTime =
-                request.StartTime.Add(TimeSpan.FromHours(customerSchedule.ProcedurePriceType.Duration / 60.0 + 0.5));
+            var endTime = request.StartTime.Add(
+                TimeSpan.FromHours(customerSchedule.ProcedurePriceType.Duration / 60.0 + 0.5));
 
-            if (endTime.Hours > 20 || endTime is { Hours: 20, Minutes: > 30 })
-                return Result.Failure(new Error("400", "Choose start time soner because clinic close at 20:30"));
+            var overlapCheck = await CheckScheduleOverlap(
+                workingScheduleRepositoryBase.FindAll(),
+                request.Date,
+                customerSchedule.Doctor.UserId,
+                customerSchedule.Doctor.ClinicId,
+                customerSchedule.Id,
+                request.StartTime,
+                endTime,
+                cancellationToken);
+
+            if (overlapCheck.IsFailure)
+                return overlapCheck;
+
             customerSchedule.EndTime = endTime;
             customerSchedule.Status = Constant.OrderStatus.ORDER_PENDING;
 
@@ -129,6 +158,44 @@ internal sealed class StaffUpdateCustomerScheduleTimeCommandHandler(
                     $"Lịch của quý khách hàng {customerSchedule.Customer.FullName} đã được cập nhật ngày {customerSchedule.Date} vào lúc {customerSchedule.StartTime.ToString()}"
             });
         }
+
+        return Result.Success();
+    }
+
+    // Add this helper method to the class
+    private async Task<Result> CheckScheduleOverlap(
+        IQueryable<WorkingSchedule> workingScheduleQuery,
+        DateOnly date,
+        Guid doctorId,
+        Guid clinicId,
+        Guid currentScheduleId,
+        TimeSpan startTime,
+        TimeSpan endTime,
+        CancellationToken cancellationToken)
+    {
+        // Get all other schedules for this doctor on this date (excluding current one)
+        var doctorSchedules = await workingScheduleQuery
+            .Where(x =>
+                x.Date == date &&
+                x.DoctorId == doctorId &&
+                x.ClinicId == clinicId &&
+                x.CustomerScheduleId != currentScheduleId && x.CustomerScheduleId != null)
+            .ToListAsync(cancellationToken);
+
+        // Check for any overlaps
+        foreach (var schedule in doctorSchedules)
+        {
+            if (startTime < schedule.EndTime && endTime > schedule.StartTime)
+            {
+                return Result.Failure(new Error("400",
+                    "This appointment would overlap with another scheduled procedure."));
+            }
+        }
+
+        // Also check clinic hours
+        if (endTime.Hours > 20 || endTime is { Hours: 20, Minutes: > 30 })
+            return Result.Failure(new Error("400",
+                "Choose start time sooner because clinic closes at 20:30"));
 
         return Result.Success();
     }

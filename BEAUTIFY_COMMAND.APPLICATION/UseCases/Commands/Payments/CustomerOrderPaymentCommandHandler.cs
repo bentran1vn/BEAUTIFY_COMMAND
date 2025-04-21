@@ -13,8 +13,8 @@ internal sealed class CustomerOrderPaymentCommandHandler(
         if (order.Status == Constant.OrderStatus.ORDER_COMPLETED)
             return Result.Failure(new Error("400", "Order already completed"));
 
-        var vietnamTimeZone = TimeZoneInfo.FindSystemTimeZoneById("SE Asia Standard Time");
-        var transactionDate = TimeZoneInfo.ConvertTime(DateTimeOffset.UtcNow, vietnamTimeZone);
+        var transactionDate = TimeZoneInfo.ConvertTime(DateTimeOffset.UtcNow,
+            TimeZoneInfo.FindSystemTimeZoneById("SE Asia Standard Time"));
         var id = Guid.NewGuid();
         clinicTransactionRepositoryBase.Add(new ClinicTransaction
         {

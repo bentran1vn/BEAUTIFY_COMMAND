@@ -52,7 +52,7 @@ public class CustomerSchedule : AggregateRoot<Guid>, IAuditableEntity
                 Id = customerSchedule.ProcedurePriceTypeId.Value,
                 StepIndex = customerSchedule.ProcedurePriceType.Procedure.StepIndex.ToString(),
                 DateCompleted = customerSchedule.Date,
-                Duration = 0
+                Duration = customerSchedule.ProcedurePriceType.Duration
             },
             Status = customerSchedule.Status,
             CompletedProcedures = [],
