@@ -34,24 +34,24 @@ public class CreateShiftConfigCommandHandler : ICommandHandler<CONTRACT.Services
             return Result.Failure(new Error("500", "Shift config already exists"));
         }
 
-        var overlappingShift = await _shiftConfigRepository
-            .FindAll(x => 
-                x.ClinicId == request.ClinicId && 
-                (
-                    (x.StartTime <= request.StartTime && x.EndTime >= request.EndTime) ||
-                    
-                    (request.StartTime <= x.StartTime && request.EndTime >= x.EndTime) ||
-                    
-                    (x.StartTime < request.EndTime && x.StartTime >= request.StartTime) ||
-                    
-                    (x.EndTime > request.StartTime && x.EndTime <= request.EndTime)
-                ))
-            .FirstOrDefaultAsync(cancellationToken);
-        
-        if(overlappingShift != null)
-        {
-            return Result.Failure(new Error("500", "Shift config overlaps with existing shift"));
-        }
+        // var overlappingShift = await _shiftConfigRepository
+        //     .FindAll(x => 
+        //         x.ClinicId == request.ClinicId && 
+        //         (
+        //             (x.StartTime <= request.StartTime && x.EndTime >= request.EndTime) ||
+        //             
+        //             (request.StartTime <= x.StartTime && request.EndTime >= x.EndTime) ||
+        //             
+        //             (x.StartTime < request.EndTime && x.StartTime >= request.StartTime) ||
+        //             
+        //             (x.EndTime > request.StartTime && x.EndTime <= request.EndTime)
+        //         ))
+        //     .FirstOrDefaultAsync(cancellationToken);
+        //
+        // if(overlappingShift != null)
+        // {
+        //     return Result.Failure(new Error("500", "Shift config overlaps with existing shift"));
+        // }
         
         var shiftConfig = new ShiftConfig
         {
