@@ -3,8 +3,7 @@ internal sealed class CustomerOrderPaymentCommandHandler(
     IRepositoryBase<Order, Guid> orderRepositoryBase,
     IRepositoryBase<ClinicTransaction, Guid> clinicTransactionRepositoryBase,
     IRepositoryBase<User, Guid> userRepositoryBase,
-    IRepositoryBase<WalletTransaction, Guid> walletTransactionRepositoryBase,
-    ICurrentUserService currentUserService)
+    IRepositoryBase<WalletTransaction, Guid> walletTransactionRepositoryBase)
     : ICommandHandler<CONTRACT.Services.Payments.Commands.CustomerOrderPaymentCommand>
 {
     public async Task<Result> Handle(CONTRACT.Services.Payments.Commands.CustomerOrderPaymentCommand request,
@@ -26,8 +25,8 @@ internal sealed class CustomerOrderPaymentCommandHandler(
         // Deduct from wallet balance if requested
         if (request.IsDeductFromCustomerBalance)
         {
-            var userId = currentUserService.UserId;
-            var user = await userRepositoryBase.FindByIdAsync(userId!.Value, cancellationToken);
+            var userId = order.CustomerId;
+            var user = await userRepositoryBase.FindByIdAsync(userId, cancellationToken);
             if (user == null)
                 return Result.Failure(new Error("404", "User Not Found"));
 
