@@ -14,9 +14,8 @@ public static class Commands
 
     public class WorkingDate
     {
+        public Guid ShiftGroupId { get; set; }
         public DateOnly Date { get; set; }
-        public required string StartTime { get; set; }
-        public required string EndTime { get; set; }
     }
 
     public class WorkingDateWithCapacity : WorkingDate

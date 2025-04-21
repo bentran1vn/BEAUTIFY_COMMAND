@@ -1,6 +1,16 @@
 ﻿namespace BEAUTIFY_COMMAND.DOMAIN;
 public static class ErrorMessages
 {
+    public static class ShiftConfig
+    {
+        public const string ShiftConfigNotFound = "Không tìm thấy ca làm việc.";
+        public const string ShiftConfigAlreadyExists = "Ca làm việc đã tồn tại.";
+        public const string ShiftConfigNotActive = "Ca làm việc không hoạt động.";
+
+        public const string ShiftConfigStartTimeMustBeEarlierThanEndTime =
+            "Thời gian bắt đầu ca làm việc phải trước thời gian kết thúc ca làm việc";
+    }
+
     public static class Clinic
     {
         public const string ClinicNotFound = "Không tìm thấy phòng khám.";

@@ -4,6 +4,7 @@ namespace BEAUTIFY_COMMAND.APPLICATION.UseCases.Commands.WorkingSchedules;
 internal sealed class CreateClinicEmptyScheduleCommandHandler(
     IRepositoryBase<Clinic, Guid> clinicRepository,
     IRepositoryBase<WorkingSchedule, Guid> workingScheduleRepository,
+    IRepositoryBase<ShiftConfig, Guid> shiftConfigRepository,
     ICurrentUserService currentUserService)
     : ICommandHandler<CONTRACT.Services.WorkingSchedules.Commands.CreateClinicEmptyScheduleCommand>
 {
@@ -28,31 +29,33 @@ internal sealed class CreateClinicEmptyScheduleCommandHandler(
         // 2. Process each request date/time
         foreach (var workingDateRequest in request.WorkingDates)
         {
+            var shiftConfig =
+                await shiftConfigRepository.FindByIdAsync(workingDateRequest.ShiftGroupId, cancellationToken);
+            if (shiftConfig == null)
+                return Result.Failure(new Error("404",
+                    ErrorMessages.ShiftConfig.ShiftConfigNotFound));
             var date = workingDateRequest.Date;
-            var parsedStartTime = TimeSpan.TryParse(workingDateRequest.StartTime, out var startTime);
 
-            var parsedEndTime = TimeSpan.TryParse(workingDateRequest.EndTime, out var endTime);
-            if (!parsedStartTime || !parsedEndTime)
-                return Result.Failure(new Error("400",
-                    ErrorMessages.Clinic.InvalidTimeFormat));
             var capacity = workingDateRequest.Capacity;
 
             // 2a. Basic time validation
-            if (startTime >= endTime && endTime != TimeSpan.Zero)
+            if (shiftConfig.StartTime >= shiftConfig.EndTime && shiftConfig.EndTime != TimeSpan.Zero)
                 return Result.Failure(new Error("400",
-                    ErrorMessages.Clinic.ClinicStartTimeMustBeEarlierThanEndTime(startTime, endTime)));
+                    ErrorMessages.Clinic.ClinicStartTimeMustBeEarlierThanEndTime(shiftConfig.StartTime,
+                        shiftConfig.EndTime)));
 
             // 2b. Validate time is within clinic working hours
-            if (startTime < clinic.WorkingTimeStart || endTime > clinic.WorkingTimeEnd)
+            if (shiftConfig.StartTime < clinic.WorkingTimeStart || shiftConfig.EndTime > clinic.WorkingTimeEnd)
                 return Result.Failure(new Error("400",
-                    ErrorMessages.Clinic.OutsideWorkingHours(startTime, endTime, clinic.WorkingTimeStart,
+                    ErrorMessages.Clinic.OutsideWorkingHours(shiftConfig.StartTime, shiftConfig.EndTime,
+                        clinic.WorkingTimeStart,
                         clinic.WorkingTimeEnd)));
 
             // 2c. Check for existing shift groups with the same time range
             var existingShiftGroups = await workingScheduleRepository
                 .FindAll(x => x.Date == date &&
-                              x.StartTime == startTime &&
-                              x.EndTime == endTime &&
+                              x.StartTime == shiftConfig.StartTime &&
+                              x.EndTime == shiftConfig.EndTime &&
                               x.ShiftGroupId != null)
                 .ToListAsync(cancellationToken);
 
@@ -85,8 +88,8 @@ internal sealed class CreateClinicEmptyScheduleCommandHandler(
                         {
                             Id = Guid.NewGuid(),
                             Date = date,
-                            StartTime = startTime,
-                            EndTime = endTime,
+                            StartTime = shiftConfig.StartTime,
+                            EndTime = shiftConfig.EndTime,
                             ShiftGroupId = shiftGroupId,
                             ClinicId = currentUserService.ClinicId.Value,
                             ShiftCapacity = capacity
@@ -164,9 +167,9 @@ internal sealed class CreateClinicEmptyScheduleCommandHandler(
                     {
                         Id = Guid.NewGuid(),
                         Date = date,
-                        StartTime = startTime,
+                        StartTime = shiftConfig.StartTime,
                         ClinicId = currentUserService.ClinicId.Value,
-                        EndTime = endTime,
+                        EndTime = shiftConfig.EndTime,
                         ShiftGroupId = shiftGroupId,
                         ShiftCapacity = capacity
                     });
