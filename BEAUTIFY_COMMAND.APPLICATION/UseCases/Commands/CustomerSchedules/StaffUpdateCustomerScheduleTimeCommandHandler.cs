@@ -41,6 +41,7 @@ internal sealed class StaffUpdateCustomerScheduleTimeCommandHandler(
                     x.Date == request.Date &&
                     x.DoctorId == customerSchedule.Doctor.UserId &&
                     x.ClinicId == customerSchedule.Doctor.ClinicId &&
+                    x.CustomerScheduleId != null &&
                     x.StartTime == request.StartTime).ToListAsync(cancellationToken);
 
             if (workingSchedule.Count != 0)
@@ -49,7 +50,7 @@ internal sealed class StaffUpdateCustomerScheduleTimeCommandHandler(
             nextCustomerSchedule.Date = request.Date;
             nextCustomerSchedule.StartTime = request.StartTime;
 
-            //toodo tru hao 30p
+            //todo tru hao 30p
             var endTime = request.StartTime.Add(
                 TimeSpan.FromHours(nextCustomerSchedule.ProcedurePriceType.Duration / 60.0 + 0.5));
 
