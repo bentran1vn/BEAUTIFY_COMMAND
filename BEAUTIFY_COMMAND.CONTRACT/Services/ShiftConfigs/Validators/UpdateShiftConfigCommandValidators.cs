@@ -5,7 +5,7 @@ public class UpdateShiftConfigCommandValidators: AbstractValidator<Commands.Upda
     public UpdateShiftConfigCommandValidators()
     {
         RuleFor(x => x.Id)
-            .NotEmpty().WithMessage("Name is required.");
+            .NotEmpty().WithMessage("Id is required.");
         
         RuleFor(x => x.Name)
             .NotEmpty().WithMessage("Name is required.");

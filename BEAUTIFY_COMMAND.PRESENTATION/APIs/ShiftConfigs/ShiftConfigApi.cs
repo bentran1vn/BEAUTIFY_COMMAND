@@ -12,10 +12,10 @@ public class ShiftConfigApi: ApiEndpoint, ICarterModule
         var gr1 = app.NewVersionedApi("Shift Configs")
             .MapGroup(BaseUrl).HasApiVersion(1);
 
-        gr1.MapPost("", () => { })
+        gr1.MapPost("", () => CreateShiftConfig)
             .RequireAuthorization(Constant.Role.CLINIC_ADMIN);
 
-        gr1.MapPut("", () => { })
+        gr1.MapPut("", () => UpdateShiftConfig)
             .RequireAuthorization(Constant.Role.CLINIC_ADMIN);
     }
     
