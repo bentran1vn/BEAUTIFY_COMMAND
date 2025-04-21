@@ -102,9 +102,9 @@ public class TriggerFromHookCommandHandler(
             return Result.Failure(new Error("422", "Transaction Amount invalid"));
 
         // Validate transaction date
-        if (transaction.TransactionDate > DateTimeOffset.Now)
-            return Result.Failure(new Error("400", "Transaction Date invalid"));
-
+        /* if (transaction.TransactionDate > DateOnly.FromDateTime(DateTime.Now))
+             return Result.Failure(new Error("400", "Transaction Date invalid"));
+ */
         // Update transaction status to completed
         transaction.Status = Constant.OrderStatus.ORDER_COMPLETED;
 
