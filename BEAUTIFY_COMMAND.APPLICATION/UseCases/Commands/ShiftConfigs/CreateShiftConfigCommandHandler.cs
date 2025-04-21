@@ -26,7 +26,11 @@ public class CreateShiftConfigCommandHandler : ICommandHandler<CONTRACT.Services
         }
         
         var exist = await _shiftConfigRepository
-            .FindAll(x => x.ClinicId == request.ClinicId && x.StartTime == request.StartTime && x.EndTime == request.EndTime)
+            .FindAll(x =>
+                x.ClinicId == request.ClinicId &&
+                x.StartTime == request.StartTime &&
+                x.EndTime == request.EndTime &&
+                !x.IsDeleted)
             .FirstOrDefaultAsync(cancellationToken);
 
         if (exist != null)
