@@ -18,7 +18,7 @@ public class ShiftConfigApi: ApiEndpoint, ICarterModule
         gr1.MapPut("", UpdateShiftConfig)
             .RequireAuthorization(Constant.Role.CLINIC_ADMIN);
         
-        gr1.MapDelete("", DeleteShiftConfig)
+        gr1.MapDelete("{id}", DeleteShiftConfig)
             .RequireAuthorization(Constant.Role.CLINIC_ADMIN);
     }
     
@@ -47,12 +47,11 @@ public class ShiftConfigApi: ApiEndpoint, ICarterModule
     }
     
     private static async Task<IResult> DeleteShiftConfig(
-        ISender sender, HttpContext httpContext,
-        [FromBody] Commands.UpdateShiftConfigBody command)
+        ISender sender, HttpContext httpContext, Guid id)
     {
         var clinicId = httpContext.User.FindFirst(c => c.Type == "ClinicId")?.Value!;
         
-        var result = await sender.Send(new Commands.DeleteShiftConfigCommand(command.Id , new Guid(clinicId)));
+        var result = await sender.Send(new Commands.DeleteShiftConfigCommand(id , new Guid(clinicId)));
         
         return result.IsFailure ? HandlerFailure(result) : Results.Ok(result);
     }
