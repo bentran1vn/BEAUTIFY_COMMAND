@@ -2,7 +2,7 @@ using BEAUTIFY_COMMAND.DOMAIN;
 
 namespace BEAUTIFY_COMMAND.APPLICATION.UseCases.Commands.Wallets;
 /// <summary>
-///     Handler for creating withdrawal requests from a child clinic to its parent
+/// Handler for creating withdrawal requests from a child clinic to its parent
 /// </summary>
 internal sealed class CreateWithdrawalRequestCommandHandler(
     IRepositoryBase<Clinic, Guid> clinicRepository,
@@ -15,65 +15,42 @@ internal sealed class CreateWithdrawalRequestCommandHandler(
     public async Task<Result> Handle(CONTRACT.Services.Wallets.Commands.CreateWithdrawalRequestCommand request,
         CancellationToken cancellationToken)
     {
-        // Validate clinic exists and user has permission
+        // Get clinic information
         var clinicId = request.ClinicId ?? currentUserService.ClinicId;
+        var clinic = await clinicRepository.FindByIdAsync(clinicId.Value, cancellationToken);
+        if (clinic is null)
+            return Result.Failure(new Error("404", ErrorMessages.Clinic.ClinicNotFound));
 
-
-        // Get the child clinic with a single database call
-        var childClinic = await clinicRepository.FindByIdAsync(clinicId.Value, cancellationToken);
-        if (childClinic == null) return Result.Failure(new Error("404", ErrorMessages.Clinic.ClinicNotFound));
-
-        // Validate request parameters
-        var validationResult = ValidateWithdrawalRequest(childClinic, request.Amount);
-        if (validationResult.IsFailure) return validationResult;
-
-        // Create and save the transaction in a single operation
-        var walletTransaction = CreateWalletTransaction(clinicId, request.Amount, request.Description);
-        walletTransactionRepository.Add(walletTransaction);
-
-        // Subtract the amount from the clinic's balance when creating the withdrawal request
-        childClinic.Balance -= request.Amount;
-        clinicRepository.Update(childClinic);
-
-        return Result.Success();
-    }
-
-    /// <summary>
-    ///     Validates the withdrawal request parameters
-    /// </summary>
-    private static Result ValidateWithdrawalRequest(Clinic childClinic, decimal amount)
-    {
-        // Verify the child clinic has a parent
-        /*if (childClinic.ParentId == null)
-            return Result.Failure(new Error("400", ErrorMessages.Clinic.ClinicIsNotABranch));*/
-
-        // Verify the amount is valid
-        if (amount < MINIMUM_WITHDRAWAL_AMOUNT)
+        // Validate withdrawal conditions
+        if (request.Amount < MINIMUM_WITHDRAWAL_AMOUNT)
             return Result.Failure(new Error("400", ErrorMessages.Clinic.AmountMustBeGreaterThan2000));
 
-        // Verify the child clinic has sufficient balance
-        return childClinic.Balance < amount
-            ? Result.Failure(new Error("400", ErrorMessages.Clinic.InsufficientFunds))
-            : Result.Success();
-    }
+        if (clinic.Balance < request.Amount)
+            return Result.Failure(new Error("400", ErrorMessages.Clinic.InsufficientFunds));
 
-    /// <summary>
-    ///     Creates a new wallet transaction for the withdrawal request
-    /// </summary>
-    private static WalletTransaction CreateWalletTransaction(Guid? clinicId, decimal amount, string description)
-    {
-        return new WalletTransaction
+        // Determine transaction status based on request source
+        var isSystemGenerated = request.ClinicId is null;
+        var status = isSystemGenerated
+            ? Constant.WalletConstants.TransactionStatus.PENDING
+            : Constant.WalletConstants.TransactionStatus.WAITING_APPROVAL;
+
+        // Record transaction
+        walletTransactionRepository.Add(new WalletTransaction
         {
             Id = Guid.NewGuid(),
             ClinicId = clinicId,
-            Amount = amount,
+            Amount = request.Amount,
             TransactionType = Constant.WalletConstants.TransactionType.WITHDRAWAL,
-            Status = clinicId == null
-                ? Constant.WalletConstants.TransactionStatus.PENDING
-                : Constant.WalletConstants.TransactionStatus.WAITING_APPROVAL,
+            Status = status,
             IsMakeBySystem = false,
-            Description = description,
+            Description = request.Description,
             CreatedOnUtc = DateTimeOffset.UtcNow
-        };
+        });
+
+        // Update clinic balance
+        clinic.Balance -= request.Amount;
+        clinicRepository.Update(clinic);
+
+        return Result.Success();
     }
 }
