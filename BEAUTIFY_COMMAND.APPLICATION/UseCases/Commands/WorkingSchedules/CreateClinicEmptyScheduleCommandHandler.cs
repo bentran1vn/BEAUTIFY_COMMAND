@@ -56,7 +56,8 @@ internal sealed class CreateClinicEmptyScheduleCommandHandler(
                 .FindAll(x => x.Date == date &&
                               x.StartTime == shiftConfig.StartTime &&
                               x.EndTime == shiftConfig.EndTime &&
-                              x.ShiftGroupId != null)
+                              x.ShiftGroupId != null &&
+                              !x.IsDeleted)
                 .ToListAsync(cancellationToken);
 
             Guid shiftGroupId;
@@ -79,13 +80,13 @@ internal sealed class CreateClinicEmptyScheduleCommandHandler(
                         return Result.Failure(new Error("CannotRemoveShift",
                             $"Cannot remove shift as there are {filledSlots} doctors assigned to this shift."));
                     }
-                    
+
                     // Remove all schedules for this shift group
                     foreach (var slot in existingShiftGroups)
                     {
                         workingScheduleRepository.Remove(slot);
                     }
-                    
+
                     // Raise domain event for capacity change to 0 (full removal)
                     if (existingShiftGroups.Count > 0)
                     {
@@ -95,9 +96,9 @@ internal sealed class CreateClinicEmptyScheduleCommandHandler(
                             shiftGroupId,
                             currentCapacity,
                             0,
-                            new List<WorkingSchedule>()); // Empty list since we're removing all
+                            []); // Empty list since we're removing all
                     }
-                    
+
                     continue; // Skip to next working date request
                 }
 
@@ -188,13 +189,13 @@ internal sealed class CreateClinicEmptyScheduleCommandHandler(
             else
             {
                 // No existing shift group found
-                
+
                 // SPECIAL CASE: If capacity is 0, there's nothing to create
                 if (capacity == 0)
                 {
                     continue; // Skip to next working date request
                 }
-                
+
                 // Create a new shift group using ShiftConfig's Id instead of generating a new GUID
                 shiftGroupId = shiftConfig.Id;
 
