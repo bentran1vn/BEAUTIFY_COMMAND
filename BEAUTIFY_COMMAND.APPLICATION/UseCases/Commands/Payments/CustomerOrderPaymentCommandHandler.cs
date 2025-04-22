@@ -72,7 +72,9 @@ internal sealed class CustomerOrderPaymentCommandHandler(
                 TransactionDate = transactionDate,
                 PaymentMethod = request.PaymentMethod
             });
+            order.Service.ClinicServices.FirstOrDefault().Clinics.Balance += finalAmount;
             order.Status = Constant.OrderStatus.ORDER_COMPLETED;
+
             orderRepositoryBase.Update(order);
             return Result.Success(new { FullyPaid = true });
         }
