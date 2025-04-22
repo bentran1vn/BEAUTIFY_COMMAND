@@ -31,9 +31,9 @@ public class CreateClinicEmptyScheduleCommandValidators : AbstractValidator<Comm
                      })
                      .WithMessage("End time must be greater than start time or set to midnight (00:00).");
  */
-                workingDate.RuleFor(x => x.Capacity)
-                    .GreaterThan(0)
-                    .WithMessage("Capacity must be greater than 0.");
+                /*  workingDate.RuleFor(x => x.Capacity)
+                      .GreaterThan(0)
+                      .WithMessage("Capacity must be greater than 0.");*/
             });
 
         // Date must be in the future

@@ -157,8 +157,8 @@ internal sealed class CreateClinicEmptyScheduleCommandHandler(
             }
             else
             {
-                // Create a new shift group
-                shiftGroupId = Guid.NewGuid();
+                // Create a new shift group using ShiftConfig's Id instead of generating a new GUID
+                shiftGroupId = shiftConfig.Id;
 
                 // Create empty slots based on capacity
                 for (var i = 0; i < capacity; i++)
