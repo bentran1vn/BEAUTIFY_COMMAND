@@ -130,7 +130,21 @@ internal sealed class CreateClinicEmptyScheduleCommandHandler(
                     // Raise domain event for capacity change
                     if (existingShiftGroups.Count == 0) continue;
                     var allAffectedSchedules = new List<WorkingSchedule>(existingShiftGroups);
-                    allAffectedSchedules.AddRange(schedulesToAdd);
+                    // Filter to only add schedules for the current shift group
+                    var currentShiftSchedules = schedulesToAdd.Where(s =>
+                        s.Date == date &&
+                        s.StartTime == shiftConfig.StartTime &&
+                        s.EndTime == shiftConfig.EndTime &&
+                        s.ShiftGroupId == shiftGroupId).ToList();
+
+                    allAffectedSchedules.AddRange(currentShiftSchedules);
+
+                    // Ensure all schedules have the correct capacity value
+                    foreach (var schedule in allAffectedSchedules)
+                    {
+                        schedule.ShiftCapacity = capacity;
+                    }
+
                     existingShiftGroups[0].ChangeShiftCapacity(
                         clinic.Id,
                         clinicName,
@@ -169,16 +183,20 @@ internal sealed class CreateClinicEmptyScheduleCommandHandler(
                     // Raise domain event for capacity change
                     if (existingShiftGroups.Count == 0) continue;
                     var remainingSchedules = existingShiftGroups.Except(slotsToRemove).ToList();
-                    if (remainingSchedules.Count != 0)
+                    if (remainingSchedules.Count == 0) continue;
+                    // Ensure all schedules have the correct capacity value
+                    foreach (var schedule in remainingSchedules)
                     {
-                        remainingSchedules[0].ChangeShiftCapacity(
-                            clinic.Id,
-                            clinicName,
-                            shiftGroupId,
-                            currentCapacity,
-                            capacity,
-                            remainingSchedules);
+                        schedule.ShiftCapacity = capacity;
                     }
+
+                    remainingSchedules[0].ChangeShiftCapacity(
+                        clinic.Id,
+                        clinicName,
+                        shiftGroupId,
+                        currentCapacity,
+                        capacity,
+                        remainingSchedules);
                 }
                 // If capacity is the same, no action needed
                 else if (capacity == currentCapacity)
