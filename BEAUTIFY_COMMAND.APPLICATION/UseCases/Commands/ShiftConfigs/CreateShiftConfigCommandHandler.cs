@@ -25,6 +25,10 @@ public class CreateShiftConfigCommandHandler : ICommandHandler<CONTRACT.Services
             return Result.Failure(new Error("500", "Clinic is not activated or deleted"));
         }
         
+        
+        if (request.StartTime < clinicExist.WorkingTimeStart || request.EndTime > clinicExist.WorkingTimeEnd)
+            return Result.Failure(new Error("500", "Shift config is out of clinic working time"));
+        
         var exist = await _shiftConfigRepository
             .FindAll(x =>
                 x.ClinicId == request.ClinicId &&

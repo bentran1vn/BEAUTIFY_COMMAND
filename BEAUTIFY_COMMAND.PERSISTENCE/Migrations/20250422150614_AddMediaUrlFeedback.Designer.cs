@@ -4,6 +4,7 @@ using BEAUTIFY_COMMAND.PERSISTENCE;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BEAUTIFY_COMMAND.PERSISTENCE.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250422150614_AddMediaUrlFeedback")]
+    partial class AddMediaUrlFeedback
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -289,7 +292,7 @@ namespace BEAUTIFY_COMMAND.PERSISTENCE.Migrations
                         {
                             Id = new Guid("33333333-1111-1111-1111-111111111111"),
                             ClassificationLabel = "Da khô",
-                            CreatedOnUtc = new DateTimeOffset(new DateTime(2025, 4, 22, 17, 15, 9, 714, DateTimeKind.Unspecified).AddTicks(4540), new TimeSpan(0, 0, 0, 0, 0)),
+                            CreatedOnUtc = new DateTimeOffset(new DateTime(2025, 4, 22, 15, 6, 13, 969, DateTimeKind.Unspecified).AddTicks(2110), new TimeSpan(0, 0, 0, 0, 0)),
                             IsDeleted = false,
                             OptionValue = "A",
                             Points = 2,
@@ -300,7 +303,7 @@ namespace BEAUTIFY_COMMAND.PERSISTENCE.Migrations
                         {
                             Id = new Guid("33333333-2222-1111-1111-111111111111"),
                             ClassificationLabel = "Da thường",
-                            CreatedOnUtc = new DateTimeOffset(new DateTime(2025, 4, 22, 17, 15, 9, 714, DateTimeKind.Unspecified).AddTicks(4550), new TimeSpan(0, 0, 0, 0, 0)),
+                            CreatedOnUtc = new DateTimeOffset(new DateTime(2025, 4, 22, 15, 6, 13, 969, DateTimeKind.Unspecified).AddTicks(2110), new TimeSpan(0, 0, 0, 0, 0)),
                             IsDeleted = false,
                             OptionValue = "B",
                             Points = 2,
@@ -311,7 +314,7 @@ namespace BEAUTIFY_COMMAND.PERSISTENCE.Migrations
                         {
                             Id = new Guid("33333333-3333-1111-1111-111111111111"),
                             ClassificationLabel = "Da hỗn hợp",
-                            CreatedOnUtc = new DateTimeOffset(new DateTime(2025, 4, 22, 17, 15, 9, 714, DateTimeKind.Unspecified).AddTicks(4550), new TimeSpan(0, 0, 0, 0, 0)),
+                            CreatedOnUtc = new DateTimeOffset(new DateTime(2025, 4, 22, 15, 6, 13, 969, DateTimeKind.Unspecified).AddTicks(2110), new TimeSpan(0, 0, 0, 0, 0)),
                             IsDeleted = false,
                             OptionValue = "C",
                             Points = 2,
@@ -322,7 +325,7 @@ namespace BEAUTIFY_COMMAND.PERSISTENCE.Migrations
                         {
                             Id = new Guid("33333333-4444-1111-1111-111111111111"),
                             ClassificationLabel = "Da dầu",
-                            CreatedOnUtc = new DateTimeOffset(new DateTime(2025, 4, 22, 17, 15, 9, 714, DateTimeKind.Unspecified).AddTicks(4550), new TimeSpan(0, 0, 0, 0, 0)),
+                            CreatedOnUtc = new DateTimeOffset(new DateTime(2025, 4, 22, 15, 6, 13, 969, DateTimeKind.Unspecified).AddTicks(2120), new TimeSpan(0, 0, 0, 0, 0)),
                             IsDeleted = false,
                             OptionValue = "D",
                             Points = 2,
@@ -333,7 +336,7 @@ namespace BEAUTIFY_COMMAND.PERSISTENCE.Migrations
                         {
                             Id = new Guid("33333333-5555-1111-1111-111111111111"),
                             ClassificationLabel = "Da nhạy cảm",
-                            CreatedOnUtc = new DateTimeOffset(new DateTime(2025, 4, 22, 17, 15, 9, 714, DateTimeKind.Unspecified).AddTicks(4550), new TimeSpan(0, 0, 0, 0, 0)),
+                            CreatedOnUtc = new DateTimeOffset(new DateTime(2025, 4, 22, 15, 6, 13, 969, DateTimeKind.Unspecified).AddTicks(2120), new TimeSpan(0, 0, 0, 0, 0)),
                             IsDeleted = false,
                             OptionValue = "E",
                             Points = 2,
@@ -955,10 +958,6 @@ namespace BEAUTIFY_COMMAND.PERSISTENCE.Migrations
 
                     b.HasIndex("DoctorId");
 
-                    b.HasIndex("FeedbackId")
-                        .IsUnique()
-                        .HasFilter("[FeedbackId] IS NOT NULL");
-
                     b.HasIndex("OrderId");
 
                     b.HasIndex("ProcedurePriceTypeId");
@@ -1104,6 +1103,9 @@ namespace BEAUTIFY_COMMAND.PERSISTENCE.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("CustomerScheduleId")
+                        .IsUnique();
 
                     b.ToTable("Feedback");
                 });
@@ -1308,9 +1310,7 @@ namespace BEAUTIFY_COMMAND.PERSISTENCE.Migrations
 
                     b.HasIndex("LivestreamRoomId");
 
-                    b.HasIndex("OrderFeedbackId")
-                        .IsUnique()
-                        .HasFilter("[OrderFeedbackId] IS NOT NULL");
+                    b.HasIndex("OrderFeedbackId");
 
                     b.HasIndex("ServiceId");
 
@@ -1861,7 +1861,7 @@ namespace BEAUTIFY_COMMAND.PERSISTENCE.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("2598b5a9-01b8-40c4-b581-d4337252a8d2"),
+                            Id = new Guid("e2fe7dc8-d923-40d4-8ef3-383607e7b85e"),
                             CreatedOnUtc = new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
                             Email = "admin@gmail.com",
                             FirstName = "System",
@@ -1874,7 +1874,7 @@ namespace BEAUTIFY_COMMAND.PERSISTENCE.Migrations
                         },
                         new
                         {
-                            Id = new Guid("c61d8c69-9068-4875-99e1-424b15161cc3"),
+                            Id = new Guid("c43ab013-aa26-452a-83c3-0fb7ac0e1829"),
                             CreatedOnUtc = new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
                             Email = "staff@gmail.com",
                             FirstName = "System",
@@ -2328,7 +2328,7 @@ namespace BEAUTIFY_COMMAND.PERSISTENCE.Migrations
                         {
                             Id = new Guid("f3e2c9f4-9d1b-4d3f-98a6-2a7fabc12345"),
                             CategoryId = new Guid("20202020-2020-2020-2020-202020202020"),
-                            CreatedOnUtc = new DateTimeOffset(new DateTime(2025, 4, 22, 17, 15, 9, 719, DateTimeKind.Unspecified).AddTicks(3840), new TimeSpan(0, 0, 0, 0, 0)),
+                            CreatedOnUtc = new DateTimeOffset(new DateTime(2025, 4, 22, 15, 6, 13, 974, DateTimeKind.Unspecified).AddTicks(920), new TimeSpan(0, 0, 0, 0, 0)),
                             Description = "Nhận biết loại da",
                             IsDeleted = false,
                             Name = "Khảo sát da"
@@ -2405,7 +2405,7 @@ namespace BEAUTIFY_COMMAND.PERSISTENCE.Migrations
                         new
                         {
                             Id = new Guid("d1a2c3b4-e5f6-4789-abcd-111111111111"),
-                            CreatedOnUtc = new DateTimeOffset(new DateTime(2025, 4, 22, 17, 15, 9, 719, DateTimeKind.Unspecified).AddTicks(4170), new TimeSpan(0, 0, 0, 0, 0)),
+                            CreatedOnUtc = new DateTimeOffset(new DateTime(2025, 4, 22, 15, 6, 13, 974, DateTimeKind.Unspecified).AddTicks(1260), new TimeSpan(0, 0, 0, 0, 0)),
                             IsDeleted = false,
                             Question = "Sau khi rửa mặt (không bôi kem) da bạn thường cảm thấy thế nào?",
                             QuestionType = "Multiple Choice",
@@ -2414,7 +2414,7 @@ namespace BEAUTIFY_COMMAND.PERSISTENCE.Migrations
                         new
                         {
                             Id = new Guid("d1a2c3b4-e5f6-4789-abcd-222222222222"),
-                            CreatedOnUtc = new DateTimeOffset(new DateTime(2025, 4, 22, 17, 15, 9, 719, DateTimeKind.Unspecified).AddTicks(4170), new TimeSpan(0, 0, 0, 0, 0)),
+                            CreatedOnUtc = new DateTimeOffset(new DateTime(2025, 4, 22, 15, 6, 13, 974, DateTimeKind.Unspecified).AddTicks(1260), new TimeSpan(0, 0, 0, 0, 0)),
                             IsDeleted = false,
                             Question = "Vào giữa ngày da bạn trông thế nào (nếu không thấm dầu)?",
                             QuestionType = "Multiple Choice",
@@ -2423,7 +2423,7 @@ namespace BEAUTIFY_COMMAND.PERSISTENCE.Migrations
                         new
                         {
                             Id = new Guid("d1a2c3b4-e5f6-4789-abcd-333333333333"),
-                            CreatedOnUtc = new DateTimeOffset(new DateTime(2025, 4, 22, 17, 15, 9, 719, DateTimeKind.Unspecified).AddTicks(4170), new TimeSpan(0, 0, 0, 0, 0)),
+                            CreatedOnUtc = new DateTimeOffset(new DateTime(2025, 4, 22, 15, 6, 13, 974, DateTimeKind.Unspecified).AddTicks(1260), new TimeSpan(0, 0, 0, 0, 0)),
                             IsDeleted = false,
                             Question = "Tần suất bong tróc hoặc khô mảng?",
                             QuestionType = "Multiple Choice",
@@ -2432,7 +2432,7 @@ namespace BEAUTIFY_COMMAND.PERSISTENCE.Migrations
                         new
                         {
                             Id = new Guid("d1a2c3b4-e5f6-4789-abcd-444444444444"),
-                            CreatedOnUtc = new DateTimeOffset(new DateTime(2025, 4, 22, 17, 15, 9, 719, DateTimeKind.Unspecified).AddTicks(4170), new TimeSpan(0, 0, 0, 0, 0)),
+                            CreatedOnUtc = new DateTimeOffset(new DateTime(2025, 4, 22, 15, 6, 13, 974, DateTimeKind.Unspecified).AddTicks(1260), new TimeSpan(0, 0, 0, 0, 0)),
                             IsDeleted = false,
                             Question = "Mức độ nhìn thấy lỗ chân lông?",
                             QuestionType = "Multiple Choice",
@@ -2441,7 +2441,7 @@ namespace BEAUTIFY_COMMAND.PERSISTENCE.Migrations
                         new
                         {
                             Id = new Guid("d1a2c3b4-e5f6-4789-abcd-555555555555"),
-                            CreatedOnUtc = new DateTimeOffset(new DateTime(2025, 4, 22, 17, 15, 9, 719, DateTimeKind.Unspecified).AddTicks(4170), new TimeSpan(0, 0, 0, 0, 0)),
+                            CreatedOnUtc = new DateTimeOffset(new DateTime(2025, 4, 22, 15, 6, 13, 974, DateTimeKind.Unspecified).AddTicks(1260), new TimeSpan(0, 0, 0, 0, 0)),
                             IsDeleted = false,
                             Question = "Bạn có thường bị mụn hoặc tắc nghẽn lỗ chân lông?",
                             QuestionType = "Multiple Choice",
@@ -2450,7 +2450,7 @@ namespace BEAUTIFY_COMMAND.PERSISTENCE.Migrations
                         new
                         {
                             Id = new Guid("d1a2c3b4-e5f6-4789-abcd-666666666666"),
-                            CreatedOnUtc = new DateTimeOffset(new DateTime(2025, 4, 22, 17, 15, 9, 719, DateTimeKind.Unspecified).AddTicks(4170), new TimeSpan(0, 0, 0, 0, 0)),
+                            CreatedOnUtc = new DateTimeOffset(new DateTime(2025, 4, 22, 15, 6, 13, 974, DateTimeKind.Unspecified).AddTicks(1260), new TimeSpan(0, 0, 0, 0, 0)),
                             IsDeleted = false,
                             Question = "Da bạn có khi nào vừa khô ở vài chỗ vừa dầu ở chỗ khác?",
                             QuestionType = "Multiple Choice",
@@ -2459,7 +2459,7 @@ namespace BEAUTIFY_COMMAND.PERSISTENCE.Migrations
                         new
                         {
                             Id = new Guid("d1a2c3b4-e5f6-4789-abcd-777777777777"),
-                            CreatedOnUtc = new DateTimeOffset(new DateTime(2025, 4, 22, 17, 15, 9, 719, DateTimeKind.Unspecified).AddTicks(4180), new TimeSpan(0, 0, 0, 0, 0)),
+                            CreatedOnUtc = new DateTimeOffset(new DateTime(2025, 4, 22, 15, 6, 13, 974, DateTimeKind.Unspecified).AddTicks(1260), new TimeSpan(0, 0, 0, 0, 0)),
                             IsDeleted = false,
                             Question = "Phản ứng da khi dùng sản phẩm mới hoặc thời tiết thay đổi?",
                             QuestionType = "Multiple Choice",
@@ -2468,7 +2468,7 @@ namespace BEAUTIFY_COMMAND.PERSISTENCE.Migrations
                         new
                         {
                             Id = new Guid("d1a2c3b4-e5f6-4789-abcd-888888888888"),
-                            CreatedOnUtc = new DateTimeOffset(new DateTime(2025, 4, 22, 17, 15, 9, 719, DateTimeKind.Unspecified).AddTicks(4180), new TimeSpan(0, 0, 0, 0, 0)),
+                            CreatedOnUtc = new DateTimeOffset(new DateTime(2025, 4, 22, 15, 6, 13, 974, DateTimeKind.Unspecified).AddTicks(1260), new TimeSpan(0, 0, 0, 0, 0)),
                             IsDeleted = false,
                             Question = "Nếu bỏ qua kem dưỡng một ngày da bạn thế nào?",
                             QuestionType = "Multiple Choice",
@@ -2477,7 +2477,7 @@ namespace BEAUTIFY_COMMAND.PERSISTENCE.Migrations
                         new
                         {
                             Id = new Guid("d1a2c3b4-e5f6-4789-abcd-999999999999"),
-                            CreatedOnUtc = new DateTimeOffset(new DateTime(2025, 4, 22, 17, 15, 9, 719, DateTimeKind.Unspecified).AddTicks(4180), new TimeSpan(0, 0, 0, 0, 0)),
+                            CreatedOnUtc = new DateTimeOffset(new DateTime(2025, 4, 22, 15, 6, 13, 974, DateTimeKind.Unspecified).AddTicks(1260), new TimeSpan(0, 0, 0, 0, 0)),
                             IsDeleted = false,
                             Question = "Khi trang điểm lớp nền giữ trên da ra sao?",
                             QuestionType = "Multiple Choice",
@@ -2486,7 +2486,7 @@ namespace BEAUTIFY_COMMAND.PERSISTENCE.Migrations
                         new
                         {
                             Id = new Guid("d1a2c3b4-e5f6-4789-abcd-aaaaaaaaaaaa"),
-                            CreatedOnUtc = new DateTimeOffset(new DateTime(2025, 4, 22, 17, 15, 9, 719, DateTimeKind.Unspecified).AddTicks(4180), new TimeSpan(0, 0, 0, 0, 0)),
+                            CreatedOnUtc = new DateTimeOffset(new DateTime(2025, 4, 22, 15, 6, 13, 974, DateTimeKind.Unspecified).AddTicks(1270), new TimeSpan(0, 0, 0, 0, 0)),
                             IsDeleted = false,
                             Question = "Tổng quát, câu mô tả nào hợp nhất với da bạn?",
                             QuestionType = "Multiple Choice",
@@ -2526,7 +2526,7 @@ namespace BEAUTIFY_COMMAND.PERSISTENCE.Migrations
                         new
                         {
                             Id = new Guid("a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11"),
-                            CreatedOnUtc = new DateTimeOffset(new DateTime(2025, 4, 22, 17, 15, 9, 719, DateTimeKind.Unspecified).AddTicks(4510), new TimeSpan(0, 0, 0, 0, 0)),
+                            CreatedOnUtc = new DateTimeOffset(new DateTime(2025, 4, 22, 15, 6, 13, 974, DateTimeKind.Unspecified).AddTicks(1640), new TimeSpan(0, 0, 0, 0, 0)),
                             IsDeleted = false,
                             Option = "A) Rất căng khô hoặc bong tróc; B) Khá cân bằng không quá khô hay dầu; C) Hơi bóng ở vùng chữ T; D) Bóng dầu toàn mặt; E) Đỏ hoặc châm chích",
                             SurveyQuestionId = new Guid("d1a2c3b4-e5f6-4789-abcd-111111111111")
@@ -2534,7 +2534,7 @@ namespace BEAUTIFY_COMMAND.PERSISTENCE.Migrations
                         new
                         {
                             Id = new Guid("a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a12"),
-                            CreatedOnUtc = new DateTimeOffset(new DateTime(2025, 4, 22, 17, 15, 9, 719, DateTimeKind.Unspecified).AddTicks(4510), new TimeSpan(0, 0, 0, 0, 0)),
+                            CreatedOnUtc = new DateTimeOffset(new DateTime(2025, 4, 22, 15, 6, 13, 974, DateTimeKind.Unspecified).AddTicks(1640), new TimeSpan(0, 0, 0, 0, 0)),
                             IsDeleted = false,
                             Option = "A) Không hầu như chỉ khô; B) Không khá đồng đều; C) Thường khô ở má nhưng dầu vùng chữ T; D) Oily toàn mặt; E) Thay đổi theo độ nhạy cảm",
                             SurveyQuestionId = new Guid("d1a2c3b4-e5f6-4789-abcd-222222222222")
@@ -2542,7 +2542,7 @@ namespace BEAUTIFY_COMMAND.PERSISTENCE.Migrations
                         new
                         {
                             Id = new Guid("a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a13"),
-                            CreatedOnUtc = new DateTimeOffset(new DateTime(2025, 4, 22, 17, 15, 9, 719, DateTimeKind.Unspecified).AddTicks(4510), new TimeSpan(0, 0, 0, 0, 0)),
+                            CreatedOnUtc = new DateTimeOffset(new DateTime(2025, 4, 22, 15, 6, 13, 974, DateTimeKind.Unspecified).AddTicks(1640), new TimeSpan(0, 0, 0, 0, 0)),
                             IsDeleted = false,
                             Option = "A) Rất nhỏ hoặc gần như không thấy; B) Thấy ở mức vừa phải; C) Rõ hơn ở vùng chữ T; D) To và dễ thấy toàn mặt; E) Rõ hơn khi da ửng đỏ hoặc kích ứng",
                             SurveyQuestionId = new Guid("d1a2c3b4-e5f6-4789-abcd-333333333333")
@@ -2550,7 +2550,7 @@ namespace BEAUTIFY_COMMAND.PERSISTENCE.Migrations
                         new
                         {
                             Id = new Guid("a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a14"),
-                            CreatedOnUtc = new DateTimeOffset(new DateTime(2025, 4, 22, 17, 15, 9, 719, DateTimeKind.Unspecified).AddTicks(4520), new TimeSpan(0, 0, 0, 0, 0)),
+                            CreatedOnUtc = new DateTimeOffset(new DateTime(2025, 4, 22, 15, 6, 13, 974, DateTimeKind.Unspecified).AddTicks(1640), new TimeSpan(0, 0, 0, 0, 0)),
                             IsDeleted = false,
                             Option = "A) Rất căng và khó chịu; B) Khá bình thường; C) T-zone bóng má bình thường; D) Rất bóng hoặc nhờn; E) Đỏ hoặc ngứa",
                             SurveyQuestionId = new Guid("d1a2c3b4-e5f6-4789-abcd-444444444444")
@@ -2558,7 +2558,7 @@ namespace BEAUTIFY_COMMAND.PERSISTENCE.Migrations
                         new
                         {
                             Id = new Guid("a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a15"),
-                            CreatedOnUtc = new DateTimeOffset(new DateTime(2025, 4, 22, 17, 15, 9, 719, DateTimeKind.Unspecified).AddTicks(4520), new TimeSpan(0, 0, 0, 0, 0)),
+                            CreatedOnUtc = new DateTimeOffset(new DateTime(2025, 4, 22, 15, 6, 13, 974, DateTimeKind.Unspecified).AddTicks(1640), new TimeSpan(0, 0, 0, 0, 0)),
                             IsDeleted = false,
                             Option = "A) Khô hơn hoặc bong tróc; B) Thích nghi khá ổn; C) Có vùng dầu vùng không; D) Tăng tiết dầu nổi mụn; E) Kích ứng ửng đỏ",
                             SurveyQuestionId = new Guid("d1a2c3b4-e5f6-4789-abcd-555555555555")
@@ -2566,7 +2566,7 @@ namespace BEAUTIFY_COMMAND.PERSISTENCE.Migrations
                         new
                         {
                             Id = new Guid("a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a16"),
-                            CreatedOnUtc = new DateTimeOffset(new DateTime(2025, 4, 22, 17, 15, 9, 719, DateTimeKind.Unspecified).AddTicks(4540), new TimeSpan(0, 0, 0, 0, 0)),
+                            CreatedOnUtc = new DateTimeOffset(new DateTime(2025, 4, 22, 15, 6, 13, 974, DateTimeKind.Unspecified).AddTicks(1640), new TimeSpan(0, 0, 0, 0, 0)),
                             IsDeleted = false,
                             Option = "A) Thường xuyên; B) Hầu như không bao giờ; C) Thỉnh thoảng ở một số vùng; D) Rất hiếm; E) Do nhạy cảm với sản phẩm hoặc thời tiết",
                             SurveyQuestionId = new Guid("d1a2c3b4-e5f6-4789-abcd-666666666666")
@@ -2574,7 +2574,7 @@ namespace BEAUTIFY_COMMAND.PERSISTENCE.Migrations
                         new
                         {
                             Id = new Guid("a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a17"),
-                            CreatedOnUtc = new DateTimeOffset(new DateTime(2025, 4, 22, 17, 15, 9, 719, DateTimeKind.Unspecified).AddTicks(4540), new TimeSpan(0, 0, 0, 0, 0)),
+                            CreatedOnUtc = new DateTimeOffset(new DateTime(2025, 4, 22, 15, 6, 13, 974, DateTimeKind.Unspecified).AddTicks(1660), new TimeSpan(0, 0, 0, 0, 0)),
                             IsDeleted = false,
                             Option = "A) Dễ bám vào vùng khô; B) Khá đều cần ít dặm lại; C) Xuống tông hoặc bóng ở chữ T; D) Trôi hoặc bóng dầu gần như toàn mặt; E) Kích ứng hoặc ửng đỏ",
                             SurveyQuestionId = new Guid("d1a2c3b4-e5f6-4789-abcd-777777777777")
@@ -2582,7 +2582,7 @@ namespace BEAUTIFY_COMMAND.PERSISTENCE.Migrations
                         new
                         {
                             Id = new Guid("a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a18"),
-                            CreatedOnUtc = new DateTimeOffset(new DateTime(2025, 4, 22, 17, 15, 9, 719, DateTimeKind.Unspecified).AddTicks(4540), new TimeSpan(0, 0, 0, 0, 0)),
+                            CreatedOnUtc = new DateTimeOffset(new DateTime(2025, 4, 22, 15, 6, 13, 974, DateTimeKind.Unspecified).AddTicks(1660), new TimeSpan(0, 0, 0, 0, 0)),
                             IsDeleted = false,
                             Option = "A) Rất hiếm; B) Đôi khi; C) Chủ yếu ở vùng chữ T; D) Thường xuyên hoặc toàn mặt; E) Phụ thuộc độ nhạy cảm với sản phẩm",
                             SurveyQuestionId = new Guid("d1a2c3b4-e5f6-4789-abcd-888888888888")
@@ -2590,7 +2590,7 @@ namespace BEAUTIFY_COMMAND.PERSISTENCE.Migrations
                         new
                         {
                             Id = new Guid("a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a19"),
-                            CreatedOnUtc = new DateTimeOffset(new DateTime(2025, 4, 22, 17, 15, 9, 719, DateTimeKind.Unspecified).AddTicks(4540), new TimeSpan(0, 0, 0, 0, 0)),
+                            CreatedOnUtc = new DateTimeOffset(new DateTime(2025, 4, 22, 15, 6, 13, 974, DateTimeKind.Unspecified).AddTicks(1660), new TimeSpan(0, 0, 0, 0, 0)),
                             IsDeleted = false,
                             Option = "A) Rất khô và hay căng; B) Cân bằng không quá khô dầu; C) Vừa dầu vừa khô da hỗn hợp; D) Dầu toàn mặt; E) Rất nhạy cảm hoặc dễ kích ứng",
                             SurveyQuestionId = new Guid("d1a2c3b4-e5f6-4789-abcd-999999999999")
@@ -2598,7 +2598,7 @@ namespace BEAUTIFY_COMMAND.PERSISTENCE.Migrations
                         new
                         {
                             Id = new Guid("a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a1a"),
-                            CreatedOnUtc = new DateTimeOffset(new DateTime(2025, 4, 22, 17, 15, 9, 719, DateTimeKind.Unspecified).AddTicks(4540), new TimeSpan(0, 0, 0, 0, 0)),
+                            CreatedOnUtc = new DateTimeOffset(new DateTime(2025, 4, 22, 15, 6, 13, 974, DateTimeKind.Unspecified).AddTicks(1660), new TimeSpan(0, 0, 0, 0, 0)),
                             IsDeleted = false,
                             Option = "A) Vẫn khô hoặc căng; B) Khá cân bằng ít bóng; C) Có chút bóng ở vùng chữ T; D) Bóng dầu toàn khuôn mặt; E) Dễ kích ứng hoặc ửng đỏ",
                             SurveyQuestionId = new Guid("d1a2c3b4-e5f6-4789-abcd-aaaaaaaaaaaa")
@@ -3325,11 +3325,6 @@ namespace BEAUTIFY_COMMAND.PERSISTENCE.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("BEAUTIFY_COMMAND.DOMAIN.Entities.Feedback", "Feedback")
-                        .WithOne()
-                        .HasForeignKey("BEAUTIFY_COMMAND.DOMAIN.Entities.CustomerSchedule", "FeedbackId")
-                        .OnDelete(DeleteBehavior.Restrict);
-
                     b.HasOne("BEAUTIFY_COMMAND.DOMAIN.Entities.Order", "Order")
                         .WithMany()
                         .HasForeignKey("OrderId");
@@ -3347,8 +3342,6 @@ namespace BEAUTIFY_COMMAND.PERSISTENCE.Migrations
                     b.Navigation("Customer");
 
                     b.Navigation("Doctor");
-
-                    b.Navigation("Feedback");
 
                     b.Navigation("Order");
 
@@ -3404,6 +3397,15 @@ namespace BEAUTIFY_COMMAND.PERSISTENCE.Migrations
                     b.Navigation("Service");
                 });
 
+            modelBuilder.Entity("BEAUTIFY_COMMAND.DOMAIN.Entities.Feedback", b =>
+                {
+                    b.HasOne("BEAUTIFY_COMMAND.DOMAIN.Entities.CustomerSchedule", null)
+                        .WithOne("Feedback")
+                        .HasForeignKey("BEAUTIFY_COMMAND.DOMAIN.Entities.Feedback", "CustomerScheduleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("BEAUTIFY_COMMAND.DOMAIN.Entities.LivestreamRoom", b =>
                 {
                     b.HasOne("BEAUTIFY_COMMAND.DOMAIN.Entities.Clinic", "Clinic")
@@ -3448,9 +3450,8 @@ namespace BEAUTIFY_COMMAND.PERSISTENCE.Migrations
                         .HasForeignKey("LivestreamRoomId");
 
                     b.HasOne("BEAUTIFY_COMMAND.DOMAIN.Entities.OrderFeedback", "OrderFeedback")
-                        .WithOne()
-                        .HasForeignKey("BEAUTIFY_COMMAND.DOMAIN.Entities.Order", "OrderFeedbackId")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .WithMany()
+                        .HasForeignKey("OrderFeedbackId");
 
                     b.HasOne("BEAUTIFY_COMMAND.DOMAIN.Entities.Service", "Service")
                         .WithMany()
@@ -3528,7 +3529,7 @@ namespace BEAUTIFY_COMMAND.PERSISTENCE.Migrations
                     b.HasOne("BEAUTIFY_COMMAND.DOMAIN.Entities.Procedure", "Procedure")
                         .WithMany("ProcedurePriceTypes")
                         .HasForeignKey("ProcedureId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Procedure");
@@ -3827,6 +3828,11 @@ namespace BEAUTIFY_COMMAND.PERSISTENCE.Migrations
                     b.Navigation("Messages");
 
                     b.Navigation("UserConversations");
+                });
+
+            modelBuilder.Entity("BEAUTIFY_COMMAND.DOMAIN.Entities.CustomerSchedule", b =>
+                {
+                    b.Navigation("Feedback");
                 });
 
             modelBuilder.Entity("BEAUTIFY_COMMAND.DOMAIN.Entities.LivestreamRoom", b =>

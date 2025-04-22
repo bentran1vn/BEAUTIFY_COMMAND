@@ -24,11 +24,11 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
     protected override void OnModelCreating(ModelBuilder builder)
     {
         // In your ApplicationDbContext.OnModelCreating method
-        builder.Entity<Order>()
-            .HasOne(o => o.OrderFeedback)
-            .WithMany() // or .WithMany(of => of.Orders) if there's a collection
-            .HasForeignKey(o => o.OrderFeedbackId)
-            .IsRequired(false);
+        // builder.Entity<Order>()
+        //     .HasOne(o => o.OrderFeedback)
+        //     .WithMany() // or .WithMany(of => of.Orders) if there's a collection
+        //     .HasForeignKey(o => o.OrderFeedbackId)
+        //     .IsRequired(false);
 
         builder.ApplyConfigurationsFromAssembly(AssemblyReference.Assembly);
         builder.Entity<CustomerSchedule>()
@@ -79,6 +79,24 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
             .HasOne(lr => lr.LiveStreamDetail)
             .WithOne() // Assuming one-to-one relationship, adjust if it's one-to-many
             .HasForeignKey<LivestreamRoom>(lr => lr.LiveStreamDetailId)
+            .OnDelete(DeleteBehavior.Restrict); // Adjust delete behavior as needed
+        
+        builder.Entity<Order>()
+            .HasOne(lr => lr.OrderFeedback)
+            .WithOne() // Assuming one-to-one relationship, adjust if it's one-to-many
+            .HasForeignKey<Order>(lr => lr.OrderFeedbackId)
+            .OnDelete(DeleteBehavior.Restrict); // Adjust delete behavior as needed
+        
+        builder.Entity<CustomerSchedule>()
+            .HasOne(lr => lr.Feedback)
+            .WithOne() // Assuming one-to-one relationship, adjust if it's one-to-many
+            .HasForeignKey<CustomerSchedule>(lr => lr.FeedbackId)
+            .OnDelete(DeleteBehavior.Restrict); // Adjust delete behavior as needed
+        
+        builder.Entity<Procedure>()
+            .HasMany(lr => lr.ProcedurePriceTypes)
+            .WithOne(o => o.Procedure) // Assuming one-to-one relationship, adjust if it's one-to-many
+            .HasForeignKey(lr => lr.ProcedureId)
             .OnDelete(DeleteBehavior.Restrict); // Adjust delete behavior as needed
     }
 }
