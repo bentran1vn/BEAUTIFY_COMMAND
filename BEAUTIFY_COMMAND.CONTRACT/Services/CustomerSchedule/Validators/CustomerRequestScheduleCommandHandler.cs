@@ -15,7 +15,7 @@ public class CustomerRequestScheduleCommandHandler : AbstractValidator<Command.C
             .Must(date => date.DayOfWeek != DayOfWeek.Sunday)
             .WithMessage("Date cannot be on Sunday.");
 
-        RuleFor(x => x.StartTime)
+      /*  RuleFor(x => x.StartTime)
             .NotEmpty()
             .WithMessage("Start time is required.")
             .Must((command, time) =>
@@ -27,6 +27,6 @@ public class CustomerRequestScheduleCommandHandler : AbstractValidator<Command.C
             })
             .WithMessage("Start time must be at least 2 hours from now.")
             .Must(time => time.Hours is >= 8 and <= 20)
-            .WithMessage("Start time must be between 08:00 and 20:00.");
+            .WithMessage("Start time must be between 08:00 and 20:00.");*/
     }
 }
