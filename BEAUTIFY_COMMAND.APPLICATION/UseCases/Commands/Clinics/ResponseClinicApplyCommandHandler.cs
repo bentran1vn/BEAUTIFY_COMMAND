@@ -44,7 +44,6 @@ public class ResponseClinicApplyCommandHandler(
             {
                 var userExist = staffRepository
                     .FindAll(x => x.Email.Equals(applyRequest.Clinic!.Email) &&
-                                x.PhoneNumber.Equals(applyRequest.Clinic.PhoneNumber) &&
                                 x.IsDeleted == false)
                     .FirstOrDefault();
                 
@@ -52,6 +51,17 @@ public class ResponseClinicApplyCommandHandler(
                 {
                     content.Body = ClinicApplicationEmailTemplates.GetRejectedTemplate(applyRequest.Clinic.Email,
                         applyRequest.RejectReason ?? "", userExist.Password);
+                    
+                    userExist.FirstName = applyRequest.Clinic.Name;
+                    userExist.LastName = "";
+                    userExist.PhoneNumber = applyRequest.Clinic!.PhoneNumber;
+                    userExist.DateOfBirth =  DateOnly.Parse("1999-01-01");
+                    userExist.City =  applyRequest.Clinic.City;
+                    userExist.District =  applyRequest.Clinic.District;
+                    userExist.Ward =  applyRequest.Clinic.Ward;
+                    userExist.Address =  applyRequest.Clinic.Address;
+                
+                    staffRepository.Update(userExist);
                 }
                 else
                 {
@@ -102,12 +112,22 @@ public class ResponseClinicApplyCommandHandler(
             
             var userExist = staffRepository
                 .FindAll(x => x.Email.Equals(applyRequest.Clinic!.Email) &&
-                              x.PhoneNumber.Equals(applyRequest.Clinic.PhoneNumber) &&
                               x.IsDeleted == false)
                 .FirstOrDefault();
                 
             if(userExist != null)
             {
+                userExist.FirstName = applyRequest.Clinic.Name;
+                userExist.LastName = "";
+                userExist.PhoneNumber = applyRequest.Clinic!.PhoneNumber;
+                userExist.DateOfBirth =  DateOnly.Parse("1999-01-01");
+                userExist.City =  applyRequest.Clinic.City;
+                userExist.District =  applyRequest.Clinic.District;
+                userExist.Ward =  applyRequest.Clinic.Ward;
+                userExist.Address =  applyRequest.Clinic.Address;
+                
+                staffRepository.Update(userExist);
+                    
                 content.Body = ClinicApplicationEmailTemplates.GetApprovedTemplate(applyRequest.Clinic.Email);
             }
             else
