@@ -193,7 +193,7 @@ public class CategoryConfiguration : IEntityTypeConfiguration<Category>
             }
         };
 
-        builder.HasData(categories);
+        // builder.HasData(categories);
 
 /*
 

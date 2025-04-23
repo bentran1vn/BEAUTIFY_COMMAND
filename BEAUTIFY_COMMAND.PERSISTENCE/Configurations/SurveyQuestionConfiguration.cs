@@ -24,87 +24,87 @@ public class SurveyQuestionConfiguration : IEntityTypeConfiguration<SurveyQuesti
             Guid.Parse("d1a2c3b4-e5f6-4789-abcd-aaaaaaaaaaaa") // Q10
         };
 
-        builder.HasData(
-            new SurveyQuestion
-            {
-                Id = questionIds[0],
-                SurveyId = surveyDaId,
-                Question = "Sau khi rửa mặt (không bôi kem) da bạn thường cảm thấy thế nào?",
-                QuestionType = Constant.SurveyQuestionType.MULTIPLE_CHOICE,
-                CreatedOnUtc = DateTimeOffset.UtcNow
-            },
-            new SurveyQuestion
-            {
-                Id = questionIds[1],
-                SurveyId = surveyDaId,
-                Question = "Vào giữa ngày da bạn trông thế nào (nếu không thấm dầu)?",
-                QuestionType = Constant.SurveyQuestionType.MULTIPLE_CHOICE,
-                CreatedOnUtc = DateTimeOffset.UtcNow
-            },
-            new SurveyQuestion
-            {
-                Id = questionIds[2],
-                SurveyId = surveyDaId,
-                Question = "Tần suất bong tróc hoặc khô mảng?",
-                QuestionType = Constant.SurveyQuestionType.MULTIPLE_CHOICE,
-                CreatedOnUtc = DateTimeOffset.UtcNow
-            },
-            new SurveyQuestion
-            {
-                Id = questionIds[3],
-                SurveyId = surveyDaId,
-                Question = "Mức độ nhìn thấy lỗ chân lông?",
-                QuestionType = Constant.SurveyQuestionType.MULTIPLE_CHOICE,
-                CreatedOnUtc = DateTimeOffset.UtcNow
-            },
-            new SurveyQuestion
-            {
-                Id = questionIds[4],
-                SurveyId = surveyDaId,
-                Question = "Bạn có thường bị mụn hoặc tắc nghẽn lỗ chân lông?",
-                QuestionType = Constant.SurveyQuestionType.MULTIPLE_CHOICE,
-                CreatedOnUtc = DateTimeOffset.UtcNow
-            },
-            new SurveyQuestion
-            {
-                Id = questionIds[5],
-                SurveyId = surveyDaId,
-                Question = "Da bạn có khi nào vừa khô ở vài chỗ vừa dầu ở chỗ khác?",
-                QuestionType = Constant.SurveyQuestionType.MULTIPLE_CHOICE,
-                CreatedOnUtc = DateTimeOffset.UtcNow
-            },
-            new SurveyQuestion
-            {
-                Id = questionIds[6],
-                SurveyId = surveyDaId,
-                Question = "Phản ứng da khi dùng sản phẩm mới hoặc thời tiết thay đổi?",
-                QuestionType = Constant.SurveyQuestionType.MULTIPLE_CHOICE,
-                CreatedOnUtc = DateTimeOffset.UtcNow
-            },
-            new SurveyQuestion
-            {
-                Id = questionIds[7],
-                SurveyId = surveyDaId,
-                Question = "Nếu bỏ qua kem dưỡng một ngày da bạn thế nào?",
-                QuestionType = Constant.SurveyQuestionType.MULTIPLE_CHOICE,
-                CreatedOnUtc = DateTimeOffset.UtcNow
-            },
-            new SurveyQuestion
-            {
-                Id = questionIds[8],
-                SurveyId = surveyDaId,
-                Question = "Khi trang điểm lớp nền giữ trên da ra sao?",
-                QuestionType = Constant.SurveyQuestionType.MULTIPLE_CHOICE,
-                CreatedOnUtc = DateTimeOffset.UtcNow
-            },
-            new SurveyQuestion
-            {
-                Id = questionIds[9],
-                SurveyId = surveyDaId,
-                Question = "Tổng quát, câu mô tả nào hợp nhất với da bạn?",
-                QuestionType = Constant.SurveyQuestionType.MULTIPLE_CHOICE,
-                CreatedOnUtc = DateTimeOffset.UtcNow
-            }
-        );
+        // builder.HasData(
+        //     new SurveyQuestion
+        //     {
+        //         Id = questionIds[0],
+        //         SurveyId = surveyDaId,
+        //         Question = "Sau khi rửa mặt (không bôi kem) da bạn thường cảm thấy thế nào?",
+        //         QuestionType = Constant.SurveyQuestionType.MULTIPLE_CHOICE,
+        //         CreatedOnUtc = DateTimeOffset.UtcNow
+        //     },
+        //     new SurveyQuestion
+        //     {
+        //         Id = questionIds[1],
+        //         SurveyId = surveyDaId,
+        //         Question = "Vào giữa ngày da bạn trông thế nào (nếu không thấm dầu)?",
+        //         QuestionType = Constant.SurveyQuestionType.MULTIPLE_CHOICE,
+        //         CreatedOnUtc = DateTimeOffset.UtcNow
+        //     },
+        //     new SurveyQuestion
+        //     {
+        //         Id = questionIds[2],
+        //         SurveyId = surveyDaId,
+        //         Question = "Tần suất bong tróc hoặc khô mảng?",
+        //         QuestionType = Constant.SurveyQuestionType.MULTIPLE_CHOICE,
+        //         CreatedOnUtc = DateTimeOffset.UtcNow
+        //     },
+        //     new SurveyQuestion
+        //     {
+        //         Id = questionIds[3],
+        //         SurveyId = surveyDaId,
+        //         Question = "Mức độ nhìn thấy lỗ chân lông?",
+        //         QuestionType = Constant.SurveyQuestionType.MULTIPLE_CHOICE,
+        //         CreatedOnUtc = DateTimeOffset.UtcNow
+        //     },
+        //     new SurveyQuestion
+        //     {
+        //         Id = questionIds[4],
+        //         SurveyId = surveyDaId,
+        //         Question = "Bạn có thường bị mụn hoặc tắc nghẽn lỗ chân lông?",
+        //         QuestionType = Constant.SurveyQuestionType.MULTIPLE_CHOICE,
+        //         CreatedOnUtc = DateTimeOffset.UtcNow
+        //     },
+        //     new SurveyQuestion
+        //     {
+        //         Id = questionIds[5],
+        //         SurveyId = surveyDaId,
+        //         Question = "Da bạn có khi nào vừa khô ở vài chỗ vừa dầu ở chỗ khác?",
+        //         QuestionType = Constant.SurveyQuestionType.MULTIPLE_CHOICE,
+        //         CreatedOnUtc = DateTimeOffset.UtcNow
+        //     },
+        //     new SurveyQuestion
+        //     {
+        //         Id = questionIds[6],
+        //         SurveyId = surveyDaId,
+        //         Question = "Phản ứng da khi dùng sản phẩm mới hoặc thời tiết thay đổi?",
+        //         QuestionType = Constant.SurveyQuestionType.MULTIPLE_CHOICE,
+        //         CreatedOnUtc = DateTimeOffset.UtcNow
+        //     },
+        //     new SurveyQuestion
+        //     {
+        //         Id = questionIds[7],
+        //         SurveyId = surveyDaId,
+        //         Question = "Nếu bỏ qua kem dưỡng một ngày da bạn thế nào?",
+        //         QuestionType = Constant.SurveyQuestionType.MULTIPLE_CHOICE,
+        //         CreatedOnUtc = DateTimeOffset.UtcNow
+        //     },
+        //     new SurveyQuestion
+        //     {
+        //         Id = questionIds[8],
+        //         SurveyId = surveyDaId,
+        //         Question = "Khi trang điểm lớp nền giữ trên da ra sao?",
+        //         QuestionType = Constant.SurveyQuestionType.MULTIPLE_CHOICE,
+        //         CreatedOnUtc = DateTimeOffset.UtcNow
+        //     },
+        //     new SurveyQuestion
+        //     {
+        //         Id = questionIds[9],
+        //         SurveyId = surveyDaId,
+        //         Question = "Tổng quát, câu mô tả nào hợp nhất với da bạn?",
+        //         QuestionType = Constant.SurveyQuestionType.MULTIPLE_CHOICE,
+        //         CreatedOnUtc = DateTimeOffset.UtcNow
+        //     }
+        // );
     }
 }
