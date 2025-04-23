@@ -37,18 +37,18 @@ public class CreateClinicEmptyScheduleCommandValidators : AbstractValidator<Comm
             });
 
         // Date must be in the future
-        RuleForEach(x => x.WorkingDates)
-            .Must(x =>
-            {
-                // No parsing needed since x.Date is already DateOnly
-                var dateObj = x.Date;
-                if (true)
-                {
-                    return dateObj > DateOnly.FromDateTime(DateTime.Now);
-                }
+        /*   RuleForEach(x => x.WorkingDates)
+               .Must(x =>
+               {
+                   // No parsing needed since x.Date is already DateOnly
+                   var dateObj = x.Date;
+                   if (true)
+                   {
+                       return dateObj > DateOnly.FromDateTime(DateTime.Now);
+                   }
 
-                return false; // If parsing fails, validation fails
-            })
-            .WithMessage("Date must be in the future.");
+                   return false; // If parsing fails, validation fails
+               })
+               .WithMessage("Date must be in the future.");*/
     }
 }
