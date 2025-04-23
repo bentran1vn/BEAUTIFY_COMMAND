@@ -239,10 +239,7 @@ internal sealed class StaffUpdateCustomerScheduleTimeCommandHandler(
                 "This appointment would overlap with another scheduled procedure."));
         }
 
-        // Check if appointment would extend past clinic closing time (20:30)
-        if (endTime.Hours > 20 || endTime is { Hours: 20, Minutes: > 30 })
-            return Result.Failure(new Error("400",
-                "Choose start time sooner because clinic closes at 20:30"));
+      
 
         return Result.Success();
     }
