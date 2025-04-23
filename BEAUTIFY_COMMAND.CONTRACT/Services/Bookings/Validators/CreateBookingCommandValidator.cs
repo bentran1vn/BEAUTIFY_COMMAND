@@ -9,7 +9,7 @@ public class CreateBookingCommandValidator : AbstractValidator<Commands.CreateBo
             .Must(date => date >= DateOnly.FromDateTime(DateTime.Today))
             .WithMessage("Booking date cannot be in the past");
 
-        RuleFor(x => x.StartTime)
+       /* RuleFor(x => x.StartTime)
             .NotEmpty()
             .WithMessage("Start time is required")
             .Must((command, startTime) =>
