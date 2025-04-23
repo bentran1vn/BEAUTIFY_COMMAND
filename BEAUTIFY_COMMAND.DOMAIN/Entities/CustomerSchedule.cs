@@ -17,6 +17,8 @@ public class CustomerSchedule : AggregateRoot<Guid>, IAuditableEntity
     public Guid? FeedbackId { get; set; }
     public virtual Feedback? Feedback { get; set; }
     [MaxLength(50)] public string? Status { get; set; }
+    public Guid? ProcedureId { get; set; }
+    public virtual Procedure? Procedure { get; set; }
     public Guid? ProcedurePriceTypeId { get; set; }
     public virtual ProcedurePriceType? ProcedurePriceType { get; set; }
     public Guid? OrderId { get; set; }

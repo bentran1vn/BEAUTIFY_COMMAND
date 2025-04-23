@@ -161,6 +161,6 @@ public class UserClinicConfiguration : IEntityTypeConfiguration<UserClinic>
             }
         };
 
-        builder.HasData(userClinics);
+        // builder.HasData(userClinics);
     }
 }

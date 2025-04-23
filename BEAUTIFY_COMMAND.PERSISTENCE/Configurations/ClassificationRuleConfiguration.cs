@@ -23,62 +23,62 @@ public class ClassificationRuleConfiguration : IEntityTypeConfiguration<Classifi
             Guid.Parse("d1a2c3b4-e5f6-4789-abcd-aaaaaaaaaaaa") // Q10
         };
 
-        builder.HasData(
-            // Q1, Option A => Da khô
-            new ClassificationRule
-            {
-                Id = Guid.Parse("33333333-1111-1111-1111-111111111111"),
-                SurveyId = surveyDaId,
-                SurveyQuestionId = questionIds[0],
-                OptionValue = "A",
-                ClassificationLabel = "Da khô",
-                Points = 2,
-                CreatedOnUtc = DateTimeOffset.UtcNow
-            },
-            // Q1, Option B => Da thường
-            new ClassificationRule
-            {
-                Id = Guid.Parse("33333333-2222-1111-1111-111111111111"),
-                SurveyId = surveyDaId,
-                SurveyQuestionId = questionIds[0],
-                OptionValue = "B",
-                ClassificationLabel = "Da thường",
-                Points = 2,
-                CreatedOnUtc = DateTimeOffset.UtcNow
-            },
-            // Q1, Option C => Da hỗn hợp
-            new ClassificationRule
-            {
-                Id = Guid.Parse("33333333-3333-1111-1111-111111111111"),
-                SurveyId = surveyDaId,
-                SurveyQuestionId = questionIds[0],
-                OptionValue = "C",
-                ClassificationLabel = "Da hỗn hợp",
-                Points = 2,
-                CreatedOnUtc = DateTimeOffset.UtcNow
-            },
-            // Q1, Option D => Da dầu
-            new ClassificationRule
-            {
-                Id = Guid.Parse("33333333-4444-1111-1111-111111111111"),
-                SurveyId = surveyDaId,
-                SurveyQuestionId = questionIds[0],
-                OptionValue = "D",
-                ClassificationLabel = "Da dầu",
-                Points = 2,
-                CreatedOnUtc = DateTimeOffset.UtcNow
-            },
-            // Q1, Option E => Da nhạy cảm
-            new ClassificationRule
-            {
-                Id = Guid.Parse("33333333-5555-1111-1111-111111111111"),
-                SurveyId = surveyDaId,
-                SurveyQuestionId = questionIds[0],
-                OptionValue = "E",
-                ClassificationLabel = "Da nhạy cảm",
-                Points = 2,
-                CreatedOnUtc = DateTimeOffset.UtcNow
-            }
-        );
+        // builder.HasData(
+        //     // Q1, Option A => Da khô
+        //     new ClassificationRule
+        //     {
+        //         Id = Guid.Parse("33333333-1111-1111-1111-111111111111"),
+        //         SurveyId = surveyDaId,
+        //         SurveyQuestionId = questionIds[0],
+        //         OptionValue = "A",
+        //         ClassificationLabel = "Da khô",
+        //         Points = 2,
+        //         CreatedOnUtc = DateTimeOffset.UtcNow
+        //     },
+        //     // Q1, Option B => Da thường
+        //     new ClassificationRule
+        //     {
+        //         Id = Guid.Parse("33333333-2222-1111-1111-111111111111"),
+        //         SurveyId = surveyDaId,
+        //         SurveyQuestionId = questionIds[0],
+        //         OptionValue = "B",
+        //         ClassificationLabel = "Da thường",
+        //         Points = 2,
+        //         CreatedOnUtc = DateTimeOffset.UtcNow
+        //     },
+        //     // Q1, Option C => Da hỗn hợp
+        //     new ClassificationRule
+        //     {
+        //         Id = Guid.Parse("33333333-3333-1111-1111-111111111111"),
+        //         SurveyId = surveyDaId,
+        //         SurveyQuestionId = questionIds[0],
+        //         OptionValue = "C",
+        //         ClassificationLabel = "Da hỗn hợp",
+        //         Points = 2,
+        //         CreatedOnUtc = DateTimeOffset.UtcNow
+        //     },
+        //     // Q1, Option D => Da dầu
+        //     new ClassificationRule
+        //     {
+        //         Id = Guid.Parse("33333333-4444-1111-1111-111111111111"),
+        //         SurveyId = surveyDaId,
+        //         SurveyQuestionId = questionIds[0],
+        //         OptionValue = "D",
+        //         ClassificationLabel = "Da dầu",
+        //         Points = 2,
+        //         CreatedOnUtc = DateTimeOffset.UtcNow
+        //     },
+        //     // Q1, Option E => Da nhạy cảm
+        //     new ClassificationRule
+        //     {
+        //         Id = Guid.Parse("33333333-5555-1111-1111-111111111111"),
+        //         SurveyId = surveyDaId,
+        //         SurveyQuestionId = questionIds[0],
+        //         OptionValue = "E",
+        //         ClassificationLabel = "Da nhạy cảm",
+        //         Points = 2,
+        //         CreatedOnUtc = DateTimeOffset.UtcNow
+        //     }
+        // );
     }
 }
