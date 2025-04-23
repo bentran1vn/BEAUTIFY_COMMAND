@@ -19,6 +19,8 @@ public class ClinicApplyCommandHandler(
             }
         }
         
+        
+        // ReApply lan dau tien
         if (request.RoleName != null && request.ClinicId != null)
         {
             if(request.RoleName != "Clinic Admin")
@@ -37,16 +39,6 @@ public class ClinicApplyCommandHandler(
             if(clinic.Email != request.Email)
             {
                 return Result.Failure(new Error("400", "Clinic Email not match"));
-            }
-            
-            if(clinic.PhoneNumber != request.PhoneNumber)
-            {
-                return Result.Failure(new Error("400", "Clinic Phone Number not match"));
-            }
-            
-            if(clinic.TaxCode != request.TaxCode)
-            {
-                return Result.Failure(new Error("400", "Clinic Tax Code not match"));
             }
             
             if(request.BankName == null || request.BankAccountNumber == null)
@@ -75,6 +67,8 @@ public class ClinicApplyCommandHandler(
             clinic.Name = request.Name;
             clinic.City = request.City;
             clinic.Ward = request.Ward;
+            clinic.PhoneNumber = request.PhoneNumber;
+            clinic.TaxCode = request.TaxCode;
             clinic.District = request.District;
             clinic.Address = request.Address;
             clinic.BankName = request.BankName;
@@ -112,6 +106,8 @@ public class ClinicApplyCommandHandler(
             return Result.Success("Clinic Apply Successfully");
         }
         
+        
+        // Apply lan dau tien
         if(request.BusinessLicense == null || request.OperatingLicense == null || request.ProfilePictureUrl == null || request.OperatingLicenseExpiryDate == null)
         {
             return Result.Failure(new Error("500", "Must have BusinessLicense, OperatingLicense and ProfilePictureUrl"));
@@ -120,7 +116,7 @@ public class ClinicApplyCommandHandler(
         // Get all clinics that match any of the fields in a single query
         var existingClinics = await clinicRepository
             .FindAll(x =>
-                (x.Email == request.Email || x.TaxCode == request.TaxCode || x.PhoneNumber == request.PhoneNumber) &&
+                (x.Email.Trim().ToLower() == request.Email.Trim().ToLower() || x.TaxCode == request.TaxCode || x.PhoneNumber.Trim().ToLower() == request.PhoneNumber.Trim().ToLower()) &&
                 !x.IsDeleted)
             .ToListAsync(cancellationToken);
 
@@ -135,10 +131,7 @@ public class ClinicApplyCommandHandler(
             return Result.Failure(new Error("400",
                 $"The following information already exists: {string.Join(", ", duplicateFields)}"));
         }
-
-        // If we need the clinic with all its related data for further processing
-        // Since we've already checked that no clinic exists with any of the fields,
-        // this will return null, but we'll keep it for code clarity
+        
         var isExist = await clinicRepository
             .FindAll(
                 x => x.Email == request.Email && x.TaxCode == request.TaxCode && x.PhoneNumber == request.PhoneNumber &&
@@ -146,9 +139,7 @@ public class ClinicApplyCommandHandler(
                 x => x.ClinicOnBoardingRequests!)
             .AsTracking()
             .FirstOrDefaultAsync(cancellationToken);
-
-        // Since we've already checked for duplicates above, if isExist is not null here,
-        // it means all three fields match (email, tax code, and phone number)
+        
         if (isExist != null)
         {
             switch (isExist.Status)

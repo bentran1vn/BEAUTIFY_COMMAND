@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BEAUTIFY_COMMAND.PERSISTENCE.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250418092648_workingschedule")]
-    partial class workingschedule
+    [Migration("20250423061407_fix_slofst")]
+    partial class fix_slofst
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -63,188 +63,6 @@ namespace BEAUTIFY_COMMAND.PERSISTENCE.Migrations
                     b.HasIndex("ParentId");
 
                     b.ToTable("Category");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = new Guid("11111111-1111-1111-1111-111111111111"),
-                            CreatedOnUtc = new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
-                            Description = "Dịch vụ phẫu thuật can thiệp ngoại khoa vùng mặt",
-                            IsDeleted = false,
-                            IsParent = true,
-                            Name = "Phẫu Thuật Vùng Mặt"
-                        },
-                        new
-                        {
-                            Id = new Guid("22222222-2222-2222-2222-222222222222"),
-                            CreatedOnUtc = new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
-                            Description = "Dịch vụ phẫu thuật can thiệp ngoại khoa vùng ngực",
-                            IsDeleted = false,
-                            IsParent = true,
-                            Name = "Phẫu Thuật Vùng Ngực"
-                        },
-                        new
-                        {
-                            Id = new Guid("33333333-3333-3333-3333-333333333333"),
-                            CreatedOnUtc = new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
-                            Description = "Dịch vụ phẫu thuật can thiệp ngoại khoa vùng bụng",
-                            IsDeleted = false,
-                            IsParent = true,
-                            Name = "Phẫu Thuật Vùng Bụng"
-                        },
-                        new
-                        {
-                            Id = new Guid("44444444-4444-4444-4444-444444444444"),
-                            CreatedOnUtc = new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
-                            Description = "Dịch vụ phẫu thuật can thiệp ngoại khoa vùng mông",
-                            IsDeleted = false,
-                            IsParent = true,
-                            Name = "Phẫu Thuật Vùng Mông"
-                        },
-                        new
-                        {
-                            Id = new Guid("55555555-5555-5555-5555-555555555555"),
-                            CreatedOnUtc = new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
-                            Description = "Dịch vụ phẫu thuật can thiệp ngoại khoa vùng chân",
-                            IsDeleted = false,
-                            IsParent = true,
-                            Name = "Phẫu Thuật Vùng Chân"
-                        },
-                        new
-                        {
-                            Id = new Guid("66666666-6666-6666-6666-666666666666"),
-                            CreatedOnUtc = new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
-                            Description = "Dịch vụ phẫu thuật hỗ trợ giảm cân",
-                            IsDeleted = false,
-                            IsParent = true,
-                            Name = "Phẫu Thuật Giảm Cân"
-                        },
-                        new
-                        {
-                            Id = new Guid("77777777-7777-7777-7777-777777777777"),
-                            CreatedOnUtc = new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
-                            Description = "Dịch vụ phẫu thuật tạo hình cơ thể",
-                            IsDeleted = false,
-                            IsParent = true,
-                            Name = "Phẫu Thuật Tạo Hình Cơ Thể"
-                        },
-                        new
-                        {
-                            Id = new Guid("88888888-8888-8888-8888-888888888888"),
-                            CreatedOnUtc = new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
-                            Description = "Dịch vụ phẫu thuật tạo hình bộ phận sinh dục",
-                            IsDeleted = false,
-                            IsParent = true,
-                            Name = "Phẫu Thuật Tạo Hình Bộ Phận Sinh Dục"
-                        },
-                        new
-                        {
-                            Id = new Guid("99999999-9999-9999-9999-999999999999"),
-                            CreatedOnUtc = new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
-                            Description = "Dịch vụ phẫu thuật tạo hình da",
-                            IsDeleted = false,
-                            IsParent = true,
-                            Name = "Phẫu Thuật Tạo Hình Da"
-                        },
-                        new
-                        {
-                            Id = new Guid("10101010-1010-1010-1010-101010101010"),
-                            CreatedOnUtc = new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
-                            Description = "Dịch vụ phẫu thuật tạo hình tai",
-                            IsDeleted = false,
-                            IsParent = true,
-                            Name = "Phẫu Thuật Tạo Hình Tai"
-                        },
-                        new
-                        {
-                            Id = new Guid("12121212-1212-1212-1212-121212121212"),
-                            CreatedOnUtc = new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
-                            Description = "Điều chỉnh hình dáng mũi để cân đối với khuôn mặt",
-                            IsDeleted = false,
-                            IsParent = false,
-                            Name = "Nâng Mũi (Rhinoplasty)",
-                            ParentId = new Guid("11111111-1111-1111-1111-111111111111")
-                        },
-                        new
-                        {
-                            Id = new Guid("13131313-1313-1313-1313-131313131313"),
-                            CreatedOnUtc = new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
-                            Description = "Loại bỏ da thừa, mỡ thừa ở mí mắt, giúp mắt to và trẻ trung hơn",
-                            IsDeleted = false,
-                            IsParent = false,
-                            Name = "Cắt Mí Mắt (Blepharoplasty)",
-                            ParentId = new Guid("11111111-1111-1111-1111-111111111111")
-                        },
-                        new
-                        {
-                            Id = new Guid("14141414-1414-1414-1414-141414141414"),
-                            CreatedOnUtc = new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
-                            Description = "Cải thiện vùng trán và cung mày, giảm nếp nhăn",
-                            IsDeleted = false,
-                            IsParent = false,
-                            Name = "Nâng Cung Mày (Brow Lift)",
-                            ParentId = new Guid("11111111-1111-1111-1111-111111111111")
-                        },
-                        new
-                        {
-                            Id = new Guid("15151515-1515-1515-1515-151515151515"),
-                            CreatedOnUtc = new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
-                            Description = "Tạo hình cằm cân đối với khuôn mặt",
-                            IsDeleted = false,
-                            IsParent = false,
-                            Name = "Độn Cằm (Chin Augmentation)",
-                            ParentId = new Guid("11111111-1111-1111-1111-111111111111")
-                        },
-                        new
-                        {
-                            Id = new Guid("16161616-1616-1616-1616-161616161616"),
-                            CreatedOnUtc = new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
-                            Description = "Loại bỏ mỡ thừa ở vùng mặt như má, cằm",
-                            IsDeleted = false,
-                            IsParent = false,
-                            Name = "Hút Mỡ Mặt",
-                            ParentId = new Guid("11111111-1111-1111-1111-111111111111")
-                        },
-                        new
-                        {
-                            Id = new Guid("17171717-1717-1717-1717-171717171717"),
-                            CreatedOnUtc = new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
-                            Description = "Sử dụng túi độn hoặc mỡ tự thân để tăng kích thước ngực",
-                            IsDeleted = false,
-                            IsParent = false,
-                            Name = "Nâng Ngực (Breast Augmentation)",
-                            ParentId = new Guid("22222222-2222-2222-2222-222222222222")
-                        },
-                        new
-                        {
-                            Id = new Guid("18181818-1818-1818-1818-181818181818"),
-                            CreatedOnUtc = new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
-                            Description = "Giảm kích thước ngực quá lớn",
-                            IsDeleted = false,
-                            IsParent = false,
-                            Name = "Thu Nhỏ Ngực (Breast Reduction)",
-                            ParentId = new Guid("22222222-2222-2222-2222-222222222222")
-                        },
-                        new
-                        {
-                            Id = new Guid("19191919-1919-1919-1919-191919191919"),
-                            CreatedOnUtc = new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
-                            Description = "Loại bỏ mỡ thừa ở vùng bụng",
-                            IsDeleted = false,
-                            IsParent = false,
-                            Name = "Hút Mỡ Bụng",
-                            ParentId = new Guid("33333333-3333-3333-3333-333333333333")
-                        },
-                        new
-                        {
-                            Id = new Guid("20202020-2020-2020-2020-202020202020"),
-                            CreatedOnUtc = new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
-                            Description = "Loại bỏ da thừa và mỡ, làm săn chắc vùng bụng",
-                            IsDeleted = false,
-                            IsParent = false,
-                            Name = "Căng Da Bụng",
-                            ParentId = new Guid("33333333-3333-3333-3333-333333333333")
-                        });
                 });
 
             modelBuilder.Entity("BEAUTIFY_COMMAND.DOMAIN.Entities.ClassificationRule", b =>
@@ -286,63 +104,6 @@ namespace BEAUTIFY_COMMAND.PERSISTENCE.Migrations
                     b.HasIndex("SurveyQuestionId");
 
                     b.ToTable("ClassificationRules");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = new Guid("33333333-1111-1111-1111-111111111111"),
-                            ClassificationLabel = "Da khô",
-                            CreatedOnUtc = new DateTimeOffset(new DateTime(2025, 4, 18, 9, 26, 47, 789, DateTimeKind.Unspecified).AddTicks(3912), new TimeSpan(0, 0, 0, 0, 0)),
-                            IsDeleted = false,
-                            OptionValue = "A",
-                            Points = 2,
-                            SurveyId = new Guid("f3e2c9f4-9d1b-4d3f-98a6-2a7fabc12345"),
-                            SurveyQuestionId = new Guid("d1a2c3b4-e5f6-4789-abcd-111111111111")
-                        },
-                        new
-                        {
-                            Id = new Guid("33333333-2222-1111-1111-111111111111"),
-                            ClassificationLabel = "Da thường",
-                            CreatedOnUtc = new DateTimeOffset(new DateTime(2025, 4, 18, 9, 26, 47, 789, DateTimeKind.Unspecified).AddTicks(3918), new TimeSpan(0, 0, 0, 0, 0)),
-                            IsDeleted = false,
-                            OptionValue = "B",
-                            Points = 2,
-                            SurveyId = new Guid("f3e2c9f4-9d1b-4d3f-98a6-2a7fabc12345"),
-                            SurveyQuestionId = new Guid("d1a2c3b4-e5f6-4789-abcd-111111111111")
-                        },
-                        new
-                        {
-                            Id = new Guid("33333333-3333-1111-1111-111111111111"),
-                            ClassificationLabel = "Da hỗn hợp",
-                            CreatedOnUtc = new DateTimeOffset(new DateTime(2025, 4, 18, 9, 26, 47, 789, DateTimeKind.Unspecified).AddTicks(3921), new TimeSpan(0, 0, 0, 0, 0)),
-                            IsDeleted = false,
-                            OptionValue = "C",
-                            Points = 2,
-                            SurveyId = new Guid("f3e2c9f4-9d1b-4d3f-98a6-2a7fabc12345"),
-                            SurveyQuestionId = new Guid("d1a2c3b4-e5f6-4789-abcd-111111111111")
-                        },
-                        new
-                        {
-                            Id = new Guid("33333333-4444-1111-1111-111111111111"),
-                            ClassificationLabel = "Da dầu",
-                            CreatedOnUtc = new DateTimeOffset(new DateTime(2025, 4, 18, 9, 26, 47, 789, DateTimeKind.Unspecified).AddTicks(3923), new TimeSpan(0, 0, 0, 0, 0)),
-                            IsDeleted = false,
-                            OptionValue = "D",
-                            Points = 2,
-                            SurveyId = new Guid("f3e2c9f4-9d1b-4d3f-98a6-2a7fabc12345"),
-                            SurveyQuestionId = new Guid("d1a2c3b4-e5f6-4789-abcd-111111111111")
-                        },
-                        new
-                        {
-                            Id = new Guid("33333333-5555-1111-1111-111111111111"),
-                            ClassificationLabel = "Da nhạy cảm",
-                            CreatedOnUtc = new DateTimeOffset(new DateTime(2025, 4, 18, 9, 26, 47, 789, DateTimeKind.Unspecified).AddTicks(3925), new TimeSpan(0, 0, 0, 0, 0)),
-                            IsDeleted = false,
-                            OptionValue = "E",
-                            Points = 2,
-                            SurveyId = new Guid("f3e2c9f4-9d1b-4d3f-98a6-2a7fabc12345"),
-                            SurveyQuestionId = new Guid("d1a2c3b4-e5f6-4789-abcd-111111111111")
-                        });
                 });
 
             modelBuilder.Entity("BEAUTIFY_COMMAND.DOMAIN.Entities.Clinic", b =>
@@ -466,242 +227,6 @@ namespace BEAUTIFY_COMMAND.PERSISTENCE.Migrations
                     b.HasIndex("ParentId");
 
                     b.ToTable("Clinic");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = new Guid("78705cfa-7097-408f-93e2-70950fc886a3"),
-                            AdditionBranches = 0,
-                            AdditionLivestreams = 0,
-                            Balance = 0m,
-                            BankAccountNumber = "1234567890123",
-                            BankName = "Vietcombank",
-                            BusinessLicenseUrl = "https://storage.googleapis.com/licenses/business-license-1.pdf",
-                            City = "Hồ Chí Minh",
-                            CreatedOnUtc = new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
-                            Email = "beautycenter.saigon@gmail.com",
-                            IsActivated = false,
-                            IsDeleted = false,
-                            IsParent = true,
-                            Name = "Beauty Center Sài Gòn",
-                            OperatingLicenseUrl = "https://storage.googleapis.com/licenses/operating-license-1.pdf",
-                            PhoneNumber = "0283456789",
-                            ProfilePictureUrl = "https://res.cloudinary.com/dmiueqpah/image/upload/v1744138052/1-1711946463238508154235_eakppa.jpg",
-                            Status = 1,
-                            TaxCode = "12345678901",
-                            TotalApply = 0,
-                            TotalBranches = 2,
-                            WorkingTimeEnd = new TimeSpan(0, 20, 0, 0, 0),
-                            WorkingTimeStart = new TimeSpan(0, 8, 0, 0, 0)
-                        },
-                        new
-                        {
-                            Id = new Guid("a96d68d9-3f28-48f3-add5-a74a6b882e93"),
-                            AdditionBranches = 0,
-                            AdditionLivestreams = 0,
-                            Balance = 0m,
-                            BankAccountNumber = "2345678901234",
-                            BankName = "BIDV",
-                            BusinessLicenseUrl = "https://storage.googleapis.com/licenses/business-license-2.pdf",
-                            City = "Hà Nội",
-                            CreatedOnUtc = new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
-                            Email = "hanoi.beautyspa@gmail.com",
-                            IsActivated = false,
-                            IsDeleted = false,
-                            IsParent = true,
-                            Name = "Hanoi Beauty Spa",
-                            OperatingLicenseUrl = "https://storage.googleapis.com/licenses/operating-license-2.pdf",
-                            PhoneNumber = "0243812345",
-                            Status = 1,
-                            TaxCode = "23456789012",
-                            TotalApply = 0,
-                            TotalBranches = 2,
-                            WorkingTimeEnd = new TimeSpan(0, 20, 0, 0, 0),
-                            WorkingTimeStart = new TimeSpan(0, 8, 0, 0, 0)
-                        },
-                        new
-                        {
-                            Id = new Guid("e5a759cd-af8d-4a1c-8c05-43cc2c95e067"),
-                            AdditionBranches = 0,
-                            AdditionLivestreams = 0,
-                            Balance = 0m,
-                            BankAccountNumber = "3456789012345",
-                            BankName = "Agribank",
-                            BusinessLicenseUrl = "https://storage.googleapis.com/licenses/business-license-3.pdf",
-                            City = "Đà Nẵng",
-                            CreatedOnUtc = new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
-                            Email = "skincare.danang@gmail.com",
-                            IsActivated = false,
-                            IsDeleted = false,
-                            IsParent = true,
-                            Name = "Skin Care Đà Nẵng",
-                            OperatingLicenseUrl = "https://storage.googleapis.com/licenses/operating-license-3.pdf",
-                            PhoneNumber = "0236789123",
-                            Status = 1,
-                            TaxCode = "34567890123",
-                            TotalApply = 0,
-                            TotalBranches = 2,
-                            WorkingTimeEnd = new TimeSpan(0, 20, 0, 0, 0),
-                            WorkingTimeStart = new TimeSpan(0, 8, 0, 0, 0)
-                        },
-                        new
-                        {
-                            Id = new Guid("c0b7058f-8e72-4dee-8742-0df6206d1843"),
-                            AdditionBranches = 0,
-                            AdditionLivestreams = 0,
-                            Balance = 0m,
-                            BankAccountNumber = "1234567890124",
-                            BankName = "Vietcombank",
-                            BusinessLicenseUrl = "https://storage.googleapis.com/licenses/business-license-1-1.pdf",
-                            City = "Hồ Chí Minh",
-                            CreatedOnUtc = new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
-                            Email = "beautycenter.q1@gmail.com",
-                            IsActivated = false,
-                            IsDeleted = false,
-                            IsParent = false,
-                            Name = "Beauty Center Sài Gòn - Chi nhánh Quận 1",
-                            OperatingLicenseUrl = "https://storage.googleapis.com/licenses/operating-license-1-1.pdf",
-                            ParentId = new Guid("78705cfa-7097-408f-93e2-70950fc886a3"),
-                            PhoneNumber = "0283456111",
-                            Status = 1,
-                            TaxCode = "12345678902",
-                            TotalApply = 0,
-                            TotalBranches = 0,
-                            WorkingTimeEnd = new TimeSpan(0, 20, 0, 0, 0),
-                            WorkingTimeStart = new TimeSpan(0, 8, 0, 0, 0)
-                        },
-                        new
-                        {
-                            Id = new Guid("6e7e4870-d28d-4a2d-9d0f-9e29f2930fc5"),
-                            AdditionBranches = 0,
-                            AdditionLivestreams = 0,
-                            Balance = 0m,
-                            BankAccountNumber = "1234567890125",
-                            BankName = "Vietcombank",
-                            BusinessLicenseUrl = "https://storage.googleapis.com/licenses/business-license-1-2.pdf",
-                            City = "Hồ Chí Minh",
-                            CreatedOnUtc = new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
-                            Email = "beautycenter.q3@gmail.com",
-                            IsActivated = false,
-                            IsDeleted = false,
-                            IsParent = false,
-                            Name = "Beauty Center Sài Gòn - Chi nhánh Quận 3",
-                            OperatingLicenseUrl = "https://storage.googleapis.com/licenses/operating-license-1-2.pdf",
-                            ParentId = new Guid("78705cfa-7097-408f-93e2-70950fc886a3"),
-                            PhoneNumber = "0283456222",
-                            Status = 1,
-                            TaxCode = "12345678903",
-                            TotalApply = 0,
-                            TotalBranches = 0,
-                            WorkingTimeEnd = new TimeSpan(0, 20, 0, 0, 0),
-                            WorkingTimeStart = new TimeSpan(0, 8, 0, 0, 0)
-                        },
-                        new
-                        {
-                            Id = new Guid("f3e6a7ca-28f9-4c7b-a190-c065cecf7be3"),
-                            AdditionBranches = 0,
-                            AdditionLivestreams = 0,
-                            Balance = 0m,
-                            BankAccountNumber = "2345678901235",
-                            BankName = "BIDV",
-                            BusinessLicenseUrl = "https://storage.googleapis.com/licenses/business-license-2-1.pdf",
-                            City = "Hà Nội",
-                            CreatedOnUtc = new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
-                            Email = "hanoi.dongda@gmail.com",
-                            IsActivated = false,
-                            IsDeleted = false,
-                            IsParent = false,
-                            Name = "Hanoi Beauty Spa - Chi nhánh Đống Đa",
-                            OperatingLicenseUrl = "https://storage.googleapis.com/licenses/operating-license-2-1.pdf",
-                            ParentId = new Guid("a96d68d9-3f28-48f3-add5-a74a6b882e93"),
-                            PhoneNumber = "0243812111",
-                            ProfilePictureUrl = "https://res.cloudinary.com/dvadlh7ah/image/upload/v1744178257/ty7jok5ooenrha5aydid.jpg",
-                            Status = 1,
-                            TaxCode = "23456789013",
-                            TotalApply = 0,
-                            TotalBranches = 0,
-                            WorkingTimeEnd = new TimeSpan(0, 20, 0, 0, 0),
-                            WorkingTimeStart = new TimeSpan(0, 8, 0, 0, 0)
-                        },
-                        new
-                        {
-                            Id = new Guid("c96de07e-32d7-41d5-b417-060cd95ee7ff"),
-                            AdditionBranches = 0,
-                            AdditionLivestreams = 0,
-                            Balance = 0m,
-                            BankAccountNumber = "2345678901236",
-                            BankName = "BIDV",
-                            BusinessLicenseUrl = "https://storage.googleapis.com/licenses/business-license-2-2.pdf",
-                            City = "Hà Nội",
-                            CreatedOnUtc = new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
-                            Email = "hanoi.caugiay@gmail.com",
-                            IsActivated = false,
-                            IsDeleted = false,
-                            IsParent = false,
-                            Name = "Hanoi Beauty Spa - Chi nhánh Cầu Giấy",
-                            OperatingLicenseUrl = "https://storage.googleapis.com/licenses/operating-license-2-2.pdf",
-                            ParentId = new Guid("a96d68d9-3f28-48f3-add5-a74a6b882e93"),
-                            PhoneNumber = "0243812222",
-                            ProfilePictureUrl = "https://res.cloudinary.com/dmiueqpah/image/upload/v1744138051/hinh-AA-Clinic-lgo-moi-1-1_smg56o.jpg",
-                            Status = 1,
-                            TaxCode = "23456789014",
-                            TotalApply = 0,
-                            TotalBranches = 0,
-                            WorkingTimeEnd = new TimeSpan(0, 20, 0, 0, 0),
-                            WorkingTimeStart = new TimeSpan(0, 8, 0, 0, 0)
-                        },
-                        new
-                        {
-                            Id = new Guid("3c8b8f3d-2f3f-4b17-9b46-0517c0183a50"),
-                            AdditionBranches = 0,
-                            AdditionLivestreams = 0,
-                            Balance = 0m,
-                            BankAccountNumber = "3456789012346",
-                            BankName = "Agribank",
-                            BusinessLicenseUrl = "https://storage.googleapis.com/licenses/business-license-3-1.pdf",
-                            City = "Đà Nẵng",
-                            CreatedOnUtc = new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
-                            Email = "skincare.haichau@gmail.com",
-                            IsActivated = false,
-                            IsDeleted = false,
-                            IsParent = false,
-                            Name = "Skin Care Đà Nẵng - Chi nhánh Hải Châu",
-                            OperatingLicenseUrl = "https://storage.googleapis.com/licenses/operating-license-3-1.pdf",
-                            ParentId = new Guid("e5a759cd-af8d-4a1c-8c05-43cc2c95e067"),
-                            PhoneNumber = "0236789111",
-                            Status = 1,
-                            TaxCode = "34567890124",
-                            TotalApply = 0,
-                            TotalBranches = 0,
-                            WorkingTimeEnd = new TimeSpan(0, 20, 0, 0, 0),
-                            WorkingTimeStart = new TimeSpan(0, 8, 0, 0, 0)
-                        },
-                        new
-                        {
-                            Id = new Guid("6ed1aefc-863e-4f2e-9c24-83eec7c0181c"),
-                            AdditionBranches = 0,
-                            AdditionLivestreams = 0,
-                            Balance = 0m,
-                            BankAccountNumber = "3456789012347",
-                            BankName = "Agribank",
-                            BusinessLicenseUrl = "https://storage.googleapis.com/licenses/business-license-3-2.pdf",
-                            City = "Đà Nẵng",
-                            CreatedOnUtc = new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
-                            Email = "skincare.sontra@gmail.com",
-                            IsActivated = false,
-                            IsDeleted = false,
-                            IsParent = false,
-                            Name = "Skin Care Đà Nẵng - Chi nhánh Sơn Trà",
-                            OperatingLicenseUrl = "https://storage.googleapis.com/licenses/operating-license-3-2.pdf",
-                            ParentId = new Guid("e5a759cd-af8d-4a1c-8c05-43cc2c95e067"),
-                            PhoneNumber = "0236789222",
-                            Status = 1,
-                            TaxCode = "34567890125",
-                            TotalApply = 0,
-                            TotalBranches = 0,
-                            WorkingTimeEnd = new TimeSpan(0, 20, 0, 0, 0),
-                            WorkingTimeStart = new TimeSpan(0, 8, 0, 0, 0)
-                        });
                 });
 
             modelBuilder.Entity("BEAUTIFY_COMMAND.DOMAIN.Entities.ClinicOnBoardingRequest", b =>
@@ -717,6 +242,9 @@ namespace BEAUTIFY_COMMAND.PERSISTENCE.Migrations
                         .HasColumnType("datetimeoffset");
 
                     b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsMain")
                         .HasColumnType("bit");
 
                     b.Property<DateTimeOffset?>("ModifiedOnUtc")
@@ -958,6 +486,10 @@ namespace BEAUTIFY_COMMAND.PERSISTENCE.Migrations
 
                     b.HasIndex("DoctorId");
 
+                    b.HasIndex("FeedbackId")
+                        .IsUnique()
+                        .HasFilter("[FeedbackId] IS NOT NULL");
+
                     b.HasIndex("OrderId");
 
                     b.HasIndex("ProcedureId");
@@ -1105,9 +637,6 @@ namespace BEAUTIFY_COMMAND.PERSISTENCE.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("CustomerScheduleId")
-                        .IsUnique();
 
                     b.ToTable("Feedback");
                 });
@@ -1312,7 +841,9 @@ namespace BEAUTIFY_COMMAND.PERSISTENCE.Migrations
 
                     b.HasIndex("LivestreamRoomId");
 
-                    b.HasIndex("OrderFeedbackId");
+                    b.HasIndex("OrderFeedbackId")
+                        .IsUnique()
+                        .HasFilter("[OrderFeedbackId] IS NOT NULL");
 
                     b.HasIndex("ServiceId");
 
@@ -1387,6 +918,40 @@ namespace BEAUTIFY_COMMAND.PERSISTENCE.Migrations
                     b.ToTable("OrderFeedback");
                 });
 
+            modelBuilder.Entity("BEAUTIFY_COMMAND.DOMAIN.Entities.OrderFeedbackMedia", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTimeOffset>("CreatedOnUtc")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("MediaUrl")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTimeOffset?>("ModifiedOnUtc")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<Guid?>("OrderFeedbackId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("OrderId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("OrderFeedbackId");
+
+                    b.HasIndex("OrderId");
+
+                    b.ToTable("OrderFeedbackMedia");
+                });
+
             modelBuilder.Entity("BEAUTIFY_COMMAND.DOMAIN.Entities.Procedure", b =>
                 {
                     b.Property<Guid>("Id")
@@ -1422,7 +987,7 @@ namespace BEAUTIFY_COMMAND.PERSISTENCE.Migrations
 
                     b.HasIndex("ServiceId");
 
-                    b.ToTable("Procedure");
+                    b.ToTable("Procedures");
                 });
 
             modelBuilder.Entity("BEAUTIFY_COMMAND.DOMAIN.Entities.ProcedureMedia", b =>
@@ -1492,7 +1057,7 @@ namespace BEAUTIFY_COMMAND.PERSISTENCE.Migrations
 
                     b.HasIndex("ProcedureId");
 
-                    b.ToTable("ProcedurePriceType");
+                    b.ToTable("ProcedurePriceTypes");
                 });
 
             modelBuilder.Entity("BEAUTIFY_COMMAND.DOMAIN.Entities.Promotion", b =>
@@ -1706,6 +1271,44 @@ namespace BEAUTIFY_COMMAND.PERSISTENCE.Migrations
                     b.ToTable("ServiceMedia");
                 });
 
+            modelBuilder.Entity("BEAUTIFY_COMMAND.DOMAIN.Entities.ShiftConfig", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("ClinicId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTimeOffset>("CreatedOnUtc")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<TimeSpan>("EndTime")
+                        .HasColumnType("time");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTimeOffset?>("ModifiedOnUtc")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Note")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<TimeSpan>("StartTime")
+                        .HasColumnType("time");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ClinicId");
+
+                    b.ToTable("ShiftConfig");
+                });
+
             modelBuilder.Entity("BEAUTIFY_COMMAND.DOMAIN.Entities.Staff", b =>
                 {
                     b.Property<Guid>("Id")
@@ -1787,320 +1390,6 @@ namespace BEAUTIFY_COMMAND.PERSISTENCE.Migrations
                     b.HasIndex("RoleId");
 
                     b.ToTable("Staff");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = new Guid("cc1f3c8c-c7f3-4b20-b3a5-7116cbd0dea8"),
-                            CreatedOnUtc = new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
-                            Email = "admin@gmail.com",
-                            FirstName = "System",
-                            IsDeleted = false,
-                            LastName = "Admin",
-                            Password = "QFUsZBROui+rvdxQ0JkaJg==:6z/WlleDL/PeFU/GLZ3ZHy50E8GTUNzv0mRqB77oE8w=",
-                            Rating = 4,
-                            RoleId = new Guid("4b7171f4-3219-4688-9f7c-625687a95867"),
-                            Status = 1
-                        },
-                        new
-                        {
-                            Id = new Guid("7d832aeb-fa49-45bc-801e-9a8ac71bab03"),
-                            CreatedOnUtc = new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
-                            Email = "staff@gmail.com",
-                            FirstName = "System",
-                            IsDeleted = false,
-                            LastName = "Staff",
-                            Password = "QFUsZBROui+rvdxQ0JkaJg==:6z/WlleDL/PeFU/GLZ3ZHy50E8GTUNzv0mRqB77oE8w=",
-                            Rating = 4,
-                            RoleId = new Guid("248bf96b-9782-4011-8bb0-b26e66658090"),
-                            Status = 1
-                        },
-                        new
-                        {
-                            Id = new Guid("c5514d77-31b0-4c07-b1fe-bf3219e249db"),
-                            CreatedOnUtc = new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
-                            Email = "beautycenter.saigon@gmail.com",
-                            FirstName = "Beauty Center Sài Gòn",
-                            IsDeleted = false,
-                            LastName = "Beauty Center Sài Gòn",
-                            Password = "QFUsZBROui+rvdxQ0JkaJg==:6z/WlleDL/PeFU/GLZ3ZHy50E8GTUNzv0mRqB77oE8w=",
-                            Rating = 4,
-                            RoleId = new Guid("c6d93b8c-f509-4498-abbb-fe63edc66f2b"),
-                            Status = 1
-                        },
-                        new
-                        {
-                            Id = new Guid("f3850b25-56de-4e0d-8e66-d46617cc6f92"),
-                            CreatedOnUtc = new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
-                            Email = "hanoi.beautyspa@gmail.com",
-                            FirstName = "Hanoi Beauty Spa",
-                            IsDeleted = false,
-                            LastName = "Hanoi Beauty Spa",
-                            Password = "QFUsZBROui+rvdxQ0JkaJg==:6z/WlleDL/PeFU/GLZ3ZHy50E8GTUNzv0mRqB77oE8w=",
-                            Rating = 4,
-                            RoleId = new Guid("c6d93b8c-f509-4498-abbb-fe63edc66f2b"),
-                            Status = 1
-                        },
-                        new
-                        {
-                            Id = new Guid("a283eb13-8d68-46c9-8a1d-450e0cc7ad13"),
-                            CreatedOnUtc = new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
-                            Email = "skincare.danang@gmail.com",
-                            FirstName = "Skin Care Đà Nẵng",
-                            IsDeleted = false,
-                            LastName = "Skin Care Đà Nẵng",
-                            Password = "QFUsZBROui+rvdxQ0JkaJg==:6z/WlleDL/PeFU/GLZ3ZHy50E8GTUNzv0mRqB77oE8w=",
-                            Rating = 4,
-                            RoleId = new Guid("c6d93b8c-f509-4498-abbb-fe63edc66f2b"),
-                            Status = 1
-                        },
-                        new
-                        {
-                            Id = new Guid("d2b2d4b8-c22c-4fcb-96c4-85ccfa378b32"),
-                            CreatedOnUtc = new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
-                            Email = "dothanhsonquan1@gmail.com",
-                            FirstName = "Đỗ Thanh",
-                            IsDeleted = false,
-                            LastName = "Sơn Quận 1",
-                            Password = "QFUsZBROui+rvdxQ0JkaJg==:6z/WlleDL/PeFU/GLZ3ZHy50E8GTUNzv0mRqB77oE8w=",
-                            Rating = 4,
-                            RoleId = new Guid("2e25e963-c03f-45e6-a29d-f22c08e117b3"),
-                            Status = 1
-                        },
-                        new
-                        {
-                            Id = new Guid("d2b2d4b8-c22c-4fcb-96c4-85ccfa378b33"),
-                            CreatedOnUtc = new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
-                            Email = "dothanhsonquan3@gmail.com",
-                            FirstName = "Đỗ Thanh",
-                            IsDeleted = false,
-                            LastName = "Sơn Quận 3",
-                            Password = "QFUsZBROui+rvdxQ0JkaJg==:6z/WlleDL/PeFU/GLZ3ZHy50E8GTUNzv0mRqB77oE8w=",
-                            Rating = 4,
-                            RoleId = new Guid("2e25e963-c03f-45e6-a29d-f22c08e117b3"),
-                            Status = 1
-                        },
-                        new
-                        {
-                            Id = new Guid("b02a28f3-f1a7-4fd7-bcb1-53be587be9f9"),
-                            CreatedOnUtc = new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
-                            Email = "caoanhdung@gmail.com",
-                            FirstName = "Cao Anh",
-                            IsDeleted = false,
-                            LastName = "Dũng",
-                            Password = "QFUsZBROui+rvdxQ0JkaJg==:6z/WlleDL/PeFU/GLZ3ZHy50E8GTUNzv0mRqB77oE8w=",
-                            Rating = 4,
-                            RoleId = new Guid("2e25e963-c03f-45e6-a29d-f22c08e117b3"),
-                            Status = 1
-                        },
-                        new
-                        {
-                            Id = new Guid("b9ab6eb6-5953-455e-8d53-5ec345f8649e"),
-                            CreatedOnUtc = new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
-                            Email = "vuthithu@gmail.com",
-                            FirstName = "Vũ Thị",
-                            IsDeleted = false,
-                            LastName = "Thu",
-                            Password = "QFUsZBROui+rvdxQ0JkaJg==:6z/WlleDL/PeFU/GLZ3ZHy50E8GTUNzv0mRqB77oE8w=",
-                            Rating = 4,
-                            RoleId = new Guid("2e25e963-c03f-45e6-a29d-f22c08e117b3"),
-                            Status = 1
-                        },
-                        new
-                        {
-                            Id = new Guid("9dde4ec6-b02f-419a-900b-5c42f1a6c863"),
-                            CreatedOnUtc = new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
-                            Email = "lethihuong@gmail.com",
-                            FirstName = "Lê Thị",
-                            IsDeleted = false,
-                            LastName = "Hương",
-                            Password = "QFUsZBROui+rvdxQ0JkaJg==:6z/WlleDL/PeFU/GLZ3ZHy50E8GTUNzv0mRqB77oE8w=",
-                            Rating = 4,
-                            RoleId = new Guid("2e25e963-c03f-45e6-a29d-f22c08e117b3"),
-                            Status = 1
-                        },
-                        new
-                        {
-                            Id = new Guid("6f8bb800-0594-4389-9749-f214ef855bdc"),
-                            CreatedOnUtc = new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
-                            Email = "nguyenvananh@gmail.com",
-                            FirstName = "Nguyễn Văn",
-                            IsDeleted = false,
-                            LastName = "Anh",
-                            Password = "QFUsZBROui+rvdxQ0JkaJg==:6z/WlleDL/PeFU/GLZ3ZHy50E8GTUNzv0mRqB77oE8w=",
-                            Rating = 4,
-                            RoleId = new Guid("2e25e963-c03f-45e6-a29d-f22c08e117b3"),
-                            Status = 1
-                        },
-                        new
-                        {
-                            Id = new Guid("a73d00ac-00c4-456e-ab2e-dd184f8681dd"),
-                            CreatedOnUtc = new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
-                            Email = "phamthiha@gmail.com",
-                            FirstName = "Phạm Thị",
-                            IsDeleted = false,
-                            LastName = "Hà",
-                            Password = "QFUsZBROui+rvdxQ0JkaJg==:6z/WlleDL/PeFU/GLZ3ZHy50E8GTUNzv0mRqB77oE8w=",
-                            Rating = 4,
-                            RoleId = new Guid("2e25e963-c03f-45e6-a29d-f22c08e117b3"),
-                            Status = 1
-                        },
-                        new
-                        {
-                            Id = new Guid("ab23d158-44e2-44d4-b679-d7c568993702"),
-                            CreatedOnUtc = new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
-                            Email = "phamphucnghi@gmail.com",
-                            FirstName = "Phạm Phúc",
-                            IsDeleted = false,
-                            LastName = "Nghị",
-                            Password = "QFUsZBROui+rvdxQ0JkaJg==:6z/WlleDL/PeFU/GLZ3ZHy50E8GTUNzv0mRqB77oE8w=",
-                            Rating = 4,
-                            RoleId = new Guid("b549752a-f156-4894-90ad-ab3994fd071d"),
-                            Status = 1
-                        },
-                        new
-                        {
-                            Id = new Guid("a2b21279-5bbd-40c3-8981-6821c7f6b2ea"),
-                            CreatedOnUtc = new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
-                            Email = "trandinhthientan@gmail.com",
-                            FirstName = "Trần Đình Thiên",
-                            IsDeleted = false,
-                            LastName = "Tân",
-                            Password = "QFUsZBROui+rvdxQ0JkaJg==:6z/WlleDL/PeFU/GLZ3ZHy50E8GTUNzv0mRqB77oE8w=",
-                            Rating = 4,
-                            RoleId = new Guid("b549752a-f156-4894-90ad-ab3994fd071d"),
-                            Status = 1
-                        },
-                        new
-                        {
-                            Id = new Guid("da2d6a80-75cc-4757-8ed3-e0b508ffb080"),
-                            CreatedOnUtc = new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
-                            Email = "trinhthuonglam@gmail.com",
-                            FirstName = "Trịnh Thượng",
-                            IsDeleted = false,
-                            LastName = "Lâm",
-                            Password = "QFUsZBROui+rvdxQ0JkaJg==:6z/WlleDL/PeFU/GLZ3ZHy50E8GTUNzv0mRqB77oE8w=",
-                            Rating = 4,
-                            RoleId = new Guid("b549752a-f156-4894-90ad-ab3994fd071d"),
-                            Status = 1
-                        },
-                        new
-                        {
-                            Id = new Guid("8b0f0b23-f07f-453d-b8bc-1acb26d03d87"),
-                            CreatedOnUtc = new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
-                            Email = "doanthanhtien@gmail.com",
-                            FirstName = "Đoàn Thanh",
-                            IsDeleted = false,
-                            LastName = "Tiến",
-                            Password = "QFUsZBROui+rvdxQ0JkaJg==:6z/WlleDL/PeFU/GLZ3ZHy50E8GTUNzv0mRqB77oE8w=",
-                            Rating = 4,
-                            RoleId = new Guid("b549752a-f156-4894-90ad-ab3994fd071d"),
-                            Status = 1
-                        },
-                        new
-                        {
-                            Id = new Guid("79f207d4-dbbf-488d-848d-fc74a7fdbb29"),
-                            CreatedOnUtc = new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
-                            Email = "phanvankhoa@gmail.com",
-                            FirstName = "Phan Văn",
-                            IsDeleted = false,
-                            LastName = "Khoa",
-                            Password = "QFUsZBROui+rvdxQ0JkaJg==:6z/WlleDL/PeFU/GLZ3ZHy50E8GTUNzv0mRqB77oE8w=",
-                            Rating = 4,
-                            RoleId = new Guid("b549752a-f156-4894-90ad-ab3994fd071d"),
-                            Status = 1
-                        },
-                        new
-                        {
-                            Id = new Guid("32e8cfbb-d8b4-4768-8695-81b6b7e63c63"),
-                            CreatedOnUtc = new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
-                            Email = "hoangminhtrang@gmail.com",
-                            FirstName = "Hoàng Minh",
-                            IsDeleted = false,
-                            LastName = "Trang",
-                            Password = "QFUsZBROui+rvdxQ0JkaJg==:6z/WlleDL/PeFU/GLZ3ZHy50E8GTUNzv0mRqB77oE8w=",
-                            Rating = 4,
-                            RoleId = new Guid("b549752a-f156-4894-90ad-ab3994fd071d"),
-                            Status = 1
-                        },
-                        new
-                        {
-                            Id = new Guid("c21fa13a-b2f6-4eba-8b77-d2c57854bc5f"),
-                            CreatedOnUtc = new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
-                            Email = "tranthanhlong@gmail.com",
-                            FirstName = "Trần Thanh",
-                            IsDeleted = false,
-                            LastName = "Long",
-                            Password = "QFUsZBROui+rvdxQ0JkaJg==:6z/WlleDL/PeFU/GLZ3ZHy50E8GTUNzv0mRqB77oE8w=",
-                            Rating = 4,
-                            RoleId = new Guid("b549752a-f156-4894-90ad-ab3994fd071d"),
-                            Status = 1
-                        },
-                        new
-                        {
-                            Id = new Guid("bd3c9480-7bca-43d7-94ed-58cea8b32733"),
-                            CreatedOnUtc = new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
-                            Email = "nguyenngocmaihuong@gmail.com",
-                            FirstName = "Nguyễn Ngọc Mai",
-                            IsDeleted = false,
-                            LastName = "Hương",
-                            Password = "QFUsZBROui+rvdxQ0JkaJg==:6z/WlleDL/PeFU/GLZ3ZHy50E8GTUNzv0mRqB77oE8w=",
-                            Rating = 4,
-                            RoleId = new Guid("b549752a-f156-4894-90ad-ab3994fd071d"),
-                            Status = 1
-                        },
-                        new
-                        {
-                            Id = new Guid("5e9bd8dd-fb53-4f74-bf59-b3aedb96aa7c"),
-                            CreatedOnUtc = new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
-                            Email = "voanhquan@gmail.com",
-                            FirstName = "Võ Anh",
-                            IsDeleted = false,
-                            LastName = "Quân",
-                            Password = "QFUsZBROui+rvdxQ0JkaJg==:6z/WlleDL/PeFU/GLZ3ZHy50E8GTUNzv0mRqB77oE8w=",
-                            Rating = 4,
-                            RoleId = new Guid("b549752a-f156-4894-90ad-ab3994fd071d"),
-                            Status = 1
-                        },
-                        new
-                        {
-                            Id = new Guid("71ddc3c7-a3a0-4e6b-bd1d-f03d5deedbfa"),
-                            CreatedOnUtc = new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
-                            Email = "lethikimhoa@gmail.com",
-                            FirstName = "Lê Thị Kim",
-                            IsDeleted = false,
-                            LastName = "Hoa",
-                            Password = "QFUsZBROui+rvdxQ0JkaJg==:6z/WlleDL/PeFU/GLZ3ZHy50E8GTUNzv0mRqB77oE8w=",
-                            Rating = 4,
-                            RoleId = new Guid("b549752a-f156-4894-90ad-ab3994fd071d"),
-                            Status = 1
-                        },
-                        new
-                        {
-                            Id = new Guid("e8e3f18b-9179-48a6-94bb-1e5320fb8f30"),
-                            CreatedOnUtc = new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
-                            Email = "phamtuanminh@gmail.com",
-                            FirstName = "Phạm Tuấn",
-                            IsDeleted = false,
-                            LastName = "Minh",
-                            Password = "QFUsZBROui+rvdxQ0JkaJg==:6z/WlleDL/PeFU/GLZ3ZHy50E8GTUNzv0mRqB77oE8w=",
-                            Rating = 4,
-                            RoleId = new Guid("b549752a-f156-4894-90ad-ab3994fd071d"),
-                            Status = 1
-                        },
-                        new
-                        {
-                            Id = new Guid("f76d8ab1-c9eb-4e29-a9f1-5302b543c283"),
-                            CreatedOnUtc = new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
-                            Email = "nguyenminhhieu@gmail.com",
-                            FirstName = "Nguyễn Minh",
-                            IsDeleted = false,
-                            LastName = "Hiếu",
-                            Password = "QFUsZBROui+rvdxQ0JkaJg==:6z/WlleDL/PeFU/GLZ3ZHy50E8GTUNzv0mRqB77oE8w=",
-                            Rating = 4,
-                            RoleId = new Guid("b549752a-f156-4894-90ad-ab3994fd071d"),
-                            Status = 1
-                        });
                 });
 
             modelBuilder.Entity("BEAUTIFY_COMMAND.DOMAIN.Entities.SubscriptionPackage", b =>
@@ -2252,17 +1541,6 @@ namespace BEAUTIFY_COMMAND.PERSISTENCE.Migrations
                     b.HasIndex("CategoryId");
 
                     b.ToTable("Surveys");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = new Guid("f3e2c9f4-9d1b-4d3f-98a6-2a7fabc12345"),
-                            CategoryId = new Guid("20202020-2020-2020-2020-202020202020"),
-                            CreatedOnUtc = new DateTimeOffset(new DateTime(2025, 4, 18, 9, 26, 47, 796, DateTimeKind.Unspecified).AddTicks(7486), new TimeSpan(0, 0, 0, 0, 0)),
-                            Description = "Nhận biết loại da",
-                            IsDeleted = false,
-                            Name = "Khảo sát da"
-                        });
                 });
 
             modelBuilder.Entity("BEAUTIFY_COMMAND.DOMAIN.Entities.SurveyAnswer", b =>
@@ -2330,98 +1608,6 @@ namespace BEAUTIFY_COMMAND.PERSISTENCE.Migrations
                     b.HasIndex("SurveyId");
 
                     b.ToTable("SurveyQuestions");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = new Guid("d1a2c3b4-e5f6-4789-abcd-111111111111"),
-                            CreatedOnUtc = new DateTimeOffset(new DateTime(2025, 4, 18, 9, 26, 47, 796, DateTimeKind.Unspecified).AddTicks(8225), new TimeSpan(0, 0, 0, 0, 0)),
-                            IsDeleted = false,
-                            Question = "Sau khi rửa mặt (không bôi kem) da bạn thường cảm thấy thế nào?",
-                            QuestionType = "Multiple Choice",
-                            SurveyId = new Guid("f3e2c9f4-9d1b-4d3f-98a6-2a7fabc12345")
-                        },
-                        new
-                        {
-                            Id = new Guid("d1a2c3b4-e5f6-4789-abcd-222222222222"),
-                            CreatedOnUtc = new DateTimeOffset(new DateTime(2025, 4, 18, 9, 26, 47, 796, DateTimeKind.Unspecified).AddTicks(8227), new TimeSpan(0, 0, 0, 0, 0)),
-                            IsDeleted = false,
-                            Question = "Vào giữa ngày da bạn trông thế nào (nếu không thấm dầu)?",
-                            QuestionType = "Multiple Choice",
-                            SurveyId = new Guid("f3e2c9f4-9d1b-4d3f-98a6-2a7fabc12345")
-                        },
-                        new
-                        {
-                            Id = new Guid("d1a2c3b4-e5f6-4789-abcd-333333333333"),
-                            CreatedOnUtc = new DateTimeOffset(new DateTime(2025, 4, 18, 9, 26, 47, 796, DateTimeKind.Unspecified).AddTicks(8228), new TimeSpan(0, 0, 0, 0, 0)),
-                            IsDeleted = false,
-                            Question = "Tần suất bong tróc hoặc khô mảng?",
-                            QuestionType = "Multiple Choice",
-                            SurveyId = new Guid("f3e2c9f4-9d1b-4d3f-98a6-2a7fabc12345")
-                        },
-                        new
-                        {
-                            Id = new Guid("d1a2c3b4-e5f6-4789-abcd-444444444444"),
-                            CreatedOnUtc = new DateTimeOffset(new DateTime(2025, 4, 18, 9, 26, 47, 796, DateTimeKind.Unspecified).AddTicks(8230), new TimeSpan(0, 0, 0, 0, 0)),
-                            IsDeleted = false,
-                            Question = "Mức độ nhìn thấy lỗ chân lông?",
-                            QuestionType = "Multiple Choice",
-                            SurveyId = new Guid("f3e2c9f4-9d1b-4d3f-98a6-2a7fabc12345")
-                        },
-                        new
-                        {
-                            Id = new Guid("d1a2c3b4-e5f6-4789-abcd-555555555555"),
-                            CreatedOnUtc = new DateTimeOffset(new DateTime(2025, 4, 18, 9, 26, 47, 796, DateTimeKind.Unspecified).AddTicks(8231), new TimeSpan(0, 0, 0, 0, 0)),
-                            IsDeleted = false,
-                            Question = "Bạn có thường bị mụn hoặc tắc nghẽn lỗ chân lông?",
-                            QuestionType = "Multiple Choice",
-                            SurveyId = new Guid("f3e2c9f4-9d1b-4d3f-98a6-2a7fabc12345")
-                        },
-                        new
-                        {
-                            Id = new Guid("d1a2c3b4-e5f6-4789-abcd-666666666666"),
-                            CreatedOnUtc = new DateTimeOffset(new DateTime(2025, 4, 18, 9, 26, 47, 796, DateTimeKind.Unspecified).AddTicks(8232), new TimeSpan(0, 0, 0, 0, 0)),
-                            IsDeleted = false,
-                            Question = "Da bạn có khi nào vừa khô ở vài chỗ vừa dầu ở chỗ khác?",
-                            QuestionType = "Multiple Choice",
-                            SurveyId = new Guid("f3e2c9f4-9d1b-4d3f-98a6-2a7fabc12345")
-                        },
-                        new
-                        {
-                            Id = new Guid("d1a2c3b4-e5f6-4789-abcd-777777777777"),
-                            CreatedOnUtc = new DateTimeOffset(new DateTime(2025, 4, 18, 9, 26, 47, 796, DateTimeKind.Unspecified).AddTicks(8234), new TimeSpan(0, 0, 0, 0, 0)),
-                            IsDeleted = false,
-                            Question = "Phản ứng da khi dùng sản phẩm mới hoặc thời tiết thay đổi?",
-                            QuestionType = "Multiple Choice",
-                            SurveyId = new Guid("f3e2c9f4-9d1b-4d3f-98a6-2a7fabc12345")
-                        },
-                        new
-                        {
-                            Id = new Guid("d1a2c3b4-e5f6-4789-abcd-888888888888"),
-                            CreatedOnUtc = new DateTimeOffset(new DateTime(2025, 4, 18, 9, 26, 47, 796, DateTimeKind.Unspecified).AddTicks(8235), new TimeSpan(0, 0, 0, 0, 0)),
-                            IsDeleted = false,
-                            Question = "Nếu bỏ qua kem dưỡng một ngày da bạn thế nào?",
-                            QuestionType = "Multiple Choice",
-                            SurveyId = new Guid("f3e2c9f4-9d1b-4d3f-98a6-2a7fabc12345")
-                        },
-                        new
-                        {
-                            Id = new Guid("d1a2c3b4-e5f6-4789-abcd-999999999999"),
-                            CreatedOnUtc = new DateTimeOffset(new DateTime(2025, 4, 18, 9, 26, 47, 796, DateTimeKind.Unspecified).AddTicks(8236), new TimeSpan(0, 0, 0, 0, 0)),
-                            IsDeleted = false,
-                            Question = "Khi trang điểm lớp nền giữ trên da ra sao?",
-                            QuestionType = "Multiple Choice",
-                            SurveyId = new Guid("f3e2c9f4-9d1b-4d3f-98a6-2a7fabc12345")
-                        },
-                        new
-                        {
-                            Id = new Guid("d1a2c3b4-e5f6-4789-abcd-aaaaaaaaaaaa"),
-                            CreatedOnUtc = new DateTimeOffset(new DateTime(2025, 4, 18, 9, 26, 47, 796, DateTimeKind.Unspecified).AddTicks(8238), new TimeSpan(0, 0, 0, 0, 0)),
-                            IsDeleted = false,
-                            Question = "Tổng quát, câu mô tả nào hợp nhất với da bạn?",
-                            QuestionType = "Multiple Choice",
-                            SurveyId = new Guid("f3e2c9f4-9d1b-4d3f-98a6-2a7fabc12345")
-                        });
                 });
 
             modelBuilder.Entity("BEAUTIFY_COMMAND.DOMAIN.Entities.SurveyQuestionOption", b =>
@@ -2451,88 +1637,6 @@ namespace BEAUTIFY_COMMAND.PERSISTENCE.Migrations
                     b.HasIndex("SurveyQuestionId");
 
                     b.ToTable("SurveyQuestionOption");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = new Guid("a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11"),
-                            CreatedOnUtc = new DateTimeOffset(new DateTime(2025, 4, 18, 9, 26, 47, 796, DateTimeKind.Unspecified).AddTicks(9009), new TimeSpan(0, 0, 0, 0, 0)),
-                            IsDeleted = false,
-                            Option = "A) Rất căng khô hoặc bong tróc; B) Khá cân bằng không quá khô hay dầu; C) Hơi bóng ở vùng chữ T; D) Bóng dầu toàn mặt; E) Đỏ hoặc châm chích",
-                            SurveyQuestionId = new Guid("d1a2c3b4-e5f6-4789-abcd-111111111111")
-                        },
-                        new
-                        {
-                            Id = new Guid("a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a12"),
-                            CreatedOnUtc = new DateTimeOffset(new DateTime(2025, 4, 18, 9, 26, 47, 796, DateTimeKind.Unspecified).AddTicks(9012), new TimeSpan(0, 0, 0, 0, 0)),
-                            IsDeleted = false,
-                            Option = "A) Không hầu như chỉ khô; B) Không khá đồng đều; C) Thường khô ở má nhưng dầu vùng chữ T; D) Oily toàn mặt; E) Thay đổi theo độ nhạy cảm",
-                            SurveyQuestionId = new Guid("d1a2c3b4-e5f6-4789-abcd-222222222222")
-                        },
-                        new
-                        {
-                            Id = new Guid("a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a13"),
-                            CreatedOnUtc = new DateTimeOffset(new DateTime(2025, 4, 18, 9, 26, 47, 796, DateTimeKind.Unspecified).AddTicks(9014), new TimeSpan(0, 0, 0, 0, 0)),
-                            IsDeleted = false,
-                            Option = "A) Rất nhỏ hoặc gần như không thấy; B) Thấy ở mức vừa phải; C) Rõ hơn ở vùng chữ T; D) To và dễ thấy toàn mặt; E) Rõ hơn khi da ửng đỏ hoặc kích ứng",
-                            SurveyQuestionId = new Guid("d1a2c3b4-e5f6-4789-abcd-333333333333")
-                        },
-                        new
-                        {
-                            Id = new Guid("a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a14"),
-                            CreatedOnUtc = new DateTimeOffset(new DateTime(2025, 4, 18, 9, 26, 47, 796, DateTimeKind.Unspecified).AddTicks(9016), new TimeSpan(0, 0, 0, 0, 0)),
-                            IsDeleted = false,
-                            Option = "A) Rất căng và khó chịu; B) Khá bình thường; C) T-zone bóng má bình thường; D) Rất bóng hoặc nhờn; E) Đỏ hoặc ngứa",
-                            SurveyQuestionId = new Guid("d1a2c3b4-e5f6-4789-abcd-444444444444")
-                        },
-                        new
-                        {
-                            Id = new Guid("a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a15"),
-                            CreatedOnUtc = new DateTimeOffset(new DateTime(2025, 4, 18, 9, 26, 47, 796, DateTimeKind.Unspecified).AddTicks(9018), new TimeSpan(0, 0, 0, 0, 0)),
-                            IsDeleted = false,
-                            Option = "A) Khô hơn hoặc bong tróc; B) Thích nghi khá ổn; C) Có vùng dầu vùng không; D) Tăng tiết dầu nổi mụn; E) Kích ứng ửng đỏ",
-                            SurveyQuestionId = new Guid("d1a2c3b4-e5f6-4789-abcd-555555555555")
-                        },
-                        new
-                        {
-                            Id = new Guid("a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a16"),
-                            CreatedOnUtc = new DateTimeOffset(new DateTime(2025, 4, 18, 9, 26, 47, 796, DateTimeKind.Unspecified).AddTicks(9020), new TimeSpan(0, 0, 0, 0, 0)),
-                            IsDeleted = false,
-                            Option = "A) Thường xuyên; B) Hầu như không bao giờ; C) Thỉnh thoảng ở một số vùng; D) Rất hiếm; E) Do nhạy cảm với sản phẩm hoặc thời tiết",
-                            SurveyQuestionId = new Guid("d1a2c3b4-e5f6-4789-abcd-666666666666")
-                        },
-                        new
-                        {
-                            Id = new Guid("a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a17"),
-                            CreatedOnUtc = new DateTimeOffset(new DateTime(2025, 4, 18, 9, 26, 47, 796, DateTimeKind.Unspecified).AddTicks(9022), new TimeSpan(0, 0, 0, 0, 0)),
-                            IsDeleted = false,
-                            Option = "A) Dễ bám vào vùng khô; B) Khá đều cần ít dặm lại; C) Xuống tông hoặc bóng ở chữ T; D) Trôi hoặc bóng dầu gần như toàn mặt; E) Kích ứng hoặc ửng đỏ",
-                            SurveyQuestionId = new Guid("d1a2c3b4-e5f6-4789-abcd-777777777777")
-                        },
-                        new
-                        {
-                            Id = new Guid("a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a18"),
-                            CreatedOnUtc = new DateTimeOffset(new DateTime(2025, 4, 18, 9, 26, 47, 796, DateTimeKind.Unspecified).AddTicks(9025), new TimeSpan(0, 0, 0, 0, 0)),
-                            IsDeleted = false,
-                            Option = "A) Rất hiếm; B) Đôi khi; C) Chủ yếu ở vùng chữ T; D) Thường xuyên hoặc toàn mặt; E) Phụ thuộc độ nhạy cảm với sản phẩm",
-                            SurveyQuestionId = new Guid("d1a2c3b4-e5f6-4789-abcd-888888888888")
-                        },
-                        new
-                        {
-                            Id = new Guid("a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a19"),
-                            CreatedOnUtc = new DateTimeOffset(new DateTime(2025, 4, 18, 9, 26, 47, 796, DateTimeKind.Unspecified).AddTicks(9027), new TimeSpan(0, 0, 0, 0, 0)),
-                            IsDeleted = false,
-                            Option = "A) Rất khô và hay căng; B) Cân bằng không quá khô dầu; C) Vừa dầu vừa khô da hỗn hợp; D) Dầu toàn mặt; E) Rất nhạy cảm hoặc dễ kích ứng",
-                            SurveyQuestionId = new Guid("d1a2c3b4-e5f6-4789-abcd-999999999999")
-                        },
-                        new
-                        {
-                            Id = new Guid("a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a1a"),
-                            CreatedOnUtc = new DateTimeOffset(new DateTime(2025, 4, 18, 9, 26, 47, 796, DateTimeKind.Unspecified).AddTicks(9029), new TimeSpan(0, 0, 0, 0, 0)),
-                            IsDeleted = false,
-                            Option = "A) Vẫn khô hoặc căng; B) Khá cân bằng ít bóng; C) Có chút bóng ở vùng chữ T; D) Bóng dầu toàn khuôn mặt; E) Dễ kích ứng hoặc ửng đỏ",
-                            SurveyQuestionId = new Guid("d1a2c3b4-e5f6-4789-abcd-aaaaaaaaaaaa")
-                        });
                 });
 
             modelBuilder.Entity("BEAUTIFY_COMMAND.DOMAIN.Entities.SurveyResponse", b =>
@@ -2751,176 +1855,6 @@ namespace BEAUTIFY_COMMAND.PERSISTENCE.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("UserClinic");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = new Guid("6c330a77-5168-49f3-98ad-b06a25a9c814"),
-                            ClinicId = new Guid("78705cfa-7097-408f-93e2-70950fc886a3"),
-                            CreatedOnUtc = new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
-                            IsDeleted = false,
-                            UserId = new Guid("c5514d77-31b0-4c07-b1fe-bf3219e249db")
-                        },
-                        new
-                        {
-                            Id = new Guid("f3f9e5a7-d0b1-4f8a-8a45-b37a07178e4b"),
-                            ClinicId = new Guid("a96d68d9-3f28-48f3-add5-a74a6b882e93"),
-                            CreatedOnUtc = new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
-                            IsDeleted = false,
-                            UserId = new Guid("f3850b25-56de-4e0d-8e66-d46617cc6f92")
-                        },
-                        new
-                        {
-                            Id = new Guid("d58a7c2d-a9f2-4c9b-bd3e-32126a76f2a5"),
-                            ClinicId = new Guid("e5a759cd-af8d-4a1c-8c05-43cc2c95e067"),
-                            CreatedOnUtc = new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
-                            IsDeleted = false,
-                            UserId = new Guid("a283eb13-8d68-46c9-8a1d-450e0cc7ad13")
-                        },
-                        new
-                        {
-                            Id = new Guid("b2e0cbc8-1f29-45a1-b0d6-1f67d83c0a7d"),
-                            ClinicId = new Guid("c0b7058f-8e72-4dee-8742-0df6206d1843"),
-                            CreatedOnUtc = new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
-                            IsDeleted = false,
-                            UserId = new Guid("d2b2d4b8-c22c-4fcb-96c4-85ccfa378b32")
-                        },
-                        new
-                        {
-                            Id = new Guid("7f0c57c5-632a-4241-8425-95e8d1c5bd5a"),
-                            ClinicId = new Guid("6e7e4870-d28d-4a2d-9d0f-9e29f2930fc5"),
-                            CreatedOnUtc = new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
-                            IsDeleted = false,
-                            UserId = new Guid("d2b2d4b8-c22c-4fcb-96c4-85ccfa378b33")
-                        },
-                        new
-                        {
-                            Id = new Guid("c7b4a5e6-d879-4b5a-9f3e-95e8d1c5bd5b"),
-                            ClinicId = new Guid("f3e6a7ca-28f9-4c7b-a190-c065cecf7be3"),
-                            CreatedOnUtc = new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
-                            IsDeleted = false,
-                            UserId = new Guid("b9ab6eb6-5953-455e-8d53-5ec345f8649e")
-                        },
-                        new
-                        {
-                            Id = new Guid("e8d9c5a3-b4d7-4f5a-9e3c-1a2b3c4d5e6f"),
-                            ClinicId = new Guid("c96de07e-32d7-41d5-b417-060cd95ee7ff"),
-                            CreatedOnUtc = new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
-                            IsDeleted = false,
-                            UserId = new Guid("9dde4ec6-b02f-419a-900b-5c42f1a6c863")
-                        },
-                        new
-                        {
-                            Id = new Guid("f9e8d7c6-b5a4-4c3b-9d2e-1a2b3c4d5e6f"),
-                            ClinicId = new Guid("3c8b8f3d-2f3f-4b17-9b46-0517c0183a50"),
-                            CreatedOnUtc = new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
-                            IsDeleted = false,
-                            UserId = new Guid("6f8bb800-0594-4389-9749-f214ef855bdc")
-                        },
-                        new
-                        {
-                            Id = new Guid("01b2c3d4-e5f6-4a5b-8c7d-9e8f7a6b5c4d"),
-                            ClinicId = new Guid("6ed1aefc-863e-4f2e-9c24-83eec7c0181c"),
-                            CreatedOnUtc = new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
-                            IsDeleted = false,
-                            UserId = new Guid("a73d00ac-00c4-456e-ab2e-dd184f8681dd")
-                        },
-                        new
-                        {
-                            Id = new Guid("06a7b8c9-d0e1-4f2a-3b4c-5d6e7f8a9b0c"),
-                            ClinicId = new Guid("c0b7058f-8e72-4dee-8742-0df6206d1843"),
-                            CreatedOnUtc = new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
-                            IsDeleted = false,
-                            UserId = new Guid("ab23d158-44e2-44d4-b679-d7c568993702")
-                        },
-                        new
-                        {
-                            Id = new Guid("07b8c9d0-e1f2-4a3b-4c5d-6e7f8a9b0c1d"),
-                            ClinicId = new Guid("c0b7058f-8e72-4dee-8742-0df6206d1843"),
-                            CreatedOnUtc = new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
-                            IsDeleted = false,
-                            UserId = new Guid("a2b21279-5bbd-40c3-8981-6821c7f6b2ea")
-                        },
-                        new
-                        {
-                            Id = new Guid("08c9d0e1-f2a3-4b4c-5d6e-7f8a9b0c1d2e"),
-                            ClinicId = new Guid("6e7e4870-d28d-4a2d-9d0f-9e29f2930fc5"),
-                            CreatedOnUtc = new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
-                            IsDeleted = false,
-                            UserId = new Guid("a2b21279-5bbd-40c3-8981-6821c7f6b2ea")
-                        },
-                        new
-                        {
-                            Id = new Guid("09d0e1f2-a3b4-4c5d-6e7f-8a9b0c1d2e3f"),
-                            ClinicId = new Guid("6e7e4870-d28d-4a2d-9d0f-9e29f2930fc5"),
-                            CreatedOnUtc = new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
-                            IsDeleted = false,
-                            UserId = new Guid("8b0f0b23-f07f-453d-b8bc-1acb26d03d87")
-                        },
-                        new
-                        {
-                            Id = new Guid("16e7f8a9-b0c1-4d2e-3f4a-5b6c7d8e9f0a"),
-                            ClinicId = new Guid("f3e6a7ca-28f9-4c7b-a190-c065cecf7be3"),
-                            CreatedOnUtc = new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
-                            IsDeleted = false,
-                            UserId = new Guid("79f207d4-dbbf-488d-848d-fc74a7fdbb29")
-                        },
-                        new
-                        {
-                            Id = new Guid("17f8a9b0-c1d2-4e3f-4a5b-6c7d8e9f0a1b"),
-                            ClinicId = new Guid("f3e6a7ca-28f9-4c7b-a190-c065cecf7be3"),
-                            CreatedOnUtc = new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
-                            IsDeleted = false,
-                            UserId = new Guid("32e8cfbb-d8b4-4768-8695-81b6b7e63c63")
-                        },
-                        new
-                        {
-                            Id = new Guid("18a9b0c1-d2e3-4f4a-5b6c-7d8e9f0a1b2c"),
-                            ClinicId = new Guid("c96de07e-32d7-41d5-b417-060cd95ee7ff"),
-                            CreatedOnUtc = new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
-                            IsDeleted = false,
-                            UserId = new Guid("c21fa13a-b2f6-4eba-8b77-d2c57854bc5f")
-                        },
-                        new
-                        {
-                            Id = new Guid("19b0c1d2-e3f4-4a5b-6c7d-8e9f0a1b2c3d"),
-                            ClinicId = new Guid("c96de07e-32d7-41d5-b417-060cd95ee7ff"),
-                            CreatedOnUtc = new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
-                            IsDeleted = false,
-                            UserId = new Guid("bd3c9480-7bca-43d7-94ed-58cea8b32733")
-                        },
-                        new
-                        {
-                            Id = new Guid("26c7d8e9-f0a1-4b2c-3d4e-5f6a7b8c9d0e"),
-                            ClinicId = new Guid("3c8b8f3d-2f3f-4b17-9b46-0517c0183a50"),
-                            CreatedOnUtc = new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
-                            IsDeleted = false,
-                            UserId = new Guid("5e9bd8dd-fb53-4f74-bf59-b3aedb96aa7c")
-                        },
-                        new
-                        {
-                            Id = new Guid("27d8e9f0-a1b2-4c3d-4e5f-6a7b8c9d0e1f"),
-                            ClinicId = new Guid("3c8b8f3d-2f3f-4b17-9b46-0517c0183a50"),
-                            CreatedOnUtc = new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
-                            IsDeleted = false,
-                            UserId = new Guid("71ddc3c7-a3a0-4e6b-bd1d-f03d5deedbfa")
-                        },
-                        new
-                        {
-                            Id = new Guid("28e9f0a1-b2c3-4d4e-5f6a-7b8c9d0e1f2a"),
-                            ClinicId = new Guid("6ed1aefc-863e-4f2e-9c24-83eec7c0181c"),
-                            CreatedOnUtc = new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
-                            IsDeleted = false,
-                            UserId = new Guid("e8e3f18b-9179-48a6-94bb-1e5320fb8f30")
-                        },
-                        new
-                        {
-                            Id = new Guid("29f0a1b2-c3d4-4e5f-6a7b-8c9d0e1f2a3b"),
-                            ClinicId = new Guid("6ed1aefc-863e-4f2e-9c24-83eec7c0181c"),
-                            CreatedOnUtc = new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
-                            IsDeleted = false,
-                            UserId = new Guid("f76d8ab1-c9eb-4e29-a9f1-5302b543c283")
-                        });
                 });
 
             modelBuilder.Entity("BEAUTIFY_COMMAND.DOMAIN.Entities.UserConversation", b =>
@@ -3066,6 +2000,9 @@ namespace BEAUTIFY_COMMAND.PERSISTENCE.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<Guid?>("ClinicId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<DateTimeOffset>("CreatedOnUtc")
                         .HasColumnType("datetimeoffset");
 
@@ -3075,7 +2012,7 @@ namespace BEAUTIFY_COMMAND.PERSISTENCE.Migrations
                     b.Property<DateOnly>("Date")
                         .HasColumnType("date");
 
-                    b.Property<Guid?>("DoctorClinicId")
+                    b.Property<Guid?>("DoctorId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<TimeSpan>("EndTime")
@@ -3098,9 +2035,13 @@ namespace BEAUTIFY_COMMAND.PERSISTENCE.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("ClinicId");
+
                     b.HasIndex("CustomerScheduleId");
 
-                    b.HasIndex("DoctorClinicId");
+                    b.HasIndex("DoctorId");
+
+                    b.HasIndex("ShiftGroupId");
 
                     b.ToTable("WorkingSchedule");
                 });
@@ -3248,12 +2189,17 @@ namespace BEAUTIFY_COMMAND.PERSISTENCE.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("BEAUTIFY_COMMAND.DOMAIN.Entities.Feedback", "Feedback")
+                        .WithOne()
+                        .HasForeignKey("BEAUTIFY_COMMAND.DOMAIN.Entities.CustomerSchedule", "FeedbackId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
                     b.HasOne("BEAUTIFY_COMMAND.DOMAIN.Entities.Order", "Order")
                         .WithMany()
                         .HasForeignKey("OrderId");
 
-                    b.HasOne("BEAUTIFY_COMMAND.DOMAIN.Entities.Procedure", null)
-                        .WithMany("CustomerSchedules")
+                    b.HasOne("BEAUTIFY_COMMAND.DOMAIN.Entities.Procedure", "Procedure")
+                        .WithMany()
                         .HasForeignKey("ProcedureId");
 
                     b.HasOne("BEAUTIFY_COMMAND.DOMAIN.Entities.ProcedurePriceType", "ProcedurePriceType")
@@ -3270,7 +2216,11 @@ namespace BEAUTIFY_COMMAND.PERSISTENCE.Migrations
 
                     b.Navigation("Doctor");
 
+                    b.Navigation("Feedback");
+
                     b.Navigation("Order");
+
+                    b.Navigation("Procedure");
 
                     b.Navigation("ProcedurePriceType");
 
@@ -3324,15 +2274,6 @@ namespace BEAUTIFY_COMMAND.PERSISTENCE.Migrations
                     b.Navigation("Service");
                 });
 
-            modelBuilder.Entity("BEAUTIFY_COMMAND.DOMAIN.Entities.Feedback", b =>
-                {
-                    b.HasOne("BEAUTIFY_COMMAND.DOMAIN.Entities.CustomerSchedule", null)
-                        .WithOne("Feedback")
-                        .HasForeignKey("BEAUTIFY_COMMAND.DOMAIN.Entities.Feedback", "CustomerScheduleId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("BEAUTIFY_COMMAND.DOMAIN.Entities.LivestreamRoom", b =>
                 {
                     b.HasOne("BEAUTIFY_COMMAND.DOMAIN.Entities.Clinic", "Clinic")
@@ -3377,8 +2318,9 @@ namespace BEAUTIFY_COMMAND.PERSISTENCE.Migrations
                         .HasForeignKey("LivestreamRoomId");
 
                     b.HasOne("BEAUTIFY_COMMAND.DOMAIN.Entities.OrderFeedback", "OrderFeedback")
-                        .WithMany()
-                        .HasForeignKey("OrderFeedbackId");
+                        .WithOne()
+                        .HasForeignKey("BEAUTIFY_COMMAND.DOMAIN.Entities.Order", "OrderFeedbackId")
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("BEAUTIFY_COMMAND.DOMAIN.Entities.Service", "Service")
                         .WithMany()
@@ -3414,6 +2356,21 @@ namespace BEAUTIFY_COMMAND.PERSISTENCE.Migrations
                     b.Navigation("Order");
 
                     b.Navigation("ProcedurePriceType");
+                });
+
+            modelBuilder.Entity("BEAUTIFY_COMMAND.DOMAIN.Entities.OrderFeedbackMedia", b =>
+                {
+                    b.HasOne("BEAUTIFY_COMMAND.DOMAIN.Entities.OrderFeedback", null)
+                        .WithMany("OrderFeedbackMedias")
+                        .HasForeignKey("OrderFeedbackId");
+
+                    b.HasOne("BEAUTIFY_COMMAND.DOMAIN.Entities.Order", "Order")
+                        .WithMany()
+                        .HasForeignKey("OrderId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Order");
                 });
 
             modelBuilder.Entity("BEAUTIFY_COMMAND.DOMAIN.Entities.Procedure", b =>
@@ -3480,6 +2437,17 @@ namespace BEAUTIFY_COMMAND.PERSISTENCE.Migrations
                         .IsRequired();
 
                     b.Navigation("Service");
+                });
+
+            modelBuilder.Entity("BEAUTIFY_COMMAND.DOMAIN.Entities.ShiftConfig", b =>
+                {
+                    b.HasOne("BEAUTIFY_COMMAND.DOMAIN.Entities.Clinic", "Clinic")
+                        .WithMany("ShiftConfigs")
+                        .HasForeignKey("ClinicId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Clinic");
                 });
 
             modelBuilder.Entity("BEAUTIFY_COMMAND.DOMAIN.Entities.Staff", b =>
@@ -3664,17 +2632,29 @@ namespace BEAUTIFY_COMMAND.PERSISTENCE.Migrations
 
             modelBuilder.Entity("BEAUTIFY_COMMAND.DOMAIN.Entities.WorkingSchedule", b =>
                 {
+                    b.HasOne("BEAUTIFY_COMMAND.DOMAIN.Entities.Clinic", "Clinic")
+                        .WithMany()
+                        .HasForeignKey("ClinicId");
+
                     b.HasOne("BEAUTIFY_COMMAND.DOMAIN.Entities.CustomerSchedule", "CustomerSchedule")
                         .WithMany()
                         .HasForeignKey("CustomerScheduleId");
 
-                    b.HasOne("BEAUTIFY_COMMAND.DOMAIN.Entities.UserClinic", "DoctorClinic")
-                        .WithMany("WorkingSchedules")
-                        .HasForeignKey("DoctorClinicId");
+                    b.HasOne("BEAUTIFY_COMMAND.DOMAIN.Entities.Staff", "Doctor")
+                        .WithMany()
+                        .HasForeignKey("DoctorId");
+
+                    b.HasOne("BEAUTIFY_COMMAND.DOMAIN.Entities.ShiftConfig", "ShiftGroup")
+                        .WithMany()
+                        .HasForeignKey("ShiftGroupId");
+
+                    b.Navigation("Clinic");
 
                     b.Navigation("CustomerSchedule");
 
-                    b.Navigation("DoctorClinic");
+                    b.Navigation("Doctor");
+
+                    b.Navigation("ShiftGroup");
                 });
 
             modelBuilder.Entity("BEAUTIFY_COMMAND.DOMAIN.Entities.Category", b =>
@@ -3695,6 +2675,8 @@ namespace BEAUTIFY_COMMAND.PERSISTENCE.Migrations
                     b.Navigation("ClinicVouchers");
 
                     b.Navigation("LivestreamRooms");
+
+                    b.Navigation("ShiftConfigs");
 
                     b.Navigation("SystemTransaction");
 
@@ -3717,11 +2699,6 @@ namespace BEAUTIFY_COMMAND.PERSISTENCE.Migrations
                     b.Navigation("UserConversations");
                 });
 
-            modelBuilder.Entity("BEAUTIFY_COMMAND.DOMAIN.Entities.CustomerSchedule", b =>
-                {
-                    b.Navigation("Feedback");
-                });
-
             modelBuilder.Entity("BEAUTIFY_COMMAND.DOMAIN.Entities.LivestreamRoom", b =>
                 {
                     b.Navigation("Promotions");
@@ -3732,10 +2709,13 @@ namespace BEAUTIFY_COMMAND.PERSISTENCE.Migrations
                     b.Navigation("OrderDetails");
                 });
 
+            modelBuilder.Entity("BEAUTIFY_COMMAND.DOMAIN.Entities.OrderFeedback", b =>
+                {
+                    b.Navigation("OrderFeedbackMedias");
+                });
+
             modelBuilder.Entity("BEAUTIFY_COMMAND.DOMAIN.Entities.Procedure", b =>
                 {
-                    b.Navigation("CustomerSchedules");
-
                     b.Navigation("ProcedureMedias");
 
                     b.Navigation("ProcedurePriceTypes");
@@ -3798,8 +2778,6 @@ namespace BEAUTIFY_COMMAND.PERSISTENCE.Migrations
             modelBuilder.Entity("BEAUTIFY_COMMAND.DOMAIN.Entities.UserClinic", b =>
                 {
                     b.Navigation("CustomerSchedules");
-
-                    b.Navigation("WorkingSchedules");
                 });
 #pragma warning restore 612, 618
         }

@@ -256,6 +256,6 @@ public class StaffConfiguration : IEntityTypeConfiguration<Staff>
             }
         };
 
-        builder.HasData(staff);
+        // builder.HasData(staff);
     }
 }

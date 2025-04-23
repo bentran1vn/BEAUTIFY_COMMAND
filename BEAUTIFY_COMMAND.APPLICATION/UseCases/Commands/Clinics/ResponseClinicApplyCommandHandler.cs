@@ -44,7 +44,6 @@ public class ResponseClinicApplyCommandHandler(
             {
                 var userExist = staffRepository
                     .FindAll(x => x.Email.Equals(applyRequest.Clinic!.Email) &&
-                                x.PhoneNumber.Equals(applyRequest.Clinic.PhoneNumber) &&
                                 x.IsDeleted == false)
                     .FirstOrDefault();
                 
@@ -52,6 +51,17 @@ public class ResponseClinicApplyCommandHandler(
                 {
                     content.Body = ClinicApplicationEmailTemplates.GetRejectedTemplate(applyRequest.Clinic.Email,
                         applyRequest.RejectReason ?? "", userExist.Password);
+                    
+                    userExist.FirstName = applyRequest.Clinic.Name;
+                    userExist.LastName = "";
+                    userExist.PhoneNumber = applyRequest.Clinic!.PhoneNumber;
+                    userExist.DateOfBirth =  DateOnly.Parse("1999-01-01");
+                    userExist.City =  applyRequest.Clinic.City;
+                    userExist.District =  applyRequest.Clinic.District;
+                    userExist.Ward =  applyRequest.Clinic.Ward;
+                    userExist.Address =  applyRequest.Clinic.Address;
+                
+                    staffRepository.Update(userExist);
                 }
                 else
                 {
@@ -99,61 +109,84 @@ public class ResponseClinicApplyCommandHandler(
             applyRequest.Clinic!.Status = 1;
             applyRequest.Clinic!.IsActivated = true;
             applyRequest.Clinic!.IsFirstLogin = true;
-
-            var passwordRandom = GenerateRandomPassword();
-            var hashingPassword = passwordHasherService.HashPassword(passwordRandom);
-
-            var user = new Staff
+            
+            var userExist = staffRepository
+                .FindAll(x => x.Email.Equals(applyRequest.Clinic!.Email) &&
+                              x.IsDeleted == false)
+                .FirstOrDefault();
+                
+            if(userExist != null)
             {
-                Email = applyRequest.Clinic!.Email,
-                FirstName = applyRequest.Clinic.Name,
-                LastName = "",
-                PhoneNumber = applyRequest.Clinic!.PhoneNumber,
-                DateOfBirth = DateOnly.Parse("1999-01-01"),
-                City = applyRequest.Clinic.City,
-                District = applyRequest.Clinic.District,
-                Ward = applyRequest.Clinic.Ward,
-                Address = applyRequest.Clinic.Address,
-                Password = hashingPassword,
-                RoleId = new Guid("C6D93B8C-F509-4498-ABBB-FE63EDC66F2B"),
-                Status = 1
-            };
-
-            staffRepository.Add(user);
-
-            var userClinic = new UserClinic
+                userExist.FirstName = applyRequest.Clinic.Name;
+                userExist.LastName = "";
+                userExist.PhoneNumber = applyRequest.Clinic!.PhoneNumber;
+                userExist.DateOfBirth =  DateOnly.Parse("1999-01-01");
+                userExist.City =  applyRequest.Clinic.City;
+                userExist.District =  applyRequest.Clinic.District;
+                userExist.Ward =  applyRequest.Clinic.Ward;
+                userExist.Address =  applyRequest.Clinic.Address;
+                
+                staffRepository.Update(userExist);
+                    
+                content.Body = ClinicApplicationEmailTemplates.GetApprovedTemplate(applyRequest.Clinic.Email);
+            }
+            else
             {
-                UserId = user.Id,
-                ClinicId = applyRequest.Clinic.Id
-            };
+                var passwordRandom = GenerateRandomPassword();
+                var hashingPassword = passwordHasherService.HashPassword(passwordRandom);
+                
+                var user = new Staff
+                {
+                    Email = applyRequest.Clinic!.Email,
+                    FirstName = applyRequest.Clinic.Name,
+                    LastName = "",
+                    PhoneNumber = applyRequest.Clinic!.PhoneNumber,
+                    DateOfBirth = DateOnly.Parse("1999-01-01"),
+                    City = applyRequest.Clinic.City,
+                    District = applyRequest.Clinic.District,
+                    Ward = applyRequest.Clinic.Ward,
+                    Address = applyRequest.Clinic.Address,
+                    Password = hashingPassword,
+                    RoleId = new Guid("C6D93B8C-F509-4498-ABBB-FE63EDC66F2B"),
+                    Status = 1
+                };
 
-            userClinicRepository.Add(userClinic);
+                staffRepository.Add(user);
+                
+                var userClinic = new UserClinic
+                {
+                    UserId = user.Id,
+                    ClinicId = applyRequest.Clinic.Id
+                };
 
-            content.Body =
-                ClinicApplicationEmailTemplates.GetApprovedTemplate(applyRequest.Clinic.Email, passwordRandom);
-
-            var sub = await subscriptionPackageRepository.FindSingleAsync(x => x.Name.Equals("Dùng Thử"),
-                cancellationToken);
-
-            if (sub == null) return Result.Failure(new Error("404", "Subscription package Not Found"));
-
-            applyRequest.Clinic.AdditionBranches = sub.LimitBranch;
-            applyRequest.Clinic.AdditionLivestreams = sub.LimitLiveStream;
-
-            var vietnamTimeZone = TimeZoneInfo.FindSystemTimeZoneById("SE Asia Standard Time");
-
-            var trans = new SystemTransaction
-            {
-                Id = Guid.NewGuid(),
-                ClinicId = applyRequest.Clinic.Id,
-                SubscriptionPackageId = sub.Id,
-                Amount = sub.Price,
-                TransactionDate = TimeZoneInfo.ConvertTime(DateTimeOffset.UtcNow, vietnamTimeZone),
-                Status = 1
-            };
-
-            systemTransactionRepository.Add(trans);
+                userClinicRepository.Add(userClinic);
+                
+                content.Body =
+                    ClinicApplicationEmailTemplates.GetApprovedTemplate(applyRequest.Clinic.Email, passwordRandom);
+            }
         }
+        
+        var sub = await subscriptionPackageRepository.FindSingleAsync(x => x.Name.Equals("Dùng Thử"),
+            cancellationToken);
+
+        if (sub == null) return Result.Failure(new Error("404", "Subscription package Not Found"));
+
+        applyRequest.Clinic.AdditionBranches = sub.LimitBranch;
+        applyRequest.Clinic.AdditionLivestreams = sub.LimitLiveStream;
+
+        var vietnamTimeZone = TimeZoneInfo.FindSystemTimeZoneById("SE Asia Standard Time");
+
+        var trans = new SystemTransaction
+        {
+            Id = Guid.NewGuid(),
+            ClinicId = applyRequest.Clinic.Id,
+            SubscriptionPackageId = sub.Id,
+            Amount = sub.Price,
+            TransactionDate = TimeZoneInfo.ConvertTime(DateTimeOffset.UtcNow, vietnamTimeZone),
+            Status = 1
+        };
+
+        systemTransactionRepository.Add(trans);
 
         await mailService.SendMail(content);
 

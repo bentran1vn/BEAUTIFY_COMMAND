@@ -195,6 +195,6 @@ public class ClinicConfiguration : IEntityTypeConfiguration<Clinic>
             }
         };
 
-        builder.HasData(clinics);
+        // builder.HasData(clinics);
     }
 }
