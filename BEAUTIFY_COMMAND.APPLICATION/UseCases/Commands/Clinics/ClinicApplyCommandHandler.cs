@@ -19,6 +19,8 @@ public class ClinicApplyCommandHandler(
             }
         }
         
+        
+        // ReApply lan dau tien
         if (request.RoleName != null && request.ClinicId != null)
         {
             if(request.RoleName != "Clinic Admin")
@@ -104,6 +106,8 @@ public class ClinicApplyCommandHandler(
             return Result.Success("Clinic Apply Successfully");
         }
         
+        
+        // Apply lan dau tien
         if(request.BusinessLicense == null || request.OperatingLicense == null || request.ProfilePictureUrl == null || request.OperatingLicenseExpiryDate == null)
         {
             return Result.Failure(new Error("500", "Must have BusinessLicense, OperatingLicense and ProfilePictureUrl"));
