@@ -85,9 +85,9 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
         
         builder.Entity<Order>()
             .HasOne(lr => lr.OrderFeedback)
-            .WithOne() // Assuming one-to-one relationship, adjust if it's one-to-many
+            .WithOne()
             .HasForeignKey<Order>(lr => lr.OrderFeedbackId)
-            .OnDelete(DeleteBehavior.Restrict); // Adjust delete behavior as needed
+            .OnDelete(DeleteBehavior.Restrict);
         
         builder.Entity<CustomerSchedule>()
             .HasOne(lr => lr.Feedback)
