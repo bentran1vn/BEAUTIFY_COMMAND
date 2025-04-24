@@ -69,8 +69,8 @@ builder.Services.AddRedisInfrastructure(builder.Configuration);
 builder.Services.AddMasstransitRabbitMQInfrastructure(builder.Configuration);
 builder.Services.AddQuartzInfrastructure();
 builder.Services.AddMediatRInfrastructure();
-builder.Services.ConfigureCloudinaryOptionsInfrastucture(builder.Configuration.GetSection(nameof(CloudinaryOptions)));
-builder.Services.ConfigureMailOptionsInfrastucture(builder.Configuration.GetSection(nameof(MailOption)));
+builder.Services.ConfigureCloudinaryOptionsInfrastructure(builder.Configuration.GetSection(nameof(CloudinaryOptions)));
+builder.Services.ConfigureMailOptionsInfrastructure(builder.Configuration.GetSection(nameof(MailOption)));
 
 
 // Add Middleware => Remember using middleware

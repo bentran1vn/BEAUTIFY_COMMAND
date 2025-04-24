@@ -107,7 +107,7 @@ public static class SubscriptionExpiryReminderEmailTemplate
             <li>Livestream capabilities may be restricted</li>
         </ul>
         
-       <a href='#' class='action-button'>Renew Subscription Now</a>
+       <a href='https://beautify.asia/clinicManager/buy-package' class='action-button'>Renew Subscription Now</a>
         
         <p>If you have any questions or need assistance with the renewal process, please don't hesitate to contact our support team.</p>
         

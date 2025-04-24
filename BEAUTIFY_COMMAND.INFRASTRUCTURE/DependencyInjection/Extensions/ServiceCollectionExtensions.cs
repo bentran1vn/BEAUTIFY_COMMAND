@@ -118,7 +118,7 @@ public static class ServiceCollectionExtensions
 
                 // ===================== Setup for Consumer =====================
 
-                // Importantce to create Echange and Queue
+                // Important to create Exchange and Queue
                 bus.ConfigureEndpoints(context);
             });
         });
@@ -174,20 +174,20 @@ public static class ServiceCollectionExtensions
         services.AddQuartzHostedService();
     }
 
-    public static OptionsBuilder<CloudinaryOptions> ConfigureCloudinaryOptionsInfrastucture(
-        this IServiceCollection services, IConfigurationSection section)
+    public static void ConfigureCloudinaryOptionsInfrastructure(this IServiceCollection services,
+        IConfigurationSection section)
     {
-        return services
+        services
             .AddOptions<CloudinaryOptions>()
             .Bind(section)
             .ValidateDataAnnotations()
             .ValidateOnStart();
     }
 
-    public static OptionsBuilder<MailOption> ConfigureMailOptionsInfrastucture(this IServiceCollection services,
+    public static void ConfigureMailOptionsInfrastructure(this IServiceCollection services,
         IConfigurationSection section)
     {
-        return services
+        services
             .AddOptions<MailOption>()
             .Bind(section)
             .ValidateDataAnnotations()

@@ -14,7 +14,7 @@ public class SubscriptionExpiryReminderJob(
     ILogger<SubscriptionExpiryReminderJob> logger) : IJob
 {
     // Define reminder thresholds in days
-    private static readonly int[] ReminderDays = { 30, 14, 7, 3, 1 };
+    private static readonly int[] ReminderDays = [30, 14, 7, 3, 1, 0];
 
     public async Task Execute(IJobExecutionContext context)
     {
@@ -23,8 +23,8 @@ public class SubscriptionExpiryReminderJob(
             logger.LogInformation("Starting SubscriptionExpiryReminderJob at {time}", DateTimeOffset.UtcNow);
 
             // Get Vietnam time zone
-            var vietnamTimeZone = TimeZoneInfo.FindSystemTimeZoneById("SE Asia Standard Time");
-            var currentDateTimeVN = TimeZoneInfo.ConvertTime(DateTimeOffset.UtcNow, vietnamTimeZone);
+            var currentDateTimeVN = TimeZoneInfo.ConvertTime(DateTimeOffset.UtcNow,
+                TimeZoneInfo.FindSystemTimeZoneById("SE Asia Standard Time"));
 
             // Get all completed subscription transactions (status = 2 means completed and email sent)
             var completedTransactions = await dbContext.Set<SystemTransaction>()
@@ -56,22 +56,20 @@ public class SubscriptionExpiryReminderJob(
                     var daysRemaining = (expiryDate - currentDateTimeVN).Days;
 
                     // Check if we need to send a reminder for this subscription
-                    if (ReminderDays.Contains(daysRemaining))
-                    {
-                        // Create and send the reminder email
-                        var mailContent = SubscriptionExpiryReminderEmailTemplate.GetSubscriptionExpiryReminderTemplate(
-                            transaction.Clinic,
-                            transaction.SubscriptionPackage,
-                            transaction,
-                            expiryDate,
-                            daysRemaining);
+                    if (!ReminderDays.Contains(daysRemaining)) continue;
+                    // Create and send the reminder email
+                    var mailContent = SubscriptionExpiryReminderEmailTemplate.GetSubscriptionExpiryReminderTemplate(
+                        transaction.Clinic,
+                        transaction.SubscriptionPackage,
+                        transaction,
+                        expiryDate,
+                        daysRemaining);
 
-                        await mailService.SendMail(mailContent);
+                    await mailService.SendMail(mailContent);
 
-                        logger.LogInformation(
-                            "Sent subscription expiry reminder email for transaction {transactionId} to {email}. Expires in {days} days on {expiryDate}",
-                            transaction.Id, transaction.Clinic.Email, daysRemaining, expiryDate);
-                    }
+                    logger.LogInformation(
+                        "Sent subscription expiry reminder email for transaction {transactionId} to {email}. Expires in {days} days on {expiryDate}",
+                        transaction.Id, transaction.Clinic.Email, daysRemaining, expiryDate);
                 }
                 catch (Exception ex)
                 {
