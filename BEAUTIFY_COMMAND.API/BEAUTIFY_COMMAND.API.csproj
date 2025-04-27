@@ -8,36 +8,24 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <_ContentIncludedByDefault Remove="appsettings.json"/>
+        <_ContentIncludedByDefault Remove="appsettings.json" />
     </ItemGroup>
 
     <ItemGroup>
-
-
-        <PackageReference Include="BEAUTIFY_PACKAGES.SHARE" Version="1.12.6"/>
-        <PackageReference Include="Carter" Version="8.1.0"/>
-        <PackageReference Include="MicroElements.Swashbuckle.FluentValidation" Version="6.1.0"/>
+        <PackageReference Include="Carter" Version="8.1.0" />
+        <PackageReference Include="MicroElements.Swashbuckle.FluentValidation" Version="6.1.0" />
         <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.7">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
-        <PackageReference Include="Swashbuckle.AspNetCore" Version="7.2.0"/>
-        <PackageReference Include="Swashbuckle.AspNetCore.Annotations" Version="7.2.0"/>
-        <PackageReference Include="Swashbuckle.AspNetCore.Newtonsoft" Version="7.2.0"/>
-        <PackageReference Include="Swashbuckle.AspNetCore.SwaggerGen" Version="7.2.0"/>
+        <PackageReference Include="Swashbuckle.AspNetCore" Version="7.2.0" />
+        <PackageReference Include="Swashbuckle.AspNetCore.Annotations" Version="7.2.0" />
+        <PackageReference Include="Swashbuckle.AspNetCore.Newtonsoft" Version="7.2.0" />
+        <PackageReference Include="Swashbuckle.AspNetCore.SwaggerGen" Version="7.2.0" />
     </ItemGroup>
 
     <ItemGroup>
-        <Folder Include="Controllers\"/>
-    </ItemGroup>
-
-    <ItemGroup>
-        <ProjectReference Include="..\BEAUTIFY_COMMAND.APPLICATION\BEAUTIFY_COMMAND.APPLICATION.csproj"/>
-        <ProjectReference Include="..\BEAUTIFY_COMMAND.DOMAIN\BEAUTIFY_COMMAND.DOMAIN.csproj"/>
-        <!--      <ProjectReference Include="..\BEAUTIFY_COMMAND.DOMAIN\BEAUTIFY_COMMAND.DOMAIN.csproj" />-->
-        <ProjectReference Include="..\BEAUTIFY_COMMAND.INFRASTRUCTURE\BEAUTIFY_COMMAND.INFRASTRUCTURE.csproj"/>
-        <ProjectReference Include="..\BEAUTIFY_COMMAND.PERSISTENCE\BEAUTIFY_COMMAND.PERSISTENCE.csproj"/>
-        <ProjectReference Include="..\BEAUTIFY_COMMAND.PRESENTATION\BEAUTIFY_COMMAND.PRESENTATION.csproj"/>
+        <Folder Include="Controllers\" />
     </ItemGroup>
 
     <ItemGroup>
@@ -47,6 +35,10 @@
     </ItemGroup>
 
     <ItemGroup>
-        <PackageVersion Update="BEAUTIFY_PACKAGES.SHARE" Version="1.5.8"/>
+      <ProjectReference Include="..\BEAUTIFY_COMMAND.INFRASTRUCTURE\BEAUTIFY_COMMAND.INFRASTRUCTURE.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <PackageVersion Update="BEAUTIFY_PACKAGES.SHARE" Version="1.5.8" />
     </ItemGroup>
 </Project>

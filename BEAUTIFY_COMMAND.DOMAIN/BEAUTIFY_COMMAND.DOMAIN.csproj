@@ -7,10 +7,6 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="BEAUTIFY_PACKAGES.SHARE" Version="1.12.6"/>
-    </ItemGroup>
-
-    <ItemGroup>
         <ProjectReference Include="..\BEAUTIFY_COMMAND.CONTRACT\BEAUTIFY_COMMAND.CONTRACT.csproj"/>
     </ItemGroup>
 

@@ -1,5 +1,4 @@
 using BEAUTIFY_COMMAND.DOMAIN.Entities;
-using BEAUTIFY_PACKAGES.BEAUTIFY_PACKAGES.DOMAIN.Constrants;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
