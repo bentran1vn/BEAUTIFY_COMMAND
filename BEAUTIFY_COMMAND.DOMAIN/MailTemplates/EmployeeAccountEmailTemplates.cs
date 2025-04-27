@@ -1,6 +1,6 @@
 ﻿using BEAUTIFY_PACKAGES.BEAUTIFY_PACKAGES.DOMAIN.Constrants;
 
-namespace BEAUTIFY_COMMAND.CONTRACT.MailTemplates;
+namespace BEAUTIFY_COMMAND.DOMAIN.MailTemplates;
 public static class EmployeeAccountEmailTemplates
 {
     public static string GetAccountCreationTemplate(string email, string firstName, string password, string roleType)

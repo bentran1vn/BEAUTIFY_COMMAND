@@ -10,6 +10,7 @@ internal sealed class CustomerWithdrawFromWalletCommandHandler(
     ICurrentUserService currentUserService)
     : ICommandHandler<CONTRACT.Services.Wallets.Commands.CustomerWithdrawFromWalletCommand>
 {
+    //todo : move to config
     private const decimal MINIMUM_WITHDRAWAL_AMOUNT = 2000;
 
     public async Task<Result> Handle(CONTRACT.Services.Wallets.Commands.CustomerWithdrawFromWalletCommand request,

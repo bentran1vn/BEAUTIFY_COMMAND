@@ -1,4 +1,4 @@
-namespace BEAUTIFY_COMMAND.INFRASTRUCTURE.Locking;
+namespace BEAUTIFY_COMMAND.DOMAIN.Abstractions;
 public interface IDistributedLockService
 {
     /// <summary>

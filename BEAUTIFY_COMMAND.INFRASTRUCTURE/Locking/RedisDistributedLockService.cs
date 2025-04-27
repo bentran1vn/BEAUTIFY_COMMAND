@@ -1,3 +1,4 @@
+using BEAUTIFY_COMMAND.DOMAIN.Abstractions;
 using Microsoft.Extensions.Logging;
 using StackExchange.Redis;
 

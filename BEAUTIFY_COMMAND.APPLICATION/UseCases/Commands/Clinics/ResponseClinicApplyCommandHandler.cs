@@ -1,4 +1,4 @@
-using BEAUTIFY_COMMAND.CONTRACT.MailTemplates;
+using BEAUTIFY_COMMAND.DOMAIN.MailTemplates;
 
 namespace BEAUTIFY_COMMAND.APPLICATION.UseCases.Commands.Clinics;
 public class ResponseClinicApplyCommandHandler(
@@ -39,28 +39,28 @@ public class ResponseClinicApplyCommandHandler(
             // 1 is Rejected
             applyRequest.RejectReason = request.RejectReason;
             applyRequest.Clinic!.Status = request.Action + 1;
-            
+
             if (request.Action == 1)
             {
                 var userExist = staffRepository
                     .FindAll(x => x.Email.Equals(applyRequest.Clinic!.Email) &&
-                                x.IsDeleted == false)
+                                  x.IsDeleted == false)
                     .FirstOrDefault();
-                
-                if(userExist != null)
+
+                if (userExist != null)
                 {
                     content.Body = ClinicApplicationEmailTemplates.GetRejectedTemplate(applyRequest.Clinic.Email,
                         applyRequest.RejectReason ?? "", userExist.Password);
-                    
+
                     userExist.FirstName = applyRequest.Clinic.Name;
                     userExist.LastName = "";
                     userExist.PhoneNumber = applyRequest.Clinic!.PhoneNumber;
-                    userExist.DateOfBirth =  DateOnly.Parse("1999-01-01");
-                    userExist.City =  applyRequest.Clinic.City;
-                    userExist.District =  applyRequest.Clinic.District;
-                    userExist.Ward =  applyRequest.Clinic.Ward;
-                    userExist.Address =  applyRequest.Clinic.Address;
-                
+                    userExist.DateOfBirth = DateOnly.Parse("1999-01-01");
+                    userExist.City = applyRequest.Clinic.City;
+                    userExist.District = applyRequest.Clinic.District;
+                    userExist.Ward = applyRequest.Clinic.Ward;
+                    userExist.Address = applyRequest.Clinic.Address;
+
                     staffRepository.Update(userExist);
                 }
                 else
@@ -82,7 +82,7 @@ public class ResponseClinicApplyCommandHandler(
                         RoleId = new Guid("C6D93B8C-F509-4498-ABBB-FE63EDC66F2B"),
                         Status = 1
                     };
-                
+
                     staffRepository.Add(user);
 
                     var userClinic = new UserClinic
@@ -109,32 +109,32 @@ public class ResponseClinicApplyCommandHandler(
             applyRequest.Clinic!.Status = 1;
             applyRequest.Clinic!.IsActivated = true;
             applyRequest.Clinic!.IsFirstLogin = true;
-            
+
             var userExist = staffRepository
                 .FindAll(x => x.Email.Equals(applyRequest.Clinic!.Email) &&
                               x.IsDeleted == false)
                 .FirstOrDefault();
-                
-            if(userExist != null)
+
+            if (userExist != null)
             {
                 userExist.FirstName = applyRequest.Clinic.Name;
                 userExist.LastName = "";
                 userExist.PhoneNumber = applyRequest.Clinic!.PhoneNumber;
-                userExist.DateOfBirth =  DateOnly.Parse("1999-01-01");
-                userExist.City =  applyRequest.Clinic.City;
-                userExist.District =  applyRequest.Clinic.District;
-                userExist.Ward =  applyRequest.Clinic.Ward;
-                userExist.Address =  applyRequest.Clinic.Address;
-                
+                userExist.DateOfBirth = DateOnly.Parse("1999-01-01");
+                userExist.City = applyRequest.Clinic.City;
+                userExist.District = applyRequest.Clinic.District;
+                userExist.Ward = applyRequest.Clinic.Ward;
+                userExist.Address = applyRequest.Clinic.Address;
+
                 staffRepository.Update(userExist);
-                    
+
                 content.Body = ClinicApplicationEmailTemplates.GetApprovedTemplate(applyRequest.Clinic.Email);
             }
             else
             {
                 var passwordRandom = GenerateRandomPassword();
                 var hashingPassword = passwordHasherService.HashPassword(passwordRandom);
-                
+
                 var user = new Staff
                 {
                     Email = applyRequest.Clinic!.Email,
@@ -152,7 +152,7 @@ public class ResponseClinicApplyCommandHandler(
                 };
 
                 staffRepository.Add(user);
-                
+
                 var userClinic = new UserClinic
                 {
                     UserId = user.Id,
@@ -160,12 +160,12 @@ public class ResponseClinicApplyCommandHandler(
                 };
 
                 userClinicRepository.Add(userClinic);
-                
+
                 content.Body =
                     ClinicApplicationEmailTemplates.GetApprovedTemplate(applyRequest.Clinic.Email, passwordRandom);
             }
         }
-        
+
         var sub = await subscriptionPackageRepository.FindSingleAsync(x => x.Name.Equals("Dùng Thử"),
             cancellationToken);
 

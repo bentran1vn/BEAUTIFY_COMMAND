@@ -1,4 +1,4 @@
-﻿namespace BEAUTIFY_COMMAND.CONTRACT.MailTemplates;
+﻿namespace BEAUTIFY_COMMAND.DOMAIN.MailTemplates;
 public static class ClinicApplicationEmailTemplates
 {
     public static string GetApprovedTemplate(string email, string password)
@@ -76,7 +76,7 @@ public static class ClinicApplicationEmailTemplates
 </body>
 </html>";
     }
-    
+
     public static string GetApprovedTemplate(string email)
     {
         return $@"
@@ -151,7 +151,7 @@ public static class ClinicApplicationEmailTemplates
 </body>
 </html>";
     }
-    
+
     public static string GetRejectedTemplate(string email, string reason, string password)
     {
         return $@"
@@ -283,7 +283,7 @@ public static class ClinicApplicationEmailTemplates
 </body>
 </html>";
     }
-    
+
     public static string GetRejectedTemplate(string email, string reason)
     {
         return $@"
@@ -348,7 +348,7 @@ public static class ClinicApplicationEmailTemplates
 </body>
 </html>";
     }
-    
+
     public static string GetBranchApprovedTemplate(string email)
     {
         return $@"

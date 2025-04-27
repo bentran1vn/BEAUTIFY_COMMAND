@@ -33,7 +33,6 @@
 
     <ItemGroup>
         <ProjectReference Include="..\BEAUTIFY_COMMAND.APPLICATION\BEAUTIFY_COMMAND.APPLICATION.csproj"/>
-        <ProjectReference Include="..\BEAUTIFY_COMMAND.CONTRACT\BEAUTIFY_COMMAND.CONTRACT.csproj"/>
         <ProjectReference Include="..\BEAUTIFY_COMMAND.DOMAIN\BEAUTIFY_COMMAND.DOMAIN.csproj"/>
         <!--      <ProjectReference Include="..\BEAUTIFY_COMMAND.DOMAIN\BEAUTIFY_COMMAND.DOMAIN.csproj" />-->
         <ProjectReference Include="..\BEAUTIFY_COMMAND.INFRASTRUCTURE\BEAUTIFY_COMMAND.INFRASTRUCTURE.csproj"/>

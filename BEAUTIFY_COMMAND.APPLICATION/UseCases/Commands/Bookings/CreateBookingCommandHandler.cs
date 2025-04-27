@@ -1,6 +1,6 @@
-﻿using BEAUTIFY_COMMAND.CONTRACT.MailTemplates;
-using BEAUTIFY_COMMAND.DOMAIN;
-using BEAUTIFY_COMMAND.INFRASTRUCTURE.Locking;
+﻿using BEAUTIFY_COMMAND.DOMAIN;
+using BEAUTIFY_COMMAND.DOMAIN.Abstractions;
+using BEAUTIFY_COMMAND.DOMAIN.MailTemplates;
 
 namespace BEAUTIFY_COMMAND.APPLICATION.UseCases.Commands.Bookings;
 /// <summary>
@@ -202,7 +202,8 @@ internal sealed class
 
                 if (discount != null)
                     // Calculate the discounted price, not the discount amount
-                    discountPrice = total * (1 - (decimal)discount.DiscountPercent);
+                    // discountPrice = total * (1 - (decimal)discount.DiscountPercent);
+                    discountPrice = total * (decimal)discount.DiscountPercent;
                 else
                     // If using service.DiscountPrice, make sure this is the final price after discount
                     // not the discount amount

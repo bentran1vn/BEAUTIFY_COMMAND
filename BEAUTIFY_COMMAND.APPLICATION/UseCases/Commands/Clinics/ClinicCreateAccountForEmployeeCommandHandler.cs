@@ -1,4 +1,4 @@
-﻿using BEAUTIFY_COMMAND.CONTRACT.MailTemplates;
+﻿using BEAUTIFY_COMMAND.DOMAIN.MailTemplates;
 
 namespace BEAUTIFY_COMMAND.APPLICATION.UseCases.Commands.Clinics;
 internal sealed class ClinicCreateAccountForEmployeeCommandHandler(
@@ -29,7 +29,7 @@ internal sealed class ClinicCreateAccountForEmployeeCommandHandler(
 
         // Validate clinic
         var clinic = await clinicRepository.FindByIdAsync(request.ClinicId, cancellationToken);
-        
+
         if (clinic == null)
             return Result.Failure(new Error("404", "Clinic not found"));
         if (!clinic.IsActivated)

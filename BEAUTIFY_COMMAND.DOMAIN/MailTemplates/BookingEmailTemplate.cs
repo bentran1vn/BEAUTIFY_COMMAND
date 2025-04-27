@@ -2,7 +2,7 @@
 using BEAUTIFY_COMMAND.DOMAIN.Entities;
 using BEAUTIFY_PACKAGES.BEAUTIFY_PACKAGES.APPLICATION.Abstractions;
 
-namespace BEAUTIFY_COMMAND.CONTRACT.MailTemplates;
+namespace BEAUTIFY_COMMAND.DOMAIN.MailTemplates;
 public static class BookingEmailTemplate
 {
     public static MailContent GetBookingConfirmationTemplate(
