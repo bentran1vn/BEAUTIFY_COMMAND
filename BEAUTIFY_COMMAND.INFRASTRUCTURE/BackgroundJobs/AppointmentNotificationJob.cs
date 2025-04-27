@@ -1,5 +1,12 @@
-﻿using BEAUTIFY_PACKAGES.BEAUTIFY_PACKAGES.DOMAIN.Abstractions.Repositories;
+﻿using BEAUTIFY_COMMAND.DOMAIN.Entities;
+using BEAUTIFY_COMMAND.DOMAIN.MailTemplates;
+using BEAUTIFY_COMMAND.PERSISTENCE;
+using BEAUTIFY_PACKAGES.BEAUTIFY_PACKAGES.APPLICATION.Abstractions;
+using BEAUTIFY_PACKAGES.BEAUTIFY_PACKAGES.DOMAIN.Abstractions.Repositories;
 using BEAUTIFY_PACKAGES.BEAUTIFY_PACKAGES.DOMAIN.Constrants;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
+using Quartz;
 
 namespace BEAUTIFY_COMMAND.INFRASTRUCTURE.BackgroundJobs;
 [DisallowConcurrentExecution]

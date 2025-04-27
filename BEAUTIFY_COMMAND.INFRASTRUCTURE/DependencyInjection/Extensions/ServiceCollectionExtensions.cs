@@ -2,6 +2,7 @@ using System.Reflection;
 using BEAUTIFY_COMMAND.DOMAIN.Abstractions;
 using BEAUTIFY_COMMAND.INFRASTRUCTURE.BackgroundJobs;
 using BEAUTIFY_COMMAND.INFRASTRUCTURE.Locking;
+using BEAUTIFY_PACKAGES.BEAUTIFY_PACKAGES.APPLICATION.Abstractions;
 using BEAUTIFY_PACKAGES.BEAUTIFY_PACKAGES.CONTRACT.JsonConverters;
 using BEAUTIFY_PACKAGES.BEAUTIFY_PACKAGES.INFRASTRUCTURE.Authentication;
 using BEAUTIFY_PACKAGES.BEAUTIFY_PACKAGES.INFRASTRUCTURE.Caching;
@@ -17,6 +18,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
+using Quartz;
 using StackExchange.Redis;
 
 namespace BEAUTIFY_COMMAND.INFRASTRUCTURE.DependencyInjection.Extensions;

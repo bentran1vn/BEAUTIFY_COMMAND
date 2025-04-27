@@ -1,8 +1,11 @@
+using BEAUTIFY_COMMAND.PERSISTENCE;
 using BEAUTIFY_COMMAND.PERSISTENCE.Outbox;
 using BEAUTIFY_PACKAGES.BEAUTIFY_PACKAGES.CONTRACT.Abstractions.Messages;
 using BEAUTIFY_PACKAGES.BEAUTIFY_PACKAGES.CONTRACT.Services.DoctorServices;
 using MassTransit;
+using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
+using Quartz;
 // using PostgreMigrateDomainEvent = BEAUTIFY_PACKAGES.BEAUTIFY_PACKAGES.CONTRACT.Services.CommandConverts.DomainEvents;
 using ClinicServiceDomainEvent = BEAUTIFY_PACKAGES.BEAUTIFY_PACKAGES.CONTRACT.Services.ClinicServices.DomainEvents;
 using ProcedureDomainEvent = BEAUTIFY_PACKAGES.BEAUTIFY_PACKAGES.CONTRACT.Services.Procedures.DomainEvents;
@@ -244,10 +247,12 @@ public class ProcessOutboxMessagesJob(ApplicationDbContext dbContext, IPublishEn
                         await publishEndpoint.Publish(doctorServiceDeleted, context.CancellationToken);
                         break;
 
-                    case nameof(BEAUTIFY_PACKAGES.BEAUTIFY_PACKAGES.CONTRACT.Services.CustomerSchedules.DomainEvents.CustomerScheduleDeleted):
+                    case nameof(BEAUTIFY_PACKAGES.BEAUTIFY_PACKAGES.CONTRACT.Services.CustomerSchedules.DomainEvents
+                        .CustomerScheduleDeleted):
                         var customerScheduleDeleted =
                             JsonConvert
-                                .DeserializeObject<BEAUTIFY_PACKAGES.BEAUTIFY_PACKAGES.CONTRACT.Services.CustomerSchedules.DomainEvents.CustomerScheduleDeleted>(
+                                .DeserializeObject<BEAUTIFY_PACKAGES.BEAUTIFY_PACKAGES.CONTRACT.Services.
+                                    CustomerSchedules.DomainEvents.CustomerScheduleDeleted>(
                                     outboxMessage.Content,
                                     new JsonSerializerSettings
                                     {
@@ -255,10 +260,12 @@ public class ProcessOutboxMessagesJob(ApplicationDbContext dbContext, IPublishEn
                                     });
                         await publishEndpoint.Publish(customerScheduleDeleted, context.CancellationToken);
                         break;
-                    case nameof(BEAUTIFY_PACKAGES.BEAUTIFY_PACKAGES.CONTRACT.Services.CustomerSchedules.DomainEvents.CustomerScheduleCreated):
+                    case nameof(BEAUTIFY_PACKAGES.BEAUTIFY_PACKAGES.CONTRACT.Services.CustomerSchedules.DomainEvents
+                        .CustomerScheduleCreated):
                         var customerScheduleCreated =
                             JsonConvert
-                                .DeserializeObject<BEAUTIFY_PACKAGES.BEAUTIFY_PACKAGES.CONTRACT.Services.CustomerSchedules.DomainEvents.CustomerScheduleCreated>(
+                                .DeserializeObject<BEAUTIFY_PACKAGES.BEAUTIFY_PACKAGES.CONTRACT.Services.
+                                    CustomerSchedules.DomainEvents.CustomerScheduleCreated>(
                                     outboxMessage.Content,
                                     new JsonSerializerSettings
                                     {
@@ -267,10 +274,12 @@ public class ProcessOutboxMessagesJob(ApplicationDbContext dbContext, IPublishEn
                         await publishEndpoint.Publish(customerScheduleCreated, context.CancellationToken);
                         break;
 
-                    case nameof(BEAUTIFY_PACKAGES.BEAUTIFY_PACKAGES.CONTRACT.Services.CustomerSchedules.DomainEvents.CustomerScheduleUpdateAfterPaymentCompleted):
+                    case nameof(BEAUTIFY_PACKAGES.BEAUTIFY_PACKAGES.CONTRACT.Services.CustomerSchedules.DomainEvents
+                        .CustomerScheduleUpdateAfterPaymentCompleted):
                         var customerScheduleUpdateAfterPaymentCompleted =
                             JsonConvert
-                                .DeserializeObject<BEAUTIFY_PACKAGES.BEAUTIFY_PACKAGES.CONTRACT.Services.CustomerSchedules.DomainEvents.CustomerScheduleUpdateAfterPaymentCompleted>(
+                                .DeserializeObject<BEAUTIFY_PACKAGES.BEAUTIFY_PACKAGES.CONTRACT.Services.
+                                    CustomerSchedules.DomainEvents.CustomerScheduleUpdateAfterPaymentCompleted>(
                                     outboxMessage.Content,
                                     new JsonSerializerSettings
                                     {
@@ -280,10 +289,12 @@ public class ProcessOutboxMessagesJob(ApplicationDbContext dbContext, IPublishEn
                             context.CancellationToken);
                         break;
 
-                    case nameof(BEAUTIFY_PACKAGES.BEAUTIFY_PACKAGES.CONTRACT.Services.CustomerSchedules.DomainEvents.CustomerScheduleUpdatedDoctorNote):
+                    case nameof(BEAUTIFY_PACKAGES.BEAUTIFY_PACKAGES.CONTRACT.Services.CustomerSchedules.DomainEvents
+                        .CustomerScheduleUpdatedDoctorNote):
                         var customerScheduleUpdatedDoctorNote =
                             JsonConvert
-                                .DeserializeObject<BEAUTIFY_PACKAGES.BEAUTIFY_PACKAGES.CONTRACT.Services.CustomerSchedules.DomainEvents.CustomerScheduleUpdatedDoctorNote>(
+                                .DeserializeObject<BEAUTIFY_PACKAGES.BEAUTIFY_PACKAGES.CONTRACT.Services.
+                                    CustomerSchedules.DomainEvents.CustomerScheduleUpdatedDoctorNote>(
                                     outboxMessage.Content,
                                     new JsonSerializerSettings
                                     {
@@ -292,10 +303,12 @@ public class ProcessOutboxMessagesJob(ApplicationDbContext dbContext, IPublishEn
                         await publishEndpoint.Publish(customerScheduleUpdatedDoctorNote, context.CancellationToken);
                         break;
 
-                    case nameof(BEAUTIFY_PACKAGES.BEAUTIFY_PACKAGES.CONTRACT.Services.CustomerSchedules.DomainEvents.CustomerScheduleUpdateDateAndTimeAndStatus):
+                    case nameof(BEAUTIFY_PACKAGES.BEAUTIFY_PACKAGES.CONTRACT.Services.CustomerSchedules.DomainEvents
+                        .CustomerScheduleUpdateDateAndTimeAndStatus):
                         var customerScheduleUpdateDateAndTime =
                             JsonConvert
-                                .DeserializeObject<BEAUTIFY_PACKAGES.BEAUTIFY_PACKAGES.CONTRACT.Services.CustomerSchedules.DomainEvents.CustomerScheduleUpdateDateAndTimeAndStatus>(
+                                .DeserializeObject<BEAUTIFY_PACKAGES.BEAUTIFY_PACKAGES.CONTRACT.Services.
+                                    CustomerSchedules.DomainEvents.CustomerScheduleUpdateDateAndTimeAndStatus>(
                                     outboxMessage.Content,
                                     new JsonSerializerSettings
                                     {
