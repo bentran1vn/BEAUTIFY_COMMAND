@@ -83,7 +83,8 @@ internal sealed class GenerateCustomerScheduleAfterPaymentCompletedCommandHandle
             ProcedurePriceTypeId = x.ProcedurePriceTypeId,
             OrderId = order.Id,
             DoctorNote = customerSchedule.DoctorNote,
-            ProcedurePriceType = x.ProcedurePriceType
+            ProcedurePriceType = x.ProcedurePriceType,
+            Procedure = x.ProcedurePriceType.Procedure,
         }).ToList();
     }
 }

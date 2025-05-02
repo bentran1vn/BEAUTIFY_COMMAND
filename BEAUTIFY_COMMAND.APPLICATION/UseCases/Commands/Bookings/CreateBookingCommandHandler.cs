@@ -258,7 +258,8 @@ internal sealed class
                 Date = request.BookingDate,
                 ProcedurePriceTypeId = initialProcedure,
                 ProcedurePriceType = procedure,
-                Status = Constant.OrderStatus.ORDER_PENDING
+                Status = Constant.OrderStatus.ORDER_PENDING,
+                Procedure = procedure.Procedure
             };
 
             var doctorSchedule = new WorkingSchedule
