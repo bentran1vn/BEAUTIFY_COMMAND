@@ -4,6 +4,8 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace BEAUTIFY_COMMAND.DOMAIN.Entities;
 public class WalletTransaction : AggregateRoot<Guid>, IAuditableEntity
 {
+
+        
     public Guid? UserId { get; set; }
     public virtual User? User { get; set; }
 
@@ -22,7 +24,7 @@ public class WalletTransaction : AggregateRoot<Guid>, IAuditableEntity
 
     [MaxLength(255)] public string? Description { get; set; }
 
-    public DateTime TransactionDate { get; set; } = DateTime.UtcNow;
+    public DateTime TransactionDate { get; set; } = TimeZoneInfo.ConvertTime(DateTime.UtcNow, TimeZoneInfo.FindSystemTimeZoneById("SE Asia Standard Time"));
 
     // For service booking deposits and refunds
     public Guid? OrderId { get; set; }

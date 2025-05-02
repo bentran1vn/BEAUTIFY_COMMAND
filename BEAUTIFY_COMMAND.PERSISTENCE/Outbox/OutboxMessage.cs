@@ -1,8 +1,8 @@
 namespace BEAUTIFY_COMMAND.PERSISTENCE.Outbox;
 public class OutboxMessage
 {
-    private static readonly DateTimeOffset VietNameTimeZone =
-        TimeZoneInfo.ConvertTime(DateTime.UtcNow, TimeZoneInfo.FindSystemTimeZoneById("SE Asia Standard Time"));
+    
+       
 
     public Guid Id { get; set; }
 
@@ -10,7 +10,7 @@ public class OutboxMessage
 
     public string Content { get; set; } = string.Empty;
 
-    public DateTimeOffset OccurredOnUtc { get; set; } = VietNameTimeZone;
+    public DateTimeOffset OccurredOnUtc { get; set; } =  TimeZoneInfo.ConvertTime(DateTime.UtcNow, TimeZoneInfo.FindSystemTimeZoneById("SE Asia Standard Time"));
 
     public DateTimeOffset? ProcessedOnUtc { get; set; }
 

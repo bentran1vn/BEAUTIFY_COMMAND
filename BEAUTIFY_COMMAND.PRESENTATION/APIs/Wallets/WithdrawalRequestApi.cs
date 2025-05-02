@@ -25,10 +25,23 @@ public class WithdrawalRequestApi : ApiEndpoint, ICarterModule
             .RequireAuthorization(Constant.Role.SYSTEM_ADMIN)
             .WithName("System Admin Update Withdrawal Request")
             .WithSummary("Approve or reject a withdrawal request by system admin");
+        gr1.MapPatch("{id:guid}/status", SystemAdminAfterTransferWallet)
+            .RequireAuthorization(Constant.Role.SYSTEM_ADMIN)
+        .WithName("Update Withdrawal Request Status")
+        .WithSummary("Update the status of a withdrawal request by system admin after transfer");
         gr1.MapPost("/customer-withdrawals", CustomerWithdrawFromWallet)
             .RequireAuthorization(Constant.Role.CUSTOMER)
             .WithName("Customer Withdraw From Wallet")
             .WithSummary("Withdraw money from wallet to bank account.");
+    }
+
+    private static async Task<IResult> SystemAdminAfterTransferWallet(
+        ISender sender,
+        Guid id)
+    {
+        var command = new Commands.SystemAdminAfterTransferWalletCommand(id);
+        var result = await sender.Send(command);
+        return result.IsFailure ? HandlerFailure(result) : Results.Ok(result);
     }
 
     private static async Task<IResult> CreateWithdrawalRequest(

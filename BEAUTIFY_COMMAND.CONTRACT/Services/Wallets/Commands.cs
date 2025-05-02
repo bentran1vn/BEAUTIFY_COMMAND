@@ -4,10 +4,15 @@ public static class Commands
     public record CustomerTopUpWalletCommand(
         decimal Amount) : ICommand;
 
+    public record SystemAdminAfterTransferWalletCommand(
+      Guid TransactionId) : ICommand;
+
     public record CreateWithdrawalRequestCommand(
         decimal Amount,
         string Description,
-        Guid? ClinicId = null) : ICommand;
+        Guid? ClinicId = null,
+        string? BankAccount = null,
+        string? BankName = null) : ICommand;
 
     public record ProcessWithdrawalRequestCommand(
         Guid WalletTransactionId,

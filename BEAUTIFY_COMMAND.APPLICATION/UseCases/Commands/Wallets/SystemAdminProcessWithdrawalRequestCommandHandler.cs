@@ -45,7 +45,7 @@ internal sealed class SystemAdminProcessWithdrawalRequestCommandHandler(
     /// <summary>
     ///     Approves the withdrawal request and generates payment information
     /// </summary>
-    private async Task<Result> ApproveWithdrawal(
+    private static async Task<Result> ApproveWithdrawal(
         WalletTransaction transaction)
     {
         // Update transaction with Vietnam timezone
@@ -56,8 +56,8 @@ internal sealed class SystemAdminProcessWithdrawalRequestCommandHandler(
 
 
         // Generate payment information
-        var qrUrl =
-            $"https://qr.sepay.vn/img?bank=MBBank&acc=0901928382&template=&amount={(int)transaction.Amount}&des=Beautifywithdrawal{transaction.Id}";
+        /*    var qrUrl =
+                $"https://qr.sepay.vn/img?bank=MBBank&acc=0901928382&template=&amount={(int)transaction.Amount}&des=Beautifywithdrawal{transaction.Id}";*/
         var result = new
         {
             TransactionId = transaction.Id,
@@ -65,10 +65,10 @@ internal sealed class SystemAdminProcessWithdrawalRequestCommandHandler(
             BankGateway = "VietinBank",
             transaction.Amount,
             OrderDescription = $"BeautifyWITHDRAWAL-{transaction.Id}",
-            QrUrl = qrUrl
+            QrUrl = transaction.NewestQrUrl
         };
-        transaction.NewestQrUrl = qrUrl;
-        walletTransactionRepository.Update(transaction);
+        //  transaction.NewestQrUrl = qrUrl;
+        //   walletTransactionRepository.Update(transaction);
         return Result.Success(result);
     }
 

@@ -6,7 +6,7 @@ public class TriggerFromHookCommandHandler(
     IRepositoryBase<SystemTransaction, Guid> systemTransactionRepository,
     IRepositoryBase<ClinicTransaction, Guid> clinicTransactionRepository,
     IRepositoryBase<WalletTransaction, Guid> walletTransactionRepository,
-    IRepositoryBase<User, Guid> userRepository,
+   
     IHubContext<PaymentHub> hubContext,
     IRepositoryBase<Order, Guid> orderRepository)
     : ICommandHandler<CONTRACT.Services.Payments.Commands.TriggerFromHookCommand>

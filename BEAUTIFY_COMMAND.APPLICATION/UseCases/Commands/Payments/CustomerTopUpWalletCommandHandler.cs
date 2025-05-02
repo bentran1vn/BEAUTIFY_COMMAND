@@ -25,6 +25,7 @@ internal sealed class
             Status = Constant.WalletConstants.TransactionStatus.PENDING,
             TransactionDate = currentDateTime
         };
+        
 
         walletTransactionRepositoryBase.Add(walletTransaction);
         var qrUrl =

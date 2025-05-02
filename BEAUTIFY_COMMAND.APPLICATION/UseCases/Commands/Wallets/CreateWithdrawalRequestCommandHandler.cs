@@ -34,8 +34,8 @@ internal sealed class CreateWithdrawalRequestCommandHandler(
             ? Constant.WalletConstants.TransactionStatus.PENDING
             : Constant.WalletConstants.TransactionStatus.WAITING_APPROVAL;
 
-        // Record transaction
-        walletTransactionRepository.Add(new WalletTransaction
+
+        var wallet = new WalletTransaction
         {
             Id = Guid.NewGuid(),
             ClinicId = clinicId,
@@ -45,7 +45,15 @@ internal sealed class CreateWithdrawalRequestCommandHandler(
             IsMakeBySystem = false,
             Description = request.Description,
             CreatedOnUtc = DateTimeOffset.UtcNow
-        });
+        };
+        var bankName = request.BankName ?? clinic.BankName;
+        var bankAccount = request.BankAccount ?? clinic.BankAccountNumber;
+
+        var qrUrl =
+            $"https://qr.sepay.vn/img?bank={bankName}&acc={bankAccount}&template=&amount={(int)wallet.Amount}&des=Beautifywithdrawal{wallet.Id}";
+        wallet.NewestQrUrl = qrUrl;
+        // Record transaction
+        walletTransactionRepository.Add(wallet);
 
         // Update clinic balance
         clinic.Balance -= request.Amount;
