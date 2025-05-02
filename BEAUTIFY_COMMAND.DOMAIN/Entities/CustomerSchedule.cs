@@ -51,6 +51,7 @@ public class CustomerSchedule : AggregateRoot<Guid>, IAuditableEntity
             CurrentProcedure = new EntityEvent.ProcedurePriceTypeEntity
             {
                 Name = customerSchedule.ProcedurePriceType.Name,
+                ProcedureName = customerSchedule.Procedure.Name,
                 Id = customerSchedule.ProcedurePriceTypeId.Value,
                 StepIndex = customerSchedule.ProcedurePriceType.Procedure.StepIndex.ToString(),
                 DateCompleted = customerSchedule.Date,
