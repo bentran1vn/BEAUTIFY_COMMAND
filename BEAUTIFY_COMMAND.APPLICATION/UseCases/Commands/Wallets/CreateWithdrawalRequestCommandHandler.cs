@@ -20,6 +20,8 @@ internal sealed class CreateWithdrawalRequestCommandHandler(
         var clinic = await clinicRepository.FindByIdAsync(clinicId.Value, cancellationToken);
         if (clinic is null)
             return Result.Failure(new Error("404", ErrorMessages.Clinic.ClinicNotFound));
+        if(clinic.BankName is null || clinic.BankAccountNumber is null)
+            return Result.Failure(new Error("400", ErrorMessages.Clinic.BankAccountNotFound));
 
         // Validate withdrawal conditions
         if (request.Amount < MINIMUM_WITHDRAWAL_AMOUNT)

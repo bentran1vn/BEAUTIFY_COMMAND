@@ -13,6 +13,7 @@ public static class ErrorMessages
 
     public static class Clinic
     {
+        public const string BankAccountNotFound = "Không tìm thấy tài khoản ngân hàng.";
         public const string ClinicNotFound = "Không tìm thấy phòng khám.";
         public const string ClinicIsNotABranch = "Phòng khám không phải là chi nhánh.";
         public const string ParentClinicNotFound = "Không tìm thấy phòng khám chi nhánh chính";
