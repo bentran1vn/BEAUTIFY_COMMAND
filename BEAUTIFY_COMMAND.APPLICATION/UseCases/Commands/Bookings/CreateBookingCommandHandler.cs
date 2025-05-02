@@ -134,8 +134,9 @@ internal sealed class
 
             // Calculate duration of procedures before using it
             var initialProcedure = list.Where(x => x.StepIndex == 1).Select(x => x.Id).FirstOrDefault();
+            //todo no hardcode 
             var durationOfProcedures =
-                list.Where(x => x.StepIndex == 1).Select(x => x.Duration).FirstOrDefault() / 60.0 + 0.5;
+                list.Where(x => x.StepIndex == 1).Select(x => x.Duration).FirstOrDefault() / 60.0 ;
 
             #endregion
 
