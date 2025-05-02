@@ -33,6 +33,6 @@ public class ProcedurePriceTypeValidator : AbstractValidator<Commands.ProcedureP
             .GreaterThan(0).WithMessage("Duration is required.");
 
         RuleFor(x => x.Price)
-            .GreaterThan(0).WithMessage("Price must be greater than zero.");
+            .GreaterThanOrEqualTo(0).WithMessage("Price must not negative.");
     }
 }
