@@ -100,17 +100,19 @@ public class CreateFeedbackCommandHandler : ICommandHandler<CONTRACT.Services.Fe
             pair => Math.Clamp((int)Math.Round((double)pair.Value.Sum / pair.Value.Count), 1, 5)
         );
 
-        var staff = await _staffRepository.FindAll(x => !x.IsDeleted &&
-                                                        x.Role.Name == Constant.Role.DOCTOR &&
-                                                        normalizedRatings.Keys.Contains(x.Id)
-        ).ToListAsync(cancellationToken);
+        var staff = await _staffRepository.FindAll(
+            x => !x.IsDeleted && x.Role.Name == Constant.Role.DOCTOR 
+                && normalizedRatings.Keys.Contains(x.Id)
+        ).AsNoTracking().ToListAsync(cancellationToken);
 
         if (staff == null || !staff.Any()) throw new Exception("Staff not found");
 
-        // Update staff ratings
-        foreach (var staffMember in staff)
-            if (normalizedRatings.TryGetValue(staffMember.Id, out var rating))
-                staffMember.Rating = (staffMember.Rating + rating) / 2;
+        staff = staff.Select(x =>
+        {
+            if (normalizedRatings.TryGetValue(x.Id, out var rating))
+                x.Rating = (x.Rating + rating) / 2;
+            return x;
+        }).ToList();
 
         _staffRepository.UpdateRange(staff);
         _customerScheduleRepository.UpdateRange(customerSchedule);
