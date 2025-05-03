@@ -80,13 +80,17 @@ public class CreateFeedbackCommandHandler : ICommandHandler<CONTRACT.Services.Fe
                     doctorRatings[schedule.Doctor!.User.Id] = (x.Rating, 1);
             }
 
-            return new Feedback
+            var feedback = new Feedback
             {
                 Id = Guid.NewGuid(),
                 Content = x.Content,
                 Rating = x.Rating,
                 CustomerScheduleId = x.CustomerScheduleId
             };
+            
+            schedule.FeedbackId = feedback.Id;
+            
+            return feedback;
         }).ToList();
 
         _scheduleFeedbackRepository.AddRange(feedbacks);
@@ -96,19 +100,22 @@ public class CreateFeedbackCommandHandler : ICommandHandler<CONTRACT.Services.Fe
             pair => Math.Clamp((int)Math.Round((double)pair.Value.Sum / pair.Value.Count), 1, 5)
         );
 
-        var staff = await _staffRepository.FindAll(x => !x.IsDeleted &&
-                                                        x.Role.Name == Constant.Role.DOCTOR &&
-                                                        normalizedRatings.Keys.Contains(x.Id)
-        ).ToListAsync(cancellationToken);
+        var staff = await _staffRepository.FindAll(
+            x => !x.IsDeleted && x.Role.Name == Constant.Role.DOCTOR 
+                && normalizedRatings.Keys.Contains(x.Id)
+        ).AsNoTracking().ToListAsync(cancellationToken);
 
         if (staff == null || !staff.Any()) throw new Exception("Staff not found");
 
-        // Update staff ratings
-        foreach (var staffMember in staff)
-            if (normalizedRatings.TryGetValue(staffMember.Id, out var rating))
-                staffMember.Rating = (staffMember.Rating + rating) / 2;
+        staff = staff.Select(x =>
+        {
+            if (normalizedRatings.TryGetValue(x.Id, out var rating))
+                x.Rating = (x.Rating + rating) / 2;
+            return x;
+        }).ToList();
 
         _staffRepository.UpdateRange(staff);
+        _customerScheduleRepository.UpdateRange(customerSchedule);
 
         var servicesCoverImageTasks = request.Images.Select(_mediaService.UploadImageAsync);
 
@@ -123,6 +130,10 @@ public class CreateFeedbackCommandHandler : ICommandHandler<CONTRACT.Services.Fe
         };
 
         _orderFeedbackRepository.Add(orderFeedback);
+        
+        order.OrderFeedbackId = orderFeedback.Id;
+        
+        _orderRepository.Update(order);
 
         var trigger = TriggerOutbox.CreateFeedbackEvent(
             orderFeedback.Id,
