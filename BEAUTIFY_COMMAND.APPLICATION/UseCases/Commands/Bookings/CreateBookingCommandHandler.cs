@@ -136,7 +136,7 @@ internal sealed class
             var initialProcedure = list.Where(x => x.StepIndex == 1).Select(x => x.Id).FirstOrDefault();
             //todo no hardcode 
             var durationOfProcedures =
-                list.Where(x => x.StepIndex == 1).Select(x => x.Duration).FirstOrDefault() / 60.0 ;
+                list.Where(x => x.StepIndex == 1).Select(x => x.Duration).FirstOrDefault() / 60.0;
 
             #endregion
 
@@ -185,7 +185,8 @@ internal sealed class
 
             #region Pricing and Discount Calculation
 
-            decimal? discountPrice = 0;
+            // Discount amount (not the final price after discount)
+            decimal? discountAmount = 0;
             var total = list.Sum(x => x.Price);
 
             if (request.LiveStreamRoomId != null)
@@ -202,18 +203,16 @@ internal sealed class
                     cancellationToken);
 
                 if (discount != null)
-                    // Calculate the discounted price, not the discount amount
-                    // discountPrice = total * (1 - (decimal)discount.DiscountPercent);
-                    discountPrice = total * (decimal)discount.DiscountPercent;
-                else
-                    // If using service.DiscountPrice, make sure this is the final price after discount
-                    // not the discount amount
-                    discountPrice = service.DiscountPrice;
+                    // Calculate the discount amount
+                    discountAmount = total * (decimal)discount.DiscountPercent;
+                else if (service.DiscountPrice.HasValue)
+                    // Use service's discount price if available
+                    discountAmount = service.DiscountPrice;
             }
 
             var deposit = service.DepositPercent;
-            // Now discountPrice contains the final price after discount
-            var depositAmount = Math.Round((total - discountPrice ?? 0) * (decimal)deposit / 100, 2);
+            // Calculate deposit amount based on the price after discount
+            var depositAmount = Math.Round((total - (discountAmount ?? 0)) * (decimal)deposit / 100, 2);
 
             // Check if user has sufficient balance for deposit
             if (user.Balance < depositAmount)
@@ -230,10 +229,10 @@ internal sealed class
                 CustomerId = user.Id,
                 ServiceId = list.First().ProcedureServiceId,
                 Status = Constant.OrderStatus.ORDER_PENDING,
-                Discount = discountPrice,
+                Discount = discountAmount,
                 TotalAmount = total,
                 DepositAmount = depositAmount,
-                FinalAmount = total - discountPrice - depositAmount,
+                FinalAmount = total - discountAmount - depositAmount,
                 LivestreamRoomId = request.LiveStreamRoomId
             };
 

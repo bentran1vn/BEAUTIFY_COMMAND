@@ -20,8 +20,9 @@ internal sealed class CustomerRequestScheduleCommandHandler(
             return Result.Failure(new Error("400", "Customer schedule already completed"));
         customerSchedule.Date = request.Date;
         customerSchedule.StartTime = request.StartTime;
+        //todo don't hardcode
         var endTime =
-            request.StartTime.Add(TimeSpan.FromHours(customerSchedule.ProcedurePriceType.Duration / 60.0 + 0.5));
+            request.StartTime.Add(TimeSpan.FromHours(customerSchedule.ProcedurePriceType.Duration / 60.0));
 
         if (endTime.Hours > 20 || endTime is { Hours: 20, Minutes: > 30 })
             return Result.Failure(new Error("400", "Choose start time soner because clinic close at 20:30"));
