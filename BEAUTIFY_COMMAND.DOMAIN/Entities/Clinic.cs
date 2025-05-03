@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace BEAUTIFY_COMMAND.DOMAIN.Entities;
 public class Clinic : AggregateRoot<Guid>, IAuditableEntity
 {
-    [MaxLength(100)] public required string Name { get; set; }
+    public required string Name { get; set; }
     [MaxLength(100)] public required string Email { get; set; }
 
     [MaxLength(15, ErrorMessage = "Phone Number must be 10 digits")]

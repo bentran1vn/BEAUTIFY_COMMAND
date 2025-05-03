@@ -80,16 +80,21 @@ public class CreateFeedbackCommandHandler : ICommandHandler<CONTRACT.Services.Fe
                     doctorRatings[schedule.Doctor!.User.Id] = (x.Rating, 1);
             }
 
-            return new Feedback
+            var feedback = new Feedback
             {
                 Id = Guid.NewGuid(),
                 Content = x.Content,
                 Rating = x.Rating,
                 CustomerScheduleId = x.CustomerScheduleId
             };
+            
+            schedule.FeedbackId = feedback.Id;
+            
+            return feedback;
         }).ToList();
 
         _scheduleFeedbackRepository.AddRange(feedbacks);
+        _customerScheduleRepository.UpdateRange(customerSchedule);
 
         var normalizedRatings = doctorRatings.ToDictionary(
             pair => pair.Key,
@@ -123,6 +128,10 @@ public class CreateFeedbackCommandHandler : ICommandHandler<CONTRACT.Services.Fe
         };
 
         _orderFeedbackRepository.Add(orderFeedback);
+        
+        order.OrderFeedbackId = orderFeedback.Id;
+        
+        _orderRepository.Update(order);
 
         var trigger = TriggerOutbox.CreateFeedbackEvent(
             orderFeedback.Id,
