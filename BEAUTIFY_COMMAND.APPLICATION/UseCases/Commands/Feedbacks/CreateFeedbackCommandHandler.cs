@@ -32,7 +32,7 @@ public class CreateFeedbackCommandHandler : ICommandHandler<CONTRACT.Services.Fe
             .Include(x => x.Customer)
             .FirstOrDefaultAsync(cancellationToken);
 
-        if (order is null) return Result.Failure(new Error("404", "Order not found"));
+        if (order is null) return Result.Failure(new Error("404", "Order not completed"));
 
         if (order.Status != Constant.OrderStatus.ORDER_COMPLETED)
             return Result.Failure(new Error("404", "Order not found"));
@@ -41,6 +41,10 @@ public class CreateFeedbackCommandHandler : ICommandHandler<CONTRACT.Services.Fe
             .FindAll(x => x.OrderId.Equals(request.OrderId))
             .Include(x => x.Doctor)
             .ThenInclude(y => y.User)
+            .ToListAsync(cancellationToken);
+        
+        var customerScheduleUpdate = await _customerScheduleRepository
+            .FindAll(x => x.OrderId.Equals(request.OrderId))
             .ToListAsync(cancellationToken);
 
         if (customerSchedule == null || !customerSchedule.Any())
@@ -71,6 +75,7 @@ public class CreateFeedbackCommandHandler : ICommandHandler<CONTRACT.Services.Fe
         var feedbacks = request.ScheduleFeedbacks.Select(x =>
         {
             var schedule = customerSchedule.FirstOrDefault(y => y.Id.Equals(x.CustomerScheduleId));
+            var scheduleUpdate = customerScheduleUpdate.FirstOrDefault(y => y.Id.Equals(x.CustomerScheduleId));
 
             if (schedule != null)
             {
@@ -88,7 +93,8 @@ public class CreateFeedbackCommandHandler : ICommandHandler<CONTRACT.Services.Fe
                 CustomerScheduleId = x.CustomerScheduleId
             };
             
-            schedule.FeedbackId = feedback.Id;
+            
+            scheduleUpdate.FeedbackId = feedback.Id;
             
             return feedback;
         }).ToList();
@@ -113,9 +119,10 @@ public class CreateFeedbackCommandHandler : ICommandHandler<CONTRACT.Services.Fe
                 x.Rating = (x.Rating + rating) / 2;
             return x;
         }).ToList();
-
+        
+        _customerScheduleRepository.UpdateRange(customerScheduleUpdate);
         _staffRepository.UpdateRange(staff);
-        _customerScheduleRepository.UpdateRange(customerSchedule);
+        
 
         var servicesCoverImageTasks = request.Images.Select(_mediaService.UploadImageAsync);
 
@@ -126,7 +133,8 @@ public class CreateFeedbackCommandHandler : ICommandHandler<CONTRACT.Services.Fe
             Id = Guid.NewGuid(),
             Content = request.Content,
             Rating = request.Rating,
-            OrderId = request.OrderId
+            OrderId = request.OrderId,
+            CreatedOnUtc = DateTimeOffset.UtcNow
         };
 
         _orderFeedbackRepository.Add(orderFeedback);
