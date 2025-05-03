@@ -94,7 +94,6 @@ public class CreateFeedbackCommandHandler : ICommandHandler<CONTRACT.Services.Fe
         }).ToList();
 
         _scheduleFeedbackRepository.AddRange(feedbacks);
-        _customerScheduleRepository.UpdateRange(customerSchedule);
 
         var normalizedRatings = doctorRatings.ToDictionary(
             pair => pair.Key,
@@ -114,6 +113,7 @@ public class CreateFeedbackCommandHandler : ICommandHandler<CONTRACT.Services.Fe
                 staffMember.Rating = (staffMember.Rating + rating) / 2;
 
         _staffRepository.UpdateRange(staff);
+        _customerScheduleRepository.UpdateRange(customerSchedule);
 
         var servicesCoverImageTasks = request.Images.Select(_mediaService.UploadImageAsync);
 
