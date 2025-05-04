@@ -23,9 +23,5 @@ public class CreateEventValidators: AbstractValidator<Commands.CreateEventComman
         RuleFor(x => x.EndDate)
             .NotEmpty()
             .WithMessage("End date is required");
-        
-        RuleFor(x => x.Date)
-            .NotEmpty()
-            .WithMessage("Start date is required");
     }
 }

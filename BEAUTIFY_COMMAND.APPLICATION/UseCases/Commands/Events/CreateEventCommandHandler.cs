@@ -28,7 +28,6 @@ public class CreateEventCommandHandler : ICommandHandler<CONTRACT.Services.Event
             Description = request.Description,
             StartDate = request.StartDate,
             EndDate = request.EndDate,
-            Date = request.Date,
         };
         
         var imageUrl = await _mediaService.UploadImageAsync(request.Image);
