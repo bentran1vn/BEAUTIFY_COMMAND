@@ -40,6 +40,7 @@ public class User : AggregateRoot<Guid>, IAuditableEntity
     [Column(TypeName = "decimal(18,2)")] public decimal Balance { get; set; }
     public virtual ICollection<UserConversation>? UserConversations { get; set; }
     public virtual ICollection<WalletTransaction>? Transactions { get; init; } = [];
+    public virtual ICollection<Follower>? Followers { get; set; }
     public virtual ICollection<CustomerSchedule>? CustomerSchedules { get; set; }
     public virtual ICollection<Order>? Orders { get; set; }
     public DateTimeOffset CreatedOnUtc { get; set; }
