@@ -5,6 +5,10 @@ public static class Command
         Guid CustomerScheduleId
     ) : ICommand;
 
+    public record StaffRefundCustomerScheduleCommand(
+        Guid CustomerScheduleId
+    ) : ICommand;
+
     public record UpdateCustomerScheduleAfterPaymentCompletedCommand(Guid CustomerScheduleId, string Status) : ICommand;
 
 
