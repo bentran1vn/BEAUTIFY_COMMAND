@@ -46,6 +46,8 @@ public class Clinic : AggregateRoot<Guid>, IAuditableEntity
 
     public virtual ICollection<ClinicService>? ClinicServices { get; set; }
     public virtual ICollection<UserClinic>? UserClinics { get; set; }
+    public virtual ICollection<Event>? Events { get; set; }
+    public virtual ICollection<Follower>? Followers { get; set; }
 
     public virtual ICollection<LivestreamRoom>? LivestreamRooms { get; set; }
     public virtual ICollection<ShiftConfig>? ShiftConfigs { get; set; }

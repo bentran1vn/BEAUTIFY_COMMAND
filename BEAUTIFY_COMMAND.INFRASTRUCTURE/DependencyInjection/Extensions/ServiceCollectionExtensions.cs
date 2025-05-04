@@ -168,6 +168,15 @@ public static class ServiceCollectionExtensions
                     trigger.ForJob(subscriptionExpiryReminderJobKey)
                         .WithCronSchedule("0 0 9 * * ?",
                             x => x.InTimeZone(TimeZoneInfo.FindSystemTimeZoneById("SE Asia Standard Time"))));
+            
+            // Subscription expiry reminder job - runs every day at 3 AM
+            var clinicEventNotificationJobKey = new JobKey(nameof(ClinicEventNotificationJob));
+            configure
+                .AddJob<ClinicEventNotificationJob>(clinicEventNotificationJobKey)
+                .AddTrigger(trigger =>
+                    trigger.ForJob(clinicEventNotificationJobKey)
+                        .WithCronSchedule("0 0 3 * * ?",
+                            x => x.InTimeZone(TimeZoneInfo.FindSystemTimeZoneById("SE Asia Standard Time"))));
 
             configure.UseMicrosoftDependencyInjectionJobFactory();
         });
