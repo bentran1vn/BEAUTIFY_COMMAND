@@ -15,7 +15,7 @@ public class WalletTransaction : AggregateRoot<Guid>, IAuditableEntity
 
 
     // Transaction Type: 0 = Deposit, 1 = Withdrawal, 2 = Transfer, 3 = SERVICE_DEPOSIT, 4 = SERVICE_DEPOSIT_REFUND
-    [MaxLength(20)] public required string TransactionType { get; set; }
+    [MaxLength(30)] public required string TransactionType { get; set; }
 
     // Status: 0 = Pending, 1 = Completed, 2 = Failed, 3 = Cancelled
     [MaxLength(20)] public required string Status { get; set; }

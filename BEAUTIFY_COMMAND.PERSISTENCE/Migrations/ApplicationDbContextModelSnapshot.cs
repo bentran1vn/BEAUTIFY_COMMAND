@@ -2049,8 +2049,8 @@ namespace BEAUTIFY_COMMAND.PERSISTENCE.Migrations
 
                     b.Property<string>("TransactionType")
                         .IsRequired()
-                        .HasMaxLength(20)
-                        .HasColumnType("nvarchar(20)");
+                        .HasMaxLength(30)
+                        .HasColumnType("nvarchar(30)");
 
                     b.Property<Guid?>("UserId")
                         .HasColumnType("uniqueidentifier");

@@ -18,8 +18,9 @@ internal sealed class StaffCancelCustomerScheduleAfterFirstStepCommandHandler(
         if (customerSchedule.Procedure!.StepIndex != 1)
             return Result.Failure(new Error("400", "Customer schedule not in first step"));
         customerSchedule.Status = Constant.WalletConstants.TransactionStatus.CANCELLED;
-        customerSchedule.Customer!.Balance +=
-            customerSchedule.Order!.DepositAmount - customerSchedule.ProcedurePriceType!.Price;
+        customerSchedule.Customer!.Balance += customerSchedule.Order!.DepositAmount;
+        customerSchedule.Customer.Balance -= Math.Min(customerSchedule.ProcedurePriceType!.Price,
+            customerSchedule.Order.DepositAmount);
         var wallet = new WalletTransaction
         {
             Amount = customerSchedule.Order.DepositAmount,
