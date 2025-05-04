@@ -33,7 +33,7 @@ public class EventApi: ApiEndpoint, ICarterModule
     
     private static async Task<IResult> Following(
         ISender sender, HttpContext httpContext,
-        [FromForm] CONTRACT.Services.Followers.Commands.FollowBody command)
+        [FromBody] CONTRACT.Services.Followers.Commands.FollowBody command)
     {
         var userId = httpContext.User.FindFirst(c => c.Type == "UserId")?.Value!;
         
