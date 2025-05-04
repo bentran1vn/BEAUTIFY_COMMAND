@@ -28,7 +28,9 @@ internal sealed class StaffCancelCustomerScheduleAfterFirstStepCommandHandler(
             TransactionType = Constant.WalletConstants.TransactionType.SERVICE_DEPOSIT_REFUND,
             Status = Constant.WalletConstants.TransactionStatus.COMPLETED,
             IsMakeBySystem = true,
-            OrderId = customerSchedule.OrderId
+            OrderId = customerSchedule.OrderId,
+            Description =
+                $"Refund for cancelled schedule with service {customerSchedule.Procedure.Service.Name} at {customerSchedule.Date}",
         };
         _walletTransactionRepository.Add(wallet);
         customerSchedule.UpdateCustomerScheduleStatus(customerSchedule.Id,
