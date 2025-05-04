@@ -29,7 +29,7 @@ public class FollowCommandHandler: ICommandHandler<CONTRACT.Services.Followers.C
 
         if (request.IsFollow)
         {
-            if (follower == null || follower.IsDeleted)
+            if (follower == null)
             {
                 var follow = new Follower()
                 {
