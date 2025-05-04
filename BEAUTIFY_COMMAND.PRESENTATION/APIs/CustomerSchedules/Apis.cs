@@ -22,7 +22,7 @@ public class Apis : ApiEndpoint, ICarterModule
             .RequireAuthorization(Constant.Role.CLINIC_STAFF);
         gr1.MapPatch("staff/approve/{customerScheduleId:guid}/", StaffUpdateCustomerScheduleStatusAfterCustomerRequest)
             .RequireAuthorization(Constant.Role.CLINIC_STAFF);
-        gr1.MapPatch("staff/cancel/{customerScheduleId:guid}/", StaffCancelCustomerScheduleAfterFirstStep)
+        gr1.MapPatch("staff/{customerScheduleId:guid}/cancellation", StaffCancelCustomerScheduleAfterFirstStep)
             .RequireAuthorization(Constant.Role.CLINIC_STAFF);
     }
 
