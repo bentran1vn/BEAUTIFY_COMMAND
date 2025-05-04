@@ -12,10 +12,6 @@ public class UpdateEventValidators: AbstractValidator<Commands.UpdateEventComman
             .NotEmpty()
             .WithMessage("ClinicId is required");
         
-        RuleFor(x => x.Image)
-            .NotEmpty()
-            .WithMessage("Image is required");
-        
         RuleFor(x => x.Name)
             .NotEmpty()
             .WithMessage("Name is required");
