@@ -289,6 +289,7 @@ internal sealed class
 
             // Deduct the deposit amount from the user's balance
             user.Balance -= depositAmount;
+            clinic.Balance += depositAmount;
             userRepositoryBase.Update(user);
 
             #endregion
