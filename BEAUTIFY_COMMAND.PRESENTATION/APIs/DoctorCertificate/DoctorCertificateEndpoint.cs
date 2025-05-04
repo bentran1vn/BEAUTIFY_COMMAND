@@ -11,7 +11,7 @@ public class DoctorCertificateEndpoint : ApiEndpoint, ICarterModule
         var gr1 = app.NewVersionedApi("Doctor Certificates").MapGroup(BaseUrl).HasApiVersion(1);
         gr1.MapPost(string.Empty, CreateDoctorCertificate).DisableAntiforgery()
             .RequireAuthorization(Constant.Role.CLINIC_ADMIN);
-        gr1.MapPut("{id:guid}", UpdateDoctorCertificate).RequireAuthorization(Constant.Role.CLINIC_ADMIN);
+        gr1.MapPut("{id:guid}", UpdateDoctorCertificate).RequireAuthorization(Constant.Role.CLINIC_ADMIN).DisableAntiforgery();
         gr1.MapDelete("{id:guid}", DeleteDoctorCertificate).RequireAuthorization(Constant.Role.CLINIC_ADMIN);
     }
 
