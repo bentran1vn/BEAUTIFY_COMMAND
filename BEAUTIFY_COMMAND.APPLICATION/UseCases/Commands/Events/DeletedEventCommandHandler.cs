@@ -1,6 +1,6 @@
 namespace BEAUTIFY_COMMAND.APPLICATION.UseCases.Commands.Events;
 
-public class DeletedEventCommandHandler: ICommandHandler<CONTRACT.Services.Events.Commands.DeleteEvent>
+public class DeletedEventCommandHandler: ICommandHandler<CONTRACT.Services.Events.Commands.DeleteEventCommand>
 {
     private readonly IRepositoryBase<Event, Guid> _eventRepository;
 
@@ -9,7 +9,7 @@ public class DeletedEventCommandHandler: ICommandHandler<CONTRACT.Services.Event
         _eventRepository = eventRepository;
     }
 
-    public async Task<Result> Handle(CONTRACT.Services.Events.Commands.DeleteEvent request, CancellationToken cancellationToken)
+    public async Task<Result> Handle(CONTRACT.Services.Events.Commands.DeleteEventCommand request, CancellationToken cancellationToken)
     {
         var eventEntity = await _eventRepository.FindByIdAsync(request.Id, cancellationToken);
         if (eventEntity is null || eventEntity.IsDeleted)

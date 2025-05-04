@@ -1,6 +1,6 @@
 namespace BEAUTIFY_COMMAND.CONTRACT.Services.Events.Validators;
 
-public class UpdateEventValidators: AbstractValidator<Commands.UpdateEvent>
+public class UpdateEventValidators: AbstractValidator<Commands.UpdateEventCommand>
 {
     public UpdateEventValidators()
     {

@@ -1,6 +1,6 @@
 namespace BEAUTIFY_COMMAND.APPLICATION.UseCases.Commands.Events;
 
-public class UpdateEventCommandHandler : ICommandHandler<CONTRACT.Services.Events.Commands.UpdateEvent>
+public class UpdateEventCommandHandler : ICommandHandler<CONTRACT.Services.Events.Commands.UpdateEventCommand>
 {
     private readonly IRepositoryBase<Event, Guid> _eventRepository;
     private readonly IMediaService _mediaService;
@@ -11,7 +11,7 @@ public class UpdateEventCommandHandler : ICommandHandler<CONTRACT.Services.Event
         _mediaService = mediaService;
     }
 
-    public async Task<Result> Handle(CONTRACT.Services.Events.Commands.UpdateEvent request, CancellationToken cancellationToken)
+    public async Task<Result> Handle(CONTRACT.Services.Events.Commands.UpdateEventCommand request, CancellationToken cancellationToken)
     {
         var eventEntity = await _eventRepository.FindByIdAsync(request.Id, cancellationToken);
         

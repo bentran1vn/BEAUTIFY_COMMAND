@@ -14,11 +14,11 @@ public class Commands
         public DateOnly Date { get; set; }
     }
 
-    public class CreateEvent : EventBody, ICommand
+    public class CreateEventCommand : EventBody, ICommand
     {
         public Guid ClinicId { get; set; }
         public new IFormFile Image { get; set; }
-        public CreateEvent(EventBody body, Guid clinicId)
+        public CreateEventCommand(EventBody body, Guid clinicId)
         {
             ClinicId = clinicId;
             Image = body.Image ?? throw new Exception("Image is required");
@@ -30,11 +30,11 @@ public class Commands
         }
     }
     
-    public class UpdateEvent : EventBody, ICommand
+    public class UpdateEventCommand : EventBody, ICommand
     {
         public Guid ClinicId { get; set; }
         public Guid Id { get; set; }
-        public UpdateEvent(EventBody body, Guid id, Guid clinicId)
+        public UpdateEventCommand(EventBody body, Guid id, Guid clinicId)
         {
             ClinicId = clinicId;
             Id = id;
@@ -47,9 +47,9 @@ public class Commands
         }
     }
     
-    public class DeleteEvent : ICommand
+    public class DeleteEventCommand : ICommand
     {
-        public DeleteEvent(Guid id)
+        public DeleteEventCommand(Guid id)
         {
             Id = id;
         }
