@@ -1,6 +1,6 @@
 namespace BEAUTIFY_COMMAND.CONTRACT.Services.Events.Validators;
 
-public class DeleteEventValidators: AbstractValidator<Commands.DeleteEvent>
+public class DeleteEventValidators: AbstractValidator<Commands.DeleteEventCommand>
 {
     public DeleteEventValidators()
     {

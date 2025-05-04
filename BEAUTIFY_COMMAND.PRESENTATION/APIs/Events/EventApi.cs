@@ -48,7 +48,7 @@ public class EventApi: ApiEndpoint, ICarterModule
     {
         var clinicId = httpContext.User.FindFirst(c => c.Type == "ClinicId")?.Value!;
         
-        var result = await sender.Send(new Commands.CreateEvent(command, new Guid(clinicId)));
+        var result = await sender.Send(new Commands.CreateEventCommand(command, new Guid(clinicId)));
         
         return result.IsFailure ? HandlerFailure(result) : Results.Ok(result);
     }
@@ -59,7 +59,7 @@ public class EventApi: ApiEndpoint, ICarterModule
     {
         var clinicId = httpContext.User.FindFirst(c => c.Type == "ClinicId")?.Value!;
         
-        var result = await sender.Send(new Commands.UpdateEvent(command, id, new Guid(clinicId)));
+        var result = await sender.Send(new Commands.UpdateEventCommand(command, id, new Guid(clinicId)));
         
         return result.IsFailure ? HandlerFailure(result) : Results.Ok(result);
     }
@@ -67,7 +67,7 @@ public class EventApi: ApiEndpoint, ICarterModule
     private static async Task<IResult> DeleteEvent(
         ISender sender, HttpContext httpContext, Guid id)
     {
-        var result = await sender.Send(new Commands.DeleteEvent(id));
+        var result = await sender.Send(new Commands.DeleteEventCommand(id));
         
         return result.IsFailure ? HandlerFailure(result) : Results.Ok(result);
     }

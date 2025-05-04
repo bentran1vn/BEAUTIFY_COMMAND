@@ -1,6 +1,6 @@
 namespace BEAUTIFY_COMMAND.APPLICATION.UseCases.Commands.Events;
 
-public class CreateEventCommandHandler : ICommandHandler<CONTRACT.Services.Events.Commands.CreateEvent>
+public class CreateEventCommandHandler : ICommandHandler<CONTRACT.Services.Events.Commands.CreateEventCommand>
 {
     private readonly IRepositoryBase<Event, Guid> _eventRepository;
     private readonly IMediaService _mediaService;
@@ -13,7 +13,7 @@ public class CreateEventCommandHandler : ICommandHandler<CONTRACT.Services.Event
         _clinicRepository = clinicRepository;
     }
 
-    public async Task<Result> Handle(CONTRACT.Services.Events.Commands.CreateEvent request, CancellationToken cancellationToken)
+    public async Task<Result> Handle(CONTRACT.Services.Events.Commands.CreateEventCommand request, CancellationToken cancellationToken)
     {
         var clinic = await _clinicRepository.FindByIdAsync(request.ClinicId, cancellationToken);
         
