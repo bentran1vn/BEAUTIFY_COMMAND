@@ -1,4 +1,5 @@
 ﻿using BEAUTIFY_COMMAND.CONTRACT.Services.DoctorCertificate;
+using BEAUTIFY_PACKAGES.BEAUTIFY_PACKAGES.DOMAIN.Constrants;
 
 namespace BEAUTIFY_COMMAND.PRESENTATION.APIs.DoctorCertificate;
 public class DoctorCertificateEndpoint : ApiEndpoint, ICarterModule
@@ -8,9 +9,10 @@ public class DoctorCertificateEndpoint : ApiEndpoint, ICarterModule
     public void AddRoutes(IEndpointRouteBuilder app)
     {
         var gr1 = app.NewVersionedApi("Doctor Certificates").MapGroup(BaseUrl).HasApiVersion(1);
-        gr1.MapPost(string.Empty, CreateDoctorCertificate).DisableAntiforgery().RequireAuthorization();
-        gr1.MapPut("{id:guid}", UpdateDoctorCertificate);
-        gr1.MapDelete("{id:guid}", DeleteDoctorCertificate);
+        gr1.MapPost(string.Empty, CreateDoctorCertificate).DisableAntiforgery()
+            .RequireAuthorization(Constant.Role.CLINIC_ADMIN);
+        gr1.MapPut("{id:guid}", UpdateDoctorCertificate).RequireAuthorization(Constant.Role.CLINIC_ADMIN);
+        gr1.MapDelete("{id:guid}", DeleteDoctorCertificate).RequireAuthorization(Constant.Role.CLINIC_ADMIN);
     }
 
     private static async Task<IResult> CreateDoctorCertificate(
