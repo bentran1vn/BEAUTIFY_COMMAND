@@ -4,6 +4,7 @@ using BEAUTIFY_COMMAND.PERSISTENCE;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BEAUTIFY_COMMAND.PERSISTENCE.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250504013622_EventAndFollowerEntity")]
+    partial class EventAndFollowerEntity
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -619,17 +622,23 @@ namespace BEAUTIFY_COMMAND.PERSISTENCE.Migrations
                     b.Property<DateTimeOffset>("CreatedOnUtc")
                         .HasColumnType("datetimeoffset");
 
+                    b.Property<DateOnly?>("Date")
+                        .HasColumnType("date");
+
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTimeOffset?>("EndDate")
-                        .HasColumnType("datetimeoffset");
+                    b.Property<TimeOnly?>("EndDate")
+                        .HasColumnType("time");
 
                     b.Property<string>("Image")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
+
+                    b.Property<Guid?>("LivestreamRoomId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTimeOffset?>("ModifiedOnUtc")
                         .HasColumnType("datetimeoffset");
@@ -638,12 +647,16 @@ namespace BEAUTIFY_COMMAND.PERSISTENCE.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTimeOffset?>("StartDate")
-                        .HasColumnType("datetimeoffset");
+                    b.Property<TimeOnly?>("StartDate")
+                        .HasColumnType("time");
 
                     b.HasKey("Id");
 
                     b.HasIndex("ClinicId");
+
+                    b.HasIndex("LivestreamRoomId")
+                        .IsUnique()
+                        .HasFilter("[LivestreamRoomId] IS NOT NULL");
 
                     b.ToTable("Event");
                 });
@@ -770,9 +783,6 @@ namespace BEAUTIFY_COMMAND.PERSISTENCE.Migrations
                     b.Property<TimeOnly?>("EndDate")
                         .HasColumnType("time");
 
-                    b.Property<Guid?>("EventId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<string>("Image")
                         .HasColumnType("nvarchar(max)");
 
@@ -807,8 +817,6 @@ namespace BEAUTIFY_COMMAND.PERSISTENCE.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("ClinicId");
-
-                    b.HasIndex("EventId");
 
                     b.HasIndex("LiveStreamDetailId")
                         .IsUnique()
@@ -2352,7 +2360,13 @@ namespace BEAUTIFY_COMMAND.PERSISTENCE.Migrations
                         .WithMany("Events")
                         .HasForeignKey("ClinicId");
 
+                    b.HasOne("BEAUTIFY_COMMAND.DOMAIN.Entities.LivestreamRoom", "LivestreamRoom")
+                        .WithOne("Event")
+                        .HasForeignKey("BEAUTIFY_COMMAND.DOMAIN.Entities.Event", "LivestreamRoomId");
+
                     b.Navigation("Clinic");
+
+                    b.Navigation("LivestreamRoom");
                 });
 
             modelBuilder.Entity("BEAUTIFY_COMMAND.DOMAIN.Entities.Follower", b =>
@@ -2378,18 +2392,12 @@ namespace BEAUTIFY_COMMAND.PERSISTENCE.Migrations
                         .WithMany("LivestreamRooms")
                         .HasForeignKey("ClinicId");
 
-                    b.HasOne("BEAUTIFY_COMMAND.DOMAIN.Entities.Event", "Event")
-                        .WithMany("LivestreamRoom")
-                        .HasForeignKey("EventId");
-
                     b.HasOne("BEAUTIFY_COMMAND.DOMAIN.Entities.LiveStreamDetail", "LiveStreamDetail")
                         .WithOne()
                         .HasForeignKey("BEAUTIFY_COMMAND.DOMAIN.Entities.LivestreamRoom", "LiveStreamDetailId")
                         .OnDelete(DeleteBehavior.Restrict);
 
                     b.Navigation("Clinic");
-
-                    b.Navigation("Event");
 
                     b.Navigation("LiveStreamDetail");
                 });
@@ -2807,13 +2815,10 @@ namespace BEAUTIFY_COMMAND.PERSISTENCE.Migrations
                     b.Navigation("UserConversations");
                 });
 
-            modelBuilder.Entity("BEAUTIFY_COMMAND.DOMAIN.Entities.Event", b =>
-                {
-                    b.Navigation("LivestreamRoom");
-                });
-
             modelBuilder.Entity("BEAUTIFY_COMMAND.DOMAIN.Entities.LivestreamRoom", b =>
                 {
+                    b.Navigation("Event");
+
                     b.Navigation("Promotions");
                 });
 

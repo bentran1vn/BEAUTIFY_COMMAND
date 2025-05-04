@@ -20,6 +20,10 @@ public class LivestreamRoom : AggregateRoot<Guid>, IAuditableEntity
     // Remove the LiveStreamDetailId property to avoid conflicts
     public Guid? LiveStreamDetailId { get; set; }
     public virtual LiveStreamDetail? LiveStreamDetail { get; set; }
+    
+    public Guid? EventId { get; set; }
+    public virtual Event? Event { get; set; }
+    
     public virtual ICollection<Promotion>? Promotions { get; set; }
 
 
