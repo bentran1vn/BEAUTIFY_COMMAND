@@ -12,8 +12,5 @@ public class FollowCommandValidators: AbstractValidator<Commands.FollowCommand>
             .NotEmpty()
             .WithMessage("UserId is required");
         
-        RuleFor(x => x.IsFollow)
-            .NotEmpty()
-            .WithMessage("IsFollow is required");
     }
 }

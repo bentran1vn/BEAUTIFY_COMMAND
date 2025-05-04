@@ -53,6 +53,6 @@ public class FollowCommandHandler: ICommandHandler<CONTRACT.Services.Followers.C
             }
         }
 
-        return Result.Success("Followed successfully");
+        return Result.Success("Followed action successfully");
     }
 }
