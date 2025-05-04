@@ -28,7 +28,7 @@ public class Apis : ApiEndpoint, ICarterModule
 
     private static async Task<IResult> StaffCancelCustomerScheduleAfterFirstStep(
         ISender sender,
-        Guid customerScheduleId, Command.StaffCancelCustomerScheduleAfterFirstStepCommand command)
+        Guid customerScheduleId)
     {
         var result =
             await sender.Send(
