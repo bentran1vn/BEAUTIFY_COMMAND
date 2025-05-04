@@ -6,7 +6,7 @@ public static class Commands
     public record CreateDoctorCertificateCommand(
         Guid DoctorId,
         string CertificateName,
-        Guid ServiceId,
+        Guid CategoryId,
         IFormFile CertificateFile,
         DateTimeOffset ExpiryDate,
         string? Note) : ICommand;

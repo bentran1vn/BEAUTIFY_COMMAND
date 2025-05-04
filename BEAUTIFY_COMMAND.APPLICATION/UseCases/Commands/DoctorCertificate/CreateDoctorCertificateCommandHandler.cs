@@ -26,7 +26,7 @@ public class CreateDoctorCertificateCommandHandler(
             CertificateUrl = await mediaService.UploadImageAsync(request.CertificateFile),
             ExpiryDate = request.ExpiryDate,
             DoctorId = request.DoctorId,
-            ServiceId = request.ServiceId,
+            CategoryId = request.CategoryId,
             Note = request.Note
         };
         doctorCertificateRepository.Add(doctor);

@@ -536,6 +536,9 @@ namespace BEAUTIFY_COMMAND.PERSISTENCE.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<Guid?>("CategoryId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<string>("CertificateName")
                         .IsRequired()
                         .HasMaxLength(100)
@@ -565,14 +568,11 @@ namespace BEAUTIFY_COMMAND.PERSISTENCE.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
-                    b.Property<Guid?>("ServiceId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.HasKey("Id");
 
-                    b.HasIndex("DoctorId");
+                    b.HasIndex("CategoryId");
 
-                    b.HasIndex("ServiceId");
+                    b.HasIndex("DoctorId");
 
                     b.ToTable("DoctorCertificate");
                 });
@@ -2312,19 +2312,19 @@ namespace BEAUTIFY_COMMAND.PERSISTENCE.Migrations
 
             modelBuilder.Entity("BEAUTIFY_COMMAND.DOMAIN.Entities.DoctorCertificate", b =>
                 {
+                    b.HasOne("BEAUTIFY_COMMAND.DOMAIN.Entities.Category", "Category")
+                        .WithMany()
+                        .HasForeignKey("CategoryId");
+
                     b.HasOne("BEAUTIFY_COMMAND.DOMAIN.Entities.Staff", "Doctor")
                         .WithMany("DoctorCertificates")
                         .HasForeignKey("DoctorId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("BEAUTIFY_COMMAND.DOMAIN.Entities.Service", "Service")
-                        .WithMany()
-                        .HasForeignKey("ServiceId");
+                    b.Navigation("Category");
 
                     b.Navigation("Doctor");
-
-                    b.Navigation("Service");
                 });
 
             modelBuilder.Entity("BEAUTIFY_COMMAND.DOMAIN.Entities.DoctorService", b =>
