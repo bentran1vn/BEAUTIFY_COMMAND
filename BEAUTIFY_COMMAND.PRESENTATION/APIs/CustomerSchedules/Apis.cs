@@ -22,8 +22,19 @@ public class Apis : ApiEndpoint, ICarterModule
             .RequireAuthorization(Constant.Role.CLINIC_STAFF);
         gr1.MapPatch("staff/approve/{customerScheduleId:guid}/", StaffUpdateCustomerScheduleStatusAfterCustomerRequest)
             .RequireAuthorization(Constant.Role.CLINIC_STAFF);
+        gr1.MapPatch("staff/cancel/{customerScheduleId:guid}/", StaffCancelCustomerScheduleAfterFirstStep)
+            .RequireAuthorization(Constant.Role.CLINIC_STAFF);
     }
 
+    private static async Task<IResult> StaffCancelCustomerScheduleAfterFirstStep(
+        ISender sender,
+        Guid customerScheduleId, Command.StaffCancelCustomerScheduleAfterFirstStepCommand command)
+    {
+        var result =
+            await sender.Send(
+                new Command.StaffCancelCustomerScheduleAfterFirstStepCommand(CustomerScheduleId: customerScheduleId));
+        return result.IsFailure ? HandlerFailure(result) : Results.Ok(result);
+    }
 
     private static async Task<IResult> StaffUpdateCustomerScheduleStatusAfterCustomerRequest(
         ISender sender,

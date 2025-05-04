@@ -13,6 +13,10 @@ internal sealed class StaffCancelCustomerScheduleAfterFirstStepCommandHandler(
             await _repositoryBase.FindSingleAsync(x => x.Id == request.CustomerScheduleId, cancellationToken);
         if (customerSchedule == null)
             return Result.Failure(new Error("400", "Customer schedule not found"));
+        if (customerSchedule.Status == Constant.WalletConstants.TransactionStatus.COMPLETED)
+            return Result.Failure(new Error("400", "Customer schedule already completed"));
+        if (customerSchedule.Procedure!.StepIndex != 1)
+            return Result.Failure(new Error("400", "Customer schedule not in first step"));
         customerSchedule.Status = Constant.WalletConstants.TransactionStatus.CANCELLED;
         customerSchedule.Customer!.Balance +=
             customerSchedule.Order!.DepositAmount - customerSchedule.ProcedurePriceType!.Price;
