@@ -1,15 +1,9 @@
 ﻿namespace BEAUTIFY_COMMAND.CONTRACT.Services.CustomerSchedule;
 public static class Command
 {
-    public record CustomerScheduleCreateCommand(
-        string CustomerId,
-        string ServiceId,
-        string DoctorId,
-        string Date,
-        string Time,
-        string Note
+    public record StaffCancelCustomerScheduleAfterFirstStepCommand(
+        Guid CustomerScheduleId
     ) : ICommand;
-
 
     public record UpdateCustomerScheduleAfterPaymentCompletedCommand(Guid CustomerScheduleId, string Status) : ICommand;
 
