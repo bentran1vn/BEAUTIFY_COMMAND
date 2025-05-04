@@ -9,9 +9,8 @@ public class Commands
         public IFormFile? Image { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
-        public TimeOnly StartDate { get; set; }
-        public TimeOnly EndDate { get; set; }
-        public DateOnly Date { get; set; }
+        public DateTimeOffset StartDate { get; set; }
+        public DateTimeOffset EndDate { get; set; }
     }
 
     public class CreateEventCommand : EventBody, ICommand
@@ -26,7 +25,6 @@ public class Commands
             Description = body.Description;
             StartDate = body.StartDate;
             EndDate = body.EndDate;
-            Date = body.Date;
         }
     }
     
@@ -43,7 +41,6 @@ public class Commands
             Description = body.Description;
             StartDate = body.StartDate;
             EndDate = body.EndDate;
-            Date = body.Date;
         }
     }
     

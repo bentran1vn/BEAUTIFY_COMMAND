@@ -13,8 +13,7 @@ public static class ClinicEventReminderEmailTemplate
         int hoursRemaining)
     {
         var vietnamTimeZone = TimeZoneInfo.FindSystemTimeZoneById("SE Asia Standard Time");
-        var eventDateTime = @event.Date!.Value.ToDateTime(@event.StartDate!.Value);
-        var localEventDateTime = TimeZoneInfo.ConvertTime(eventDateTime, vietnamTimeZone);
+        var localEventDateTime = TimeZoneInfo.ConvertTime((DateTimeOffset)@event.StartDate, vietnamTimeZone);
 
         var body = $@"
 <!DOCTYPE html>
@@ -120,7 +119,7 @@ public static class ClinicEventReminderEmailTemplate
             {(!string.IsNullOrEmpty(@event.Description) ? $"<p>{@event.Description}</p>" : "")}
             <p><strong>Date:</strong> {localEventDateTime:dddd, MMMM d, yyyy}</p>
             <p><strong>Time:</strong> {localEventDateTime:h:mm tt}{(@event.EndDate.HasValue ? $" - {@event.EndDate.Value:h:mm tt}" : "")}</p>
-            {(@event.LivestreamRoomId.HasValue ? "<p><span class='livestream-badge'>LIVE</span> This event includes a livestream!</p>" : "")}
+
         </div>
         
         <div class='clinic-details'>
@@ -130,10 +129,7 @@ public static class ClinicEventReminderEmailTemplate
         </div>
         
         <a href='https://beautify.asia/event/{@event.Id}' class='action-button'>View Event Details</a>
-        
-        {(@event.LivestreamRoomId.HasValue ? 
-            $"<a href='https://beautify.asia/livestream/{@event.LivestreamRoomId}' class='action-button' style='background-color: #e91e63;'>Join Livestream</a>" : "")}
-        
+
         <p>We hope to see you there!</p>
         
         <p>Best regards,</p>

@@ -34,12 +34,15 @@ public class ClinicEventNotificationJob : IJob
             var vietnamTimeZone = TimeZoneInfo.FindSystemTimeZoneById("SE Asia Standard Time");
             var currentDateTimeVN = TimeZoneInfo.ConvertTime(DateTimeOffset.UtcNow, vietnamTimeZone);
             
+            // With DateTimeOffset, we need to get events within the next day's range
+            var todayStart = new DateTimeOffset(currentDateTimeVN.Date, currentDateTimeVN.Offset);
+            var tomorrowEnd = todayStart.AddDays(1);
+            
             var events = await _applicationDbContext.Set<Event>()
                 .Where(x => x.IsDeleted == false && 
-                       x.Date.HasValue && 
-                       x.Date.Value.ToDateTime(TimeOnly.MinValue) >= currentDateTimeVN.Date &&
-                       x.Date.Value.ToDateTime(TimeOnly.MinValue) <= currentDateTimeVN.Date.AddDays(1) &&
-                       x.StartDate.HasValue)
+                       x.StartDate.HasValue && 
+                       x.StartDate.Value >= todayStart &&
+                       x.StartDate.Value <= tomorrowEnd)
                 .Include(x => x.Clinic)
                 .ToListAsync();
                 
@@ -49,17 +52,16 @@ public class ClinicEventNotificationJob : IJob
             
             foreach (var @event in events)
             {
-                if (!@event.Date.HasValue || !@event.StartDate.HasValue || @event.Clinic == null)
+                if (!@event.StartDate.HasValue || @event.Clinic == null)
                     continue;
                     
-                // Create event datetime from Date and StartDate
-                var eventDateTime = @event.Date.Value.ToDateTime(@event.StartDate.Value);
+                var eventDateTime = @event.StartDate.Value;
                 
-                // Convert to Vietnam time to match user expectations
-                var eventTimeVN = TimeZoneInfo.ConvertTime(eventDateTime, vietnamTimeZone);
-                var timeUntilEvent = eventTimeVN - currentDateTimeVN.DateTime;
+                var eventDateTimeOffsetVN = eventDateTime.ToOffset(vietnamTimeZone.GetUtcOffset(eventDateTime.DateTime));
+
+
+                var timeUntilEvent = eventDateTimeOffsetVN - currentDateTimeVN;
                 
-                // Check if the event is at one of our reminder hours
                 var hoursUntilEvent = (int)Math.Ceiling(timeUntilEvent.TotalHours);
                 
                 if (!ReminderHours.Contains(hoursUntilEvent))

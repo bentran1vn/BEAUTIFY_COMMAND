@@ -31,9 +31,5 @@ public class UpdateEventValidators: AbstractValidator<Commands.UpdateEventComman
         RuleFor(x => x.EndDate)
             .NotEmpty()
             .WithMessage("End date is required");
-        
-        RuleFor(x => x.Date)
-            .NotEmpty()
-            .WithMessage("Start date is required");
     }
 }

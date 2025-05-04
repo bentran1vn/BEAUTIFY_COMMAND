@@ -21,6 +21,7 @@ public class LivestreamRoom : AggregateRoot<Guid>, IAuditableEntity
     public Guid? LiveStreamDetailId { get; set; }
     public virtual LiveStreamDetail? LiveStreamDetail { get; set; }
     
+    public Guid? EventId { get; set; }
     public virtual Event? Event { get; set; }
     
     public virtual ICollection<Promotion>? Promotions { get; set; }

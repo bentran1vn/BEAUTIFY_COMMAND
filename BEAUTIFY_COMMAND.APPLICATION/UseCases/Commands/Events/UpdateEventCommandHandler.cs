@@ -22,7 +22,6 @@ public class UpdateEventCommandHandler : ICommandHandler<CONTRACT.Services.Event
         eventEntity.Description = request.Description;
         eventEntity.StartDate = request.StartDate;
         eventEntity.EndDate = request.EndDate;
-        eventEntity.Date = request.Date;
         eventEntity.ClinicId = request.ClinicId;
         eventEntity.Image = request.Image != null ? await _mediaService.UploadImageAsync(request.Image) : eventEntity.Image;
         
