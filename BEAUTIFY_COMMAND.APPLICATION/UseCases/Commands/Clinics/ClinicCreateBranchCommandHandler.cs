@@ -13,36 +13,37 @@ internal sealed class
         CancellationToken cancellationToken)
     {
         var vietnamTimeZone = TimeZoneInfo.FindSystemTimeZoneById("SE Asia Standard Time");
-        
-        var parentClinic = await clinicRepository.FindByIdAsync(currentUserService.ClinicId!.Value, cancellationToken) ??
-                           throw new ClinicException.ClinicNotFoundException(currentUserService.ClinicId.Value);
-        
+
+        var parentClinic =
+            await clinicRepository.FindByIdAsync(currentUserService.ClinicId!.Value, cancellationToken) ??
+            throw new ClinicException.ClinicNotFoundException(currentUserService.ClinicId.Value);
+
         if (parentClinic.TotalBranches >= parentClinic.AdditionBranches)
             return Result.Failure(new Error("403", "You have reached the maximum number of branches"));
-        
+
         var isExist = await clinicRepository
             .FindAll(x => x.PhoneNumber == request.PhoneNumber && x.IsDeleted == false)
             .FirstOrDefaultAsync(cancellationToken);
-        
+
         var isExistEmail = await clinicRepository
             .FindAll(x => x.PhoneNumber == request.Email && x.IsDeleted == false
-                            && x.IsActivated && x.Status == 1)
+                                                         && x.IsActivated && x.Status == 1)
             .FirstOrDefaultAsync(cancellationToken);
-        
+
         var role = await roleRepository.FindSingleAsync(x => x.Name == "Clinic Staff", cancellationToken);
-        
-        if(role == null)
+
+        if (role == null)
             return Result.Failure(new Error("404", "Role not found"));
 
-        if (isExist != null && isExist.IsActivated && isExist.Status == 1)
+        if (isExist is { IsActivated: true, Status: 1 })
             return Result.Failure(new Error("500", "Clinic with phone number already exists"));
 
-        if (isExistEmail != null && isExistEmail.IsActivated && isExistEmail.Status == 1 && isExistEmail.Id != currentUserService.ClinicId.Value)
+        if (isExistEmail is { IsActivated: true, Status: 1 } && isExistEmail.Id != currentUserService.ClinicId.Value)
         {
             return Result.Failure(new Error("500", "Clinic with email already exists"));
         }
-        
-        if(isExist != null && !isExist.IsActivated && isExist.Status == 0)
+
+        if (isExist is { IsActivated: false, Status: 0 })
         {
             isExist.Email = request.Email;
             isExist.Name = request.Name;
@@ -59,7 +60,7 @@ internal sealed class
                 var oUrl = await mediaService.UploadImageAsync(request.OperatingLicense);
                 isExist.OperatingLicenseUrl = oUrl;
             }
-                
+
             if (request.ProfilePictureUrl != null)
             {
                 var pUrl = await mediaService.UploadImageAsync(request.ProfilePictureUrl);
@@ -69,9 +70,9 @@ internal sealed class
             isExist.BankName = request.BankName;
             isExist.BankAccountNumber = request.BankAccountNumber;
             isExist.OperatingLicenseExpiryDate = request.OperatingLicenseExpiryDate;
-            
+
             clinicRepository.Update(isExist);
-            
+
             var clinicOnBoardingRequest = new ClinicOnBoardingRequest
             {
                 Id = Guid.NewGuid(),
@@ -87,9 +88,9 @@ internal sealed class
         {
             if (request.OperatingLicense == null)
                 return Result.Failure(new Error("400", "Missing Operating License"));
-            
+
             var oUrl = await mediaService.UploadImageAsync(request.OperatingLicense);
-            
+
             var clinic = new Clinic
             {
                 Id = Guid.NewGuid(),
@@ -101,8 +102,8 @@ internal sealed class
                 District = request.District,
                 Address = request.Address,
                 ParentId = currentUserService.ClinicId.Value,
-                WorkingTimeStart = request.WorkingTimeStart,
-                WorkingTimeEnd = request.WorkingTimeEnd,
+                WorkingTimeStart = parentClinic.WorkingTimeStart,
+                WorkingTimeEnd = parentClinic.WorkingTimeEnd,
                 TaxCode = parentClinic.TaxCode,
                 BusinessLicenseUrl = parentClinic.BusinessLicenseUrl,
                 OperatingLicenseUrl = oUrl,
@@ -112,16 +113,16 @@ internal sealed class
                 BankAccountNumber = request.BankAccountNumber,
                 IsActivated = false
             };
-            
+
             if (request.ProfilePictureUrl != null)
             {
                 var pUrl = await mediaService.UploadImageAsync(request.ProfilePictureUrl);
                 clinic.ProfilePictureUrl = pUrl;
             }
-            
+
             clinicRepository.Add(clinic);
-            
-            
+
+
             var clinicOnBoardingRequest = new ClinicOnBoardingRequest
             {
                 Id = Guid.NewGuid(),
@@ -133,7 +134,7 @@ internal sealed class
 
             clinicOnBoardingRequestRepository.Add(clinicOnBoardingRequest);
         }
-        
+
         await mailService.SendMail(new MailContent
         {
             To = request.Email,
@@ -147,7 +148,7 @@ internal sealed class
                     <p>Our system will handle as soon as possible !</p>
                 "
         });
-        
+
         return Result.Success("Send Branch Create Request Successfully");
     }
 }
