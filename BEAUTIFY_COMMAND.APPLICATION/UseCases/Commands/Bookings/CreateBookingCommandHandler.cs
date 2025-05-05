@@ -82,7 +82,7 @@ namespace BEAUTIFY_COMMAND.APPLICATION.UseCases.Commands.Bookings
                     var (procedureList, initialProcedureId, durationOfProcedures) = procedureResult.Data;
 
                     // Verify doctor availability
-                    var availabilityResult = await VerifyDoctorAvailability(
+                    var (isSuccess, result, doctorShift) = await VerifyDoctorAvailability(
                         request.BookingDate,
                         request.StartTime,
                         durationOfProcedures,
@@ -90,10 +90,8 @@ namespace BEAUTIFY_COMMAND.APPLICATION.UseCases.Commands.Bookings
                         clinic.Id,
                         cancellationToken);
 
-                    if (!availabilityResult.IsSuccess)
-                        return availabilityResult.Result;
-
-                    var doctorShift = availabilityResult.Data;
+                    if (!isSuccess)
+                        return result;
 
                     // Calculate pricing and discounts
                     var pricingResult = await CalculatePricing(
