@@ -23,10 +23,22 @@ public class UpdateClinicCommandHandler(
         if (request.Ward != null) clinic.Ward = request.Ward;
 
         if (request.Address != null) clinic.Address = request.Address;
-        
-        if (request.WorkingTimeStart != null) clinic.WorkingTimeStart = request.WorkingTimeStart;
 
-        if (request.WorkingTimeEnd != null) clinic.WorkingTimeEnd = request.WorkingTimeEnd;
+        if (request.WorkingTimeStart != null)
+        {
+            var startTime = TimeSpan.TryParse(request.WorkingTimeStart, out var time);
+            if (!startTime)
+                return Result.Failure(new Error("400", "Invalid working time start format."));
+            clinic.WorkingTimeStart = time;
+        }
+
+        if (request.WorkingTimeEnd != null)
+        {
+            var endTime = TimeSpan.TryParse(request.WorkingTimeEnd, out var time);
+            if (!endTime)
+                return Result.Failure(new Error("400", "Invalid working time end format."));
+            clinic.WorkingTimeEnd = time;
+        }
 
         if (request.ProfilePicture != null)
         {

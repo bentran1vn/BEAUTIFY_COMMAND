@@ -56,8 +56,8 @@ public static class Commands
         public string? District { get; set; }
         public string? Ward { get; set; }
         public string? Address { get; set; }
-        public TimeSpan? WorkingTimeStart { get; set; }
-        public TimeSpan? WorkingTimeEnd { get; set; }
+        public string? WorkingTimeStart { get; set; }
+        public string? WorkingTimeEnd { get; set; }
         public IFormFile? ProfilePicture { get; set; }
         public bool? IsActivated { get; set; }
         public string? BankName { get; set; }
