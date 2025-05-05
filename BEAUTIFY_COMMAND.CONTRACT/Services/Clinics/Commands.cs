@@ -59,7 +59,7 @@ public static class Commands
         public string? WorkingTimeStart { get; set; }
         public string? WorkingTimeEnd { get; set; }
         public IFormFile? ProfilePicture { get; set; }
-        public bool? IsActivated { get; set; }
+        public string? IsActivated { get; set; } 
         public string? BankName { get; set; }
         public string? BankAccountNumber { get; set; }
     }
