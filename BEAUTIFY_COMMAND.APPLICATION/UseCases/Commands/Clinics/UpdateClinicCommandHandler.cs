@@ -12,19 +12,19 @@ public class UpdateClinicCommandHandler(
 
         if (clinic == null || clinic.IsDeleted) return Result.Failure(new Error("404", "Clinic not found."));
 
-        if (request.Name != null) clinic.Name = request.Name;
+        if (!string.IsNullOrEmpty(request.Name)) clinic.Name = request.Name;
 
-        if (request.PhoneNumber != null) clinic.PhoneNumber = request.PhoneNumber;
+        if (!string.IsNullOrEmpty(request.PhoneNumber)) clinic.PhoneNumber = request.PhoneNumber;
 
-        if (request.City != null) clinic.City = request.City;
+        if (!string.IsNullOrEmpty(request.City)) clinic.City = request.City;
 
-        if (request.District != null) clinic.District = request.District;
+        if (!string.IsNullOrEmpty(request.District)) clinic.District = request.District;
 
-        if (request.Ward != null) clinic.Ward = request.Ward;
+        if (!string.IsNullOrEmpty(request.Ward)) clinic.Ward = request.Ward;
 
-        if (request.Address != null) clinic.Address = request.Address;
+        if (!string.IsNullOrEmpty(request.Address)) clinic.Address = request.Address;
 
-        if (request.WorkingTimeStart != null)
+        if (!string.IsNullOrEmpty(request.WorkingTimeStart))
         {
             var startTime = TimeSpan.TryParse(request.WorkingTimeStart, out var time);
             if (!startTime)
@@ -32,7 +32,7 @@ public class UpdateClinicCommandHandler(
             clinic.WorkingTimeStart = time;
         }
 
-        if (request.WorkingTimeEnd != null)
+        if (!string.IsNullOrEmpty(request.WorkingTimeEnd))
         {
             var endTime = TimeSpan.TryParse(request.WorkingTimeEnd, out var time);
             if (!endTime)
@@ -46,9 +46,9 @@ public class UpdateClinicCommandHandler(
             clinic.ProfilePictureUrl = url;
         }
 
-        if (request.IsActivated != null) clinic.IsActivated = request.IsActivated.Value;
-        if (request.BankName != null) clinic.BankName = request.BankName;
-        if (request.BankAccountNumber != null) clinic.BankAccountNumber = request.BankAccountNumber;
+        if (!string.IsNullOrEmpty(request.IsActivated)) clinic.IsActivated = bool.Parse(request.IsActivated);
+        if (!string.IsNullOrEmpty(request.BankName)) clinic.BankName = request.BankName;
+        if (!string.IsNullOrEmpty(request.BankAccountNumber)) clinic.BankAccountNumber = request.BankAccountNumber;
 
         var trigger = TriggerOutbox.UpdateBranchEvent(true, clinic);
         triggerRepository.Add(trigger);
