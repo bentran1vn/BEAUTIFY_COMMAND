@@ -68,7 +68,7 @@ internal sealed class StaffUpdateCustomerScheduleTimeCommandHandler(
 
             // todo Calculate end time (procedure duration + 30 min buffer)
             var endTime = request.StartTime.Add(
-                TimeSpan.FromHours(nextCustomerSchedule.ProcedurePriceType.Duration / 60.0 + 0.5));
+                TimeSpan.FromHours(nextCustomerSchedule.ProcedurePriceType.Duration / 60.0));
 
             // Check for schedule overlaps with other appointments
             var overlapCheck = await CheckScheduleOverlap(
