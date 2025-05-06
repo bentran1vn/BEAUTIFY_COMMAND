@@ -3,6 +3,7 @@
 namespace BEAUTIFY_COMMAND.APPLICATION.UseCases.Commands.CustomerSchedules;
 internal sealed class StaffUpdateCustomerScheduleStatusAfterCheckInCommandHandler(
     IRepositoryBase<CustomerSchedule, Guid> customerScheduleRepositoryBase,
+    IRepositoryBase<WorkingSchedule, Guid> workingScheduleRepositoryBase,
     IRepositoryBase<WalletTransaction, Guid> walletTransactionRepositoryBase,
     IRepositoryBase<User, Guid> userRepository,
     ICurrentUserService currentUserService)
@@ -12,14 +13,14 @@ internal sealed class StaffUpdateCustomerScheduleStatusAfterCheckInCommandHandle
         CancellationToken cancellationToken)
     {
         //take the vn time zone
-        var vietnamTimeZone = TimeZoneInfo.FindSystemTimeZoneById("SE Asia Standard Time");
-        var checkInDate = TimeZoneInfo.ConvertTime(DateTimeOffset.UtcNow, vietnamTimeZone);
+        var checkInDate = TimeZoneInfo.ConvertTime(DateTimeOffset.UtcNow,
+            TimeZoneInfo.FindSystemTimeZoneById("SE Asia Standard Time"));
         var customerSchedule = await customerScheduleRepositoryBase.FindByIdAsync(request.CustomerScheduleId,
             cancellationToken);
-        if (customerSchedule!.Doctor!.ClinicId != currentUserService.ClinicId)
-            return Result.Failure(new Error("403", "User is not a staff of this clinic"));
         if (customerSchedule == null)
             return Result.Failure(new Error("404", "Customer Schedule Not Found"));
+        if (customerSchedule!.Doctor!.ClinicId != currentUserService.ClinicId)
+            return Result.Failure(new Error("403", "User is not a staff of this clinic"));
         if (customerSchedule.Status == Constant.OrderStatus.ORDER_COMPLETED)
             return Result.Failure(new Error("400", "Customer Schedule already completed"));
         if (customerSchedule.Date != DateOnly.FromDateTime(checkInDate.Date))
@@ -28,6 +29,11 @@ internal sealed class StaffUpdateCustomerScheduleStatusAfterCheckInCommandHandle
         customerSchedule.Status = request.Status;
         customerScheduleRepositoryBase.Update(customerSchedule);
         customerSchedule.UpdateCustomerScheduleStatus(customerSchedule.Id, request.Status);
+        var workingSchedule = await workingScheduleRepositoryBase
+            .FindSingleAsync(x => x.CustomerScheduleId == customerSchedule.Id, cancellationToken);
+
+        workingSchedule?.UpdateDoctorScheduleStatus([workingSchedule.Id], Constant.OrderStatus.ORDER_COMPLETED);
+
 
         // If this is the first meeting (status changed to IN_PROGRESS), refund the deposit
         if (request.Status != Constant.OrderStatus.ORDER_IN_PROGRESS) return Result.Success();
