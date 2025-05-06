@@ -2,7 +2,8 @@
 public static class Command
 {
     public record StaffCancelCustomerScheduleAfterFirstStepCommand(
-        Guid CustomerScheduleId
+        Guid CustomerScheduleId,
+        Guid OrderId
     ) : ICommand;
 
     public record StaffRefundCustomerScheduleCommand(
