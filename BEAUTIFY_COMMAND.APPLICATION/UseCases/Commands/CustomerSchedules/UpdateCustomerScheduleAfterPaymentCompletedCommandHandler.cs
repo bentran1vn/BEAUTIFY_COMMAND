@@ -2,7 +2,8 @@
 
 namespace BEAUTIFY_COMMAND.APPLICATION.UseCases.Commands.CustomerSchedules;
 internal sealed class UpdateCustomerScheduleAfterPaymentCompletedCommandHandler(
-    IRepositoryBase<CustomerSchedule, Guid> repositoryBase) : ICommandHandler<
+    IRepositoryBase<CustomerSchedule, Guid> repositoryBase,
+    IRepositoryBase<WorkingSchedule, Guid> workingScheduleRepositoryBase) : ICommandHandler<
     Command.UpdateCustomerScheduleAfterPaymentCompletedCommand>
 {
     public async Task<Result> Handle(Command.UpdateCustomerScheduleAfterPaymentCompletedCommand request,
@@ -24,6 +25,9 @@ internal sealed class UpdateCustomerScheduleAfterPaymentCompletedCommandHandler(
 
         repositoryBase.Update(customerSchedule);
         customerSchedule.UpdateCustomerScheduleStatus(customerSchedule.Id, request.Status);
+        var workingSchedule = await workingScheduleRepositoryBase
+            .FindSingleAsync(x => x.CustomerScheduleId == customerSchedule.Id, cancellationToken);
+        workingSchedule?.UpdateDoctorScheduleStatus([workingSchedule.Id], request.Status);
         return Result.Success();
     }
 }

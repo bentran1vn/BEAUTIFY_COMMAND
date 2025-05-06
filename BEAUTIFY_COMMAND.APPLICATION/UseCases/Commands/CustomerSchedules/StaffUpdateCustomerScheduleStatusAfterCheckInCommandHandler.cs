@@ -32,7 +32,7 @@ internal sealed class StaffUpdateCustomerScheduleStatusAfterCheckInCommandHandle
         var workingSchedule = await workingScheduleRepositoryBase
             .FindSingleAsync(x => x.CustomerScheduleId == customerSchedule.Id, cancellationToken);
 
-        workingSchedule?.UpdateDoctorScheduleStatus([workingSchedule.Id], Constant.OrderStatus.ORDER_COMPLETED);
+        workingSchedule?.UpdateDoctorScheduleStatus([workingSchedule.Id], request.Status);
 
 
         // If this is the first meeting (status changed to IN_PROGRESS), refund the deposit
