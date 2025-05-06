@@ -28,11 +28,13 @@ public class Apis : ApiEndpoint, ICarterModule
 
     private static async Task<IResult> StaffCancelCustomerScheduleAfterFirstStep(
         ISender sender,
-        Guid customerScheduleId)
+        Guid customerScheduleId,
+        Guid orderId)
     {
         var result =
             await sender.Send(
-                new Command.StaffCancelCustomerScheduleAfterFirstStepCommand(CustomerScheduleId: customerScheduleId));
+                new Command.StaffCancelCustomerScheduleAfterFirstStepCommand(CustomerScheduleId: customerScheduleId,
+                    OrderId: orderId));
         return result.IsFailure ? HandlerFailure(result) : Results.Ok(result);
     }
 
