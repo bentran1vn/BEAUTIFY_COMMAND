@@ -14,26 +14,24 @@ public sealed class StaffCancelCustomerScheduleAfterFirstStepCommandHandler(
         CancellationToken cancellationToken)
     {
         // Optimize by executing both queries in parallel
-        var orderTask = _orderRepository.FindSingleAsync(x => x.Id == request.OrderId, cancellationToken);
-        var customerScheduleTask = _repositoryBase.FindAll(x => x.Id == request.CustomerScheduleId)
+        var orderTask = await _orderRepository.FindSingleAsync(x => x.Id == request.OrderId, cancellationToken);
+        var customerScheduleTask = await _repositoryBase.FindAll(x => x.Id == request.CustomerScheduleId)
             .AsTracking()
             .FirstOrDefaultAsync(cancellationToken);
-        var clinicTask = _clinicRepository.FindSingleAsync(x => x.Id == currentUserService.ClinicId, cancellationToken);
+        var clinicTask = await _clinicRepository.FindSingleAsync(x => x.Id == currentUserService.ClinicId, cancellationToken);
         
         // Wait for all the necessary data
-        await Task.WhenAll(orderTask, customerScheduleTask, clinicTask);
-        
-        var order = await orderTask;
-        var customerSchedule = await customerScheduleTask;
-        var clinic = await clinicTask;
-        
+
+
+        var customerSchedule =  customerScheduleTask;
+
         if (customerSchedule == null)
             return Result.Failure(new Error("400", "Customer schedule not found"));
             
         if (customerSchedule.Status == Constant.WalletConstants.TransactionStatus.COMPLETED)
             return Result.Failure(new Error("400", "Customer schedule already completed"));
 
-        var isRefundable = order.Service.IsRefundable;
+        var isRefundable = orderTask.Service.IsRefundable;
         decimal refundAmount = 0;
             
         // Update the schedule status
@@ -51,14 +49,6 @@ public sealed class StaffCancelCustomerScheduleAfterFirstStepCommandHandler(
             refundAmount = CalculateFirstStepRefund(customerSchedule);
             
             // Only update balances if refundable and there's an amount to refund
-            if (isRefundable && refundAmount > 0)
-            {
-                customerSchedule.Customer!.Balance += refundAmount;
-                if (clinic != null)
-                {
-                    clinic.Balance -= refundAmount;
-                }
-            }
         }
         else
         {
@@ -101,16 +91,17 @@ public sealed class StaffCancelCustomerScheduleAfterFirstStepCommandHandler(
             }
 
             // Only update balances if refundable and there's an amount to refund
-            if (isRefundable && refundAmount > 0)
+        }
+
+        if (isRefundable && refundAmount > 0)
+        {
+            customerSchedule.Customer!.Balance += refundAmount;
+            if (clinicTask != null)
             {
-                customerSchedule.Customer!.Balance += refundAmount;
-                if (clinic != null)
-                {
-                    clinic.Balance -= refundAmount;
-                }
+                clinicTask.Balance -= refundAmount;
             }
         }
-        
+
         // Create wallet transaction record if there's a refund amount
         if (refundAmount > 0)
         {
