@@ -3,6 +3,8 @@ using Microsoft.AspNetCore.Http;
 namespace BEAUTIFY_COMMAND.CONTRACT.Services.Users;
 public static class Commands
 {
+    public record UserActionCommand(Guid UserId, bool IsActive) : ICommand;
+    
     public class UpdateUserProfileCommand : ICommand
     {
         public string? FirstName { get; set; }
