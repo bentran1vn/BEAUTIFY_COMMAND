@@ -4,6 +4,7 @@ using BEAUTIFY_COMMAND.PERSISTENCE;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BEAUTIFY_COMMAND.PERSISTENCE.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250507161623_FeedbackChangeMigration")]
+    partial class FeedbackChangeMigration
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -396,34 +399,6 @@ namespace BEAUTIFY_COMMAND.PERSISTENCE.Migrations
                     b.HasIndex("ServiceId");
 
                     b.ToTable("ClinicVoucher");
-                });
-
-            modelBuilder.Entity("BEAUTIFY_COMMAND.DOMAIN.Entities.Config", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTimeOffset>("CreatedOnUtc")
-                        .HasColumnType("datetimeoffset");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("Key")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTimeOffset?>("ModifiedOnUtc")
-                        .HasColumnType("datetimeoffset");
-
-                    b.Property<string>("Value")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Configs");
                 });
 
             modelBuilder.Entity("BEAUTIFY_COMMAND.DOMAIN.Entities.Conversation", b =>
