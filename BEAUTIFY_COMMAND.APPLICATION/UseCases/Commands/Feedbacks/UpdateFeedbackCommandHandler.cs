@@ -278,7 +278,9 @@ public class UpdateFeedbackCommandHandler : ICommandHandler<CONTRACT.Services.Fe
                  x.FeedbackId != null &&
                  !scheduleIds.Contains(x.Id) // Exclude current feedback schedules
         ).AsNoTracking().CountAsync(cancellationToken);
-
+        
+        List<TriggerOutbox.DoctorFeedback> doctorFeedbacks = new();
+        
         // Update staff ratings
         staff = staff.Select(x =>
         {
@@ -305,6 +307,14 @@ public class UpdateFeedbackCommandHandler : ICommandHandler<CONTRACT.Services.Fe
                     // If no previous ratings, just use the new rating
                     x.Rating = newRating;
                 }
+                
+                doctorFeedbacks.Add(new TriggerOutbox.DoctorFeedback
+                {
+                    FeedbackId = x.Id,
+                    NewRating = x.Rating, // the newest rating, after update
+                    DoctorId = x.Id,
+                    Content = ""
+                });
             }
             return x;
         }).ToList();
@@ -358,7 +368,8 @@ public class UpdateFeedbackCommandHandler : ICommandHandler<CONTRACT.Services.Fe
             request.Content, 
             request.Rating,
             TimeZoneInfo.ConvertTime(DateTimeOffset.UtcNow, vietnamTimeZone),
-            currentService?.Rating ?? request.Rating // Pass updated service rating
+            currentService?.Rating ?? request.Rating, // Pass updated service rating
+            doctorFeedbacks
         );
 
         _triggerOutboxRepository.Add(trigger);

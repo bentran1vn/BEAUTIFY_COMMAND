@@ -1,3 +1,5 @@
+using BEAUTIFY_PACKAGES.BEAUTIFY_PACKAGES.DOMAIN.EntityEvents;
+
 namespace BEAUTIFY_COMMAND.APPLICATION.UseCases.Commands.Feedbacks;
 public class CreateFeedbackCommandHandler : ICommandHandler<CONTRACT.Services.Feedbacks.Commands.CreateFeedbackCommand>
 {
@@ -115,12 +117,21 @@ public class CreateFeedbackCommandHandler : ICommandHandler<CONTRACT.Services.Fe
 
         if (staff == null || !staff.Any()) throw new Exception("Staff not found");
 
+        List<TriggerOutbox.DoctorFeedback> doctorFeedbacks = new();
+        
         staff = staff.Select(x =>
         {
             if (normalizedRatings.TryGetValue(x.Id, out var rating))
             {
                 var previousRatingCount = staffFeedback.Count(y => y.DoctorId == x.Id);
                 x.Rating = (x.Rating * previousRatingCount + rating) / (previousRatingCount + 1);
+                doctorFeedbacks.Add(new TriggerOutbox.DoctorFeedback
+                {
+                    FeedbackId = x.Id,
+                    NewRating = x.Rating, // the newest rating, after update
+                    DoctorId = x.Id,
+                    Content = ""
+                });
             }
             return x;
         }).ToList();
@@ -170,7 +181,7 @@ public class CreateFeedbackCommandHandler : ICommandHandler<CONTRACT.Services.Fe
         
         currentService.Rating = newServiceRating;
         
-        _serviceRepository.Update(currentService);        
+        _serviceRepository.Update(currentService);
 
         var trigger = TriggerOutbox.CreateFeedbackEvent(
             orderFeedback.Id,
@@ -180,7 +191,8 @@ public class CreateFeedbackCommandHandler : ICommandHandler<CONTRACT.Services.Fe
             orderFeedback.Rating,
             order.Customer!,
             orderFeedback.CreatedOnUtc,
-            newServiceRating
+            newServiceRating,
+            doctorFeedbacks
         );
 
         _triggerOutboxRepository.Add(trigger);

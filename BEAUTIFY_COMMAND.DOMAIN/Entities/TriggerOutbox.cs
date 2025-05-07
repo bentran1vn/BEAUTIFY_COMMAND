@@ -254,11 +254,19 @@ public class TriggerOutbox : AggregateRoot<Guid>, IAuditableEntity
 
         return triggerOutbox;
     }
+    
+    public class DoctorFeedback
+    {
+        public Guid FeedbackId { get; set; }
+        public double NewRating { get; set; }
+        public Guid DoctorId { get; set; }
+        public string Content { get; set; }
+    }
 
     public static TriggerOutbox CreateFeedbackEvent(
         Guid feedbackId, Guid serviceId, ICollection<string> images,
         string content, double rating, User user, DateTimeOffset createdAt,
-        double newRating
+        double newRating, List<DoctorFeedback> doctorFeedbacks
     )
     {
         var triggerOutbox = new TriggerOutbox
@@ -286,7 +294,14 @@ public class TriggerOutbox : AggregateRoot<Guid>, IAuditableEntity
                     LastName = user.LastName,
                     Address = user.Address
                 },
-                CreatedAt = createdAt 
+                CreatedAt = createdAt ,
+                DoctorFeedbacks = doctorFeedbacks.Select(x => new FeedbackEvent.DoctorFeedback
+                {
+                    FeedbackId = x.FeedbackId,
+                    NewRating = x.NewRating,
+                    DoctorId = x.DoctorId,
+                    Content = x.Content
+                }).ToList()
             }));
 
         return triggerOutbox;
@@ -294,7 +309,8 @@ public class TriggerOutbox : AggregateRoot<Guid>, IAuditableEntity
     
     public static TriggerOutbox UpdateFeedbackEvent(
         Guid feedbackId, Guid serviceId, ICollection<string> images,
-        string content, double rating, DateTimeOffset updateAt, double newRating
+        string content, double rating, DateTimeOffset updateAt, double newRating,
+        List<DoctorFeedback> doctorFeedbacks
     )
     {
         var triggerOutbox = new TriggerOutbox
@@ -312,7 +328,14 @@ public class TriggerOutbox : AggregateRoot<Guid>, IAuditableEntity
                 Content = content,
                 Rating = rating,
                 UpdateAt = updateAt,
-                NewRating = newRating
+                NewRating = newRating,
+                DoctorFeedbacks = doctorFeedbacks.Select(x => new FeedbackEvent.DoctorFeedback
+                {
+                    FeedbackId = x.FeedbackId,
+                    NewRating = x.NewRating,
+                    DoctorId = x.DoctorId,
+                    Content = x.Content
+                }).ToList()
             }));
 
         return triggerOutbox;
