@@ -17,6 +17,7 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
     public virtual DbSet<ClinicTransaction> ClinicTransactions { get; set; }
     public virtual DbSet<Procedure> Procedures { get; set; }
     public virtual DbSet<ProcedurePriceType> ProcedurePriceTypes { get; set; }
+    public virtual DbSet<Config> Configs { get; set; }
 
     private static void SetSoftDeleteFilter<T>(ModelBuilder modelBuilder) where T : Entity<T>
     {
