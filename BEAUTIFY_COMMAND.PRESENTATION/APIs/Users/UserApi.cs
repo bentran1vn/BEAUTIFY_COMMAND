@@ -18,11 +18,22 @@ public class UserApi : ApiEndpoint, ICarterModule
             .WithSummary("Update user profile information")
             .WithDescription(
                 "Updates the profile information of the currently authenticated user (customer or doctor)");
+
+        gr1.MapPut("", UserAction)
+            .RequireAuthorization(Constant.Policy.POLICY_SYSTEM_ADMIN);
     }
 
     private static async Task<IResult> UpdateUserProfile(
         ISender sender,
         [FromForm] Commands.UpdateUserProfileCommand command)
+    {
+        var result = await sender.Send(command);
+        return result.IsFailure ? HandlerFailure(result) : Results.Ok(result);
+    }
+    
+    private static async Task<IResult> UserAction(
+        ISender sender,
+        [FromBody] Commands.UserActionCommand command)
     {
         var result = await sender.Send(command);
         return result.IsFailure ? HandlerFailure(result) : Results.Ok(result);
