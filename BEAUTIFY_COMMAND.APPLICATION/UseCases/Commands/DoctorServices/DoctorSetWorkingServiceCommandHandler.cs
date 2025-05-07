@@ -33,7 +33,7 @@ internal sealed class DoctorSetWorkingServiceCommandHandler(
         // Get doctors with role information in a single query
         var doctors = await staffRepository.FindAll(x => request.DoctorId.Contains(x.Id))
             .Include(x => x.Role)
-            .Include(x => x.DoctorServices)
+            .Include(x => x.UserClinics)
             .ToListAsync(cancellationToken);
 
         if (doctors.Count != request.DoctorId.Count)
