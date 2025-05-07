@@ -25,10 +25,10 @@ public class PaymentApi : ApiEndpoint, ICarterModule
             .WithSummary("Subscription Over Payments.")
             .RequireAuthorization();
 
-        gr1.MapPost("order/", CustomerOrderPayment)
+        gr1.MapPost("order", CustomerOrderPayment)
             .WithName("Customer Order Payments")
             .WithSummary("Customer Order Payments.")
-            .RequireAuthorization();
+            .RequireAuthorization(Constant.Role.CLINIC_STAFF);
         ;
 
         gr1.MapPost("wallets/top-ups", CustomerTopUpWallet)

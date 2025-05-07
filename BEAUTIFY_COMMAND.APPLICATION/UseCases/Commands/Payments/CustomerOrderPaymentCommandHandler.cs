@@ -4,7 +4,8 @@ internal sealed class CustomerOrderPaymentCommandHandler(
     IRepositoryBase<ClinicTransaction, Guid> clinicTransactionRepositoryBase,
     IRepositoryBase<User, Guid> userRepositoryBase,
     IRepositoryBase<Clinic, Guid> clinicRepositoryBase,
-    IRepositoryBase<WalletTransaction, Guid> walletTransactionRepositoryBase)
+    IRepositoryBase<WalletTransaction, Guid> walletTransactionRepositoryBase,
+    ICurrentUserService currentUserService)
     : ICommandHandler<CONTRACT.Services.Payments.Commands.CustomerOrderPaymentCommand>
 {
     public async Task<Result> Handle(CONTRACT.Services.Payments.Commands.CustomerOrderPaymentCommand request,
@@ -21,7 +22,7 @@ internal sealed class CustomerOrderPaymentCommandHandler(
             TimeZoneInfo.FindSystemTimeZoneById("SE Asia Standard Time"));
         var finalAmount = order.FinalAmount!.Value;
         var remainingAmount = finalAmount;
-        var clinicId = order.Service!.ClinicServices!.FirstOrDefault()!.ClinicId;
+        var clinicId = currentUserService.ClinicId;
 
 
         // Deduct from wallet balance if requested
@@ -75,7 +76,7 @@ internal sealed class CustomerOrderPaymentCommandHandler(
                 PaymentMethod = request.PaymentMethod
             });
             //  order.Service.ClinicServices.FirstOrDefault().Clinics.Balance += finalAmount;
-            var clinic = await clinicRepositoryBase.FindByIdAsync(clinicId, cancellationToken);
+            var clinic = await clinicRepositoryBase.FindByIdAsync(clinicId.Value, cancellationToken);
             if (clinic == null)
                 return Result.Failure(new Error("404", "Clinic Not Found"));
             clinic.Balance += finalAmount;
