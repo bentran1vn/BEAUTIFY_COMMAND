@@ -3,6 +3,7 @@ internal sealed class CustomerOrderPaymentCommandHandler(
     IRepositoryBase<Order, Guid> orderRepositoryBase,
     IRepositoryBase<ClinicTransaction, Guid> clinicTransactionRepositoryBase,
     IRepositoryBase<User, Guid> userRepositoryBase,
+    IRepositoryBase<Clinic, Guid> clinicRepositoryBase,
     IRepositoryBase<WalletTransaction, Guid> walletTransactionRepositoryBase)
     : ICommandHandler<CONTRACT.Services.Payments.Commands.CustomerOrderPaymentCommand>
 {
@@ -16,11 +17,12 @@ internal sealed class CustomerOrderPaymentCommandHandler(
         if (order.Status == Constant.OrderStatus.ORDER_COMPLETED)
             return Result.Failure(new Error("400", "Order already completed"));
 
-        var vietnamTimeZone = TimeZoneInfo.FindSystemTimeZoneById("SE Asia Standard Time");
-        var transactionDate = TimeZoneInfo.ConvertTime(DateTime.UtcNow, vietnamTimeZone);
+        var transactionDate = TimeZoneInfo.ConvertTime(DateTime.UtcNow,
+            TimeZoneInfo.FindSystemTimeZoneById("SE Asia Standard Time"));
         var finalAmount = order.FinalAmount!.Value;
         var remainingAmount = finalAmount;
         var clinicId = order.Service!.ClinicServices!.FirstOrDefault()!.ClinicId;
+
 
         // Deduct from wallet balance if requested
         if (request.IsDeductFromCustomerBalance)
@@ -72,7 +74,12 @@ internal sealed class CustomerOrderPaymentCommandHandler(
                 TransactionDate = transactionDate,
                 PaymentMethod = request.PaymentMethod
             });
-            order.Service.ClinicServices.FirstOrDefault().Clinics.Balance += finalAmount;
+            //  order.Service.ClinicServices.FirstOrDefault().Clinics.Balance += finalAmount;
+            var clinic = await clinicRepositoryBase.FindByIdAsync(clinicId, cancellationToken);
+            if (clinic == null)
+                return Result.Failure(new Error("404", "Clinic Not Found"));
+            clinic.Balance += finalAmount;
+            clinicRepositoryBase.Update(clinic);
             order.Status = Constant.OrderStatus.ORDER_COMPLETED;
 
             orderRepositoryBase.Update(order);
@@ -106,6 +113,7 @@ internal sealed class CustomerOrderPaymentCommandHandler(
             OrderDescription = $"Customer Order: {request.OrderId}",
             QrUrl = qrUrl
         };
+
 
         return Result.Success(result);
     }
