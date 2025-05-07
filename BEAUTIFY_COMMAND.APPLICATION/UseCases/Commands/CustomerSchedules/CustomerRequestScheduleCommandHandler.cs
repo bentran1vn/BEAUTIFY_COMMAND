@@ -6,6 +6,8 @@
 namespace BEAUTIFY_COMMAND.APPLICATION.UseCases.Commands.CustomerSchedules;
 internal sealed class CustomerRequestScheduleCommandHandler(
     IRepositoryBase<CustomerSchedule, Guid> customerScheduleRepositoryBase,
+    IRepositoryBase<Clinic, Guid> clinicRepositoryBase,
+    
     IMailService mailService)
     : ICommandHandler<Command.CustomerRequestScheduleCommand>
 {
@@ -16,23 +18,26 @@ internal sealed class CustomerRequestScheduleCommandHandler(
             cancellationToken);
         if (customerSchedule == null)
             return Result.Failure(new Error("404", "Customer schedule not found"));
-        if (customerSchedule.Status == Constant.OrderStatus.ORDER_COMPLETED)
-            return Result.Failure(new Error("400", "Customer schedule already completed"));
+        if (customerSchedule.Status != Constant.OrderStatus.ORDER_PENDING &&
+            customerSchedule.Status != Constant.OrderStatus.ORDER_WAITING_APPROVAL)
+            return Result.Failure(new Error("400", "Customer schedule cannot be updated"));
         customerSchedule.Date = request.Date;
         customerSchedule.StartTime = request.StartTime;
         //todo don't hardcode
         var endTime =
             request.StartTime.Add(TimeSpan.FromHours(customerSchedule.ProcedurePriceType.Duration / 60.0));
+        var clinic = await clinicRepositoryBase.FindByIdAsync(customerSchedule.Doctor.ClinicId, cancellationToken);
 
-        if (endTime.Hours > 20 || endTime is { Hours: 20, Minutes: > 30 })
-            return Result.Failure(new Error("400", "Choose start time soner because clinic close at 20:30"));
+        if (endTime > clinic.WorkingTimeEnd)
+            return Result.Failure(new Error("400",
+                $"Choose start time soner because clinic close at {clinic.WorkingTimeEnd}"));
         customerSchedule.EndTime = endTime;
         customerSchedule.Status = Constant.OrderStatus.ORDER_WAITING_APPROVAL;
 
         customerScheduleRepositoryBase.Update(customerSchedule);
         customerSchedule.CustomerScheduleUpdateDateAndTime(customerSchedule);
 
-        mailService.SendMail(new MailContent
+        _ = mailService.SendMail(new MailContent
         {
             To = customerSchedule.Customer.Email,
             Subject = "Yêu cầu lịch hẹn đã được cập nhật",

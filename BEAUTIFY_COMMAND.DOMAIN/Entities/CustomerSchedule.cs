@@ -86,4 +86,10 @@ public class CustomerSchedule : AggregateRoot<Guid>, IAuditableEntity
             customerSchedule.Id, customerSchedule.StartTime.Value, customerSchedule.EndTime.Value,
             customerSchedule.Date.Value, customerSchedule.Status));
     }
+
+    public void CustomerScheduleDoctorChanged(
+        List<Guid> Ids, Guid DoctorId, string DoctorName)
+    {
+        RaiseDomainEvent(new DomainEvents.CustomerScheduleDoctorChanged(Guid.NewGuid(), Ids, DoctorId, DoctorName));
+    }
 }

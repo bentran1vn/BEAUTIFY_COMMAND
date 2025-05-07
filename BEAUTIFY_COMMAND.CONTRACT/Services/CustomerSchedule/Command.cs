@@ -27,7 +27,10 @@ public static class Command
         string DoctorNote
     ) : ICommand;
 
-    public record CustomerRequestScheduleCommand(Guid CustomerScheduleId, DateOnly Date, TimeSpan StartTime) : ICommand;
+    public record CustomerRequestScheduleCommand(
+        Guid CustomerScheduleId,
+        DateOnly Date,
+        TimeSpan StartTime) : ICommand;
 
 
     public record StaffUpdateCustomerScheduleTimeCommand(
@@ -40,5 +43,13 @@ public static class Command
     public record StaffApproveCustomerScheduleCommand(
         Guid CustomerScheduleId,
         string Status
+    ) : ICommand;
+
+    public record StaffChangeCustomerScheduleDoctorCommand(
+        Guid CustomerScheduleId,
+        Guid DoctorId,
+        DateOnly Date,
+        TimeSpan StartTime,
+        bool IsSingleSchedule
     ) : ICommand;
 }

@@ -114,7 +114,7 @@ internal sealed class StaffUpdateCustomerScheduleTimeCommandHandler(
                 [doctorSchedule], nextCustomerSchedule);
 
             // Send email notification to customer about schedule update
-            mailService.SendMail(new MailContent
+          _=  mailService.SendMail(new MailContent
             {
                 To = nextCustomerSchedule.Customer.Email,
                 Subject = "Yêu cầu lịch hẹn của quý khách vừa được cập nhập",

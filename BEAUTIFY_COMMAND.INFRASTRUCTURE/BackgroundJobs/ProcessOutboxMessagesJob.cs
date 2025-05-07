@@ -1,3 +1,4 @@
+using BEAUTIFY_COMMAND.DOMAIN.Entities;
 using BEAUTIFY_COMMAND.PERSISTENCE;
 using BEAUTIFY_COMMAND.PERSISTENCE.Outbox;
 using BEAUTIFY_PACKAGES.BEAUTIFY_PACKAGES.CONTRACT.Abstractions.Messages;
@@ -370,6 +371,17 @@ public class ProcessOutboxMessagesJob(ApplicationDbContext dbContext, IPublishEn
                                     TypeNameHandling = TypeNameHandling.All
                                 });
                         await publishEndpoint.Publish(doctorScheduleStatusChanged, context.CancellationToken);
+                        break;
+                    case nameof(CustomerSchedule.CustomerScheduleDoctorChanged):
+                        var customerScheduleDoctorChanged =
+                            JsonConvert.DeserializeObject<BEAUTIFY_PACKAGES.BEAUTIFY_PACKAGES.CONTRACT.Services.
+                                CustomerSchedules.DomainEvents.CustomerScheduleDoctorChanged>(
+                                outboxMessage.Content,
+                                new JsonSerializerSettings
+                                {
+                                    TypeNameHandling = TypeNameHandling.All
+                                });
+                        await publishEndpoint.Publish(customerScheduleDoctorChanged, context.CancellationToken);
                         break;
                 }
 
