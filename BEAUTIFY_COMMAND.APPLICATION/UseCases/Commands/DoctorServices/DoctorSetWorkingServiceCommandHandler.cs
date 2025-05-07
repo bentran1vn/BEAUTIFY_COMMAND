@@ -33,6 +33,7 @@ internal sealed class DoctorSetWorkingServiceCommandHandler(
         // Get doctors with role information in a single query
         var doctors = await staffRepository.FindAll(x => request.DoctorId.Contains(x.Id))
             .Include(x => x.Role)
+            .Include(x => x.DoctorServices)
             .ToListAsync(cancellationToken);
 
         if (doctors.Count != request.DoctorId.Count)
@@ -74,7 +75,9 @@ internal sealed class DoctorSetWorkingServiceCommandHandler(
                         Email = doctor.Email,
                         PhoneNumber = doctor.PhoneNumber ?? "",
                         ProfilePictureUrl = doctor.ProfilePicture ?? ""
-                    }
+                    },
+                    ClinicId = doctor.UserClinics!
+                        .FirstOrDefault(x => !x.IsDeleted)?.ClinicId ?? Guid.Empty,
                 });
         }
 
