@@ -110,8 +110,17 @@ public class WorkingSchedule : AggregateRoot<Guid>, IAuditableEntity
 
     public void WorkingScheduleDelete(Guid WorkingScheduleId)
     {
+        Console.BackgroundColor = ConsoleColor.Red;
+        Console.WriteLine("Deleting working schedule with ID: " + WorkingScheduleId);
         // Raise the domain event
         RaiseDomainEvent(new DomainEvents.WorkingScheduleDeleted(Guid.NewGuid(), WorkingScheduleId));
+    }
+
+    
+
+    public void UpdateDoctorScheduleStatus(List<Guid> WorkingScheduleId, string Status)
+    {
+        RaiseDomainEvent(new DomainEvents.DoctorScheduleStatusChanged(Guid.NewGuid(), WorkingScheduleId, Status));
     }
 
     public void WorkingScheduleUpdate(List<WorkingSchedule> workingSchedule, string DoctorName)
@@ -123,6 +132,7 @@ public class WorkingSchedule : AggregateRoot<Guid>, IAuditableEntity
             Date = x.Date,
             StartTime = x.StartTime,
             EndTime = x.EndTime,
+
             IsDeleted = false,
             CustomerScheduleId = x.CustomerScheduleId.Value
         }).ToList();

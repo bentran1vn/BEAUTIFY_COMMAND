@@ -3,13 +3,10 @@ internal sealed class DoctorRegisterScheduleCommandHandler(
     IRepositoryBase<Staff, Guid> staffRepository,
     IRepositoryBase<WorkingSchedule, Guid> workingScheduleRepository,
     IRepositoryBase<UserClinic, Guid> userClinicRepository,
+    IRepositoryBase<Config, Guid> configRepository,
     ICurrentUserService currentUserService)
     : ICommandHandler<CONTRACT.Services.WorkingSchedules.Commands.DoctorRegisterScheduleCommand>
 {
-    //todo not hardcode
-    // Maximum weekly working hours (44 hours)
-    private const int MaxWeeklyHours = 44;
-
     public async Task<Result> Handle(CONTRACT.Services.WorkingSchedules.Commands.DoctorRegisterScheduleCommand request,
         CancellationToken cancellationToken)
     {
@@ -88,11 +85,20 @@ internal sealed class DoctorRegisterScheduleCommandHandler(
         }
 
         var existingHours = existingSchedules.Sum(x => (x.EndTime - x.StartTime).TotalHours);
+        var config = await configRepository
+            .FindSingleAsync(x => x.Key == "Maximun_Working_Hours_A_Week", cancellationToken);
+
+        if (config == null)
+            return Result.Failure(new Error("404", "Không tìm thấy cấu hình giới hạn giờ làm việc"));
+        if (!int.TryParse(config.Value, out var Maximun_Working_Hours_A_Week))
+        {
+            return Result.Failure(new Error("422", "Giá trị giới hạn giờ làm việc không hợp lệ"));
+        }
 
         // 7. Check if adding the new schedules would exceed the weekly limit
-        if (existingHours + requestedHours > MaxWeeklyHours)
+        if (existingHours + requestedHours > Maximun_Working_Hours_A_Week)
             return Result.Failure(new Error("422",
-                $"Không thể đăng kí những lịch làm việc này. Vì đã vượt quá giới hạn {MaxWeeklyHours} giờ 1 tuần. " +
+                $"Không thể đăng kí những lịch làm việc này. Vì đã vượt quá giới hạn {Maximun_Working_Hours_A_Week} giờ 1 tuần. " +
                 $"Hiện tại: {existingHours} giờ, đăng ký: {requestedHours} giờ"));
 
         // 8. Assign the doctor to the schedules

@@ -30,8 +30,4 @@ public class UserConfiguration /*: IEntityTypeConfiguration<User>*/
 
         builder.HasData(user);
     }*/
-    public void Configure(EntityTypeBuilder<User> builder)
-    {
-        throw new NotImplementedException();
-    }
 }

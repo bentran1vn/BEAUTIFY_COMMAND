@@ -1,0 +1,23 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net8.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="BEAUTIFY_PACKAGES.SHARE" Version="1.12.9" />
+        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.13.0" />
+        <PackageReference Include="MockQueryable.Moq" Version="7.0.3" />
+        <PackageReference Include="Moq" Version="4.20.72"/>
+        <PackageReference Include="xunit" Version="2.9.3"/>
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\BEAUTIFY_COMMAND.DOMAIN\BEAUTIFY_COMMAND.DOMAIN.csproj"/>
+        <ProjectReference Include="..\BEAUTIFY_COMMAND.CONTRACT\BEAUTIFY_COMMAND.CONTRACT.csproj"/>
+        <ProjectReference Include="..\BEAUTIFY_COMMAND.APPLICATION\BEAUTIFY_COMMAND.APPLICATION.csproj"/>
+    </ItemGroup>
+
+</Project>
