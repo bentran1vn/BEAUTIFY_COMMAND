@@ -257,7 +257,8 @@ public class TriggerOutbox : AggregateRoot<Guid>, IAuditableEntity
 
     public static TriggerOutbox CreateFeedbackEvent(
         Guid feedbackId, Guid serviceId, ICollection<string> images,
-        string content, int rating, User user, DateTimeOffset createdAt
+        string content, double rating, User user, DateTimeOffset createdAt,
+        double newRating
     )
     {
         var triggerOutbox = new TriggerOutbox
@@ -274,6 +275,7 @@ public class TriggerOutbox : AggregateRoot<Guid>, IAuditableEntity
                 Images = images,
                 Content = content,
                 Rating = rating,
+                NewRating = newRating,
                 User = new FeedbackEvent.User
                 {
                     Id = user.Id,
@@ -292,7 +294,7 @@ public class TriggerOutbox : AggregateRoot<Guid>, IAuditableEntity
     
     public static TriggerOutbox UpdateFeedbackEvent(
         Guid feedbackId, Guid serviceId, ICollection<string> images,
-        string content, int rating, DateTimeOffset updateAt
+        string content, double rating, DateTimeOffset updateAt, double newRating
     )
     {
         var triggerOutbox = new TriggerOutbox
@@ -309,7 +311,8 @@ public class TriggerOutbox : AggregateRoot<Guid>, IAuditableEntity
                 Images = images,
                 Content = content,
                 Rating = rating,
-                UpdateAt = updateAt 
+                UpdateAt = updateAt,
+                NewRating = newRating
             }));
 
         return triggerOutbox;
