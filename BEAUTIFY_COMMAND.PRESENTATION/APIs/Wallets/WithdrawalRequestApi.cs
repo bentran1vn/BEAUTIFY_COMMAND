@@ -23,6 +23,7 @@ public class WithdrawalRequestApi : ApiEndpoint, ICarterModule
             .WithSummary("Approve or reject a withdrawal request");
         gr1.MapPatch("{id:guid}/system", SystemAdminProcessWithdrawalRequest)
             .RequireAuthorization(Constant.Role.SYSTEM_ADMIN)
+            .DisableAntiforgery()
             .WithName("System Admin Update Withdrawal Request")
             .WithSummary("Approve or reject a withdrawal request by system admin");
         gr1.MapPatch("{id:guid}/status", SystemAdminAfterTransferWallet)
