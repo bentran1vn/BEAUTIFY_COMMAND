@@ -33,19 +33,19 @@ public class PaymentServices : IPaymentService
         string returnUrl = "";
         switch (type)
         {
-            case "BuyPackage":
+            case "SUB":
                 //MuaSub
                 returnUrl = $"{_buyPackage}?transactionId={transactionId}&type={type}";
                 break;
-            case "OverSub":
-                //OverSub
-                returnUrl = $"{_buyPackage}?transactionId={transactionId}&type={type}";
-                break;
-            case "UserProfile":
+            case "WALLET":
                 //CusNap
                 returnUrl = $"{_userProfile}?transactionId={transactionId}&type={type}";
                 break;
-            case "CusSche":
+            case "OVER":
+                //OverSub
+                returnUrl = $"{_buyPackage}?transactionId={transactionId}&type={type}";
+                break;
+            case "ORDER":
                 //CusNap
                 returnUrl = $"{_cusSche}?transactionId={transactionId}&type={type}";
                 break;
