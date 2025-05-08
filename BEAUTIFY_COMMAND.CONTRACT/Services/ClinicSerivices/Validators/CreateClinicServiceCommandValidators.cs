@@ -8,8 +8,7 @@ public class CreateClinicServiceCommandValidators : AbstractValidator<Commands.C
 
         RuleFor(x => x.Name)
             .NotEmpty()
-            .MinimumLength(5).WithMessage("Category Name must be at least 5 characters long")
-            .MaximumLength(50).WithMessage("Category Name must exceed 50 characters");
+            .MinimumLength(5).WithMessage("Service Name must be at least 5 characters long");
 
         RuleFor(x => x.Description)
             .NotEmpty()
