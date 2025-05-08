@@ -156,9 +156,9 @@ public class TriggerFromHookCommandHandler(
         if (transaction.Amount != request.TransferAmount)
             return Result.Failure(new Error("422", "Transaction Amount invalid"));
 */
-        // Validate transaction date (must be today)
+     /*   // Validate transaction date (must be today)
         if (transaction.TransactionDate.Date != DateTimeOffset.Now.Date)
-            return Result.Failure(new Error("400", "Transaction Date invalid"));
+            return Result.Failure(new Error("400", "Transaction Date invalid"));*/
 
         // Update transaction status to completed
         transaction.Status = Constant.WalletConstants.TransactionStatus.COMPLETED;
@@ -245,8 +245,8 @@ public class TriggerFromHookCommandHandler(
         }
 */
         // Validate transaction date
-        if (transaction.TransactionDate > DateTimeOffset.Now)
-            return Result.Failure(new Error("400", "Transaction Date invalid"));
+      /*  if (transaction.TransactionDate > DateTimeOffset.Now)
+            return Result.Failure(new Error("400", "Transaction Date invalid"));*/
 
         transaction.Status = 1;
 
