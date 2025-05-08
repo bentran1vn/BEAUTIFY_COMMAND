@@ -109,8 +109,8 @@ internal sealed class
                 OperatingLicenseUrl = oUrl,
                 OperatingLicenseExpiryDate = request.OperatingLicenseExpiryDate,
                 Status = 0,
-                BankName = request.BankName,
-                BankAccountNumber = request.BankAccountNumber,
+                BankName = parentClinic.BankName,
+                BankAccountNumber = parentClinic.BankAccountNumber,
                 IsActivated = false
             };
 
