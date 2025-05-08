@@ -1,8 +1,6 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
-
-namespace BEAUTIFY_COMMAND.DOMAIN.Entities;
-public class GlobalOrder : Entity<Guid>
+﻿namespace BEAUTIFY_COMMAND.DOMAIN.Entities;
+public class GlobalOrder : AggregateRoot<int>, IAuditableEntity
 {
-    [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-    public int OrderCode { get; init; }
+    public DateTimeOffset CreatedOnUtc { get; set; }
+    public DateTimeOffset? ModifiedOnUtc { get; set; }
 }
