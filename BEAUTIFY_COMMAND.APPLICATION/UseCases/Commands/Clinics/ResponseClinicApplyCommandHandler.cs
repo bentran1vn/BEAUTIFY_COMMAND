@@ -78,7 +78,7 @@ public class ResponseClinicApplyCommandHandler(
                         District = applyRequest.Clinic.District,
                         Ward = applyRequest.Clinic.Ward,
                         Address = applyRequest.Clinic.Address,
-                        Password = passwordRandom,
+                        Password = hashingPassword,
                         RoleId = new Guid("C6D93B8C-F509-4498-ABBB-FE63EDC66F2B"),
                         Status = 1
                     };
@@ -146,7 +146,7 @@ public class ResponseClinicApplyCommandHandler(
                     District = applyRequest.Clinic.District,
                     Ward = applyRequest.Clinic.Ward,
                     Address = applyRequest.Clinic.Address,
-                    Password = passwordRandom,
+                    Password = hashingPassword,
                     RoleId = new Guid("C6D93B8C-F509-4498-ABBB-FE63EDC66F2B"),
                     Status = 1
                 };
@@ -195,15 +195,8 @@ public class ResponseClinicApplyCommandHandler(
 
     private static string GenerateRandomPassword()
     {
-        var guid = Guid.NewGuid().ToString("N").ToLower();
-        const string specialChars = "!@#$%^&*";
         var random = new Random();
-
-        // Ensure first character is uppercase
-        var firstChar = char.ToUpper(guid[0]);
-        var specialChar = specialChars[random.Next(specialChars.Length)];
-
         // Construct the password
-        return $"{firstChar}{guid.Substring(1, 5)}{specialChar}{guid.Substring(6, 2)}";
+        return random.Next(100000, 9999999).ToString();
     }
 }
