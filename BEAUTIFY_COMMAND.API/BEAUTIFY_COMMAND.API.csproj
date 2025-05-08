@@ -14,13 +14,14 @@
     <ItemGroup>
 
 
-        <PackageReference Include="BEAUTIFY_PACKAGES.SHARE" Version="1.13.3" />
+        <PackageReference Include="BEAUTIFY_PACKAGES.SHARE" Version="1.13.4" />
         <PackageReference Include="Carter" Version="8.1.0"/>
         <PackageReference Include="MicroElements.Swashbuckle.FluentValidation" Version="6.1.0"/>
         <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.7">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
+        <PackageReference Include="payOS" Version="1.0.9" />
         <PackageReference Include="Swashbuckle.AspNetCore" Version="7.2.0"/>
         <PackageReference Include="Swashbuckle.AspNetCore.Annotations" Version="7.2.0"/>
         <PackageReference Include="Swashbuckle.AspNetCore.Newtonsoft" Version="7.2.0"/>

@@ -1,9 +1,12 @@
+using BEAUTIFY_COMMAND.APPLICATION.PaymentServices;
+
 namespace BEAUTIFY_COMMAND.APPLICATION.UseCases.Commands.Payments;
 public class
     SubscriptionOrderCommandHandler(
         IRepositoryBase<Clinic, Guid> clinicRepository,
         IRepositoryBase<SubscriptionPackage, Guid> subscriptionPackageRepository,
-        IRepositoryBase<SystemTransaction, Guid> systemTransactionRepository)
+        IRepositoryBase<SystemTransaction, Guid> systemTransactionRepository,
+        IPaymentService paymentService)
     : ICommandHandler<CONTRACT.Services.Payments.Commands.SubscriptionOrderCommand>
 {
     public async Task<Result> Handle(CONTRACT.Services.Payments.Commands.SubscriptionOrderCommand request,
@@ -37,14 +40,16 @@ public class
 
         systemTransactionRepository.Add(trans);
 
-        var qrUrl =
-            $"https://qr.sepay.vn/img?bank=MBBank&acc=0901928382&template=&amount={(int)sub.Price}&des=BeautifySub{trans.Id}";
+        // var qrUrl =
+        //     $"https://qr.sepay.vn/img?bank=MBBank&acc=0901928382&template=&amount={(int)sub.Price}&des=BeautifySub{trans.Id}";
+
+        var qrUrl = await paymentService.CreatePaymentLink(trans.Id, (double)trans.Amount, "BuyPackage");
 
         var result = new
         {
             TransactionId = trans.Id,
-            BankNumber = "100879223979",
-            BankGateway = "VietinBank",
+            BankNumber = "0901928382",
+            BankGateway = "MBBank",
             trans.Amount,
             OrderDescription = $"Beautify-{trans.Id}",
             QrUrl = qrUrl

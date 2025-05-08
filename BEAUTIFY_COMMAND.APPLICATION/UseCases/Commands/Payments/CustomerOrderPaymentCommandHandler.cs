@@ -1,11 +1,14 @@
-﻿namespace BEAUTIFY_COMMAND.APPLICATION.UseCases.Commands.Payments;
+﻿using BEAUTIFY_COMMAND.APPLICATION.PaymentServices;
+
+namespace BEAUTIFY_COMMAND.APPLICATION.UseCases.Commands.Payments;
 internal sealed class CustomerOrderPaymentCommandHandler(
     IRepositoryBase<Order, Guid> orderRepositoryBase,
     IRepositoryBase<ClinicTransaction, Guid> clinicTransactionRepositoryBase,
     IRepositoryBase<User, Guid> userRepositoryBase,
     IRepositoryBase<Clinic, Guid> clinicRepositoryBase,
     IRepositoryBase<WalletTransaction, Guid> walletTransactionRepositoryBase,
-    ICurrentUserService currentUserService)
+    ICurrentUserService currentUserService,
+    IPaymentService paymentService)
     : ICommandHandler<CONTRACT.Services.Payments.Commands.CustomerOrderPaymentCommand>
 {
     public async Task<Result> Handle(CONTRACT.Services.Payments.Commands.CustomerOrderPaymentCommand request,
@@ -101,20 +104,19 @@ internal sealed class CustomerOrderPaymentCommandHandler(
         });
 
         // Generate payment link for remaining amount
-        var qrUrl =
-            $"https://qr.sepay.vn/img?bank=MBBank&acc=0901928382&template=&amount={(int)remainingAmount}&des=BeautifyOrder{id}";
+        var qrUrl = await paymentService.CreatePaymentLink(id, (double)remainingAmount, "CusSche");
+        
         var result = new
         {
             TransactionId = id,
-            BankNumber = "100879223979",
-            BankGateway = "VietinBank",
+            BankNumber = "0901928382",
+            BankGateway = "MBBank",
             Amount = remainingAmount,
             OriginalAmount = finalAmount,
             AmountPaidFromWallet = finalAmount - remainingAmount,
             OrderDescription = $"Customer Order: {request.OrderId}",
             QrUrl = qrUrl
         };
-
 
         return Result.Success(result);
     }

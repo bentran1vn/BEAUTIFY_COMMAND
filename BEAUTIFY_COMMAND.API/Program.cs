@@ -55,6 +55,7 @@ builder.Services.AddHttpContextAccessor();
 // Application Layer
 builder.Services.AddMediatRApplication();
 builder.Services.AddAutoMapperApplication();
+builder.Services.PayOs();
 
 // Persistence Layer
 builder.Services.AddInterceptorPersistence();

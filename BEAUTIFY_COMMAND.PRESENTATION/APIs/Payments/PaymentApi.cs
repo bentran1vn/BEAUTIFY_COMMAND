@@ -1,15 +1,24 @@
 using BEAUTIFY_COMMAND.CONTRACT.Services.Payments;
 using BEAUTIFY_PACKAGES.BEAUTIFY_PACKAGES.DOMAIN.Constrants;
+using Microsoft.Extensions.Logging;
 
 namespace BEAUTIFY_COMMAND.PRESENTATION.APIs.Payments;
 public class PaymentApi : ApiEndpoint, ICarterModule
 {
     private const string BaseUrl = "/api/v{version:apiVersion}/payments";
+    private readonly ILogger<PaymentApi> _logger ;
+
+    public PaymentApi(ILogger<PaymentApi> logger)
+    {
+        _logger = logger;
+    }
 
     public void AddRoutes(IEndpointRouteBuilder app)
     {
         var gr1 = app.NewVersionedApi("Payments")
             .MapGroup(BaseUrl).HasApiVersion(1);
+
+        gr1.MapGet("payOs/success", HandlePaySuccess);
 
         gr1.MapPost("sepay-payment", TriggerFromHook)
             .WithName("Web Hook for Payments")
@@ -35,6 +44,13 @@ public class PaymentApi : ApiEndpoint, ICarterModule
             .RequireAuthorization(Constant.Role.CUSTOMER)
             .WithName("Top Up Wallet")
             .WithSummary("Top Up Wallet.");
+    }
+
+    private static async Task<IResult> HandlePaySuccess(ISender sender, [FromQuery]Guid transactionId)
+    {
+        Console.BackgroundColor = ConsoleColor.Green;
+        Console.WriteLine(transactionId);
+        return Results.Empty;
     }
 
     private static async Task<IResult> TriggerFromHook(ISender sender,

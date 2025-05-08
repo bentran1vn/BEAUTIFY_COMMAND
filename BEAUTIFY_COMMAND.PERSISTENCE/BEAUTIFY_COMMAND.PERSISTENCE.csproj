@@ -8,7 +8,7 @@
 
     <ItemGroup>
 
-        <PackageReference Include="BEAUTIFY_PACKAGES.SHARE" Version="1.13.3" />
+        <PackageReference Include="BEAUTIFY_PACKAGES.SHARE" Version="1.13.4" />
 
         <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.7"/>
         <PackageReference Include="Microsoft.EntityFrameworkCore.Proxies" Version="8.0.7"/>
@@ -19,6 +19,7 @@
         <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="9.0.1"/>
         <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="9.0.1"/>
         <PackageReference Include="Microsoft.Extensions.Options.DataAnnotations" Version="9.0.1"/>
+        <PackageReference Include="payOS" Version="1.0.9" />
     </ItemGroup>
 
     <ItemGroup>

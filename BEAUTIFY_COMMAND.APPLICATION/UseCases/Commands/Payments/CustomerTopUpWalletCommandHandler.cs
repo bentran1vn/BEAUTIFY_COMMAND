@@ -1,9 +1,12 @@
+using BEAUTIFY_COMMAND.APPLICATION.PaymentServices;
+
 namespace BEAUTIFY_COMMAND.APPLICATION.UseCases.Commands.Payments;
 internal sealed class
     CustomerTopUpWalletCommandHandler(
         ICurrentUserService currentUserService,
         IRepositoryBase<User, Guid> userRepositoryBase,
-        IRepositoryBase<WalletTransaction, Guid> walletTransactionRepositoryBase)
+        IRepositoryBase<WalletTransaction, Guid> walletTransactionRepositoryBase,
+        IPaymentService paymentService)
     : ICommandHandler<CONTRACT.Services.Wallets.Commands.CustomerTopUpWalletCommand>
 {
     public async Task<Result> Handle(CONTRACT.Services.Wallets.Commands.CustomerTopUpWalletCommand request,
@@ -28,8 +31,9 @@ internal sealed class
         
 
         walletTransactionRepositoryBase.Add(walletTransaction);
-        var qrUrl =
-            $"https://qr.sepay.vn/img?bank=MBBank&acc=0901928382&template=&amount={(int)walletTransaction.Amount}&des=BeautifyWallet{walletTransaction.Id}";
+        
+        var qrUrl = await paymentService.CreatePaymentLink(walletTransaction.Id, (double)walletTransaction.Amount, "UserProfile");
+        
         var result = new
         {
             TransactionId = walletTransaction.Id,

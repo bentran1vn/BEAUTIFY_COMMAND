@@ -1,5 +1,6 @@
 using BEAUTIFY_COMMAND.APPLICATION.Behaviors;
 using BEAUTIFY_COMMAND.APPLICATION.Mapper;
+using BEAUTIFY_COMMAND.APPLICATION.PaymentServices;
 using BEAUTIFY_PACKAGES.BEAUTIFY_PACKAGES.APPLICATION.Behaviors;
 using FluentValidation;
 using MediatR;
@@ -10,7 +11,8 @@ public static class ServiceCollectionExtensions
 {
     public static IServiceCollection AddMediatRApplication(this IServiceCollection services)
     {
-        return services.AddMediatR(cfg =>
+        return services
+            .AddMediatR(cfg =>
                 cfg.RegisterServicesFromAssembly(AssemblyReference.Assembly)
             )
             //.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationDefaultBehavior<,>))
@@ -20,6 +22,11 @@ public static class ServiceCollectionExtensions
             .AddTransient(typeof(IPipelineBehavior<,>), typeof(TransactionPipelineBehavior<,>))
             .AddTransient(typeof(IPipelineBehavior<,>), typeof(TracingPipelineBehavior<,>))
             .AddValidatorsFromAssembly(CONTRACT.AssemblyReference.Assembly, includeInternalTypes: true);
+    }
+    
+    public static IServiceCollection PayOs(this IServiceCollection services)
+    {
+        return services.AddTransient<IPaymentService, PaymentServices.PaymentServices>();
     }
 
 
