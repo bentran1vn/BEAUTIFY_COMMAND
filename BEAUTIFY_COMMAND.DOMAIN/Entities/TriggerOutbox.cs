@@ -184,8 +184,9 @@ public class TriggerOutbox : AggregateRoot<Guid>, IAuditableEntity
             Guid.NewGuid(),
             new ClinicServiceEvent.CreateClinicService(
                 id, name, description, new ClinicServiceEvent.Clinic(branding.Id, branding.Name, branding.Email,
-                    branding.City, branding.Address, branding.FullAddress, (TimeSpan)branding.WorkingTimeStart,
-                    (TimeSpan)branding.WorkingTimeEnd, branding.District, branding.Ward,
+                    branding.City ?? "", branding.Address ?? "", branding.FullAddress ?? ""
+                    , branding.WorkingTimeStart ?? TimeSpan.Zero, branding.WorkingTimeEnd ?? TimeSpan.Zero,
+                    branding.District ?? "", branding.Ward ?? "",
                     branding.PhoneNumber, branding.ProfilePictureUrl,
                     branding.IsParent, branding.ParentId),
                 depositPercent, isRefundable,
@@ -195,9 +196,9 @@ public class TriggerOutbox : AggregateRoot<Guid>, IAuditableEntity
                 
                 new ClinicServiceEvent.Category(cateId, cateName, cateDescription),
                 clinics.Select(x => new ClinicServiceEvent.Clinic(x.Id, x.Name, x.Email,
-                    x.City, x.Address, x.FullAddress, (TimeSpan)x.WorkingTimeStart,
-                    (TimeSpan)x.WorkingTimeEnd,
-                    x.District, x.Ward, x.PhoneNumber, x.ProfilePictureUrl,
+                    x.City ?? "", x.Address ?? "", x.FullAddress ?? "",x.WorkingTimeStart ?? TimeSpan.Zero,
+                    x.WorkingTimeEnd ?? TimeSpan.Zero,
+                    x.District ?? "", x.Ward ?? "", x.PhoneNumber, x.ProfilePictureUrl,
                     x.IsParent, x.ParentId)).ToList()
             )));
 
@@ -228,8 +229,8 @@ public class TriggerOutbox : AggregateRoot<Guid>, IAuditableEntity
                 )).ToArray(),
                 new ClinicServiceEvent.Category(cateId, cateName, cateDescription),
                 clinics.Select(x => new ClinicServiceEvent.Clinic(x.Id, x.Name, x.Email,
-                    x.City, x.Address, x.FullAddress, (TimeSpan)x.WorkingTimeStart,
-                    (TimeSpan)x.WorkingTimeEnd, x.District, x.Ward,
+                    x.City ?? "", x.Address ?? "", x.FullAddress ?? "", x.WorkingTimeStart ?? TimeSpan.Zero,
+                    x.WorkingTimeEnd ?? TimeSpan.Zero, x.District ?? "", x.Ward ?? "",
                     x.PhoneNumber, x.ProfilePictureUrl,
                     x.IsParent, x.ParentId)).ToList()
             )));
@@ -288,11 +289,11 @@ public class TriggerOutbox : AggregateRoot<Guid>, IAuditableEntity
                 {
                     Id = user.Id,
                     Avatar = user.ProfilePicture ?? "",
-                    PhoneNumber = user.PhoneNumber,
-                    FullName = user.FullName,
+                    PhoneNumber = user.PhoneNumber ?? "",
+                    FullName = user.FullName ?? "",
                     FirstName = user.FirstName,
                     LastName = user.LastName,
-                    Address = user.Address
+                    Address = user.Address ?? ""
                 },
                 CreatedAt = createdAt ,
                 DoctorFeedbacks = doctorFeedbacks.Select(x => new FeedbackEvent.DoctorFeedback
@@ -375,9 +376,9 @@ public class TriggerOutbox : AggregateRoot<Guid>, IAuditableEntity
             Guid.NewGuid(),
             new ClinicEvent.ClinicUpdated(
                 new ClinicEvent.Clinic(
-                clinic.Id, clinic.Name, clinic.Email, clinic.City, clinic.Address,
-                clinic.FullAddress, (TimeSpan)clinic.WorkingTimeStart, (TimeSpan)clinic.WorkingTimeEnd,
-                clinic.District, clinic.Ward, clinic.PhoneNumber, clinic.ProfilePictureUrl,
+                clinic.Id, clinic.Name, clinic.Email, clinic.City ?? "", clinic.Address ?? "",
+                clinic.FullAddress ?? "", clinic.WorkingTimeStart ?? TimeSpan.Zero, clinic.WorkingTimeEnd ?? TimeSpan.Zero,
+                clinic.District ?? "", clinic.Ward ?? "", clinic.PhoneNumber, clinic.ProfilePictureUrl,
                 clinic.IsParent, clinic.ParentId
                 ),
             isParent)
