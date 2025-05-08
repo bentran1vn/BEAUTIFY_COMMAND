@@ -49,8 +49,8 @@ public class ResponseClinicApplyCommandHandler(
 
                 if (userExist != null)
                 {
-                    content.Body = ClinicApplicationEmailTemplates.GetRejectedTemplate(applyRequest.Clinic.Email,
-                        applyRequest.RejectReason ?? "", userExist.Password);
+                    content.Body = ClinicApplicationEmailTemplates.GetRejected1Template(applyRequest.Clinic.Email,
+                        applyRequest.RejectReason ?? "");
 
                     userExist.FirstName = applyRequest.Clinic.Name;
                     userExist.LastName = "";
