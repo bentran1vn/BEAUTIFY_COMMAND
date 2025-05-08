@@ -28,13 +28,17 @@ public class PaymentServices : IPaymentService
         ItemData item = new ItemData(string.Empty, 1, 1);
         items.Add(item);
 
-        int newOrderId = await _repositoryBase.FindAll(x => true).CountAsync(new CancellationToken());
+        int newOrderId = await _repositoryBase.FindAll(x => true).MaxAsync(x => x.Id) + 1;
 
         string returnUrl = "";
         switch (type)
         {
             case "BuyPackage":
                 //MuaSub
+                returnUrl = $"{_buyPackage}?transactionId={transactionId}&type={type}";
+                break;
+            case "OverSub":
+                //OverSub
                 returnUrl = $"{_buyPackage}?transactionId={transactionId}&type={type}";
                 break;
             case "UserProfile":
@@ -59,6 +63,9 @@ public class PaymentServices : IPaymentService
         );
         
         var paymentResult = await payOS.createPaymentLink(paymentData);
+        
+        _repositoryBase.Add(new GlobalOrder());
+        
         return paymentResult.checkoutUrl;
     }
 
