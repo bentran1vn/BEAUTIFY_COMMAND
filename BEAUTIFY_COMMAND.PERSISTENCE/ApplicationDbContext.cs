@@ -19,6 +19,8 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
     public virtual DbSet<ProcedurePriceType> ProcedurePriceTypes { get; set; }
     public virtual DbSet<Config> Configs { get; set; }
 
+    public virtual DbSet<GlobalOrder> GlobalOrders { get; set; }
+
     private static void SetSoftDeleteFilter<T>(ModelBuilder modelBuilder) where T : Entity<T>
     {
         modelBuilder.Entity<T>().HasQueryFilter(e => !e.IsDeleted);
@@ -83,25 +85,25 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
             .WithOne() // Assuming one-to-one relationship, adjust if it's one-to-many
             .HasForeignKey<LivestreamRoom>(lr => lr.LiveStreamDetailId)
             .OnDelete(DeleteBehavior.Restrict); // Adjust delete behavior as needed
-        
+
         builder.Entity<Order>()
             .HasOne(lr => lr.OrderFeedback)
             .WithOne()
             .HasForeignKey<Order>(lr => lr.OrderFeedbackId)
             .OnDelete(DeleteBehavior.Restrict);
-        
+
         builder.Entity<CustomerSchedule>()
             .HasOne(lr => lr.Feedback)
             .WithOne() // Assuming one-to-one relationship, adjust if it's one-to-many
             .HasForeignKey<CustomerSchedule>(lr => lr.FeedbackId)
             .OnDelete(DeleteBehavior.Restrict); // Adjust delete behavior as needed
-        
+
         // builder.Entity<Procedure>()
         //     .HasMany(lr => lr.ProcedurePriceTypes)
         //     .WithOne(o => o.Procedure) // Assuming one-to-one relationship, adjust if it's one-to-many
         //     .HasForeignKey(lr => lr.ProcedureId)
         //     .OnDelete(DeleteBehavior.Restrict); // Adjust delete behavior as needed
-        
+
         builder.Entity<ProcedurePriceType>()
             .HasOne(p => p.Procedure)
             .WithMany(p => p.ProcedurePriceTypes)

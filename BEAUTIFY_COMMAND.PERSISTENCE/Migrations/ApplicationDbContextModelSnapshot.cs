@@ -736,6 +736,19 @@ namespace BEAUTIFY_COMMAND.PERSISTENCE.Migrations
                     b.ToTable("Follower");
                 });
 
+            modelBuilder.Entity("BEAUTIFY_COMMAND.DOMAIN.Entities.GlobalOrder", b =>
+                {
+                    b.Property<int>("OrderCode")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("OrderCode"));
+
+                    b.HasKey("OrderCode");
+
+                    b.ToTable("GlobalOrders");
+                });
+
             modelBuilder.Entity("BEAUTIFY_COMMAND.DOMAIN.Entities.LiveStreamDetail", b =>
                 {
                     b.Property<Guid>("Id")
