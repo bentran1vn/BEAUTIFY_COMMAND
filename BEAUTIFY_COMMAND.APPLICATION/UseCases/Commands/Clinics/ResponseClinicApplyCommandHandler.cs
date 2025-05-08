@@ -78,7 +78,7 @@ public class ResponseClinicApplyCommandHandler(
                         District = applyRequest.Clinic.District,
                         Ward = applyRequest.Clinic.Ward,
                         Address = applyRequest.Clinic.Address,
-                        Password = hashingPassword,
+                        Password = passwordRandom,
                         RoleId = new Guid("C6D93B8C-F509-4498-ABBB-FE63EDC66F2B"),
                         Status = 1
                     };
@@ -146,7 +146,7 @@ public class ResponseClinicApplyCommandHandler(
                     District = applyRequest.Clinic.District,
                     Ward = applyRequest.Clinic.Ward,
                     Address = applyRequest.Clinic.Address,
-                    Password = hashingPassword,
+                    Password = passwordRandom,
                     RoleId = new Guid("C6D93B8C-F509-4498-ABBB-FE63EDC66F2B"),
                     Status = 1
                 };
