@@ -79,82 +79,94 @@ public class
             clinicServiceRepository.AddRange(newClinicServices);
         }
 
-        var serviceMediaList = new List<ServiceMedia>();
-        var serviceMediaListUpdate = new List<ServiceMedia>();
-        var serviceMediaListAdd = new List<ServiceMedia>();
+        // Get all existing, non-deleted cover images
+        var existingCoverImages = service.ServiceMedias?
+            .Where(x => x.ServiceMediaType == 0 && !x.IsDeleted)
+            .OrderBy(x => x.IndexNumber)
+            .ToList() ?? new List<ServiceMedia>();
 
-        if (request.IndexCoverImagesChange?.Count > 0)
+        var updatedCoverImages = new List<ServiceMedia>();
+        var servicesToUpdate = new List<ServiceMedia>();
+
+        // Handle image removals if specified
+        if (request.IndexCoverImagesChange != null && request.IndexCoverImagesChange.Any())
         {
-            var coverMediaToDelete = service.ServiceMedias?.Where(x => x.ServiceMediaType == 0 &&
-                                                                       request.IndexCoverImagesChange.Contains(
-                                                                           x.IndexNumber) &&
-                                                                       !x.IsDeleted).ToList();
-
-            var coverMediaToUpdate = service.ServiceMedias?.Where(x => x.ServiceMediaType == 0 &&
-                                                                       !request.IndexCoverImagesChange.Contains(
-                                                                           x.IndexNumber) &&
-                                                                       !x.IsDeleted).ToList();
-
-            if (coverMediaToUpdate != null && coverMediaToUpdate.Any())
+            // Mark images for deletion
+            foreach (var indexToRemove in request.IndexCoverImagesChange)
             {
-                var updateCoverImages = coverMediaToUpdate.OrderBy(x => x.IndexNumber).ToList();
-                for (var i = 0; i < updateCoverImages.Count(); i++) updateCoverImages[i].IndexNumber = i;
-
-                serviceMediaList.AddRange(updateCoverImages);
-                serviceMediaListUpdate.AddRange(updateCoverImages);
+                var imageToDelete = existingCoverImages.FirstOrDefault(x => x.IndexNumber == indexToRemove);
+                if (imageToDelete != null)
+                {
+                    imageToDelete.IsDeleted = true;
+                    servicesToUpdate.Add(imageToDelete);
+                }
             }
 
-            if (coverMediaToDelete != null && coverMediaToDelete.Any())
-            {
-                foreach (var item in coverMediaToDelete) item.IsDeleted = true;
+            // Get remaining images after deletion
+            var remainingImages = existingCoverImages
+                .Where(x => !request.IndexCoverImagesChange.Contains(x.IndexNumber))
+                .ToList();
 
-                serviceMediaListUpdate.AddRange(coverMediaToDelete);
+            // Reindex remaining images starting from 0
+            for (var i = 0; i < remainingImages.Count; i++)
+            {
+                var image = remainingImages[i];
+                image.IndexNumber = i;
+                servicesToUpdate.Add(image);
+                updatedCoverImages.Add(image);
             }
         }
+        else
+        {
+            // If no deletions, keep all existing images with their current indices
+            updatedCoverImages.AddRange(existingCoverImages);
+        }
 
-        if (request.CoverImages != null)
+        // Handle new image uploads
+        var newCoverImages = new List<ServiceMedia>();
+        if (request.CoverImages != null && request.CoverImages.Any())
         {
             var coverImageFiles = request.CoverImages.Where(x => x.Name == "coverImages").ToList();
-
-            var coverImageUrls = await Task.WhenAll(coverImageFiles.Select(mediaService.UploadImageAsync));
-
-            if (coverImageUrls.Any())
+            
+            if (coverImageFiles.Any())
             {
-                List<ServiceMedia> newCoverMedias;
-                if (request.IndexCoverImagesChange?.Count > 0)
+                var coverImageUrls = await Task.WhenAll(coverImageFiles.Select(mediaService.UploadImageAsync));
+                
+                // Create new image entities with indices continuing from existing ones
+                int nextIndex = updatedCoverImages.Count > 0 
+                    ? updatedCoverImages.Max(x => x.IndexNumber) + 1 
+                    : 0;
+                    
+                foreach (var imageUrl in coverImageUrls)
                 {
-                    newCoverMedias = coverImageUrls.Select((x, idx) => new ServiceMedia
+                    var newMedia = new ServiceMedia
                     {
                         Id = Guid.NewGuid(),
-                        ImageUrl = x,
-                        IndexNumber = idx + serviceMediaList.Count,
+                        ImageUrl = imageUrl,
+                        IndexNumber = nextIndex++,
                         ServiceMediaType = 0,
                         ServiceId = service.Id
-                    }).ToList();
+                    };
+                    
+                    newCoverImages.Add(newMedia);
+                    updatedCoverImages.Add(newMedia);
                 }
-                else
-                {
-                    var oldImgages = service.ServiceMedias?.Where(x => x.ServiceMediaType == 0 && !x.IsDeleted)
-                        .ToList();
-
-                    newCoverMedias = coverImageUrls.Select((x, idx) => new ServiceMedia
-                    {
-                        Id = Guid.NewGuid(),
-                        ImageUrl = x,
-                        IndexNumber = idx + oldImgages?.Count ?? 0,
-                        ServiceMediaType = 0,
-                        ServiceId = service.Id
-                    }).ToList();
-                }
-
-                serviceMediaList.AddRange(newCoverMedias);
-                serviceMediaListAdd.AddRange(newCoverMedias);
             }
         }
 
-        // Update Service Media
-        if (serviceMediaListUpdate.Any()) _serviceMediaRepository.UpdateRange(serviceMediaListUpdate);
-        if (serviceMediaListAdd.Any()) _serviceMediaRepository.AddRange(serviceMediaListAdd);
+        // Update database
+        if (servicesToUpdate.Any())
+        {
+            _serviceMediaRepository.UpdateRange(servicesToUpdate);
+        }
+
+        if (newCoverImages.Any())
+        {
+            _serviceMediaRepository.AddRange(newCoverImages);
+        }
+
+        // Combine all updated cover images for the event trigger
+        var finalCoverImages = updatedCoverImages.ToArray();
 
         // Update Service
         serviceRepository.Update(service);
@@ -163,7 +175,7 @@ public class
         var trigger = TriggerOutbox.RaiseUpdateClinicServiceEvent(
             service.Id, service.Name, service.Description,
             service.DepositPercent, service.IsRefundable,
-            serviceMediaList.Where(x => x.ServiceMediaType == 0).ToArray(),
+            finalCoverImages,
             [],
             request.CategoryId, category.Name, category.Description ?? "", clinics
         );
