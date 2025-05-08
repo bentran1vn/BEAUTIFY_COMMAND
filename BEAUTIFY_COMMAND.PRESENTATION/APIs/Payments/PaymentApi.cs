@@ -54,28 +54,20 @@ public class PaymentApi : ApiEndpoint, ICarterModule
     }
 
     private static async Task<IResult> TriggerFromHook(ISender sender,
-        [FromBody] Commands.SepayBodyHook command)
+        [FromBody] Commands.TriggerFromHookCommand command)
     {
-        var (type, id) = QrContentParser.TakeOrderIdFromContent(command.content);
 
-        var request = new Commands.TriggerFromHookCommand
+        command.Types = command.Types switch
         {
-            Id = id,
-            TransferAmount = command.transferAmount,
-            PaymentDate = command.transactionDate
+            "OVER" => "4",
+            "WITHDRAWAL" => "3",
+            "WALLET" => "2",
+            "ORDER" => "1",
+            "SUB" => "0",
+            _ => command.Types
         };
 
-        request.Type = type switch
-        {
-            "OVER" => 4,
-            "WITHDRAWAL" => 3,
-            "WALLET" => 2,
-            "ORDER" => 1,
-            "SUB" => 0,
-            _ => request.Type
-        };
-
-        var result = await sender.Send(request);
+        var result = await sender.Send(command);
 
         return result.IsFailure ? HandlerFailure(result) : Results.Ok(result);
     }

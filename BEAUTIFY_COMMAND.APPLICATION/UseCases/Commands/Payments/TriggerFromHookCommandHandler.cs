@@ -6,7 +6,6 @@ public class TriggerFromHookCommandHandler(
     IRepositoryBase<SystemTransaction, Guid> systemTransactionRepository,
     IRepositoryBase<ClinicTransaction, Guid> clinicTransactionRepository,
     IRepositoryBase<WalletTransaction, Guid> walletTransactionRepository,
-   
     IHubContext<PaymentHub> hubContext,
     IRepositoryBase<Order, Guid> orderRepository)
     : ICommandHandler<CONTRACT.Services.Payments.Commands.TriggerFromHookCommand>
@@ -15,7 +14,7 @@ public class TriggerFromHookCommandHandler(
         CancellationToken cancellationToken)
     {
         // Process different transaction types based on the request Type
-        return request.Type switch
+        return short.Parse(request.Types) switch
         {
             0 => // Subscription transaction
                 await HandleSubscriptionTransaction(request, cancellationToken),
@@ -48,7 +47,7 @@ public class TriggerFromHookCommandHandler(
         // Validate transaction status
         if (transaction.Status != 0)
             return Result.Failure(new Error("400", "Transaction already handled"));
-
+/*
         // Validate transaction amount
         if (transaction.Amount != request.TransferAmount)
             return Result.Failure(new Error("422", "Transaction Amount invalid"));
@@ -60,7 +59,7 @@ public class TriggerFromHookCommandHandler(
                 .SendAsync("SubscriptionPriceChanged", false, cancellationToken);
             return Result.Success("Subscription price changed notification sent.");
         }
-
+*/
         // Validate transaction date
         if (transaction.TransactionDate > DateTimeOffset.Now)
             return Result.Failure(new Error("400", "Transaction Date invalid"));
@@ -97,11 +96,11 @@ public class TriggerFromHookCommandHandler(
         // Validate transaction status
         if (transaction.Status != Constant.OrderStatus.ORDER_PENDING)
             return Result.Failure(new Error("400", "Transaction already handled"));
-
+/*
         // Validate transaction amount
         if (transaction.Amount != request.TransferAmount)
             return Result.Failure(new Error("422", "Transaction Amount invalid"));
-
+*/
         // Validate transaction date
         /* if (transaction.TransactionDate > DateOnly.FromDateTime(DateTime.Now))
              return Result.Failure(new Error("400", "Transaction Date invalid"));
@@ -152,11 +151,11 @@ public class TriggerFromHookCommandHandler(
         // Validate transaction status
         if (transaction.Status != Constant.WalletConstants.TransactionStatus.PENDING)
             return Result.Failure(new Error("400", "Transaction already handled"));
-
+/*
         // Validate transaction amount
         if (transaction.Amount != request.TransferAmount)
             return Result.Failure(new Error("422", "Transaction Amount invalid"));
-
+*/
         // Validate transaction date (must be today)
         if (transaction.TransactionDate.Date != DateTimeOffset.Now.Date)
             return Result.Failure(new Error("400", "Transaction Date invalid"));
@@ -196,11 +195,11 @@ public class TriggerFromHookCommandHandler(
         // Validate transaction status
         if (transaction.Status != Constant.WalletConstants.TransactionStatus.WAITING_FOR_PAYMENT)
             return Result.Failure(new Error("400", "Transaction already handled"));
-
+/*
         // Validate transaction amount
         if (transaction.Amount != request.TransferAmount)
             return Result.Failure(new Error("422", "Transaction Amount invalid"));
-
+*/
         // Update transaction status to completed
         transaction.Status = Constant.WalletConstants.TransactionStatus.COMPLETED;
 
@@ -232,7 +231,7 @@ public class TriggerFromHookCommandHandler(
         // Validate transaction status
         if (transaction.Status != 0)
             return Result.Failure(new Error("400", "Transaction already handled"));
-
+/*
         // Validate transaction amount
         if (transaction.Amount != request.TransferAmount)
             return Result.Failure(new Error("422", "Transaction Amount invalid"));
@@ -244,7 +243,7 @@ public class TriggerFromHookCommandHandler(
                 .SendAsync("SubscriptionPriceChanged", false, cancellationToken);
             return Result.Success("Subscription price changed notification sent.");
         }
-
+*/
         // Validate transaction date
         if (transaction.TransactionDate > DateTimeOffset.Now)
             return Result.Failure(new Error("400", "Transaction Date invalid"));
