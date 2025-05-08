@@ -38,7 +38,7 @@ public class WithdrawalRequestApi : ApiEndpoint, ICarterModule
     private static async Task<IResult> SystemAdminAfterTransferWallet(
         ISender sender,
         Guid id,
-        [FromBody] IFormFile? image)
+        [FromForm] IFormFile? image)
     {
         var command = new Commands.SystemAdminAfterTransferWalletCommand(id, image);
         var result = await sender.Send(command);
