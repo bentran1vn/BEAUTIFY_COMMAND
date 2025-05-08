@@ -57,7 +57,7 @@ public class SubscriptionOverOrderCommandHandler
 
         _systemTransactionRepository.Add(trans);
 
-        var qrUrl = await _paymentService.CreatePaymentLink(trans.Id, (double)trans.Amount, "BuyPackage");
+        var qrUrl = await _paymentService.CreatePaymentLink(trans.Id, (double)trans.Amount, "OVER");
 
         var result = new
         {

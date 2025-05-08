@@ -104,7 +104,7 @@ internal sealed class CustomerOrderPaymentCommandHandler(
         });
 
         // Generate payment link for remaining amount
-        var qrUrl = await paymentService.CreatePaymentLink(id, (double)remainingAmount, "CusSche");
+        var qrUrl = await paymentService.CreatePaymentLink(id, (double)remainingAmount, "ORDER");
         
         var result = new
         {

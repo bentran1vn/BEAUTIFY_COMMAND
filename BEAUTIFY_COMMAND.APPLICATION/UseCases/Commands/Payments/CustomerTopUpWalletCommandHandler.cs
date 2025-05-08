@@ -32,7 +32,7 @@ internal sealed class
 
         walletTransactionRepositoryBase.Add(walletTransaction);
         
-        var qrUrl = await paymentService.CreatePaymentLink(walletTransaction.Id, (double)walletTransaction.Amount, "UserProfile");
+        var qrUrl = await paymentService.CreatePaymentLink(walletTransaction.Id, (double)walletTransaction.Amount, "WALLET");
         
         var result = new
         {
