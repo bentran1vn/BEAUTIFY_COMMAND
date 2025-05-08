@@ -43,13 +43,13 @@ public class
         // var qrUrl =
         //     $"https://qr.sepay.vn/img?bank=MBBank&acc=0901928382&template=&amount={(int)sub.Price}&des=BeautifySub{trans.Id}";
 
-        var qrUrl = await paymentService.CreatePaymentLink(1, trans.Id, (double)trans.Amount, 1);
+        var qrUrl = await paymentService.CreatePaymentLink(trans.Id, (double)trans.Amount, "BuyPackage");
 
         var result = new
         {
             TransactionId = trans.Id,
-            BankNumber = "100879223979",
-            BankGateway = "VietinBank",
+            BankNumber = "0901928382",
+            BankGateway = "MBBank",
             trans.Amount,
             OrderDescription = $"Beautify-{trans.Id}",
             QrUrl = qrUrl
