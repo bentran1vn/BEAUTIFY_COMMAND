@@ -8,9 +8,8 @@ public class UpdateClinicServiceCommandValidators : AbstractValidator<Commands.U
 
         RuleFor(x => x.Name)
             .NotEmpty()
-            .MinimumLength(5).WithMessage("Name must be at least 5 characters long")
-            .MaximumLength(500).WithMessage("Name must exceed 500 characters");
-
+            .MinimumLength(5).WithMessage("Name must be at least 5 characters long");
+        
         RuleFor(x => x.Description)
             .NotEmpty()
             .MinimumLength(5).WithMessage("Description must be at least 5 characters long");
