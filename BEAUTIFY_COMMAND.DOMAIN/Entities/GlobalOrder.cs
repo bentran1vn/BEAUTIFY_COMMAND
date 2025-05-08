@@ -1,10 +1,8 @@
-﻿using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.ComponentModel.DataAnnotations.Schema;
 
 namespace BEAUTIFY_COMMAND.DOMAIN.Entities;
-public class GlobalOrder
+public class GlobalOrder : Entity<Guid>
 {
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-    [Key]
-    public int OrderCode { get; set; }
+    public int OrderCode { get; init; }
 }
