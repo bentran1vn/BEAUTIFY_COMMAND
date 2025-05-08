@@ -143,7 +143,7 @@ public static class ServiceCollectionExtensions
                                 .RepeatForever()));
 
             // Unified appointment notification job - runs every hour to handle all notification types
-            var appointmentNotificationJobKey = new JobKey(nameof(AppointmentNotificationJob));
+          /*  var appointmentNotificationJobKey = new JobKey(nameof(AppointmentNotificationJob));
             configure
                 .AddJob<AppointmentNotificationJob>(appointmentNotificationJobKey)
                 .AddTrigger(trigger =>
@@ -157,7 +157,7 @@ public static class ServiceCollectionExtensions
                 .AddJob<SubscriptionPurchaseEmailJob>(subscriptionEmailJobKey)
                 .AddTrigger(trigger =>
                     trigger.ForJob(subscriptionEmailJobKey)
-                        .WithCronSchedule("*/5 * * * * ?",
+                        .WithCronSchedule("#1#5 * * * * ?",
                             x => x.InTimeZone(TimeZoneInfo.FindSystemTimeZoneById("SE Asia Standard Time"))));
 
             // Subscription expiry reminder job - runs every day at 9 AM
@@ -176,7 +176,7 @@ public static class ServiceCollectionExtensions
                 .AddTrigger(trigger =>
                     trigger.ForJob(clinicEventNotificationJobKey)
                         .WithCronSchedule("0 0 3 * * ?",
-                            x => x.InTimeZone(TimeZoneInfo.FindSystemTimeZoneById("SE Asia Standard Time"))));
+                            x => x.InTimeZone(TimeZoneInfo.FindSystemTimeZoneById("SE Asia Standard Time"))));*/
 
             configure.UseMicrosoftDependencyInjectionJobFactory();
         });

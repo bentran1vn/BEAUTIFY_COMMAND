@@ -33,8 +33,8 @@ internal sealed class
         var result = new
         {
             TransactionId = walletTransaction.Id,
-            BankNumber = "100879223979",
-            BankGateway = "VietinBank",
+            BankNumber = "0901928382",
+            BankGateway = "MBBank",
             walletTransaction.Amount,
             OrderDescription = $"BeautifyWallet-{walletTransaction.Id}",
             QrUrl = qrUrl

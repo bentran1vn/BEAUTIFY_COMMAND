@@ -23,12 +23,14 @@ public class WithdrawalRequestApi : ApiEndpoint, ICarterModule
             .WithSummary("Approve or reject a withdrawal request");
         gr1.MapPatch("{id:guid}/system", SystemAdminProcessWithdrawalRequest)
             .RequireAuthorization(Constant.Role.SYSTEM_ADMIN)
+            .DisableAntiforgery()
             .WithName("System Admin Update Withdrawal Request")
             .WithSummary("Approve or reject a withdrawal request by system admin");
         gr1.MapPatch("{id:guid}/status", SystemAdminAfterTransferWallet)
             .RequireAuthorization(Constant.Role.SYSTEM_ADMIN)
-        .WithName("Update Withdrawal Request Status")
-        .WithSummary("Update the status of a withdrawal request by system admin after transfer");
+            .DisableAntiforgery()
+            .WithName("Update Withdrawal Request Status")
+            .WithSummary("Update the status of a withdrawal request by system admin after transfer");
         gr1.MapPost("/customer-withdrawals", CustomerWithdrawFromWallet)
             .RequireAuthorization(Constant.Role.CUSTOMER)
             .WithName("Customer Withdraw From Wallet")
@@ -37,10 +39,10 @@ public class WithdrawalRequestApi : ApiEndpoint, ICarterModule
 
     private static async Task<IResult> SystemAdminAfterTransferWallet(
         ISender sender,
+        [FromForm] Commands.SystemAdminAfterTransferWalletCommand command,
         Guid id)
     {
-        var command = new Commands.SystemAdminAfterTransferWalletCommand(id);
-        var result = await sender.Send(command);
+        var result = await sender.Send(command with { TransactionId = id });
         return result.IsFailure ? HandlerFailure(result) : Results.Ok(result);
     }
 

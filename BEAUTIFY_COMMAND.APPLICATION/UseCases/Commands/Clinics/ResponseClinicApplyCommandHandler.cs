@@ -195,15 +195,8 @@ public class ResponseClinicApplyCommandHandler(
 
     private static string GenerateRandomPassword()
     {
-        var guid = Guid.NewGuid().ToString("N").ToLower();
-        const string specialChars = "!@#$%^&*";
         var random = new Random();
-
-        // Ensure first character is uppercase
-        var firstChar = char.ToUpper(guid[0]);
-        var specialChar = specialChars[random.Next(specialChars.Length)];
-
         // Construct the password
-        return $"{firstChar}{guid.Substring(1, 5)}{specialChar}{guid.Substring(6, 2)}";
+        return random.Next(100000, 9999999).ToString();
     }
 }
