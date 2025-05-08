@@ -1,3 +1,5 @@
+using Microsoft.AspNetCore.Http;
+
 namespace BEAUTIFY_COMMAND.CONTRACT.Services.Wallets;
 public static class Commands
 {
@@ -5,7 +7,8 @@ public static class Commands
         decimal Amount) : ICommand;
 
     public record SystemAdminAfterTransferWalletCommand(
-      Guid TransactionId) : ICommand;
+        Guid TransactionId,
+        IFormFile Image) : ICommand;
 
     public record CreateWithdrawalRequestCommand(
         decimal Amount,

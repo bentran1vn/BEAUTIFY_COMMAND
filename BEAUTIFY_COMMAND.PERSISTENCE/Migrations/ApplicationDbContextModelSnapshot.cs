@@ -2103,6 +2103,9 @@ namespace BEAUTIFY_COMMAND.PERSISTENCE.Migrations
                     b.Property<Guid?>("OrderId")
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<string>("ProofImageUrl")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<Guid?>("RelatedTransactionId")
                         .HasColumnType("uniqueidentifier");
 

@@ -34,22 +34,9 @@ internal sealed class CustomerWithdrawFromWalletCommandHandler(
             $"Withdrawal to {request.BankName} - {request.BankAccountNumber} - {request.AccountHolderName}");
 
         walletTransactionRepository.Add(walletTransaction);
+       
 
-        // Generate payment information (QR code for admin to process payment)
-        var qrUrl =
-            $"https://qr.sepay.vn/img?bank=MBBank&acc=0901928382&template=&amount={(int)walletTransaction.Amount}&des=BeautifyWithdrawal{walletTransaction.Id}";
-
-        var result = new
-        {
-            TransactionId = walletTransaction.Id,
-            BankNumber = "100879223979",
-            BankGateway = "VietinBank",
-            walletTransaction.Amount,
-            OrderDescription = $"BeautifyWITHDRAWAL-{walletTransaction.Id}",
-            QrUrl = qrUrl
-        };
-
-        return Result.Success(result);
+        return Result.Success();
     }
 
     /// <summary>

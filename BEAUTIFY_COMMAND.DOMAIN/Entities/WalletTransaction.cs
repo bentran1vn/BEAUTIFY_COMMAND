@@ -4,14 +4,14 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace BEAUTIFY_COMMAND.DOMAIN.Entities;
 public class WalletTransaction : AggregateRoot<Guid>, IAuditableEntity
 {
-
-        
     public Guid? UserId { get; set; }
     public virtual User? User { get; set; }
 
     public Guid? ClinicId { get; set; }
     public virtual Clinic? Clinic { get; set; }
     [Column(TypeName = "decimal(18,2)")] public decimal Amount { get; set; }
+
+    public string? ProofImageUrl { get; set; } = null;
 
 
     // Transaction Type: 0 = Deposit, 1 = Withdrawal, 2 = Transfer, 3 = SERVICE_DEPOSIT, 4 = SERVICE_DEPOSIT_REFUND
@@ -24,7 +24,8 @@ public class WalletTransaction : AggregateRoot<Guid>, IAuditableEntity
 
     [MaxLength(255)] public string? Description { get; set; }
 
-    public DateTime TransactionDate { get; set; } = TimeZoneInfo.ConvertTime(DateTime.UtcNow, TimeZoneInfo.FindSystemTimeZoneById("SE Asia Standard Time"));
+    public DateTime TransactionDate { get; set; } = TimeZoneInfo.ConvertTime(DateTime.UtcNow,
+        TimeZoneInfo.FindSystemTimeZoneById("SE Asia Standard Time"));
 
     // For service booking deposits and refunds
     public Guid? OrderId { get; set; }
